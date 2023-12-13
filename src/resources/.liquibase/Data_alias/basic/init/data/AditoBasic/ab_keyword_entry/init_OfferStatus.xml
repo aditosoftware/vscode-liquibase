@@ -1,0 +1,67 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.goderbauer" id="e7f911b2-7f89-41b1-b59e-4b359ccbf728">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="87bd1a28-d364-47ee-9a01-33714f6998ba"/>
+      <column name="KEYID" value="OFFERSTATCHECK"/>
+      <column name="TITLE" value="Checked"/>
+      <column name="CONTAINER" value="OfferStatus"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="9912dcc6-edf1-4a68-b605-925a31b7f9a4"/>
+      <column name="KEYID" value="OFFERSTATSENT"/>
+      <column name="TITLE" value="Sent"/>
+      <column name="CONTAINER" value="OfferStatus"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d3bd6272-d1d9-4a5c-9f5c-772f0ee2551e"/>
+      <column name="KEYID" value="OFFERSTATWON"/>
+      <column name="TITLE" value="Won"/>
+      <column name="CONTAINER" value="OfferStatus"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="0cba2fe7-97c3-4eb4-9999-1fc4e8e93a7a"/>
+      <column name="KEYID" value="OFFERSTATLOST"/>
+      <column name="TITLE" value="Lost"/>
+      <column name="CONTAINER" value="OfferStatus"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <rollback>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="87bd1a28-d364-47ee-9a01-33714f6998ba"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="9912dcc6-edf1-4a68-b605-925a31b7f9a4"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="d3bd6272-d1d9-4a5c-9f5c-772f0ee2551e"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="0cba2fe7-97c3-4eb4-9999-1fc4e8e93a7a"/>
+        </whereParams>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

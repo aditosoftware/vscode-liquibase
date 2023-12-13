@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.goderbauer" id="e7f911b2-7f89-41b1-b59e-4b359ccbf728">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="7963d4ed-f7a7-4a9f-aa86-fea42167145f"/>
+      <column name="KEYID" value="SALPROJSTPRICEPOL"/>
+      <column name="TITLE" value="Strength 1"/>
+      <column name="CONTAINER" value="SalesprojectStrength"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="2cacfe09-7dcd-454a-b263-46aee796bc21"/>
+      <column name="KEYID" value="SALPROJSTPERSAPP"/>
+      <column name="TITLE" value="Strength 2"/>
+      <column name="CONTAINER" value="SalesprojectStrength"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="919cffee-5943-4105-a5bc-a14bd33b9f67"/>
+      <column name="KEYID" value="SALPROJSTPROD"/>
+      <column name="TITLE" value="Strength 3"/>
+      <column name="CONTAINER" value="SalesprojectStrength"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <rollback>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="7963d4ed-f7a7-4a9f-aa86-fea42167145f"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="2cacfe09-7dcd-454a-b263-46aee796bc21"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="919cffee-5943-4105-a5bc-a14bd33b9f67"/>
+        </whereParams>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,8 @@
+{
+    "option1": { "label": "DEV - Data_alias", "description": "jdbc:mariadb://localhost:3306/adito_data" },
+    "option2": { "label": "DEV - _____SYSTEM_ALIAS", "description": "jdbc:mariadb://localhost:3306/adito_system" },
+    "option3": { "label": "TEST - Data_alias", "description": "jdbc:mariadb://127.0.0.1:3306/adito_data" },
+    "option4": { "label": "TEST - _____SYSTEM_ALIAS", "description": "jdbc:mariadb://127.0.0.1:3306/adito_system" },
+    "option5": { "label": "PROD - Data_alias", "description": "jdbc:mariadb://192.168.0.1:3306/adito_data" },
+    "option6": { "label": "PROD - _____SYSTEM_ALIAS", "description": "jdbc:mariadb://192.168.0.1:3306/adito_system" }
+  }

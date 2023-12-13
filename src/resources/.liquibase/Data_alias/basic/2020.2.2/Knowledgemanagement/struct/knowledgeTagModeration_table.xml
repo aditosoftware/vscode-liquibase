@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="e.pollinger" id="50ea4ad8-c864-489e-a121-92f4738e0a7f">
+        <createTable tableName="KNOWLEDGEMANAGEMENTTAGMODERATION">
+            <column name="KNOWLEDGEMANAGEMENTTAGMODERATIONID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_TAGMODERATION_KNOWLEDGEMANAGEMENTTAGMODERATIONID"/>
+            </column>
+            <column name="AB_ATTRIBUTE_ID" type="CHAR(36)"></column>
+            <column name="STATUS" type="CHAR(36)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

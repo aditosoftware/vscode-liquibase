@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="3e7869e8-5cc1-4db8-bc3b-d2d719722cb0">
+        <delete tableName="AB_KEYWORD_ENTRY">
+            <where>AB_KEYWORD_ENTRYID in(?,?,?,?,?,?,?,?,?)</where>
+            <whereParams>
+                <param value="f630f573-baae-4041-aeb0-41ff30ad188a"/>
+                <param value="4895c091-f810-4c64-9bba-698c07a59c5e"/>
+                <param value="b255450e-418c-41dd-be47-26c69aedbffa"/>
+                <param value="de2e8c2a-ef34-4d62-8d65-a4ca530e7236"/>
+                <param value="58f6b20b-0cae-4a1c-bb47-d2bfaab58df5"/>
+                <param value="4f957f7d-173d-4450-8502-ba8dc3351db3"/>
+                <param value="ee7de36d-b33b-4e5c-b750-5ec2798d2964"/>
+                <param value="1991320a-3e15-4ed3-867a-5c7c39a4cf4a"/>
+                <param value="adb3d122-992c-4d00-88a8-c04ec6e15cd3"/>
+            </whereParams>
+        </delete>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="028af5dd-1071-4108-8685-ed7124376706"/>
+            <column name="KEYID" value="SALPROJPHASEMQC"/>
+            <column name="TITLE" value="MQC"/>
+            <column name="CONTAINER" value="SalesprojectPhase"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="${SALESPROJECT_OFFER}"/>
+            <where>AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="0e8eab64-4c79-4eed-9746-0ac6fc397620"/>
+            </whereParams>
+        </update>
+                
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="${SALESPROJECT_NEGOTIATION}"/>
+            <where>AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="405e2b7b-20c2-4824-a8b5-c7a533784ef3"/>
+            </whereParams>
+        </update>
+        
+        <sql>update AB_KEYWORD_ENTRY set SORTING = SORTING+1 where AB_KEYWORD_ENTRYID in (
+            '8a2d19c9-bc32-437e-9261-78ed30110e92',
+            '46f55a58-dbe4-40ae-9306-481df9095088',
+            'afa8cf58-07e8-4ee9-b24e-96cb6fa76aec',
+            'c9483fb9-c295-43d2-94e0-8c949cf6dc47',
+            '0e8eab64-4c79-4eed-9746-0ac6fc397620',
+            '405e2b7b-20c2-4824-a8b5-c7a533784ef3')
+        </sql>
+    </changeSet>
+</databaseChangeLog>

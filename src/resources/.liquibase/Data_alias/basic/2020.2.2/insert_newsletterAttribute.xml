@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="4b285b34-29bc-4446-8d95-37cfcff7bd58">
+      <insert tableName="AB_ATTRIBUTE">
+          <column name="AB_ATTRIBUTEID" value="cf985906-b4f9-443e-9d7b-edbeb60ca463"/>
+          <column name="ATTRIBUTE_NAME" value="Marketing"/>
+          <column name="ATTRIBUTE_TYPE" value="GROUP"/>
+          <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+      </insert>
+      <insert tableName="AB_ATTRIBUTE">
+          <column name="AB_ATTRIBUTEID" value="e196975c-6cfd-46dc-9cb2-053893ec2faa"/>
+          <column name="ATTRIBUTE_PARENT_ID" value="cf985906-b4f9-443e-9d7b-edbeb60ca463"/>
+          <column name="ATTRIBUTE_NAME" value="Newsletter"/>
+          <column name="ATTRIBUTE_TYPE" value="BOOLEAN"/>
+          <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+          <column name="SORTING" valueNumeric="0"/>
+      </insert>
+      <insert tableName="AB_ATTRIBUTEUSAGE">
+          <column name="AB_ATTRIBUTEUSAGEID" value="e9842896-628c-4c80-a0ef-811f35b8ae51"/>
+          <column name="AB_ATTRIBUTE_ID" value="cf985906-b4f9-443e-9d7b-edbeb60ca463"/>
+          <column name="OBJECT_TYPE" value="Person"/>
+          <column name="MAX_COUNT" valueNumeric="1"/>
+      </insert>
+      <insert tableName="AB_ATTRIBUTEUSAGE">
+          <column name="AB_ATTRIBUTEUSAGEID" value="fc594860-76c5-4acb-9758-44ea1a1db5d0"/>
+          <column name="AB_ATTRIBUTE_ID" value="e196975c-6cfd-46dc-9cb2-053893ec2faa"/>
+          <column name="OBJECT_TYPE" value="Person"/>
+          <column name="MAX_COUNT" valueNumeric="1"/>
+      </insert>
+  </changeSet>
+</databaseChangeLog>

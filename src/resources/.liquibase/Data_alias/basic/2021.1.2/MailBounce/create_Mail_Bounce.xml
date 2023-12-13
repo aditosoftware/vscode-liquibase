@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.groppe" id="cb2e933a-2d2d-49d3-892d-e3f64d5d789c">
+        <createTable tableName="MAIL_BOUNCE">
+            <column name="MAIL_BOUNCEID" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_MAIL_BOUNCEID"/>
+            </column>
+            <column name="MAIL_LOG_ID" type="CHAR(36)">
+            </column>
+            <column name="CONTACT_ID" type="CHAR(36)">
+            </column>
+            <column name="CATEGORY" type="VARCHAR(36)">
+            </column>
+            <column name="RECIPIENT_EMAIL" type="VARCHAR(255)"/>
+            <column name="DATE_BOUNCE" type="DATETIME" />
+            <column name="EMAIL_FILTER_HANDLING_ID" type="char(36)"/>
+        </createTable>
+        <createIndex tableName="MAIL_BOUNCE" indexName="IDX_MAILBOUNCE_MAILLOGID">
+            <column name="MAIL_LOG_ID"/>
+        </createIndex>
+        <createIndex tableName="MAIL_BOUNCE" indexName="IDX_MAILBOUNCE_CONTACTID">
+            <column name="CONTACT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

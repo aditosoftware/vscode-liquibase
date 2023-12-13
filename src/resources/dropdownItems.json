@@ -1,0 +1,7 @@
+{
+    "option1": { "label": "default", "description": "All files that don't have a context" },
+    "option2": { "label": "Demo", "description": "Demo data for Presentations and Demo-Systems" },
+    "option3": { "label": "Trade", "description": "All Liquibase-files for the Trade-Section" },
+    "option4": { "label": "Machine", "description": "All Liquibase-files for the Machine-Section" },
+    "option5": { "label": "Workflow", "description": "All Workflows" }
+  }

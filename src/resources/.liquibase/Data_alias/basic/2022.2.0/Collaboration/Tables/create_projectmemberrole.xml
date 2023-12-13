@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="A.Voegl" id="8735e980-1c74-4c3b-b652-577c060dd89c">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTMEMBERROLE" />
+      </not>
+    </preConditions>
+    <createTable tableName="PROJECTMEMBERROLE">
+      <column name="ROLE" type="VARCHAR(50)" />
+      <column name="PROJECTMEMBERROLEID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column name="PROJECTMEMBER_ID" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

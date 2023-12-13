@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="BIRGIT_LEICHT.xml"/>
+    <include relativeToChangelogFile="true" file="CHRISTIAN_PABST.xml"/>
+    <include relativeToChangelogFile="true" file="FRANZ_MUELLER.xml"/>
+    <include relativeToChangelogFile="true" file="HAROLD_SMITH.xml"/>
+    <include relativeToChangelogFile="true" file="HEIKO_STORBECK.xml"/>
+    <include relativeToChangelogFile="true" file="HERBERT_OBERMEIER.xml"/>
+    <include relativeToChangelogFile="true" file="ISATOU_JAMMEH.xml"/>
+    <include relativeToChangelogFile="true" file="JAN_FROHBERG.xml"/>
+    <include relativeToChangelogFile="true" file="LINDA_REITER.xml"/>
+    <include relativeToChangelogFile="true" file="LISA_SOMMER.xml"/>
+    <include relativeToChangelogFile="true" file="MELANIE_HUEBER.xml"/>
+    <include relativeToChangelogFile="true" file="PAULA_STRAUSS.xml"/>
+    <include relativeToChangelogFile="true" file="PETER_PFIFFIG.xml"/>
+    <include relativeToChangelogFile="true" file="SARAH_NAGEL.xml"/>
+    <include relativeToChangelogFile="true" file="SILKE_DEHLER.xml"/>
+    <include relativeToChangelogFile="true" file="SUSANNE_LUSTIG.xml"/>
+    <include relativeToChangelogFile="true" file="INSERT_ASYS_USERS-ADMIN.xml"/>
+    <include relativeToChangelogFile="true" file="TIMESHIFTSERVICE.xml"/>
+    <include relativeToChangelogFile="true" file="TELEMETRYUSER.xml"/>
+    <include relativeToChangelogFile="true" file="MIGRATIONUSER.xml"/>
+    <include relativeToChangelogFile="true" file="MAX_MUSTERMANN.xml"/>
+</databaseChangeLog>

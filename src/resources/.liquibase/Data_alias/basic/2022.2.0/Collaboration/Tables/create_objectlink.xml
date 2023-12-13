@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="A.Voegl" id="aa8b0f8b-5659-45d4-8e39-3d1af3f56c52">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="OBJECTLINK" />
+      </not>
+    </preConditions>
+    <createTable tableName="OBJECTLINK">
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />      
+      <column name="OBJECTLINKID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="TARGET_OBJECT_TYPE" type="CHAR(60)" />
+      <column name="SOURCE_OBJECT_TYPE" type="CHAR(60)" />
+      <column name="TARGET_OBJECT_ROWID" type="CHAR(36)" />
+      <column name="SOURCE_OBJECT_ROWID" type="CHAR(36)" />      
+      <column name="INFO" type="LONGTEXT" />
+    </createTable>
+  </changeSet>
+  <changeSet author="A.Voegl" id="6d366376-56aa-4dfc-bf78-8fa9da17c51c">
+    <createIndex indexName="objectlink_idx_SOURCE_OBJECT_ROWID" tableName="OBJECTLINK">
+      <column name="SOURCE_OBJECT_ROWID" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="A.Voegl" id="3f3cd48b-312d-4b5d-b7c9-5e71fb69d6b9">
+    <createIndex indexName="objectlink_idx_TARGET_OBJECT_ROWID" tableName="OBJECTLINK">
+      <column name="TARGET_OBJECT_ROWID" />
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

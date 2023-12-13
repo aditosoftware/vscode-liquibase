@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="b.ulrich" id="cda0846c-db93-40bb-921b-aa58b50be540">
+    <update tableName="DISTRICT">
+        <column name="DISTRICT_STATUS" valueNumeric="0"/>/>
+        <where>DISTRICT_STATUS = 1</where>
+    </update>
+    <update tableName="DISTRICT">
+        <column name="DISTRICT_STATUS" valueNumeric="1"/>/>
+        <where>DISTRICT_STATUS = 0</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

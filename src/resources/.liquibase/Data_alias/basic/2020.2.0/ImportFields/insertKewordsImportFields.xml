@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="d058a476-66c8-414e-ab2e-d132513d90ad">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="8c24ac4a-23cc-4a16-98a0-362e72b77977"/>
+            <column name="KEYID" value="ATTRIBUTE_Loyalty"/>
+            <column name="TITLE" value="Loyalty"/>
+            <column name="CONTAINER" value="ImportFields"/>
+            <column name="SORTING" valueNumeric="26"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="cb227318-924a-4df4-af98-eb6814ce21a1"/>
+            <column name="KEYID" value="ATTRIBUTE_Industry"/>
+            <column name="TITLE" value="Industry"/>
+            <column name="CONTAINER" value="ImportFields"/>
+            <column name="SORTING" valueNumeric="27"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="b1cdbbda-5181-4dbd-b786-4d180c1248aa"/>
+            <column name="KEYID" value="CONTACTROLE"/>
+            <column name="TITLE" value="Contactrole"/>
+            <column name="CONTAINER" value="ImportFields"/>
+            <column name="SORTING" valueNumeric="28"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

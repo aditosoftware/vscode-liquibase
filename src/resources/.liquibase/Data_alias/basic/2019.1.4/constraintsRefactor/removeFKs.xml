@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="9f967c2b-40fb-4fb1-ab3d-569722df4c2e">
+        <dropForeignKeyConstraint baseTableName="PRODUCTPRICE" constraintName="FK_PRODUCTPRICE_PRODUCT_ID"/>
+        <dropForeignKeyConstraint baseTableName="STOCK" constraintName="FK_STOCK_PRODUCT_ID"/>
+        <dropForeignKeyConstraint baseTableName="TIMETRACKING" constraintName="FK_TIMETRACKING_CONTACT_ID"/>
+        <dropForeignKeyConstraint baseTableName="OFFERITEM" constraintName="FK_OFFERITEM_ASSIGNEDTO"/>
+        <dropForeignKeyConstraint baseTableName="SALESORDERITEM" constraintName="FK_SALESORDERITEM_ASSIGNEDTO"/>
+    </changeSet>
+</databaseChangeLog>

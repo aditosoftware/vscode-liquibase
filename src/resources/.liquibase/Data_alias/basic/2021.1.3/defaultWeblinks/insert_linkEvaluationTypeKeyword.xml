@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="199d9675-11d4-4bb3-9a1f-384dd53b6708">
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="8d7ff560-d24c-4998-995b-27dacc4bfa64"/>
+      <column name="NAME" value="LinkEvaluationType"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="404337d9-b7e9-47fd-9401-b859a8142696"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="8d7ff560-d24c-4998-995b-27dacc4bfa64"/>
+        <column name="KEYID" value="LINKEVALUATION_DEFAULT"/>
+        <column name="TITLE" value="default"/>
+        <column name="CONTAINER" value="LinkEvaluationType"/>
+        <column name="SORTING" valueNumeric="1"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="9143322a-30f1-44ac-b1bc-3190f5da9eef"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="8d7ff560-d24c-4998-995b-27dacc4bfa64"/>
+        <column name="KEYID" value="LINKEVALUATION_UNSUBSCRIBE"/>
+        <column name="TITLE" value="unsubscribe"/>
+        <column name="CONTAINER" value="LinkEvaluationType"/>
+        <column name="SORTING" valueNumeric="2"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="6f88dd99-ad20-4154-885c-cde4bcb68070"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="8d7ff560-d24c-4998-995b-27dacc4bfa64"/>
+        <column name="KEYID" value="LINKEVALUATION_IGNORE"/>
+        <column name="TITLE" value="ignore"/>
+        <column name="CONTAINER" value="LinkEvaluationType"/>
+        <column name="SORTING" valueNumeric="3"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

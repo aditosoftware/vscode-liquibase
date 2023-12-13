@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet  dbms="derby" author="b.ulrich" id="344cce62-e9d4-4106-a0c5-c782a795d19d">
+        <sql>
+            ALTER TABLE PRODUCT ADD COLUMN GROUPCODEID_NEW VARCHAR(36);
+            UPDATE PRODUCT SET GROUPCODEID_NEW=GROUPCODEID;
+            ALTER TABLE PRODUCT DROP COLUMN GROUPCODEID;
+            RENAME COLUMN PRODUCT.GROUPCODEID_NEW TO GROUPCODEID;
+        </sql>
+    </changeSet>
+    
+    <changeSet author="b.ulrich" id="e0feee96-ce51-4a18-814c-bca8f685d337">
+        <preConditions onFail="CONTINUE">
+            <not>
+                <dbms type="derby" />
+            </not>
+        </preConditions>
+
+        <modifyDataType tableName="PRODUCT" columnName="GROUPCODEID" newDataType="VARCHAR(36)"/>
+    </changeSet>
+</databaseChangeLog>

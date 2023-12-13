@@ -1,0 +1,166 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="6e154b73-f025-4072-9fe0-12ab39abebec">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="NAME" value="icon"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+        
+        <!-- new -->
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="10"/>
+            <column name="KEYID" value="NEW"/>
+            <where>AB_KEYWORD_ENTRYID = '6ab0cc9e-021c-42ef-abfd-f9f7a58aa76c'</where>
+        </update>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="3a2e147c-614e-49ae-8b7e-16a8a16d0c05"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="6ab0cc9e-021c-42ef-abfd-f9f7a58aa76c"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_NOT_STARTED"/>
+        </insert>
+        
+        <!-- unassigned -->
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0b06db5c-1d00-4d01-b8a9-f280a4f69cbc"/>
+            <column name="KEYID" value="UNASSIGNED"/>
+            <column name="TITLE" value="unassigned"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="20"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="cd121a8b-7a7f-4cc1-a0ad-1f82444b549c"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="0b06db5c-1d00-4d01-b8a9-f280a4f69cbc"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_NOT_ASSIGNED"/>
+        </insert>
+        
+        <!-- assigned -->
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="1061168a-4b17-4ba5-be70-948c0dd78f20"/>
+            <column name="KEYID" value="ASSIGNED"/>
+            <column name="TITLE" value="assigned"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="30"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="d20606fe-776f-4f44-b2f1-504e0066398a"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="1061168a-4b17-4ba5-be70-948c0dd78f20"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_ASSIGNED"/>
+        </insert>
+        
+        <!-- in progress -->
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="40"/>
+            <column name="KEYID" value="IN-PROGRESS"/>
+            <column name="TITLE" value="in progress"/>
+            <where>AB_KEYWORD_ENTRYID = '6a479d71-2c05-4496-9c6c-c9aeef929bcf'</where>
+        </update>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f0ec52a0-81f1-43b7-bb5b-d9e925d525aa"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="6a479d71-2c05-4496-9c6c-c9aeef929bcf"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_IN_PROGRESS"/>
+        </insert>
+        
+        <!-- waiting -->
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="50"/>
+            <column name="KEYID" value="WAITING"/>
+            <where>AB_KEYWORD_ENTRYID = '34701d4d-7435-43bc-8b2f-ad2a70065a75'</where>
+        </update>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="9b9eac4b-886b-46b1-a099-2ead6cfbc99d"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="34701d4d-7435-43bc-8b2f-ad2a70065a75"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_WAITING"/>
+        </insert>
+        
+        <!-- ended -->
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="60"/>
+            <column name="KEYID" value="ENDED"/>
+            <where>AB_KEYWORD_ENTRYID = '7311d8c5-edf2-492e-be4d-6f0469334611'</where>
+        </update>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="7f4d36bd-4ab2-4ccc-bdf5-ae05d817c255"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="7311d8c5-edf2-492e-be4d-6f0469334611"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_DONE"/>
+        </insert>
+        
+        <!-- ended (done) -->
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="890a7832-f06f-4e51-8744-73aa8ddea4f8"/>
+            <column name="KEYID" value="ENDED-DONE"/>
+            <column name="TITLE" value="ended (done)"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="70"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="7c8c74a2-0f9b-4491-9c97-38a380d77b2c"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="890a7832-f06f-4e51-8744-73aa8ddea4f8"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_DONE"/>
+        </insert>
+        
+        <!-- ended (abandoned) -->
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="a5b50ba3-0fb9-4fbe-9e98-4d6c53b329af"/>
+            <column name="KEYID" value="ENDED-ABANDONED"/>
+            <column name="TITLE" value="ended (abandoned)"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="80"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="eb632e72-2014-468e-8abc-43e5a5e41875"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="a5b50ba3-0fb9-4fbe-9e98-4d6c53b329af"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_DONE_DISCONTINUED"/>
+        </insert>
+        
+        <!-- still incorrect -->
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9d4cdd61-9f6a-46e1-bef0-eaf16613aea5"/>
+            <column name="KEYID" value="STILL-INCORRECT"/>
+            <column name="TITLE" value="still incorrect"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="90"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f9e2f0b3-baca-4a26-bc9f-b42b6dc1ef9e"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="9d4cdd61-9f6a-46e1-bef0-eaf16613aea5"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_STILL_FAULTY"/>
+        </insert>
+        
+        <!-- customer checks -->
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="2f742253-c287-40ab-838f-ec797a16fdce"/>
+            <column name="KEYID" value="CUSTOMER-CHECKS"/>
+            <column name="TITLE" value="customer checks"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="100"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="8a01f326-f629-44ca-be1e-5b9dbc0ef06d"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="2f742253-c287-40ab-838f-ec797a16fdce"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="472f9bc2-3331-49f9-aba2-72d5eeb89654"/>
+            <column name="CHAR_VALUE" value="NEON:STATUS_CUSTOMER_CHECK"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

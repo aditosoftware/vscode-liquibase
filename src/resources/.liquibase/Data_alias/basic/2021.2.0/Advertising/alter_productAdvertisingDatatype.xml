@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="83e55d9f-2e47-4b71-89ca-f080e57d13b6">
+        
+	<!--Add Column with correct datatype-->
+        <addColumn tableName="PRODUCT">
+            <column name="ADVERTISING_NEW" type="TINYINT"/>
+	</addColumn>
+        
+        <!--Set Values accordingly-->
+        <update tableName="PRODUCT">
+            <column name="ADVERTISING_NEW" valueNumeric="1"></column>
+            <where>ADVERTISING = ?</where>
+            <whereParams>
+                <param name="ADVERTISING" value="Y"/>
+            </whereParams>
+        </update>
+        <update tableName="PRODUCT">
+            <column name="ADVERTISING_NEW" valueNumeric="0"></column>
+            <where>ADVERTISING = ?</where>
+            <whereParams>
+                <param name="ADVERTISING" value="N"/>
+            </whereParams>
+        </update>
+        
+        <!--Drop old Column-->
+        <dropColumn tableName="PRODUCT">
+            <column name="ADVERTISING"/>
+        </dropColumn>
+        
+        <!--Rename new Column-->
+        <renameColumn newColumnName="ADVERTISING" oldColumnName="ADVERTISING_NEW" columnDataType="TINYINT" tableName="PRODUCT"/>
+    </changeSet>
+</databaseChangeLog>

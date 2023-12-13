@@ -1,0 +1,58 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="a.voegl" id="fa33c0ca-f311-45ab-b8ad-359241301584">
+        <renameColumn newColumnName="PROBABILITY_OLD" oldColumnName="PROBABILITY" columnDataType="INTEGER" tableName="OFFER"/>
+	<addColumn tableName="OFFER">
+            <column name="PROBABILITY" type="VARCHAR(36)"/>
+	</addColumn> 
+        <update tableName="OFFER">
+            <column name="PROBABILITY" value="0"/>
+            <where>PROBABILITY_OLD = 1</where>
+        </update>
+        <update tableName="OFFER">
+            <column name="PROBABILITY" value="25"/>
+            <where>PROBABILITY_OLD = 2</where>
+        </update>
+        <update tableName="OFFER">
+            <column name="PROBABILITY" value="50"/>
+            <where>PROBABILITY_OLD = 3</where>
+        </update>
+        <update tableName="OFFER">
+            <column name="PROBABILITY" value="75"/>
+            <where>PROBABILITY_OLD = 4</where>
+        </update>
+        <update tableName="OFFER">
+            <column name="PROBABILITY" value="100"/>
+            <where>PROBABILITY_OLD = 5</where>
+        </update>
+        <dropColumn tableName="OFFER" columnName="PROBABILITY_OLD"/>
+ 
+        <rollback>
+            <renameColumn newColumnName="PROBABILITY_OLD" oldColumnName="PROBABILITY" columnDataType="VARCHAR(36)" tableName="OFFER"/>
+            <addColumn tableName="OFFER">
+                <column name="PROBABILITY" type="INTEGER"/>
+            </addColumn>   
+            <update tableName="OFFER">
+                <column name="PROBABILITY" valueNumeric="1"/>
+                <where>PROBABILITY_OLD = '0'</where>
+            </update>
+            <update tableName="OFFER">
+                <column name="PROBABILITY" valueNumeric="2"/>
+                <where>PROBABILITY_OLD = '25'</where>
+            </update>
+            <update tableName="OFFER">
+                <column name="PROBABILITY" valueNumeric="3"/>
+                <where>PROBABILITY_OLD = '50'</where>
+            </update>
+            <update tableName="OFFER">
+                <column name="PROBABILITY" valueNumeric="4"/>
+                <where>PROBABILITY_OLD = '75'</where>
+            </update>
+            <update tableName="OFFER">
+                <column name="PROBABILITY" valueNumeric="5"/>
+                <where>PROBABILITY_OLD = '100'</where>
+            </update>
+            <dropColumn tableName="OFFER" columnName="PROBABILITY_OLD"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

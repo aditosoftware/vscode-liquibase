@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+        <changeSet dbms="derby" author="b.ulrich" id="9c551ee3-f4f0-46e4-a671-943b58c74432">
+        <sql>
+            ALTER TABLE EXPORTTEMPLATEPLACEOFUSE ADD COLUMN EXPORTTEMPLATE_ID_NEW CHAR(36);
+            UPDATE EXPORTTEMPLATEPLACEOFUSE SET EXPORTTEMPLATE_ID_NEW=EXPORTTEMPLATE_ID;
+            ALTER TABLE EXPORTTEMPLATEPLACEOFUSE DROP COLUMN EXPORTTEMPLATE_ID;
+            RENAME COLUMN EXPORTTEMPLATEPLACEOFUSE.EXPORTTEMPLATE_ID_NEW TO EXPORTTEMPLATE_ID;
+             ALTER TABLE EXPORTTEMPLATEFIELD ADD COLUMN EXPORTTEMPLATE_ID_NEW CHAR(36);
+            UPDATE EXPORTTEMPLATEFIELD SET EXPORTTEMPLATE_ID_NEW=EXPORTTEMPLATE_ID;
+            ALTER TABLE EXPORTTEMPLATEFIELD DROP COLUMN EXPORTTEMPLATE_ID;
+            RENAME COLUMN EXPORTTEMPLATEFIELD.EXPORTTEMPLATE_ID_NEW TO EXPORTTEMPLATE_ID;
+             ALTER TABLE EXPORTTEMPLATESELECTION ADD COLUMN EXPORTTEMPLATE_ID_NEW CHAR(36);
+            UPDATE EXPORTTEMPLATESELECTION SET EXPORTTEMPLATE_ID_NEW=EXPORTTEMPLATE_ID;
+            ALTER TABLE EXPORTTEMPLATESELECTION DROP COLUMN EXPORTTEMPLATE_ID;
+            RENAME COLUMN EXPORTTEMPLATESELECTION.EXPORTTEMPLATE_ID_NEW TO EXPORTTEMPLATE_ID;
+        </sql>
+    </changeSet>
+    
+    <changeSet dbms="!derby" author="b.ulrich" id="a53a2f38-3788-44a2-a151-13b3853ccb74">
+        <!--EXPORTTEMPLATEPLACEOFUSE.EXPORTTEMPLATE_ID-->
+        <dropIndex  tableName="EXPORTTEMPLATEPLACEOFUSE" indexName="idx_exprttmppou_tmpltid"/>
+        <modifyDataType tableName="EXPORTTEMPLATEPLACEOFUSE" columnName="EXPORTTEMPLATE_ID" newDataType="CHAR(36)"/>
+        <createIndex indexName="idx_exprttmppou_tmpltid" tableName="EXPORTTEMPLATEPLACEOFUSE">
+            <column name="EXPORTTEMPLATE_ID"/>
+        </createIndex>
+        
+        <!--EXPORTTEMPLATEFIELD.EXPORTTEMPLATE_ID-->
+        <dropIndex  tableName="EXPORTTEMPLATEFIELD" indexName="idx_exprttmpfld_tmpltid"/>
+        <modifyDataType tableName="EXPORTTEMPLATEFIELD" columnName="EXPORTTEMPLATE_ID" newDataType="CHAR(36)"/>
+        <createIndex indexName="idx_exprttmpfld_tmpltid" tableName="EXPORTTEMPLATEFIELD">
+            <column name="EXPORTTEMPLATE_ID"/>
+        </createIndex>
+        
+        <!--EXPORTTEMPLATESELECTION.EXPORTTEMPLATE_ID-->
+        <dropIndex  tableName="EXPORTTEMPLATESELECTION" indexName="idx_exprttmpselection_tmpltid"/>
+        <modifyDataType tableName="EXPORTTEMPLATESELECTION" columnName="EXPORTTEMPLATE_ID" newDataType="CHAR(36)"/>
+        <createIndex indexName="idx_exprttmpselection_tmpltid" tableName="EXPORTTEMPLATESELECTION">
+            <column name="EXPORTTEMPLATE_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

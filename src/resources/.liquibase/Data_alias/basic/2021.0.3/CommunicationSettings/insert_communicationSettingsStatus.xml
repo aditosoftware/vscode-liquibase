@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="67049212-747b-45c9-a556-219c8180db5f">
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="4a7065d8-3ccc-49c5-bd50-1a7546e8a84d"/>
+      <column name="NAME" value="CommunicationSettingStatus"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="6afeb45a-c64b-4c6c-93bb-7378b0551729"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="4a7065d8-3ccc-49c5-bd50-1a7546e8a84d"/>
+        <column name="KEYID" value="COMMUNICATION_PENDING"/>
+        <column name="TITLE" value="Pending"/>
+        <column name="CONTAINER" value="CommunicationSettingStatus"/>
+        <column name="SORTING" valueNumeric="1"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="77aa26ef-7938-4c0d-9ff2-5eadc0aa282d"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="4a7065d8-3ccc-49c5-bd50-1a7546e8a84d"/>
+        <column name="KEYID" value="COMMUNICATION_ALLOWED"/>
+        <column name="TITLE" value="Allowed"/>
+        <column name="CONTAINER" value="CommunicationSettingStatus"/>
+        <column name="SORTING" valueNumeric="2"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="c2c117ac-d94f-4da2-a7a4-2e36e537a8b8"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="4a7065d8-3ccc-49c5-bd50-1a7546e8a84d"/>
+        <column name="KEYID" value="COMMUNICATION_REJECTED"/>
+        <column name="TITLE" value="Rejected"/>
+        <column name="CONTAINER" value="CommunicationSettingStatus"/>
+        <column name="SORTING" valueNumeric="3"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

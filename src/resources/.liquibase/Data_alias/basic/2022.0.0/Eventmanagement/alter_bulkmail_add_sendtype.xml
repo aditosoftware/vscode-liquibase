@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="f5c5f3f3-2eb1-4ce6-aa63-b92ed6b5402d">
+      <addColumn tableName="BULKMAIL">
+          <column name="SENDTYPE" type="VARCHAR(36)"/>
+      </addColumn>
+      <update tableName="BULKMAIL">
+        <column name="SENDTYPE" value="SENDTYPE_MANUAL"/>
+        <where>BULKMAIL.STATUS != ?</where>
+        <whereParams>
+            <param value="BULKMAILPLANNED" />
+        </whereParams>
+      </update>
+      <update tableName="BULKMAIL">
+        <column name="SENDTYPE" value="SENDTYPE_DATE"/>
+        <where>BULKMAIL.STATUS = ?</where>
+        <whereParams>
+            <param value="BULKMAILPLANNED" />
+        </whereParams>
+      </update>
+      <update tableName="BULKMAIL">
+      <column name="STATUS" value="BULKMAILNOTSENT"/>
+      <where>BULKMAIL.STATUS = ?</where>
+      <whereParams>
+          <param value="BULKMAILPLANNED" />
+      </whereParams>
+    </update>    
+  </changeSet>  
+</databaseChangeLog>

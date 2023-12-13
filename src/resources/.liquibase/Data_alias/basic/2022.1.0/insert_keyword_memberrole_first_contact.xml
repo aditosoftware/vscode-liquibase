@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="0e25a68b-2623-4ecc-8bb4-7cea3ab199d2">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="647ec043-6e8f-4d80-b97a-208f6173a705"/>
+            <column name="KEYID" value="MEMROLEFIRSTCONTACT"/>
+            <column name="TITLE" value="First contact"/>
+            <column name="CONTAINER" value="MemberRole"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="b3765719-9d07-41c4-a813-18bc9056db1a"/>
+            <column name="SORTING" valueNumeric="8"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

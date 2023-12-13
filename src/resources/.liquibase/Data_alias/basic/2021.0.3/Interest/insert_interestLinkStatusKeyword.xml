@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="bea56786-cd38-4926-bad7-7f2bd37a17ef">
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="9eba38ce-72ba-485a-9a81-f800f8ce6575"/>
+      <column name="NAME" value="InterestLinkStatus"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="5c723271-ee7f-4daa-9bb3-ca1f81174168"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="9eba38ce-72ba-485a-9a81-f800f8ce6575"/>
+        <column name="KEYID" value="INTERESTLINK_SUBSCRIBED"/>
+        <column name="TITLE" value="Subscribed"/>
+        <column name="CONTAINER" value="InterestLinkStatus"/>
+        <column name="SORTING" valueNumeric="1"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="5f0e6420-14b9-43e4-bbe3-c156d6519c02"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="9eba38ce-72ba-485a-9a81-f800f8ce6575"/>
+        <column name="KEYID" value="INTERESTLINK_NOTSUBSCRIBED"/>
+        <column name="TITLE" value="Not subscribed"/>
+        <column name="CONTAINER" value="InterestLinkStatus"/>
+        <column name="SORTING" valueNumeric="2"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+
+  </changeSet>
+</databaseChangeLog>

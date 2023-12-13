@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="5f08fb9a-ec05-4a06-8809-1fc0629bd08b">
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="59377864-0745-4a18-8d7b-57a0491a8116"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="ATTRIBUTE_NAME" value="Visit Planning"/>
+            <column name="ATTRIBUTE_TYPE" value="VOID                                "/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

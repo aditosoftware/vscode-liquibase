@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.kremer" id="3affddf3-3e6c-426b-beb4-f58ef2b1d352">
+    <createTable tableName="INBOXFILTER" >
+        <column name="INBOXFILTERID" type="char(36)">
+            <constraints primaryKey = "true" nullable = "false"/>
+        </column>
+        <column name="INBOXFILTERGROUP_ID" type="char(36)"/>
+        <column name="COMPONENT" type="varchar(36)"/>
+        <column name="SEARCHTERM" type="varchar(50)"/>
+        <column name="TICKETTEMPLATE_ID" type="CHAR(36)"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

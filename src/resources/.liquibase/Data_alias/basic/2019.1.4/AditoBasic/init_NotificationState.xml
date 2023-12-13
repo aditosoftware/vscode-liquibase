@@ -1,0 +1,57 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="a.schindlbeck" id="8ddce9af-b5ae-422f-8dda-5191723e867b">
+        
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0fdcfc0f-ba82-4881-813d-9f169339ab57"/>
+            <column name="KEYID" value="NONE"/>
+            <column name="TITLE" value="NONE"/>
+            <column name="CONTAINER" value="NotificationPriority"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="6aaddcc6-a94e-4267-a52e-f0dd1df62023"/>
+            <column name="KEYID" value="LOW"/>
+            <column name="TITLE" value="LOW"/>
+            <column name="CONTAINER" value="NotificationPriority"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="1290323b-82d4-4f34-95d7-44c453eef3bb"/>
+            <column name="KEYID" value="NORMAL"/>
+            <column name="TITLE" value="NORMAL"/>
+            <column name="CONTAINER" value="NotificationPriority"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="6f35ab82-7905-472a-b635-954bd5fac1e5"/>
+            <column name="KEYID" value="HIGH"/>
+            <column name="TITLE" value="HIGH"/>
+            <column name="CONTAINER" value="NotificationPriority"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="faa99798-c68f-435a-95d5-77bcd2bbabef"/>
+            <column name="KEYID" value="MAX"/>
+            <column name="TITLE" value="MAX"/>
+            <column name="CONTAINER" value="NotificationPriority"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        
+    </changeSet>
+</databaseChangeLog>

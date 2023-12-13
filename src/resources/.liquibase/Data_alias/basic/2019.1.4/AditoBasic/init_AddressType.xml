@@ -1,0 +1,193 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="a.veogl" id="83126524-0cca-4430-8a2c-571a44a7829d">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="1d5c5d49-0ffd-47fb-af10-542f7cf454cd"/>
+
+            <column name="NAME" value="organisation"/>
+            <column name="CONTAINER" value="AddressType"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="c4c5352b-ff72-4323-80b9-631a24dd7245"/>
+
+            <column name="NAME" value="contact"/>
+            <column name="CONTAINER" value="AddressType"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="49bb6904-dd20-4ede-aaff-ae80131ed274"/>
+
+            <column name="KEYID" value="OFFICEADDR"/>
+            <column name="TITLE" value="Office address"/>
+            <column name="CONTAINER" value="AddressType"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="a62eae3b-b670-4bf7-a144-696d456cd26a"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="49bb6904-dd20-4ede-aaff-ae80131ed274"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="1d5c5d49-0ffd-47fb-af10-542f7cf454cd"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f4e88624-f2a8-43a5-b5db-51fa0879314f"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="49bb6904-dd20-4ede-aaff-ae80131ed274"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="c4c5352b-ff72-4323-80b9-631a24dd7245"/>
+            <column name="BOOL_VALUE" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="5213a48a-b6d2-47ee-8409-a4af7477535f"/>
+
+            <column name="KEYID" value="HOMEADDR"/>
+            <column name="TITLE" value="Home address"/>
+            <column name="CONTAINER" value="AddressType"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f6d6f746-bb2c-48c1-92a9-e5624d0a72e1"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="5213a48a-b6d2-47ee-8409-a4af7477535f"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="1d5c5d49-0ffd-47fb-af10-542f7cf454cd"/>
+            <column name="BOOL_VALUE" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="d62d4424-ba6c-4b10-ad83-f7d7c156f814"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="5213a48a-b6d2-47ee-8409-a4af7477535f"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="c4c5352b-ff72-4323-80b9-631a24dd7245"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="045d0567-4535-4d22-84f2-95b3b0e23000"/>
+
+            <column name="KEYID" value="DELIVERADDR"/>
+            <column name="TITLE" value="Delivery address"/>
+            <column name="CONTAINER" value="AddressType"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="08f2ba6c-22da-447c-9aa8-052fe401f2bd"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="045d0567-4535-4d22-84f2-95b3b0e23000"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="1d5c5d49-0ffd-47fb-af10-542f7cf454cd"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="a02167af-0518-4e3d-80c7-8e25a725c31c"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="045d0567-4535-4d22-84f2-95b3b0e23000"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="c4c5352b-ff72-4323-80b9-631a24dd7245"/>
+            <column name="BOOL_VALUE" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="e62da2f2-6352-4660-b2ff-1e8a552d298a"/>
+
+            <column name="KEYID" value="POSTADDR"/>
+            <column name="TITLE" value="Post office box"/>
+            <column name="CONTAINER" value="AddressType"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="502fd0cf-873e-4a9a-87a9-949c0c3b07af"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="e62da2f2-6352-4660-b2ff-1e8a552d298a"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="1d5c5d49-0ffd-47fb-af10-542f7cf454cd"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="443ffd0a-d5f5-46f8-948e-89d4e6456f4c"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="e62da2f2-6352-4660-b2ff-1e8a552d298a"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="c4c5352b-ff72-4323-80b9-631a24dd7245"/>
+            <column name="BOOL_VALUE" valueNumeric="0"/>
+        </insert>
+        <rollback>
+            <delete tableName="AB_KEYWORD_ATTRIBUTE">
+                <where>AB_KEYWORD_ATTRIBUTEID = ?</where>
+                <whereParams>
+                    <param value="1d5c5d49-0ffd-47fb-af10-542f7cf454cd" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTE">
+                <where>AB_KEYWORD_ATTRIBUTEID = ?</where>
+                <whereParams>
+                    <param value="c4c5352b-ff72-4323-80b9-631a24dd7245" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="49bb6904-dd20-4ede-aaff-ae80131ed274" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="a62eae3b-b670-4bf7-a144-696d456cd26a" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="f4e88624-f2a8-43a5-b5db-51fa0879314f" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="5213a48a-b6d2-47ee-8409-a4af7477535f" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="f6d6f746-bb2c-48c1-92a9-e5624d0a72e1" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="d62d4424-ba6c-4b10-ad83-f7d7c156f814" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="045d0567-4535-4d22-84f2-95b3b0e23000" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="08f2ba6c-22da-447c-9aa8-052fe401f2bd" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="a02167af-0518-4e3d-80c7-8e25a725c31c" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="e62da2f2-6352-4660-b2ff-1e8a552d298a" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="502fd0cf-873e-4a9a-87a9-949c0c3b07af" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+                <whereParams>
+                    <param value="443ffd0a-d5f5-46f8-948e-89d4e6456f4c" />
+                </whereParams>
+            </delete>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

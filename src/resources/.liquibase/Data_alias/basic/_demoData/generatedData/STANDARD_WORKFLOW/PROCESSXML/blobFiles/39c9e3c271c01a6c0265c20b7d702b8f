@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="rejectEmailCommunication" name="Reject email communication" isExecutable="true">
+    <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+    <serviceTask id="sid-267CEC4E-48FD-4844-B14C-F1B01D5BD16E" name="Set communication setting" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[SetCommunicationSetting_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"channelType":{"value":"COMMUNICATIONCHANNEL_EMAIL"},"status":{"value":"COMMUNICATION_REJECTED"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-649F5C57-5FAB-43A7-9019-944DC4D56FDD" sourceRef="startEvent1" targetRef="sid-267CEC4E-48FD-4844-B14C-F1B01D5BD16E"></sequenceFlow>
+    <endEvent id="sid-E6C948F0-8E59-400F-A308-22C66076A405"></endEvent>
+    <sequenceFlow id="sid-1F8F23D4-9CDB-49A6-A04B-980EC0A51233" sourceRef="sid-267CEC4E-48FD-4844-B14C-F1B01D5BD16E" targetRef="sid-E6C948F0-8E59-400F-A308-22C66076A405"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_rejectEmailCommunication">
+    <bpmndi:BPMNPlane bpmnElement="rejectEmailCommunication" id="BPMNPlane_rejectEmailCommunication">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-267CEC4E-48FD-4844-B14C-F1B01D5BD16E" id="BPMNShape_sid-267CEC4E-48FD-4844-B14C-F1B01D5BD16E">
+        <omgdc:Bounds height="80.0" width="100.0" x="175.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-E6C948F0-8E59-400F-A308-22C66076A405" id="BPMNShape_sid-E6C948F0-8E59-400F-A308-22C66076A405">
+        <omgdc:Bounds height="28.0" width="28.0" x="320.0" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-1F8F23D4-9CDB-49A6-A04B-980EC0A51233" id="BPMNEdge_sid-1F8F23D4-9CDB-49A6-A04B-980EC0A51233">
+        <omgdi:waypoint x="274.95000000000005" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="320.0" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-649F5C57-5FAB-43A7-9019-944DC4D56FDD" id="BPMNEdge_sid-649F5C57-5FAB-43A7-9019-944DC4D56FDD">
+        <omgdi:waypoint x="129.9499984899576" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="174.9999999999917" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="e512fd40-3dc0-416a-a731-38c2df48be28">
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="ee81bee4-03d3-40fd-958b-59921c46db0d"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="c60f4fa6-dc09-4a09-b5a0-7371d2cd069d"/>
+        <column name="KEYID" value="EVENTMESSAGE_WAITINGNOTIFICATION"/>
+        <column name="TITLE" value="Waiting notification"/>
+        <column name="CONTAINER" value="EventMessageType"/>
+        <column name="SORTING" valueNumeric="6"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="7f9d208b-2375-48e0-a852-26eadfa8238f">
+        <createTable tableName="TASK">
+            <column name="TASKID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_TASK_TASKID"/>
+            </column>
+            
+            <column name="CODE" type="INTEGER">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="SUBJECT" type="NVARCHAR(254)"/>
+            <column name="STATUS" type="VARCHAR(36)"/>
+            <column name="PRIORITY" type="SMALLINT"/>
+            <column name="REQUESTOR_CONTACT_ID" type="CHAR(36)"/>
+            <column name="EDITOR_CONTACT_ID" type="CHAR(36)"/>
+            <column name="START_DATE" type="DATETIME"/>
+            <column name="MATURITY_DATE" type="DATETIME"/>
+            <column name="KIND" type="VARCHAR(36)"/>
+            <column name="DESCRIPTION" type="NCLOB"/>
+            <column name="PROTECTIONLEVEL" type="SMALLINT"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

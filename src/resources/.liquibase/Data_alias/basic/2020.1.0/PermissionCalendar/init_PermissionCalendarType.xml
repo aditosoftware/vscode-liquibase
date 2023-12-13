@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="b2894de0-4a19-4fcb-9412-0a5e91bfec80">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="b6618b25-ec10-413f-9048-a5d8e792d161"/>
+            <column name="KEYID" value="USER"/>
+            <column name="TITLE" value="User"/>
+            <column name="CONTAINER" value="PermissionCalendarType"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="45738bd4-1d7f-46b1-a863-93d183bbd238"/>
+            <column name="KEYID" value="DEPARTMENT"/>
+            <column name="TITLE" value="Deparment"/>
+            <column name="CONTAINER" value="PermissionCalendarType"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

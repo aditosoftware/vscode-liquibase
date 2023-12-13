@@ -1,0 +1,67 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.goderbauer" id="e7f911b2-7f89-41b1-b59e-4b359ccbf728">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d0f5c21d-14ff-414b-9d51-2a2c5f49b50d"/>
+      <column name="KEYID" value="PRICELISTDEFAULT"/>
+      <column name="TITLE" value="${PRICELIST_DEFAULT}"/>
+      <column name="CONTAINER" value="ProductPricelist"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="a581bf7c-1cb7-4821-96f5-6eed9a0de58c"/>
+      <column name="KEYID" value="PRICELISTKEY"/>
+      <column name="TITLE" value="Key account"/>
+      <column name="CONTAINER" value="ProductPricelist"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="b47478a1-1fac-4e74-921f-b47c146e034d"/>
+      <column name="KEYID" value="PRICELISTSPECIAL"/>
+      <column name="TITLE" value="Special price list1"/>
+      <column name="CONTAINER" value="ProductPricelist"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="932057b5-a2e1-4f0b-83be-28692d9e9e44"/>
+      <column name="KEYID" value="PRICELISTSERVICE"/>
+      <column name="TITLE" value="${PRICELIST_SERVICE}"/>
+      <column name="CONTAINER" value="ProductPricelist"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <rollback>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="d0f5c21d-14ff-414b-9d51-2a2c5f49b50d"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="a581bf7c-1cb7-4821-96f5-6eed9a0de58c"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="b47478a1-1fac-4e74-921f-b47c146e034d"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="932057b5-a2e1-4f0b-83be-28692d9e9e44"/>
+        </whereParams>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

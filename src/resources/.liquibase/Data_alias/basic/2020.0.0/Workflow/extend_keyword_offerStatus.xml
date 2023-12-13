@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="719da8eb-4a47-4bcc-8a50-5a35a21d8ff3">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="56e9b1a8-2ccd-4a48-8563-70d31ac108cf"/>
+            <column name="KEYID" value="OFFERSTATTOCHECK"/>
+            <column name="TITLE" value="To check"/>
+            <column name="CONTAINER" value="OfferStatus"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="1"/>
+            <where>AB_KEYWORD_ENTRYID='87bd1a28-d364-47ee-9a01-33714f6998ba'</where>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="2"/>
+            <where>AB_KEYWORD_ENTRYID='9912dcc6-edf1-4a68-b605-925a31b7f9a4'</where>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="3"/>
+            <where>AB_KEYWORD_ENTRYID='d3bd6272-d1d9-4a5c-9f5c-772f0ee2551e'</where>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="SORTING" valueNumeric="4"/>
+            <where>AB_KEYWORD_ENTRYID='0cba2fe7-97c3-4eb4-9999-1fc4e8e93a7a'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

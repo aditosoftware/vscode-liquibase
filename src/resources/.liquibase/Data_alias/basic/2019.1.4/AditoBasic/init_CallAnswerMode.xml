@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="e6d83e7a-46cb-401f-a2f0-5eab35141daf">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="538d03cc-8535-474a-bf16-05e654815863"/>
+            <column name="KEYID" value="ACCEPTED"/>
+            <column name="TITLE" value="Answered"/>
+            <column name="CONTAINER" value="CallAnswerMode"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="c3c66fa1-185e-40c5-8ff7-3e7b02466ed1"/>
+            <column name="KEYID" value="MISSED"/>
+            <column name="TITLE" value="Missed"/>
+            <column name="CONTAINER" value="CallAnswerMode"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="7c283844-f008-4672-a94a-5ca78f4cdfc7">
+        <addColumn tableName="SALESORDER">
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+        </addColumn>
+        <update tableName="SALESORDER">
+            <column name="DATE_NEW" valueComputed="SALESORDERDATE"/>
+        </update>
+    </changeSet>
+</databaseChangeLog>

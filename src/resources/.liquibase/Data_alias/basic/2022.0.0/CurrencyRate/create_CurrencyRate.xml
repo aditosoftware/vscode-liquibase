@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="ba924567-e017-40ac-af64-3595fbc8daa1">
+        <createTable tableName="CURRENCYRATE">
+            <column name="CURRENCYRATEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_CURRENCYRATE_CURRENCYRATEID"/>
+            </column>    
+            <column name="CURRENCYRATE" type="FLOAT"/>          
+            <column name="SOURCECURRENCYISO" type="CHAR(3)"/>
+            <column name="TARGETCURRENCYISO" type="CHAR(3)"/>
+            <column name="VALID_FROM" type="DATETIME"/>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.goderbauer" id="31959cda-46f5-443e-b90b-499009895453">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="6fea53cc-c167-4aad-9468-64a0c525ad47"/>
+      <column name="KEYID" value="BOOL_VALUE"/>
+      <column name="TITLE" value="Boolean value"/>
+      <column name="CONTAINER" value="KeywordAttributeType"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="93c67ca9-dec2-4d8a-863a-3b9cbce7bed1"/>
+      <column name="KEYID" value="CHAR_VALUE"/>
+      <column name="TITLE" value="String value"/>
+      <column name="CONTAINER" value="KeywordAttributeType"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="f6566efc-5918-426d-9a45-a160ad632d55"/>
+      <column name="KEYID" value="NUMBER_VALUE"/>
+      <column name="TITLE" value="Numeric value"/>
+      <column name="CONTAINER" value="KeywordAttributeType"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <rollback>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="6fea53cc-c167-4aad-9468-64a0c525ad47"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="93c67ca9-dec2-4d8a-863a-3b9cbce7bed1"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="f6566efc-5918-426d-9a45-a160ad632d55"/>
+        </whereParams>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

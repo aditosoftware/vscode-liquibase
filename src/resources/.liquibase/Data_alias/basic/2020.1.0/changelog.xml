@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include file="ExportTemplate/create_ExportTemplateTables.xml" relativeToChangelogFile="true"/>
+    <include relativeToChangelogFile="true" file="VisitPlan/changelog.xml"/>
+    <include file="PermissionCalendar/changelog.xml" relativeToChangelogFile="true"/>
+    <include file="DocumentTemplate/create_DocumentTemplatePlaceOfUse.xml" relativeToChangelogFile="true"/>
+    <include relativeToChangelogFile="true" file="changeType_SALESORDER_PAID_UNPAID.xml"/>
+    <include relativeToChangelogFile="true" file="delete_leadImportKeywords.xml"/>
+    <include relativeToChangelogFile="true" file="changeType_productGroupCodeId.xml" />
+    <include relativeToChangelogFile="true" file="add_WorkflowSignal_variables.xml"/>
+    <include relativeToChangelogFile="true" file="AlterTablesForTranslation/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="update_Salutation_headline.xml"/>
+</databaseChangeLog>

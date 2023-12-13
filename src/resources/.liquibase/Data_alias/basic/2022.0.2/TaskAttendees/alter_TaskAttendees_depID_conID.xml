@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="t.kerscher" id="7d87e4a5-5755-456a-8fb5-4117f005bfb7">
+        <addColumn tableName="TASKATTENDEES">
+            <column name="OBJECT_ROWID" type="CHAR(36)"/>
+            <column name="OBJECT_TYPE" type="VARCHAR(63)"/>
+	</addColumn>
+        <sql>
+            UPDATE TASKATTENDEES SET OBJECT_TYPE = (
+                CASE
+                    WHEN DEPARTMENT_ID IS NULL 
+                        THEN 'Employee'
+                    ELSE 'Department'
+                    END);
+            UPDATE TASKATTENDEES SET OBJECT_ROWID = (CASE
+                    WHEN DEPARTMENT_ID IS NULL 
+                        THEN CONTACT_ID
+                    ELSE DEPARTMENT_ID
+                    END);
+        </sql>
+        <dropIndex tableName="TASKATTENDEES" indexName="IDX_DEPARTMENT_ID"/>
+        <dropIndex tableName="TASKATTENDEES" indexName="IDX_CONTACT_ID"/>
+        <dropColumn tableName="TASKATTENDEES">
+            <column name="DEPARTMENT_ID"/>
+            <column name="CONTACT_ID"/>
+        </dropColumn>
+        <addNotNullConstraint tableName="TASKATTENDEES" columnName="OBJECT_ROWID" columnDataType="CHAR(36)"/>
+        <addNotNullConstraint tableName="TASKATTENDEES" columnName="OBJECT_TYPE" columnDataType="VARCHAR(63)"/>
+  </changeSet>
+</databaseChangeLog>

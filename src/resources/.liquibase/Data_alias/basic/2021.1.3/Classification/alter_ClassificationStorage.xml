@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="7eb72f9e-1d36-4174-97cb-062e40f72bf7">
+        
+        <!--Needed for MS SQL, otherwise the column can't be deleted-->
+        <dropDefaultValue
+            columnDataType="int"  
+            columnName="OUTDATED"
+            tableName="CLASSIFICATIONSTORAGE"/>  
+        <dropColumn tableName="CLASSIFICATIONSTORAGE" columnName="OUTDATED"/>
+    </changeSet>
+</databaseChangeLog>

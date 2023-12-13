@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="p.neub" id="05a0c26f-0753-41b3-adc5-25ae99f75dd7">
+    <renameColumn columnDataType="VARCHAR(36)" newColumnName="PROBABILITY_OLD" oldColumnName="PROBABILITY" tableName="OFFER"/>
+    <addColumn tableName="OFFER">
+      <column afterColumn="PROBABILITY_OLD" name="PROBABILITY" type="DECIMAL(6, 2)"/>
+    </addColumn>
+    
+    <update tableName="OFFER">
+      <column name="PROBABILITY" valueNumeric="0"/>
+      <where>OFFER.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="0"/>
+      </whereParams>
+    </update>
+    <update tableName="OFFER">
+      <column name="PROBABILITY" valueNumeric="25"/>
+      <where>OFFER.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="25"/>
+      </whereParams>
+    </update>
+    <update tableName="OFFER">
+      <column name="PROBABILITY" valueNumeric="50"/>
+      <where>OFFER.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="50"/>
+      </whereParams>
+    </update>
+    <update tableName="OFFER">
+      <column name="PROBABILITY" valueNumeric="75"/>
+      <where>OFFER.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="75"/>
+      </whereParams>
+    </update>
+    <update tableName="OFFER">
+      <column name="PROBABILITY" valueNumeric="100"/>
+      <where>OFFER.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="100"/>
+      </whereParams>
+    </update>
+    
+    <dropColumn tableName="OFFER">
+      <column name="PROBABILITY_OLD"/>
+    </dropColumn>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,527 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.dietl" id="6788dcc4-2d9a-4863-9660-5069a69e1932">
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="دولة الإمارات العربية المتحدة"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="AE"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="افغانستان"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="AF"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Հայաստան"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="AM"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Azərbaycan"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="AZ"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="България"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="BG"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="‏البحرين"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="BH"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="ʼbrug-yul"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="BT"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Белару́сь"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="BY"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="中国"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="CN"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Κύπρος"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="CY"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Česká republika"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="CZ"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="الجزائر"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="DZ"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="مصر‎"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="EG"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="الصحراء الغربية"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="EH"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="ኤርትራ"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="ER"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="ኢትዮጵያ"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="ET"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="საქართველო"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="GE"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Ελλάδα"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="GR"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="香港"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="HK"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="יִשְׂרָאֵל"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="IL"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="भारत"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="IN"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="العراق"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="IQ"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="ایران"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="IR"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="الأردن"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="JO"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="日本"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="JP"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Кыргызстан"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="KG"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Kâmpŭchéa"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="KH"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="북한"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="KP"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="대한민국"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="KR"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="الكويت"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="KW"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Қазақстан"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="KZ"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="ສປປລາວ"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="LA"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="لبنان"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="LB"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="śrī laṃkāva"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="LK"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="‏ليبيا"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="LY"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="المغرب"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="MA"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Црна Гора"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="ME"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="M̧ajeļ"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="MH"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Македонија"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="MK"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Монгол улс"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="MN"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="澳門"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="MO"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="موريتانيا"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="MR"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="नेपाल"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="NP"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Niuē"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="NU"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="عمان"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="OM"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="فلسطين"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="PS"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="قطر"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="QA"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Србија"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="RS"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Россия"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="RU"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="العربية السعودية"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="SA"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="السودان"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="SD"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="سوريا"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="SY"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="ประเทศไทย"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="TH"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Тоҷикистон"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="TJ"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="تونس"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="TN"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="臺灣"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="TW"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Україна"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="UA"/>
+            </whereParams>
+        </update>
+
+
+        <update tableName="AB_COUNTRYINFO">
+            <column name="NAME_NATIVE" value="Việt Nam"/>
+            <where>ISO2 = ?</where>
+            <whereParams>
+                <param value="VN"/>
+            </whereParams>
+        </update>
+    </changeSet>
+</databaseChangeLog>

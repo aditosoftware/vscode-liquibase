@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="e.pollinger" id="9a0aaba2-c114-4648-ab1e-15acf489f19d">
+        <createTable tableName="KNOWLEDGEMANAGEMENT">
+            <column name="KNOWLEDGEMANAGEMENTID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_KNOWLEDGEMANAGEMENT_KNOWLEDGEMANAGEMENTID"/>
+            </column>
+            <column name="AUTHOR_CONTACT_ID" type="CHAR(36)"></column>
+            <column name="RESPONSIBLE_CONTACT_ID" type="CHAR(36)"></column>
+            <column name="USER_NEW" type="NVARCHAR(63)"></column>
+            <column name="DATE_NEW" type="DATETIME2"></column>
+            <column name="USER_EDIT" type="NVARCHAR(63)"></column>
+            <column name="DATE_EDIT" type="DATETIME2"></column>
+            <column name="TITLE" type="NVARCHAR(255)"></column>
+            <column name="CONTENT" type="LONGTEXT"></column>
+            <column name="CONTENTDECODED" type="LONGTEXT"></column>
+            <column name="PUBLISH" type="VARCHAR(36)"></column>
+            <column name="TYPE" type="VARCHAR(36)"></column>
+        </createTable>
+        
+        <createIndex tableName="KNOWLEDGEMANAGEMENT" indexName="IDX_KNOWLEDGEMANAGEMENT_TITLE">
+            <column name="TITLE"/>
+        </createIndex>
+        <createIndex tableName="KNOWLEDGEMANAGEMENT" indexName="IDX_KNOWLEDGEMANAGEMENT_TYPE">
+            <column name="TYPE"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

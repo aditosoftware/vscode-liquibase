@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="7019c00e-0501-4b25-b20b-ece3abcc9cfd">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="SALESPROJECT_COMPETITION"/>
+        </not>
+      </preConditions>
+        <createTable tableName="SALESPROJECT_COMPETITION">
+            <column name="SALESPROJECT_COMPETITIONID" type="CHAR(36)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="SALESPROJECT_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTACT_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_CANCELLED" type="DATETIME"/>
+            <column name="INFO" type="NCLOB"/>
+            <column name="REASON" type="VARCHAR(36)"/>
+            <column name="STATUS" type="INTEGER"/> 
+            <column name="PHASE" type="INTEGER"/>
+                        
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

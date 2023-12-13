@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="b7a26a48-6dfe-45b5-82d4-caf7dac92288">
+        <dropIndex indexName="IDX_RESOURCEPLNNNG_RESOURCE_ID"
+            tableName="RESOURCEPLANNINGOPERATION"/>
+        <renameColumn columnDataType="CHAR(36)"
+            newColumnName="RESOURCES_ID"
+            oldColumnName="RESOURCE_ID"
+            tableName="RESOURCEPLANNINGOPERATION"/>
+        <createIndex tableName="RESOURCEPLANNINGOPERATION" indexName="IDX_RESOURCEPLNNNG_RESOURCES_ID">
+            <column name="RESOURCES_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

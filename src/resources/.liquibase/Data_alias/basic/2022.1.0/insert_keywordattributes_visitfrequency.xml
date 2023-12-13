@@ -1,0 +1,82 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="140712cd-3222-42f0-b6b9-82d0b404bd26">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="cea14420-d2b5-4067-bf7e-0cd603218ebd"/>
+            <column name="NAME" value="VisitFrequencyNumber"/>
+            <column name="CONTAINER" value="VISITFREQUENCY"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+            <column name="KIND" value="NUMBER_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="5280cc04-17d6-4399-bfc0-0cf910fd9a2b"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="44cf5275-0fa0-416a-b41f-1e4e87dabc14"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cea14420-d2b5-4067-bf7e-0cd603218ebd"/>
+            <column name="NUMBER_VALUE" valueNumeric="12"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="28da7254-d6f0-45fb-bb13-8d8d86193fa1"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="d392e3a8-fb05-4ab4-8985-34399836fceb"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cea14420-d2b5-4067-bf7e-0cd603218ebd"/>
+            <column name="NUMBER_VALUE" valueNumeric="6"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f9ed0c28-f58e-4030-934f-0caf23e6bfd9"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="2f97c210-5963-4776-b171-c9146581a2b3"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cea14420-d2b5-4067-bf7e-0cd603218ebd"/>
+            <column name="NUMBER_VALUE" valueNumeric="3"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="24ede20f-a66e-4220-89fc-72ea9c6e66da"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="42cc5696-3984-420a-be51-aec265b2885b"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cea14420-d2b5-4067-bf7e-0cd603218ebd"/>
+            <column name="NUMBER_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="72e037d1-7896-466b-ae22-fd84eb1173fc"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="53fe29ef-86ac-42ee-bb4b-e874340c463e"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cea14420-d2b5-4067-bf7e-0cd603218ebd"/>
+            <column name="NUMBER_VALUE" valueNumeric="1"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="cd2448cf-3b41-47cb-80d5-7a59b5df78d3"/>
+            <column name="NAME" value="VisitFrequencyKind"/>
+            <column name="CONTAINER" value="VISITFREQUENCY"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+            <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="fde2fd14-0d3d-4422-aedb-be6c6e3f2c4b"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="44cf5275-0fa0-416a-b41f-1e4e87dabc14"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cd2448cf-3b41-47cb-80d5-7a59b5df78d3"/>
+            <column name="CHAR_VALUE" value="M"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="00b61adc-3ed3-4ef3-aa75-beac5e0bfeef"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="d392e3a8-fb05-4ab4-8985-34399836fceb"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cd2448cf-3b41-47cb-80d5-7a59b5df78d3"/>
+            <column name="CHAR_VALUE" value="M"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="8dae695f-31e8-4b89-8c8a-4d3f512b875a"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="2f97c210-5963-4776-b171-c9146581a2b3"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cd2448cf-3b41-47cb-80d5-7a59b5df78d3"/>
+            <column name="CHAR_VALUE" value="M"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="0bcf11b6-b314-4db5-9a4a-7f0bcd54106b"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="42cc5696-3984-420a-be51-aec265b2885b"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cd2448cf-3b41-47cb-80d5-7a59b5df78d3"/>
+            <column name="CHAR_VALUE" value="M"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="d0bbbbd1-b2a1-4f31-9305-95c3e7d8538d"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="53fe29ef-86ac-42ee-bb4b-e874340c463e"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="cd2448cf-3b41-47cb-80d5-7a59b5df78d3"/>
+            <column name="CHAR_VALUE" value="W"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

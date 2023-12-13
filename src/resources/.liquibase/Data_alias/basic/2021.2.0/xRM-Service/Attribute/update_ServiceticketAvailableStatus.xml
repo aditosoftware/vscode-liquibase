@@ -1,0 +1,11 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="v.broens" id="5879b13d-d0e0-42cc-965e-f9dc499caf10">
+    <update tableName="AB_KEYWORD_ATTRIBUTERELATION">
+      <column name="LONG_CHAR_VALUE" value="[&quot;ASSIGNED&quot;,&quot;UNASSIGNED&quot;,&quot;IN-PROGRESS&quot;,&quot;ENDED&quot;,&quot;WAITING&quot;,&quot;EMPLOYEE-CHECKS&quot;,&quot;CUSTOMER-CHECKS&quot;,&quot;ENTRY&quot;,&quot;RESUBMITTED&quot;,&quot;REOPEN&quot;,&quot;REQUEST&quot;,&quot;REPLY&quot;,&quot;INTERNALREPLY&quot;,&quot;RESUBMISSION&quot;]"/>
+      <where> AB_KEYWORD_ATTRIBUTERELATIONID = 'cd293e92-224f-4bc3-9552-b3f7caa95c99'</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

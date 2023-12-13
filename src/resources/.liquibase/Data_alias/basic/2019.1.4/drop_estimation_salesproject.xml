@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="0601eb26-fc5e-4b57-ad18-2b6a064f383f">
+        <dropColumn tableName="SALESPROJECT" columnName="ESTIMATION"/>
+        <dropColumn tableName="SALESPROJECT" columnName="ESTIMATIONVALUE"/>
+        
+        <rollback>
+            <addColumn tableName="SALESPROJECT">
+                <column name="ESTIMATION" type="NVARCHAR(50)"/>
+                <column name="ESTIMATIONVALUE" type="INTEGER"/>
+            </addColumn>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+ <changeSet author="v.broens" id="9385770a-bc41-4e2c-8158-961f3df04bc0">    
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="98f2518d-c707-49a1-a6ff-485628fd2ad0"/>
+      <column name="NAME" value="LeadBusinessFairEntryStatus"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="0a458b5f-47e8-4356-a587-d24e144c62e3"/>
+      <column name="KEYID"  value="NEW"/>
+      <column name="TITLE" value="new"/>
+      <column name="CONTAINER" value="LeadBusinessFairEntryStatus"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="98f2518d-c707-49a1-a6ff-485628fd2ad0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="9ff4a780-a357-49c3-ab04-59aeea3e8624"/>
+      <column name="KEYID"  value="IN-PROGRESS"/>
+      <column name="TITLE" value="in progress"/>
+      <column name="CONTAINER" value="LeadBusinessFairEntryStatus"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="98f2518d-c707-49a1-a6ff-485628fd2ad0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="c1403d6f-391d-47ae-a7ef-6981044db4ea"/>
+      <column name="KEYID"  value="DONE"/>
+      <column name="TITLE" value="done"/>
+      <column name="CONTAINER" value="LeadBusinessFairEntryStatus"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="98f2518d-c707-49a1-a6ff-485628fd2ad0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

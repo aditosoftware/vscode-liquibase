@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="4ba3c25d-6c4a-4fae-b098-219914e813de">                  
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="Boolean value"/>
+            <where>AB_KEYWORD_ENTRYID='8a9791c1-655f-4340-91b4-cfdf6372fc75'</where>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="Selection"/>
+            <where>AB_KEYWORD_ENTRYID='1390813c-6b94-4336-9986-9bcaddab69ac'</where>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="Selection value"/>
+            <where>AB_KEYWORD_ENTRYID='75a67526-6b7c-400d-b958-e1f8f45466aa'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

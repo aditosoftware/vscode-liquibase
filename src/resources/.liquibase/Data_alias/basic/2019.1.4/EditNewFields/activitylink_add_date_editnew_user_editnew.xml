@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    
+    <changeSet author="d.buechler" id="4974c7ff-9b83-488e-b2d8-4d3d3fbfa13b">
+        <addColumn tableName="ACTIVITYLINK">
+	    <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+        </addColumn>
+        
+        <update
+            tableName="ACTIVITYLINK">
+        <column name="USER_NEW" type="NVARCHAR(50)" value="Admin"/>
+        <column name="DATE_NEW" type="DATETIME" valueComputed="current_datetime"/>
+        </update>
+        
+        <addNotNullConstraint
+            columnDataType="NVARCHAR(50)"
+            columnName="USER_NEW"
+            tableName="ACTIVITYLINK"/>
+        
+        <addNotNullConstraint
+            columnDataType="DATETIME"
+            columnName="DATE_NEW"
+            tableName="ACTIVITYLINK"/>
+        
+    </changeSet>
+</databaseChangeLog>

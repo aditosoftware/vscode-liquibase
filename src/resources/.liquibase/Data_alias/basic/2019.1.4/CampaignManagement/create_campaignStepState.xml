@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="d.buechler" id="d5e7a9a5-d4a9-4425-a930-39ea2574ca47">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0dc9b27b-56d8-4650-92ee-bf85a3c67cb3"/>
+
+            <column name="KEYID" value="OPEN"/>
+            <column name="TITLE" value="Open"/>
+            <column name="CONTAINER" value="CampaignManagementStepStates"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="b1f5ea38-1b8c-47a8-a8ad-4c6ed9c26cda"/>
+
+            <column name="KEYID" value="ACTIVE"/>
+            <column name="TITLE" value="Active"/>
+            <column name="CONTAINER" value="CampaignManagementStepStates"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="98f4cab1-74b8-4a23-a99a-c3624711beab"/>
+
+            <column name="KEYID" value="COMPLETED"/>
+            <column name="TITLE" value="Completed"/>
+            <column name="CONTAINER" value="CampaignManagementStepStates"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

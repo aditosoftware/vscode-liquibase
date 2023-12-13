@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="A.Voegl" id="0e17eb1a-7c36-4cdf-9b27-0f1bc71932d2">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTTICKETTYPEREL" />
+      </not>
+    </preConditions>
+    <createTable tableName="PROJECTTICKETTYPEREL">
+      <column name="DOCUMENTTEMPLATE_ID" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column name="PROJECTTICKETTYPERELID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="PROJECTTICKETTYPE_ID" type="CHAR(36)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="A.Voegl" id="3b20b68c-b320-462a-ac76-ee46aa798a06">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PRJTCTYPREL_PRJTICKTTYP_ID_IDX"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="PRJTCTYPREL_PRJTICKTTYP_ID_IDX" tableName="PROJECTTICKETTYPEREL">
+      <column name="PROJECTTICKETTYPE_ID" />
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

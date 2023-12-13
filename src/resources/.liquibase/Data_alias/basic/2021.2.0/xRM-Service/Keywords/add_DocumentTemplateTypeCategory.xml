@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="v.broens" id="9a6e03f7-b8bd-4c00-bc92-7a91989ad5aa">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from AB_KEYWORD_ENTRY where AB_KEYWORD_ENTRYID in ('a81effbe-f6a3-4780-b948-17ff4f0f3bd4', 'd0332f79-bc92-4e6d-9d35-9da78904a1a1', 'bd0fc361-60ba-490e-9a6a-5a7b98038002');
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="AB_KEYWORD_ENTRY">  
+            <column  name="AB_KEYWORD_ENTRYID"  value="a81effbe-f6a3-4780-b948-17ff4f0f3bd4"/>  
+            <column  name="KEYID"  value="10"/>  
+            <column  name="TITLE"  value="Single (Service/All)"/>  
+            <column  name="CONTAINER"  value="DocumentTemplateTypeCategory"/>  
+            <column  name="SORTING"  valueNumeric="10"/>  
+            <column  name="ISACTIVE"  valueNumeric="1"/>  
+            <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+            <column  name="AB_KEYWORD_CATEGORY_ID"  value="e23c8316-d43a-4606-803e-d4488823cc52"/>
+        </insert> 
+        <insert tableName="AB_KEYWORD_ENTRY">  
+            <column  name="AB_KEYWORD_ENTRYID"  value="d0332f79-bc92-4e6d-9d35-9da78904a1a1"/>  
+            <column  name="KEYID"  value="11"/>  
+            <column  name="TITLE"  value="Single (Service/Internal)"/>  
+            <column  name="CONTAINER"  value="DocumentTemplateTypeCategory"/>  
+            <column  name="SORTING"  valueNumeric="11"/>  
+            <column  name="ISACTIVE"  valueNumeric="1"/>  
+            <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+            <column  name="AB_KEYWORD_CATEGORY_ID"  value="e23c8316-d43a-4606-803e-d4488823cc52"/>
+        </insert> 
+        <insert tableName="AB_KEYWORD_ENTRY">  
+            <column  name="AB_KEYWORD_ENTRYID"  value="bd0fc361-60ba-490e-9a6a-5a7b98038002"/>  
+            <column  name="KEYID"  value="12"/>  
+            <column  name="TITLE"  value="Single (Service/External)"/>  
+            <column  name="CONTAINER"  value="DocumentTemplateTypeCategory"/>  
+            <column  name="SORTING"  valueNumeric="12"/>  
+            <column  name="ISACTIVE"  valueNumeric="1"/>  
+            <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+            <column  name="AB_KEYWORD_CATEGORY_ID"  value="e23c8316-d43a-4606-803e-d4488823cc52"/>
+        </insert> 
+    </changeSet>
+</databaseChangeLog>

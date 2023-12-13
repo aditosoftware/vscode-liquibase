@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="A.Voegl" id="8d7f72fe-2a2d-4aa3-bf19-d2c7813cf354">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTATTRIBUTEVALUES" />
+      </not>
+    </preConditions>
+    <createTable tableName="PROJECTATTRIBUTEVALUES">
+      <column name="PROJECTATTRIBUTEVALUESID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column name="PROJECTTYPE_ID" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="VALUE" type="VARCHAR(255)" />
+      <column name="PROJECT_ID" type="CHAR(36)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+      <column name="PROJECTTICKETATTRIBUTE_ID" type="CHAR(36)" />
+      <column name="COMBOVALUETYPE" type="VARCHAR(50)" />
+      <column defaultValueComputed="NULL" name="SORTING" type="INT" />
+    </createTable>
+  </changeSet>
+  <changeSet author="A.Voegl" id="4da64f1f-2bd8-4167-a45b-50876af14051">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PROJATTRVAL_PROJTATTRE_ID_IDX"/>
+            </not>
+        </preConditions>
+    <createIndex indexName="PROJATTRVAL_PROJTATTRE_ID_IDX" tableName="PROJECTATTRIBUTEVALUES">
+      <column name="PROJECTTICKETATTRIBUTE_ID" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="A.Voegl" id="8d0cc6bb-eeca-4a65-84ec-0ed922836ee9">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="projectattributevalues_idx_PROJECTTYPE_ID"/>
+            </not>
+        </preConditions>
+    <createIndex indexName="projectattributevalues_idx_PROJECTTYPE_ID" tableName="PROJECTATTRIBUTEVALUES">
+      <column name="PROJECTTYPE_ID" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="A.Voegl" id="9cd3fbde-6bc6-4923-8cd7-12403acf455b">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="projectattributevalues_idx_PROJECT_ID"/>
+            </not>
+        </preConditions>
+    <createIndex indexName="projectattributevalues_idx_PROJECT_ID" tableName="PROJECTATTRIBUTEVALUES">
+      <column name="PROJECT_ID" />
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

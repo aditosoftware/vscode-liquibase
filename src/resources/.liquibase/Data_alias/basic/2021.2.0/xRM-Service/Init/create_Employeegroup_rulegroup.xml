@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.kremer" id="5756f487-300d-49a9-85c9-e1fbb59ca381">
+    <createTable tableName="EMPLOYEEGROUP_RULEGROUP" >
+        <column name="EMPLOYEEGROUP_RULEGROUPID" type="char(36)">
+            <constraints primaryKey = "true" nullable = "false"/>
+        </column>
+        <column name="STATE" type="varchar(36)"/>
+        <column name="NAME" type="varchar(50)"/>
+        <column name="DATE" type="datetime"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

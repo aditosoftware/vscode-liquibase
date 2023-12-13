@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.goderbauer" id="26ab4f8b-edbf-49c3-a7a3-1e48ca369119">
+    <update tableName="AB_KEYWORD_ENTRY">
+        <column name="SORTING" valueNumeric="6"/>
+        <where>AB_KEYWORD_ENTRY.CONTAINER = ? and SORTING = ?</where>
+        <whereParams>
+            <param value="OrganisationType" />
+            <param valueNumeric="3" />
+        </whereParams>
+    </update>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="7ac75d3d-243c-49d2-9f50-25403fab003a"/>
+      <column name="KEYID" value="ORGMANUF"/>
+      <column name="TITLE" value="Manufacturer"/>
+      <column name="CONTAINER" value="OrganisationType"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/><!-- e.g. used in Product -->
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="2b9c1bdf-b0bb-447d-a57d-e369cf475fca"/>
+      <column name="KEYID" value="eccaf9de-5c7b-4b6e-ab77-0b33d8486f29"/>
+      <column name="TITLE" value="Competitor"/>
+      <column name="CONTAINER" value="OrganisationType"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/><!-- e.g. used in SalesprojectMember -->
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="45438bcf-74cf-408f-bc4d-5d70595369c8"/>
+      <column name="KEYID" value="ORGPARTNER"/>
+      <column name="TITLE" value="Partner"/>
+      <column name="CONTAINER" value="OrganisationType"/>
+      <column name="SORTING" valueNumeric="5"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

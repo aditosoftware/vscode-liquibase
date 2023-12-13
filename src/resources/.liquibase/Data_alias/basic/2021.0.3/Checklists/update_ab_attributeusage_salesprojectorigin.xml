@@ -1,0 +1,56 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="cdd3790e-0f62-4169-9e74-c096dc56ede3">
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="AB_ATTRIBUTEUSAGEID" value="47cffdf2-75b0-4395-8d3f-f8b4e1ecb3e6"/>
+            <column name="OBJECT_TYPE" value="Salesproject"/>
+            <column name="MIN_COUNT"/>
+            <column name="AB_ATTRIBUTE_ID" value="a6eee141-5ed6-4b87-986f-29e3fdccaf13"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="AB_ATTRIBUTEUSAGEID" value="dc9d8f2c-8381-4299-9b2a-d884852139c3"/>
+            <column name="OBJECT_TYPE" value="Salesproject"/>
+            <column name="MIN_COUNT"/>
+            <column name="AB_ATTRIBUTE_ID" value="d0ae40d2-1a7f-45f6-bb0c-20ce6ae7efe2"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="AB_ATTRIBUTEUSAGEID" value="16a1a657-f7d5-413c-9ec4-fb640c12d2b6"/>
+            <column name="OBJECT_TYPE" value="Salesproject"/>
+            <column name="MIN_COUNT"/>
+            <column name="AB_ATTRIBUTE_ID" value="956622a7-03b3-42a4-a7ef-f8936d92cff9"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="AB_ATTRIBUTEUSAGEID" value="d1c2cfac-f222-4022-9757-cea993c52bac"/>
+            <column name="OBJECT_TYPE" value="Salesproject"/>
+            <column name="MIN_COUNT"/>
+            <column name="AB_ATTRIBUTE_ID" value="f0f0b150-ea60-46e5-ba4f-727c78c993d0"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="AB_ATTRIBUTEUSAGEID" value="6f7972fb-8d04-4a81-a989-76a0cfb25d4f"/>
+            <column name="OBJECT_TYPE" value="Salesproject"/>
+            <column name="MIN_COUNT"/>
+            <column name="AB_ATTRIBUTE_ID" value="c5f8b5f7-ddc0-4c88-bebd-be96fd37bb9c"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="AB_ATTRIBUTEUSAGEID" value="789507e9-b665-46db-9c6d-0efee34a3f38"/>
+            <column name="OBJECT_TYPE" value="Salesproject"/>
+            <column name="MIN_COUNT"/>
+            <column name="AB_ATTRIBUTE_ID" value="262a8fbe-d6ef-4949-87ce-6202967136d7"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="AB_ATTRIBUTEUSAGEID" value="a940b942-f5b8-4108-b986-9803e282ca3c"/>
+            <column name="OBJECT_TYPE" value="Salesproject"/>
+            <column name="MIN_COUNT"/>
+            <column name="AB_ATTRIBUTE_ID" value="67edd12f-93cc-45d4-b86a-b59d19936442"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

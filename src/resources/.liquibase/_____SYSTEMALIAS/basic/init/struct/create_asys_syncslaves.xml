@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="82e3bcbb-22ae-48ac-90cb-53fd952e4ea8">
+      <preConditions onFail="MARK_RAN">
+          <not>
+              <tableExists tableName="ASYS_SYNCSLAVES"/>
+          </not>
+      </preConditions>
+      <createTable tableName="ASYS_SYNCSLAVES">
+          <column name="SLAVEUID" type="VARCHAR(127)">
+              <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ASYS_SYNCSLAVES_ID"/>
+          </column>
+          <column name="LASTSYNC" type="DATETIME"/>
+          <column name="DEVICEID" type="VARCHAR(40)"/>
+          <column name="DESCRIPTION" type="NVARCHAR(255)"/>
+          <column name="ACTIVE" type="INTEGER"/>
+          <column name="INTERVALL" type="INTEGER"/>
+      </createTable>
+  </changeSet>
+</databaseChangeLog>

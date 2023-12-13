@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="fe21a354-51af-4376-89c1-61c2da2300dd">
+      <addColumn tableName="COMMUNICATIONSETTINGS">
+          <column name="ADDRESS" type="NVARCHAR(512)"/>
+          <column name="INFO" type="NVARCHAR(250)"/>
+      </addColumn>
+      <createIndex tableName="COMMUNICATIONSETTINGS" indexName="IDX_COMMSETTINGS_ADDRESS">
+        <column name="ADDRESS"/>
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>

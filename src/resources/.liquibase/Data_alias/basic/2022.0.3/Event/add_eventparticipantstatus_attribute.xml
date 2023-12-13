@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="aba52c44-e82c-48e3-88f7-b9af1820a929">
+
+    <update tableName="AB_KEYWORD_ATTRIBUTERELATION">
+        <column name="CHAR_VALUE" value="VAADIN:CHECK_CIRCLE"/>
+        <where>AB_KEYWORD_ATTRIBUTERELATIONID = ?</where>
+        <whereParams>
+            <param value="bc4bbc4f-01e9-4fbc-94c0-9ae28fdf5618"/>
+        </whereParams>
+    </update>            
+
+    <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+        <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="851d5e23-2411-4153-a002-87714437bca3"/>
+        <column name="AB_KEYWORD_ATTRIBUTE_ID" value="d6aa7e39-e040-4866-99bf-4d75831c1f77"/>
+        <column name="AB_KEYWORD_ENTRY_ID" value="804bcce7-f9c4-44ab-ba34-dec3e0863d50"/>
+        <column name="CHAR_VALUE" value="VAADIN:CHECK_CIRCLE_O"/>
+    </insert>
+  
+    <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+        <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="a78f937d-6e5b-4091-a664-1bac1a1246d9"/>
+        <column name="AB_KEYWORD_ATTRIBUTE_ID" value="d6aa7e39-e040-4866-99bf-4d75831c1f77"/>
+        <column name="AB_KEYWORD_ENTRY_ID" value="de53d96a-8c4f-4a6b-baf4-41b6d3ce0405"/>
+        <column name="CHAR_VALUE" value="VAADIN:CLOCK"/>
+    </insert>
+
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="approvalWorkflow_dynamicStep_User" name="Approval Workflow -dynamicStep -Role" isExecutable="true">
+    <documentation>Approval Workflow with dynamic Steps (1 or 2) and fix candidate user(approver) , can be used for any entity</documentation>
+    <userTask id="approvalTask1" name="Freigeben (1. Freigabe)" flowable:assignee="${variables:get(approver1UserId)}" flowable:formKey="approvalTask1" flowable:formFieldValidation="true">
+      <documentation>${taskDescription} ${taskHistory}</documentation>
+      <extensionElements>
+        <flowable:formProperty id="inspector1approval" name="Freigegeben ?" type="boolean" variable="inspector1approval" default="1" required="true"></flowable:formProperty>
+        <flowable:formProperty id="inspector2needed" name="2. Freigabe notig" type="boolean" variable="inspector2needed" default="0" visibilityExpression="${currentValues.inspector1approval != false}"></flowable:formProperty>
+        <flowable:formProperty id="reason1" name="Begründung" type="string" variable="reason1"></flowable:formProperty>
+        <flowable:formProperty id="choosedApprover2UserId" name="Approver" type="lookup" variable="choosedApprover2UserId" visibilityExpression="${currentValues.inspector1approval != false}"></flowable:formProperty>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" name="Freigegeben ?"></exclusiveGateway>
+    <userTask id="approvalTask2" name="Freigeben  (2. Freigabe)" flowable:assignee="${variables:get(choosedApprover2UserId)}" flowable:formFieldValidation="true">
+      <documentation>${taskDescription} ${taskHistory}</documentation>
+      <extensionElements>
+        <flowable:formProperty id="inspector2approval" name="Freigegeben?" type="boolean" variable="inspector2approval" default="1" required="true"></flowable:formProperty>
+        <flowable:formProperty id="reason2" name="Begründung" type="string" variable="reason2"></flowable:formProperty>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A" name="Freigegeben (2)?"></exclusiveGateway>
+    <startEvent id="startEvent1" name="START" flowable:formFieldValidation="true"></startEvent>
+    <subProcess id="sid-C028C233-73F0-4CB1-BE67-45A63FC28B70" name="ABGELEHNT">
+      <serviceTask id="sid-DDA2DA6E-B960-4981-AD48-55AE859EC660" name="Benachrichtigung 
+(an Freigabeanforderer)" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+        <extensionElements>
+          <flowable:field name="jditoProcess">
+            <flowable:string><![CDATA[ApprovalCreateNotification_workflowService]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="taskVariables">
+            <flowable:string><![CDATA[{"optionType":{"value":"requestDenied"},"userSubject":{"value":""},"userDescription":{"value":""},"userToSend":{"value":"userNew"}}]]></flowable:string>
+          </flowable:field>
+        </extensionElements>
+      </serviceTask>
+      <startEvent id="sid-8E58D67F-A4F8-4664-8A58-65ED4ED1A948" flowable:formFieldValidation="true"></startEvent>
+      <parallelGateway id="sid-F39D9C35-2B66-4BBE-8367-662F3F7B3476"></parallelGateway>
+      <parallelGateway id="sid-8E0148BC-E26E-461C-B613-FB08FE5C78E7"></parallelGateway>
+      <serviceTask id="sid-050C1059-9A5B-49FF-87B0-1BB1A0EBDD9E" name="Target-Update:  'Freigabe abgelehnt'" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+        <extensionElements>
+          <flowable:field name="jditoProcess">
+            <flowable:string><![CDATA[ApprovalUpdateTarget_workflowService]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="taskVariables">
+            <flowable:string><![CDATA[{"approval":{"value":""},"keywordContainer":{"value":""},"status":{"value":"APPROVALDENIED"}}]]></flowable:string>
+          </flowable:field>
+        </extensionElements>
+      </serviceTask>
+      <endEvent id="sid-9E47F453-CDF8-4F66-B05A-E286B69D9055"></endEvent>
+      <serviceTask id="sid-DFC4BB10-CCB3-4382-A86B-AC5B7B847057" name="Aktivität erstellen 
+&amp; Update &quot;Task Beschreibung&quot;" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+        <extensionElements>
+          <flowable:field name="jditoProcess">
+            <flowable:string><![CDATA[ApprovalCreateActivity_workflowService]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="taskVariables">
+            <flowable:string><![CDATA[{"optionType":{"value":"requestDenied"},"userSubject":{"value":""},"userDescription":{"value":""}}]]></flowable:string>
+          </flowable:field>
+        </extensionElements>
+      </serviceTask>
+      <sequenceFlow id="sid-7E0B865D-0BCE-47C8-93D2-77B09DDE1DB8" sourceRef="sid-F39D9C35-2B66-4BBE-8367-662F3F7B3476" targetRef="sid-DDA2DA6E-B960-4981-AD48-55AE859EC660"></sequenceFlow>
+      <sequenceFlow id="sid-64B59939-12AC-4DAD-B3C2-2C0ED3D55A82" sourceRef="sid-050C1059-9A5B-49FF-87B0-1BB1A0EBDD9E" targetRef="sid-8E0148BC-E26E-461C-B613-FB08FE5C78E7"></sequenceFlow>
+      <sequenceFlow id="sid-F6CAFAE7-F10C-4AE8-A5D6-82575AE53017" sourceRef="sid-8E58D67F-A4F8-4664-8A58-65ED4ED1A948" targetRef="sid-F39D9C35-2B66-4BBE-8367-662F3F7B3476"></sequenceFlow>
+      <sequenceFlow id="sid-4552D6DA-92E5-40C8-841B-60D1BEBA9AE2" sourceRef="sid-DDA2DA6E-B960-4981-AD48-55AE859EC660" targetRef="sid-8E0148BC-E26E-461C-B613-FB08FE5C78E7"></sequenceFlow>
+      <sequenceFlow id="sid-28494DDC-43ED-4F5A-A76C-5B90AF7C548D" sourceRef="sid-F39D9C35-2B66-4BBE-8367-662F3F7B3476" targetRef="sid-050C1059-9A5B-49FF-87B0-1BB1A0EBDD9E"></sequenceFlow>
+      <sequenceFlow id="sid-BDEC0939-22A2-437E-8877-169FC7714E06" sourceRef="sid-DFC4BB10-CCB3-4382-A86B-AC5B7B847057" targetRef="sid-8E0148BC-E26E-461C-B613-FB08FE5C78E7"></sequenceFlow>
+      <sequenceFlow id="sid-84E89AFE-0598-4D4D-81D4-FB01E157BCD3" sourceRef="sid-F39D9C35-2B66-4BBE-8367-662F3F7B3476" targetRef="sid-DFC4BB10-CCB3-4382-A86B-AC5B7B847057"></sequenceFlow>
+      <sequenceFlow id="sid-157AEB4C-273C-43E5-BE02-001B55BE6DB2" sourceRef="sid-8E0148BC-E26E-461C-B613-FB08FE5C78E7" targetRef="sid-9E47F453-CDF8-4F66-B05A-E286B69D9055"></sequenceFlow>
+    </subProcess>
+    <endEvent id="sid-2A6C102F-0583-4832-9961-3437B86C750A" name="ENDE"></endEvent>
+    <serviceTask id="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7" name="Update-Target:
+ 
+- Status: 
+&quot;Zu Prüfung 
+(1.MA)&quot; 
+
+- Freigabe &quot;1&quot;" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[ApprovalUpdateTarget_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"approval":{"value":1},"keywordContainer":{"value":""},"status":{"value":"APPROVALTOCHECK"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <subProcess id="sid-50D51D9F-AC12-4D31-8A9B-F20EC449D1F4" name="FREIGEGEBEN">
+      <startEvent id="sid-79E37A3D-DCD2-49D8-90D0-84170ABAB2BA" flowable:formFieldValidation="true"></startEvent>
+      <parallelGateway id="sid-D9775C6C-81D3-49A9-9CF1-B66A188CBB0B"></parallelGateway>
+      <parallelGateway id="sid-880EF8B0-E799-4566-B193-FA644EA417C7"></parallelGateway>
+      <endEvent id="sid-CB5370BB-197A-4481-8EE5-6149AAE91C13"></endEvent>
+      <serviceTask id="sid-DBBA7FA5-A444-4B7F-8642-3F03999F3FF4" name="Update-Target: Status  'Freigegeben&quot; " flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+        <extensionElements>
+          <flowable:field name="jditoProcess">
+            <flowable:string><![CDATA[ApprovalUpdateTarget_workflowService]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="taskVariables">
+            <flowable:string><![CDATA[{"approval":{"value":""},"keywordContainer":{"value":""},"status":{"value":"APPROVALAPPROVED"}}]]></flowable:string>
+          </flowable:field>
+        </extensionElements>
+      </serviceTask>
+      <serviceTask id="sid-90ADA11C-D9C2-4FAE-9891-DFA733FBEED0" name="Aktivität erstellen 
+&amp; Update &quot;Task Beschreibung&quot;" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+        <extensionElements>
+          <flowable:field name="jditoProcess">
+            <flowable:string><![CDATA[ApprovalCreateActivity_workflowService]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="taskVariables">
+            <flowable:string><![CDATA[{"optionType":{"value":"requestApproved"},"userSubject":{"value":""},"userDescription":{"value":""}}]]></flowable:string>
+          </flowable:field>
+        </extensionElements>
+      </serviceTask>
+      <serviceTask id="sid-D7BB7CD2-59C6-427A-9579-F8B9CC287D5C" name="Benachrichtigung
+(an Freigabeanforderer)" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+        <extensionElements>
+          <flowable:field name="jditoProcess">
+            <flowable:string><![CDATA[ApprovalCreateNotification_workflowService]]></flowable:string>
+          </flowable:field>
+          <flowable:field name="taskVariables">
+            <flowable:string><![CDATA[{"optionType":{"value":"requestApproved"},"userSubject":{"value":""},"userDescription":{"value":""},"userToSend":{"value":"userNew"}}]]></flowable:string>
+          </flowable:field>
+        </extensionElements>
+      </serviceTask>
+      <sequenceFlow id="sid-A0B6E556-22B4-4DBD-A5F2-B67DCD5D183D" sourceRef="sid-D9775C6C-81D3-49A9-9CF1-B66A188CBB0B" targetRef="sid-90ADA11C-D9C2-4FAE-9891-DFA733FBEED0"></sequenceFlow>
+      <sequenceFlow id="sid-33E1A6A8-6A80-4242-B83C-32259EC75EB4" sourceRef="sid-D9775C6C-81D3-49A9-9CF1-B66A188CBB0B" targetRef="sid-D7BB7CD2-59C6-427A-9579-F8B9CC287D5C"></sequenceFlow>
+      <sequenceFlow id="sid-16980AC1-598F-468C-8A4B-531FD974A4AC" sourceRef="sid-D7BB7CD2-59C6-427A-9579-F8B9CC287D5C" targetRef="sid-880EF8B0-E799-4566-B193-FA644EA417C7"></sequenceFlow>
+      <sequenceFlow id="sid-5E288BF5-F2D7-4BDB-9191-0FA7A7C4E429" sourceRef="sid-DBBA7FA5-A444-4B7F-8642-3F03999F3FF4" targetRef="sid-880EF8B0-E799-4566-B193-FA644EA417C7"></sequenceFlow>
+      <sequenceFlow id="sid-19FB257B-EE08-42D3-A357-A1D474904124" sourceRef="sid-90ADA11C-D9C2-4FAE-9891-DFA733FBEED0" targetRef="sid-880EF8B0-E799-4566-B193-FA644EA417C7"></sequenceFlow>
+      <sequenceFlow id="sid-1D71F3B1-4D7D-4859-9731-5C24377691FB" sourceRef="sid-79E37A3D-DCD2-49D8-90D0-84170ABAB2BA" targetRef="sid-D9775C6C-81D3-49A9-9CF1-B66A188CBB0B"></sequenceFlow>
+      <sequenceFlow id="sid-B8D04345-8443-4A3D-B6F5-ECAF5E7A7AA4" sourceRef="sid-880EF8B0-E799-4566-B193-FA644EA417C7" targetRef="sid-CB5370BB-197A-4481-8EE5-6149AAE91C13"></sequenceFlow>
+      <sequenceFlow id="sid-C4AA53B2-968B-49B0-8FC8-99465E09571A" sourceRef="sid-D9775C6C-81D3-49A9-9CF1-B66A188CBB0B" targetRef="sid-DBBA7FA5-A444-4B7F-8642-3F03999F3FF4"></sequenceFlow>
+    </subProcess>
+    <serviceTask id="sid-E1EE1607-6E9B-41D8-8353-F7B83A28DCFC" name="Update-Target:
+ 
+-Status:
+&quot;Zu Prüfung 
+(2.MA)&quot;
+ 
+- Freigabe &quot;2&quot;
+" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[ApprovalUpdateTarget_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"approval":{"value":2},"keywordContainer":{"value":""},"status":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-49702747-C729-41B1-8713-802F035442B8" sourceRef="sid-C028C233-73F0-4CB1-BE67-45A63FC28B70" targetRef="sid-2A6C102F-0583-4832-9961-3437B86C750A"></sequenceFlow>
+    <sequenceFlow id="sid-C0CD7DC8-7B8C-421A-864E-2731B9FB6BCD" sourceRef="sid-50D51D9F-AC12-4D31-8A9B-F20EC449D1F4" targetRef="sid-2A6C102F-0583-4832-9961-3437B86C750A"></sequenceFlow>
+    <serviceTask id="sid-2C921BC4-4ABF-4831-BF2A-B7BE75D749E4" name="Aktivität erstellen 
+&amp; Update &quot;Task Beschreibung&quot;" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[ApprovalCreateActivity_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"optionType":{"value":"approvalRequest"},"userSubject":{"value":""},"userDescription":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <parallelGateway id="sid-47C1E29E-0372-4B23-A9BB-41F143B99BCD"></parallelGateway>
+    <parallelGateway id="sid-C847FB93-DAA0-4C9B-B69D-6E9D7C2B34A1"></parallelGateway>
+    <sequenceFlow id="sid-BB36D74B-9319-4193-A8E7-DA3D6FE4C917" sourceRef="sid-47C1E29E-0372-4B23-A9BB-41F143B99BCD" targetRef="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7"></sequenceFlow>
+    <sequenceFlow id="sid-78FA46CF-D0F9-4000-9B30-38D928E13576" sourceRef="sid-47C1E29E-0372-4B23-A9BB-41F143B99BCD" targetRef="sid-2C921BC4-4ABF-4831-BF2A-B7BE75D749E4"></sequenceFlow>
+    <sequenceFlow id="sid-3167E44A-AD59-442A-B0F4-4331C450BB15" sourceRef="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7" targetRef="sid-C847FB93-DAA0-4C9B-B69D-6E9D7C2B34A1"></sequenceFlow>
+    <sequenceFlow id="sid-010E1B3A-956B-455F-B502-550F21E6DE2E" sourceRef="sid-2C921BC4-4ABF-4831-BF2A-B7BE75D749E4" targetRef="sid-C847FB93-DAA0-4C9B-B69D-6E9D7C2B34A1"></sequenceFlow>
+    <sequenceFlow id="sid-6140AB22-EB2A-457A-8EFD-DC7DE2AE2D96" sourceRef="sid-C847FB93-DAA0-4C9B-B69D-6E9D7C2B34A1" targetRef="approvalTask1"></sequenceFlow>
+    <sequenceFlow id="sid-8A3C7A28-71DD-47C8-9521-803C72A803E9" name="2te Freigabe" sourceRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" targetRef="sid-E1EE1607-6E9B-41D8-8353-F7B83A28DCFC">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ inspector1approval == true && inspector2needed == true }]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-DAF2E423-FBBF-4684-8B56-EDCE1E1429C7" sourceRef="startEvent1" targetRef="sid-47C1E29E-0372-4B23-A9BB-41F143B99BCD"></sequenceFlow>
+    <serviceTask id="sid-01480B70-0FD9-4C74-A43C-6B9F99E9CA59" name="Update variable &quot;Task Beschreibung&quot;" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[ApprovalCreateActivity_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"optionType":{"value":"onlyHistory"},"userSubject":{"value":""},"userDescription":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-F53A65E8-181B-44FD-BCA3-38F530D6C717" name="freigegeben" sourceRef="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A" targetRef="sid-50D51D9F-AC12-4D31-8A9B-F20EC449D1F4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${inspector2approval== true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-4A941651-157C-4676-BA3D-ECF897AF0FCD" name="abgelehnt" sourceRef="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A" targetRef="sid-C028C233-73F0-4CB1-BE67-45A63FC28B70">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${inspector2approval== false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-422FE8C4-DC10-467D-A400-EA087E865F74" name="abgelehnt" sourceRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" targetRef="sid-C028C233-73F0-4CB1-BE67-45A63FC28B70">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ inspector1approval == false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-41EB3FF5-F96D-49CE-8813-5B36FA4392BB" name="freigegeben " sourceRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" targetRef="sid-50D51D9F-AC12-4D31-8A9B-F20EC449D1F4">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${ inspector2needed == false && inspector1approval == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-F7249F67-5E97-4A60-85DA-C4CB9D8D7B78" sourceRef="approvalTask1" targetRef="sid-B268AF7D-2B08-4866-BC23-80E7C5F1644E"></sequenceFlow>
+    <sequenceFlow id="sid-BB06A643-DE41-49E5-8788-1DB702DAE013" sourceRef="sid-5EBE7A3A-DB61-4635-B853-26251EE320B2" targetRef="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A"></sequenceFlow>
+    <sequenceFlow id="sid-F7AA5034-90A8-4291-8F1C-F612FE50DD1E" sourceRef="sid-E1EE1607-6E9B-41D8-8353-F7B83A28DCFC" targetRef="sid-01480B70-0FD9-4C74-A43C-6B9F99E9CA59"></sequenceFlow>
+    <sequenceFlow id="sid-E38258C3-8E5C-42F5-93D8-884A4A2EDA51" sourceRef="sid-01480B70-0FD9-4C74-A43C-6B9F99E9CA59" targetRef="approvalTask2"></sequenceFlow>
+    <sequenceFlow id="sid-D112AABA-EB38-4510-9280-EC605CBADD45" sourceRef="approvalTask2" targetRef="sid-5EBE7A3A-DB61-4635-B853-26251EE320B2"></sequenceFlow>
+    <serviceTask id="sid-5EBE7A3A-DB61-4635-B853-26251EE320B2" name="Update-Variable: &quot;Genehmiger&quot;" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[ApprovalUpdateTarget_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"approval":{"value":2},"keywordContainer":{"value":""},"status":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-43C30C05-6A7C-45C2-A4F4-102C66770A81" sourceRef="sid-B268AF7D-2B08-4866-BC23-80E7C5F1644E" targetRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295"></sequenceFlow>
+    <serviceTask id="sid-B268AF7D-2B08-4866-BC23-80E7C5F1644E" name="Update-Variable: &quot;Genehmiger&quot;" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[ApprovalUpdateTarget_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"approval":{"value":2},"keywordContainer":{"value":""},"status":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <textAnnotation id="sid-477B8341-39A0-4AD9-A34E-C8E74C9EFF40">
+      <text>Prozess wurde im Angebot gestartet.
+Angebot status: Ofen</text>
+    </textAnnotation>
+    <association id="sid-4C18E475-F687-44AA-BE8E-4BBB8A3602F7" sourceRef="startEvent1" targetRef="sid-477B8341-39A0-4AD9-A34E-C8E74C9EFF40" associationDirection="None"></association>
+    <textAnnotation id="sid-305411DE-F849-4AFF-95C6-D6941F2DE157">
+      <text>Genehmigung 2</text>
+    </textAnnotation>
+    <textAnnotation id="sid-B81F4589-83DC-4437-BDD0-2A9C5740825E">
+      <text>Genehmigung 1</text>
+    </textAnnotation>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_approvalWorkflow_dynamicStep_User">
+    <bpmndi:BPMNPlane bpmnElement="approvalWorkflow_dynamicStep_User" id="BPMNPlane_approvalWorkflow_dynamicStep_User">
+      <bpmndi:BPMNShape bpmnElement="approvalTask1" id="BPMNShape_approvalTask1">
+        <omgdc:Bounds height="130.0" width="72.0" x="285.0" y="213.5000000000001"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" id="BPMNShape_sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295">
+        <omgdc:Bounds height="40.0" width="39.99999999999994" x="480.00000000000006" y="254.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approvalTask2" id="BPMNShape_approvalTask2">
+        <omgdc:Bounds height="119.00000000000006" width="75.0" x="830.0" y="219.00000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A" id="BPMNShape_sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A">
+        <omgdc:Bounds height="40.0" width="39.999999999999886" x="1020.0000000000001" y="258.50000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="15.0" y="255.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C028C233-73F0-4CB1-BE67-45A63FC28B70" id="BPMNShape_sid-C028C233-73F0-4CB1-BE67-45A63FC28B70">
+        <omgdc:Bounds height="247.99999999999994" width="419.6171969977438" x="1091.6914015011287" y="315.00000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-DDA2DA6E-B960-4981-AD48-55AE859EC660" id="BPMNShape_sid-DDA2DA6E-B960-4981-AD48-55AE859EC660">
+        <omgdc:Bounds height="58.0" width="148.0" x="1231.4521496247187" y="494.00000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-8E58D67F-A4F8-4664-8A58-65ED4ED1A948" id="BPMNShape_sid-8E58D67F-A4F8-4664-8A58-65ED4ED1A948">
+        <omgdc:Bounds height="30.0" width="30.0" x="1110.1790015633494" y="431.62500000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-F39D9C35-2B66-4BBE-8367-662F3F7B3476" id="BPMNShape_sid-F39D9C35-2B66-4BBE-8367-662F3F7B3476">
+        <omgdc:Bounds height="40.0" width="40.0" x="1164.0585984988736" y="426.62500000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-8E0148BC-E26E-461C-B613-FB08FE5C78E7" id="BPMNShape_sid-8E0148BC-E26E-461C-B613-FB08FE5C78E7">
+        <omgdc:Bounds height="40.0" width="40.0" x="1408.0000000000007" y="426.62500000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-050C1059-9A5B-49FF-87B0-1BB1A0EBDD9E" id="BPMNShape_sid-050C1059-9A5B-49FF-87B0-1BB1A0EBDD9E">
+        <omgdc:Bounds height="69.0" width="147.0" x="1231.9521496247187" y="327.00000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-9E47F453-CDF8-4F66-B05A-E286B69D9055" id="BPMNShape_sid-9E47F453-CDF8-4F66-B05A-E286B69D9055">
+        <omgdc:Bounds height="28.0" width="28.0" x="1470.1790015633496" y="432.62500000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-DFC4BB10-CCB3-4382-A86B-AC5B7B847057" id="BPMNShape_sid-DFC4BB10-CCB3-4382-A86B-AC5B7B847057">
+        <omgdc:Bounds height="58.0" width="148.0" x="1231.4521496247187" y="415.25000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-2A6C102F-0583-4832-9961-3437B86C750A" id="BPMNShape_sid-2A6C102F-0583-4832-9961-3437B86C750A">
+        <omgdc:Bounds height="28.0" width="28.0" x="1575.0" y="264.50000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7" id="BPMNShape_sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7">
+        <omgdc:Bounds height="119.0" width="106.0" x="106.5" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-50D51D9F-AC12-4D31-8A9B-F20EC449D1F4" id="BPMNShape_sid-50D51D9F-AC12-4D31-8A9B-F20EC449D1F4">
+        <omgdc:Bounds height="247.99999999999994" width="423.0" x="1090.0000000000007" y="15.000000000000002"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-79E37A3D-DCD2-49D8-90D0-84170ABAB2BA" id="BPMNShape_sid-79E37A3D-DCD2-49D8-90D0-84170ABAB2BA">
+        <omgdc:Bounds height="30.0" width="30.0" x="1106.308598498873" y="119.75000000000011"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-D9775C6C-81D3-49A9-9CF1-B66A188CBB0B" id="BPMNShape_sid-D9775C6C-81D3-49A9-9CF1-B66A188CBB0B">
+        <omgdc:Bounds height="40.0" width="40.0" x="1162.3671969977456" y="114.75000000000011"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-880EF8B0-E799-4566-B193-FA644EA417C7" id="BPMNShape_sid-880EF8B0-E799-4566-B193-FA644EA417C7">
+        <omgdc:Bounds height="40.0" width="40.0" x="1406.3085984988727" y="114.75000000000011"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-CB5370BB-197A-4481-8EE5-6149AAE91C13" id="BPMNShape_sid-CB5370BB-197A-4481-8EE5-6149AAE91C13">
+        <omgdc:Bounds height="28.0" width="28.0" x="1466.3085984988727" y="120.75000000000011"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-DBBA7FA5-A444-4B7F-8642-3F03999F3FF4" id="BPMNShape_sid-DBBA7FA5-A444-4B7F-8642-3F03999F3FF4">
+        <omgdc:Bounds height="52.0" width="136.0" x="1230.0" y="30.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-90ADA11C-D9C2-4FAE-9891-DFA733FBEED0" id="BPMNShape_sid-90ADA11C-D9C2-4FAE-9891-DFA733FBEED0">
+        <omgdc:Bounds height="58.0" width="148.0" x="1231.4521496247187" y="108.00000000000011"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-D7BB7CD2-59C6-427A-9579-F8B9CC287D5C" id="BPMNShape_sid-D7BB7CD2-59C6-427A-9579-F8B9CC287D5C">
+        <omgdc:Bounds height="58.0" width="148.0" x="1231.4521496247187" y="183.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-E1EE1607-6E9B-41D8-8353-F7B83A28DCFC" id="BPMNShape_sid-E1EE1607-6E9B-41D8-8353-F7B83A28DCFC">
+        <omgdc:Bounds height="130.0" width="92.99999999999977" x="610.0" y="205.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-2C921BC4-4ABF-4831-BF2A-B7BE75D749E4" id="BPMNShape_sid-2C921BC4-4ABF-4831-BF2A-B7BE75D749E4">
+        <omgdc:Bounds height="89.0" width="109.0" x="105.0" y="285.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-47C1E29E-0372-4B23-A9BB-41F143B99BCD" id="BPMNShape_sid-47C1E29E-0372-4B23-A9BB-41F143B99BCD">
+        <omgdc:Bounds height="40.0" width="40.0" x="61.0" y="258.50000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C847FB93-DAA0-4C9B-B69D-6E9D7C2B34A1" id="BPMNShape_sid-C847FB93-DAA0-4C9B-B69D-6E9D7C2B34A1">
+        <omgdc:Bounds height="40.0" width="40.0" x="210.0" y="254.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-01480B70-0FD9-4C74-A43C-6B9F99E9CA59" id="BPMNShape_sid-01480B70-0FD9-4C74-A43C-6B9F99E9CA59">
+        <omgdc:Bounds height="102.0" width="63.99999999999977" x="735.0" y="223.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-477B8341-39A0-4AD9-A34E-C8E74C9EFF40" id="BPMNShape_sid-477B8341-39A0-4AD9-A34E-C8E74C9EFF40">
+        <omgdc:Bounds height="50.0" width="174.0" x="30.0" y="-70.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-305411DE-F849-4AFF-95C6-D6941F2DE157" id="BPMNShape_sid-305411DE-F849-4AFF-95C6-D6941F2DE157">
+        <omgdc:Bounds height="49.999999999999986" width="174.0" x="540.0000000000002" y="105.00000000000001"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-B81F4589-83DC-4437-BDD0-2A9C5740825E" id="BPMNShape_sid-B81F4589-83DC-4437-BDD0-2A9C5740825E">
+        <omgdc:Bounds height="50.0" width="174.0" x="115.0" y="84.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-5EBE7A3A-DB61-4635-B853-26251EE320B2" id="BPMNShape_sid-5EBE7A3A-DB61-4635-B853-26251EE320B2">
+        <omgdc:Bounds height="69.0" width="65.0" x="935.0" y="244.00000000000006"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-B268AF7D-2B08-4866-BC23-80E7C5F1644E" id="BPMNShape_sid-B268AF7D-2B08-4866-BC23-80E7C5F1644E">
+        <omgdc:Bounds height="67.0" width="63.0" x="390.0" y="245.0000000000001"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-010E1B3A-956B-455F-B502-550F21E6DE2E" id="BPMNEdge_sid-010E1B3A-956B-455F-B502-550F21E6DE2E">
+        <omgdi:waypoint x="213.9499999999671" y="329.5"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="329.5"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="294.41807832422586"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-16980AC1-598F-468C-8A4B-531FD974A4AC" id="BPMNEdge_sid-16980AC1-598F-468C-8A4B-531FD974A4AC">
+        <omgdi:waypoint x="1379.4021496246642" y="212.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1426.3085984988727" y="212.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1426.3085984988727" y="154.66286454957887"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F7AA5034-90A8-4291-8F1C-F612FE50DD1E" id="BPMNEdge_sid-F7AA5034-90A8-4291-8F1C-F612FE50DD1E">
+        <omgdi:waypoint x="702.9499999999992" y="271.89162895927603"></omgdi:waypoint>
+        <omgdi:waypoint x="735.0" y="273.1968325791855"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-64B59939-12AC-4DAD-B3C2-2C0ED3D55A82" id="BPMNEdge_sid-64B59939-12AC-4DAD-B3C2-2C0ED3D55A82">
+        <omgdi:waypoint x="1378.9021496247187" y="361.50000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1428.0000000000007" y="361.50000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1428.0000000000007" y="426.62500000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-41EB3FF5-F96D-49CE-8813-5B36FA4392BB" id="BPMNEdge_sid-41EB3FF5-F96D-49CE-8813-5B36FA4392BB">
+        <omgdi:waypoint x="500.0" y="254.5"></omgdi:waypoint>
+        <omgdi:waypoint x="500.0" y="78.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1089.9999999999045" y="78.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-19FB257B-EE08-42D3-A357-A1D474904124" id="BPMNEdge_sid-19FB257B-EE08-42D3-A357-A1D474904124">
+        <omgdi:waypoint x="1379.4021496247187" y="135.6223325147228"></omgdi:waypoint>
+        <omgdi:waypoint x="1406.6741358075315" y="135.11462346538727"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E38258C3-8E5C-42F5-93D8-884A4A2EDA51" id="BPMNEdge_sid-E38258C3-8E5C-42F5-93D8-884A4A2EDA51">
+        <omgdi:waypoint x="798.9499999999989" y="275.7716417910448"></omgdi:waypoint>
+        <omgdi:waypoint x="830.0" y="277.00746268656724"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-422FE8C4-DC10-467D-A400-EA087E865F74" id="BPMNEdge_sid-422FE8C4-DC10-467D-A400-EA087E865F74">
+        <omgdi:waypoint x="500.0" y="294.44517182962244"></omgdi:waypoint>
+        <omgdi:waypoint x="500.0" y="481.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1091.6914015011287" y="481.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-28494DDC-43ED-4F5A-A76C-5B90AF7C548D" id="BPMNEdge_sid-28494DDC-43ED-4F5A-A76C-5B90AF7C548D">
+        <omgdi:waypoint x="1184.0585984988736" y="426.62500000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1184.0585984988736" y="361.50000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1231.9521496247187" y="361.50000000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-43C30C05-6A7C-45C2-A4F4-102C66770A81" id="BPMNEdge_sid-43C30C05-6A7C-45C2-A4F4-102C66770A81">
+        <omgdi:waypoint x="452.94999999999925" y="277.10443037974693"></omgdi:waypoint>
+        <omgdi:waypoint x="481.34848484848493" y="275.8463636363637"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-B8D04345-8443-4A3D-B6F5-ECAF5E7A7AA4" id="BPMNEdge_sid-B8D04345-8443-4A3D-B6F5-ECAF5E7A7AA4">
+        <omgdi:waypoint x="1446.2401604212387" y="134.7500000000001"></omgdi:waypoint>
+        <omgdi:waypoint x="1466.3085984988727" y="134.7500000000001"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-3167E44A-AD59-442A-B0F4-4331C450BB15" id="BPMNEdge_sid-3167E44A-AD59-442A-B0F4-4331C450BB15">
+        <omgdi:waypoint x="212.45" y="194.5"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="194.5"></omgdi:waypoint>
+        <omgdi:waypoint x="230.0" y="254.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F6CAFAE7-F10C-4AE8-A5D6-82575AE53017" id="BPMNEdge_sid-F6CAFAE7-F10C-4AE8-A5D6-82575AE53017">
+        <omgdi:waypoint x="1140.1289962971596" y="446.62500000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1164.0585984988736" y="446.62500000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F53A65E8-181B-44FD-BCA3-38F530D6C717" id="BPMNEdge_sid-F53A65E8-181B-44FD-BCA3-38F530D6C717">
+        <omgdi:waypoint x="1040.0" y="258.50000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1040.0" y="172.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1090.0000000000007" y="172.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-D112AABA-EB38-4510-9280-EC605CBADD45" id="BPMNEdge_sid-D112AABA-EB38-4510-9280-EC605CBADD45">
+        <omgdi:waypoint x="904.9499999999831" y="278.5000000000001"></omgdi:waypoint>
+        <omgdi:waypoint x="935.0" y="278.5000000000001"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-7E0B865D-0BCE-47C8-93D2-77B09DDE1DB8" id="BPMNEdge_sid-7E0B865D-0BCE-47C8-93D2-77B09DDE1DB8">
+        <omgdi:waypoint x="1184.0585984988736" y="466.56195652173926"></omgdi:waypoint>
+        <omgdi:waypoint x="1184.0585984988736" y="523.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1231.4521496247187" y="523.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-33E1A6A8-6A80-4242-B83C-32259EC75EB4" id="BPMNEdge_sid-33E1A6A8-6A80-4242-B83C-32259EC75EB4">
+        <omgdi:waypoint x="1182.3671969977456" y="154.68710407239828"></omgdi:waypoint>
+        <omgdi:waypoint x="1182.3671969977456" y="212.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1231.4521496246903" y="212.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4552D6DA-92E5-40C8-841B-60D1BEBA9AE2" id="BPMNEdge_sid-4552D6DA-92E5-40C8-841B-60D1BEBA9AE2">
+        <omgdi:waypoint x="1379.4021496247187" y="523.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1428.0000000000007" y="523.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1428.0000000000007" y="466.53801212717144"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4C18E475-F687-44AA-BE8E-4BBB8A3602F7" id="BPMNEdge_sid-4C18E475-F687-44AA-BE8E-4BBB8A3602F7">
+        <omgdi:waypoint x="30.0" y="255.0"></omgdi:waypoint>
+        <omgdi:waypoint x="30.0" y="-45.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BB06A643-DE41-49E5-8788-1DB702DAE013" id="BPMNEdge_sid-BB06A643-DE41-49E5-8788-1DB702DAE013">
+        <omgdi:waypoint x="999.9499999999999" y="278.50000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1020.0000000000001" y="278.50000000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-78FA46CF-D0F9-4000-9B30-38D928E13576" id="BPMNEdge_sid-78FA46CF-D0F9-4000-9B30-38D928E13576">
+        <omgdi:waypoint x="81.0" y="298.4304794520548"></omgdi:waypoint>
+        <omgdi:waypoint x="81.0" y="329.5"></omgdi:waypoint>
+        <omgdi:waypoint x="105.0" y="329.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-DAF2E423-FBBF-4684-8B56-EDCE1E1429C7" id="BPMNEdge_sid-DAF2E423-FBBF-4684-8B56-EDCE1E1429C7">
+        <omgdi:waypoint x="44.74693718919087" y="272.4581465913596"></omgdi:waypoint>
+        <omgdi:waypoint x="63.83347315436242" y="275.64285714285717"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BB36D74B-9319-4193-A8E7-DA3D6FE4C917" id="BPMNEdge_sid-BB36D74B-9319-4193-A8E7-DA3D6FE4C917">
+        <omgdi:waypoint x="81.0" y="258.50000000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="81.0" y="194.5"></omgdi:waypoint>
+        <omgdi:waypoint x="106.5" y="194.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-6140AB22-EB2A-457A-8EFD-DC7DE2AE2D96" id="BPMNEdge_sid-6140AB22-EB2A-457A-8EFD-DC7DE2AE2D96">
+        <omgdi:waypoint x="249.9379804993769" y="274.5"></omgdi:waypoint>
+        <omgdi:waypoint x="284.9999999999594" y="274.5"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-5E288BF5-F2D7-4BDB-9191-0FA7A7C4E429" id="BPMNEdge_sid-5E288BF5-F2D7-4BDB-9191-0FA7A7C4E429">
+        <omgdi:waypoint x="1365.95" y="56.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1426.3085984988727" y="56.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1426.3085984988727" y="114.75000000000011"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-49702747-C729-41B1-8713-802F035442B8" id="BPMNEdge_sid-49702747-C729-41B1-8713-802F035442B8">
+        <omgdi:waypoint x="1511.2585984984169" y="439.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1589.0" y="439.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1589.0" y="292.44992683280384"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-157AEB4C-273C-43E5-BE02-001B55BE6DB2" id="BPMNEdge_sid-157AEB4C-273C-43E5-BE02-001B55BE6DB2">
+        <omgdi:waypoint x="1447.9322758049614" y="446.62500000000006"></omgdi:waypoint>
+        <omgdi:waypoint x="1470.1790015633496" y="446.62500000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F7249F67-5E97-4A60-85DA-C4CB9D8D7B78" id="BPMNEdge_sid-F7249F67-5E97-4A60-85DA-C4CB9D8D7B78">
+        <omgdi:waypoint x="356.95000000000005" y="276.55797101449286"></omgdi:waypoint>
+        <omgdi:waypoint x="390.0" y="276.55797101449286"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-C0CD7DC8-7B8C-421A-864E-2731B9FB6BCD" id="BPMNEdge_sid-C0CD7DC8-7B8C-421A-864E-2731B9FB6BCD">
+        <omgdi:waypoint x="1512.949999999908" y="139.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1589.0" y="139.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1589.0" y="264.50000000000006"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1D71F3B1-4D7D-4859-9731-5C24377691FB" id="BPMNEdge_sid-1D71F3B1-4D7D-4859-9731-5C24377691FB">
+        <omgdi:waypoint x="1136.2585936015564" y="134.7500000000001"></omgdi:waypoint>
+        <omgdi:waypoint x="1162.3671969977456" y="134.7500000000001"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8A3C7A28-71DD-47C8-9521-803C72A803E9" id="BPMNEdge_sid-8A3C7A28-71DD-47C8-9521-803C72A803E9">
+        <omgdi:waypoint x="519.4429843650593" y="275.0"></omgdi:waypoint>
+        <omgdi:waypoint x="609.9999999999807" y="275.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-84E89AFE-0598-4D4D-81D4-FB01E157BCD3" id="BPMNEdge_sid-84E89AFE-0598-4D4D-81D4-FB01E157BCD3">
+        <omgdi:waypoint x="1203.625777099016" y="446.2412191480152"></omgdi:waypoint>
+        <omgdi:waypoint x="1231.4521496247164" y="445.6967922584943"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BDEC0939-22A2-437E-8877-169FC7714E06" id="BPMNEdge_sid-BDEC0939-22A2-437E-8877-169FC7714E06">
+        <omgdi:waypoint x="1379.402149624715" y="445.68316467373495"></omgdi:waypoint>
+        <omgdi:waypoint x="1408.3398687308231" y="446.24476532029735"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A0B6E556-22B4-4DBD-A5F2-B67DCD5D183D" id="BPMNEdge_sid-A0B6E556-22B4-4DBD-A5F2-B67DCD5D183D">
+        <omgdi:waypoint x="1201.951389867922" y="135.1081403196729"></omgdi:waypoint>
+        <omgdi:waypoint x="1231.4521496247182" y="135.64727575185742"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4A941651-157C-4676-BA3D-ECF897AF0FCD" id="BPMNEdge_sid-4A941651-157C-4676-BA3D-ECF897AF0FCD">
+        <omgdi:waypoint x="1040.0" y="298.44106182795707"></omgdi:waypoint>
+        <omgdi:waypoint x="1040.0" y="390.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1091.6914015011287" y="390.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-C4AA53B2-968B-49B0-8FC8-99465E09571A" id="BPMNEdge_sid-C4AA53B2-968B-49B0-8FC8-99465E09571A">
+        <omgdi:waypoint x="1182.3671969977456" y="114.75000000000011"></omgdi:waypoint>
+        <omgdi:waypoint x="1182.3671969977456" y="56.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1230.0" y="56.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

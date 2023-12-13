@@ -1,0 +1,50 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="a.voegl" id="6604df3f-37ad-4658-80c5-abe75fa71c14">
+        <renameColumn newColumnName="ADDR_TYPE_OLD" oldColumnName="ADDR_TYPE" columnDataType="INTEGER" tableName="ADDRESS"/>
+	<addColumn tableName="ADDRESS">
+            <column name="ADDR_TYPE" type="VARCHAR(36)"/>
+	</addColumn> 
+        <update tableName="ADDRESS">
+            <column name="ADDR_TYPE" value="OFFICEADDR"/>
+            <where>ADDR_TYPE_OLD = 1</where>
+        </update>
+        <update tableName="ADDRESS">
+            <column name="ADDR_TYPE" value="a7466ee5-3fba-40bf-93cf-aa20a2b32ad6"/>
+            <where>ADDR_TYPE_OLD = 2</where>
+        </update>
+        <update tableName="ADDRESS">
+            <column name="ADDR_TYPE" value="cf1c4cab-d24e-4690-ba52-54bae711cd47"/>
+            <where>ADDR_TYPE_OLD = 3</where>
+        </update>
+        <update tableName="ADDRESS">
+            <column name="ADDR_TYPE" value="POSTADDR"/>
+            <where>ADDR_TYPE_OLD = 4</where>
+        </update>
+        <dropColumn tableName="ADDRESS" columnName="ADDR_TYPE_OLD"/>
+ 
+        <rollback>
+            <renameColumn newColumnName="ADDR_TYPE_OLD" oldColumnName="ADDR_TYPE" columnDataType="VARCHAR(36)" tableName="ADDRESS"/>
+            <addColumn tableName="ADDRESS">
+                <column name="ADDR_TYPE" type="INTEGER"/>
+            </addColumn>   
+            <update tableName="ADDRESS">
+                <column name="ADDR_TYPE" valueNumeric="1"/>
+                <where>ADDR_TYPE_OLD = 'OFFICEADDR'</where>
+            </update>
+            <update tableName="ADDRESS">
+                <column name="ADDR_TYPE" valueNumeric="2"/>
+                <where>ADDR_TYPE_OLD = 'a7466ee5-3fba-40bf-93cf-aa20a2b32ad6'</where>
+            </update>
+            <update tableName="ADDRESS">
+                <column name="ADDR_TYPE" valueNumeric="3"/>
+                <where>ADDR_TYPE_OLD = 'cf1c4cab-d24e-4690-ba52-54bae711cd47'</where>
+            </update>
+            <update tableName="ADDRESS">
+                <column name="ADDR_TYPE" valueNumeric="4"/>
+                <where>ADDR_TYPE_OLD = 'POSTADDR'</where>
+            </update>
+            <dropColumn tableName="ADDRESS" columnName="ADDR_TYPE_OLD"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

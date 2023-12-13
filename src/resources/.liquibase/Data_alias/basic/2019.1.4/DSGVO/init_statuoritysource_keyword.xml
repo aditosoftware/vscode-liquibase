@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.hofmann" id="e6b32d7d-298c-44a3-901f-88baa77cb6c3">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="b189770f-f36f-4256-b1c9-866010a6aa95"/>
+            <column name="KEYID" value="DSGVOCONTRACT"/>
+            <column name="TITLE" value="contract of sale"/>
+            <column name="CONTAINER" value="DSGVOStatuoritysource"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0ecc8e3d-2ff7-40fa-84be-d45988d32ae7"/>
+            <column name="KEYID" value="DSGVOCONSENT"/>
+            <column name="TITLE" value="consent"/>
+            <column name="CONTAINER" value="DSGVOStatuoritysource"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

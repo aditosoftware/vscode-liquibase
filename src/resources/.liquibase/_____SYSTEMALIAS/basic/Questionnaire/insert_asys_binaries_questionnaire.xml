@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="19ef9aa7-2978-42d4-ad0a-545a3693d06d">
+    <insert tableName="ASYS_BINARIES">
+      <column name="ID" value="3a1ce024-a17e-406a-aca3-ec505281d584"/>
+      <column name="ROW_ID" value="63e1631d-7ea7-443c-880b-5055e589a8b8"/>
+      <column name="FILENAME" value="questionnaire_default.html"/>
+      <column name="CONTAINERNAME" value="DOCUMENT"/>
+      <column name="USER_EDIT" value="Admin"/>
+      <column name="USER_NEW" value="Admin"/>
+      <column name="DATE_NEW" valueDate="2023-01-18T07:52:40"/>
+      <column name="DATE_EDIT" valueDate="2023-01-18T07:54:18"/>
+      <column name="MIMETYPE" value="text/html"/>
+      <column name="DATASIZE" valueNumeric="3826"/>
+      <column name="TABLENAME" value="DOCUMENTTEMPLATE"/>
+      <column name="KEYWORD" value="TEMPLATE"/>
+      <column name="BINDATA" valueBlobFile="ASYS_BINARIES/BINDATA/blobFiles/questionnaire_default" encoding="UTF-8"/>
+      <column name="PREVIEW" valueBlobFile="ASYS_BINARIES/PREVIEW/blobFiles/questionnaire_default_preview" encoding="UTF-8"/>
+    </insert>
+    
+    <insert tableName="ASYS_BINARIES">
+      <column name="ID" value="8ef54766-0675-40da-9b70-ede29ecaa9c1"/>
+      <column name="ROW_ID" value="42043a9d-f73a-49b0-a61f-a25de3e0b471"/>
+      <column name="FILENAME" value="questionnaire_adito.html"/>
+      <column name="CONTAINERNAME" value="DOCUMENT"/>
+      <column name="USER_EDIT" value="Admin"/>
+      <column name="USER_NEW" value="Admin"/>
+      <column name="DATE_NEW" valueDate="2023-01-18T07:52:40"/>
+      <column name="DATE_EDIT" valueDate="2023-01-18T07:54:18"/>
+      <column name="MIMETYPE" value="text/html"/>
+      <column name="DATASIZE" valueNumeric="4650"/>
+      <column name="TABLENAME" value="DOCUMENTTEMPLATE"/>
+      <column name="KEYWORD" value="TEMPLATE"/>
+      <column name="BINDATA" valueBlobFile="ASYS_BINARIES/BINDATA/blobFiles/questionnaire_adito" encoding="UTF-8"/>
+      <column name="PREVIEW" valueBlobFile="ASYS_BINARIES/PREVIEW/blobFiles/questionnaire_adito_preview" encoding="UTF-8"/>
+    </insert>
+
+  </changeSet>
+</databaseChangeLog>

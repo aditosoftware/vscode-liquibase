@@ -1,0 +1,26 @@
+<p>Der Krankmeldeprozess zielt auf direkte Kommunikation ab:</p>
+
+<ol>
+	<li>
+	<p>Bei Krankheit und Arbeitsunf&auml;higkeit informieren wir unsere Teamleitung telefonisch</p>
+	</li>
+	<li>
+	<p>Erreichen wir unsere Teamleitung telefonisch nicht, schreiben wir eine E-Mail an diese&nbsp;und setzen&nbsp;krankmeldung@meinefirma.de&nbsp;auf CC. Bitte beachtet, dass ihr bei akuten Terminen oder dringenden Aufgaben, auch die betroffenen Kollegen informiert.</p>
+	</li>
+	<li>
+	<p>Die Teamleitung tr&auml;gt die Krankheit zeitnah in die Arbeitszeit ein.</p>
+	</li>
+</ol>
+
+<p>&nbsp;</p>
+
+<p>Bitte beachten:</p>
+
+<ul>
+	<li>
+	<p>Wenn uns der Zeitraum am ersten Krankheitstag noch nicht bekannt ist, melden wir uns an jedem weiteren Tag krank</p>
+	</li>
+	<li>
+	<p>Am dritten&nbsp;<strong>Kalendertag</strong>&nbsp;(auch Freitag bis Montag) senden wir eine Arbeitsunf&auml;higkeitsbescheinigung in digitaler Form (E-Mail) an&nbsp;krankmeldung@meinefirma.de&nbsp;und setzen unsere Teamleitung&nbsp; auf CC.</p>
+	</li>
+</ul>

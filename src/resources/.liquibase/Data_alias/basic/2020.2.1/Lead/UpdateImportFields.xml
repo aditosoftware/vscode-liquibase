@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.pongratz" id="a75320ca-ecd1-4132-9fdf-989897934a85">
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMINTERNET"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="9ed26d58-cc2f-436e-b67b-afbb9f102bf4" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="LinkedIn (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="97e27378-e733-4629-b0c4-515faf89da7e" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="P_COMMINTERNET"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="01f18fd8-44c1-43ec-8601-bf1fe7e62700" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="LinkedIn (Person)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="53e06704-e28d-49b5-a49f-e40ca250ee6a" />
+            </whereParams>
+        </update>
+  </changeSet>
+</databaseChangeLog>

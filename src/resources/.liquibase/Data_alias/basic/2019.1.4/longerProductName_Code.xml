@@ -1,0 +1,7 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="ba54e81e-3be2-408a-bfb2-47f04a774c9f">
+        <modifyDataType tableName="PRODUCT" columnName="PRODUCTNAME" newDataType="NVARCHAR(100)"/>
+        <modifyDataType tableName="PRODUCT" columnName="PRODUCTCODE" newDataType="NVARCHAR(100)"/>
+    </changeSet>
+</databaseChangeLog>

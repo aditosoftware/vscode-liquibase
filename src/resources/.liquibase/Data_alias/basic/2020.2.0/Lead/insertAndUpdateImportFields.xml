@@ -1,0 +1,125 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="bcd6cb02-d074-444f-a307-34973b3dd4e1">
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMMOBIL"/>
+            <column name="TITLE" value="Mobile number (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="da3acc3a-457e-4c88-a477-8abdaf819539" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMEMAIL"/>
+            <column name="TITLE" value="Mail (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="2e7952b1-56a8-484d-9d82-564236c30d20" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMPHONE"/>
+            <column name="TITLE" value="Phone number (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="96534736-0247-4596-a8db-f6d7eee611c5" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMMOBIL"/>
+            <column name="TITLE" value="Internet (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="9ed26d58-cc2f-436e-b67b-afbb9f102bf4" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMBLOG"/>
+            <column name="TITLE" value="Blog (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="52bad941-02be-4c63-94a7-979e8ecef0c9" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMXING"/>
+            <column name="TITLE" value="Xing (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="8bf354dc-4278-493e-9824-40367382290f" />
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="KEYID" value="O_COMMLINKEDIN"/>
+            <column name="TITLE" value="Linked in (Organisation)"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="97e27378-e733-4629-b0c4-515faf89da7e" />
+            </whereParams>
+        </update>
+        
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="dd5abf99-b43d-4b3d-b4b0-376c70572490"/>
+        <column name="KEYID" value="P_COMMMOBIL"/>
+        <column name="TITLE" value="Mobile number (Person)"/>
+        <column name="CONTAINER" value="ImportFields"/>
+        <column name="SORTING" valueNumeric="29"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="345fe723-73dc-4687-afd2-c4ebc16aebdc"/>
+        <column name="KEYID" value="P_COMMEMAIL"/>
+        <column name="TITLE" value="Mail (Person)"/>
+        <column name="CONTAINER" value="ImportFields"/>
+        <column name="SORTING" valueNumeric="30"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="370672a7-946a-43b6-98dd-532422bef388"/>
+        <column name="KEYID" value="P_COMMPHONE"/>
+        <column name="TITLE" value="Phone number (Person)"/>
+        <column name="CONTAINER" value="ImportFields"/>
+        <column name="SORTING" valueNumeric="31"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="01f18fd8-44c1-43ec-8601-bf1fe7e62700"/>
+        <column name="KEYID" value="P_COMMMOBIL"/>
+        <column name="TITLE" value="Internet (Person)"/>
+        <column name="CONTAINER" value="ImportFields"/>
+        <column name="SORTING" valueNumeric="32"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="504d48d1-1a0d-437a-adc9-38501679137a"/>
+        <column name="KEYID" value="P_COMMBLOG"/>
+        <column name="TITLE" value="Blog (Person)"/>
+        <column name="CONTAINER" value="ImportFields"/>
+        <column name="SORTING" valueNumeric="33"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="fde1a4d1-d77e-494c-a1e4-2ef82abec246"/>
+        <column name="KEYID" value="P_COMMXING"/>
+        <column name="TITLE" value="Xing (Person)"/>
+        <column name="CONTAINER" value="ImportFields"/>
+        <column name="SORTING" valueNumeric="34"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="53e06704-e28d-49b5-a49f-e40ca250ee6a"/>
+        <column name="KEYID" value="P_COMMLINKEDIN"/>
+        <column name="TITLE" value="Linked in (Person)"/>
+        <column name="CONTAINER" value="ImportFields"/>
+        <column name="SORTING" valueNumeric="35"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+</changeSet>
+</databaseChangeLog>

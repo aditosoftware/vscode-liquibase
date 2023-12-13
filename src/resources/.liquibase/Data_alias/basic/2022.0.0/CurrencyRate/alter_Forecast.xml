@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet dbms="derby" author="b.ulrich" id="062f385c-fa7e-4890-9529-602044f3ac25">
+        <sql>
+            ALTER TABLE FORECAST ADD VOLUME_NEW NUMERIC(14,2);
+            UPDATE FORECAST SET VOLUME_NEW = CAST ( VOLUME as NUMERIC(14,2));
+            ALTER TABLE FORECAST DROP COLUMN VOLUME;
+            RENAME COLUMN FORECAST.VOLUME_NEW TO VOLUME;
+        </sql>
+    </changeSet>
+    
+    <changeSet author="b.ulrich" id="6cb184f3-d010-438c-a1fc-3077cff3cd67">
+        <preConditions onFail="CONTINUE">
+            <not>
+                <dbms type="derby" />
+            </not>
+        </preConditions>
+        <modifyDataType columnName="VOLUME" newDataType="NUMERIC(14,2)" tableName="FORECAST"/>
+    </changeSet>
+</databaseChangeLog>

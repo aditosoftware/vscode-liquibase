@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="e5c47286-7fde-4003-96d9-bb6376ae08ca">                  
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="Support ticket"/>
+            <where>AB_KEYWORD_ENTRYID='98075159-ecc2-4851-a971-6f3123a495d3'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

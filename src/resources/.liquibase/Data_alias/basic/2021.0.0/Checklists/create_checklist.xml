@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="d.tran" id="e7dcb68c-cb64-4f67-914b-f40acb138569">
+        <createTable tableName="CHECKLIST">
+            <column name="CHECKLISTID" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CHECKLIST_CHECKLISTID"/>
+            </column>
+            <column name="USER_NEW" type="VARCHAR(50)"/>
+            <column name="USER_EDIT" type="VARCHAR(50)"/>
+            <column name="DATE_NEW" type="TIMESTAMP"/>
+            <column name="DATE_EDIT" type="TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="d.tran" id="b4001d82-7e72-4993-9971-8d2d805f2102">
+        <insert tableName="CHECKLIST">
+            <column name="CHECKLISTID" value="cb340ed2-ea49-45bb-a7a0-1a4f88d6e138"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW" valueDate="2021-01-12T08:10:34"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="CHECKLIST">
+            <column name="CHECKLISTID" value="c2bb548c-2f0c-45be-9e49-2ebf86bd6ab8"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW" valueDate="2021-01-12T08:36:11"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="CHECKLIST">
+            <column name="CHECKLISTID" value="c7b847b1-934a-4592-8c10-53da1d43dc4c"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW" valueDate="2021-01-12T08:38:49"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="CHECKLIST">
+            <column name="CHECKLISTID" value="0f95ce44-3b0d-417b-969f-f84897868558"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW" valueDate="2021-01-12T08:41:20"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="CHECKLIST">
+            <column name="CHECKLISTID" value="cb0357c9-a222-4d78-b2c5-035fffe3bb51"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW" valueDate="2021-01-12T08:43:26"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

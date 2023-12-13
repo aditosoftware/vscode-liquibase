@@ -1,0 +1,112 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="55a6a9df-5852-4bd4-ad72-8c575c0a27f6">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="972e5eb1-a457-4b75-b966-1183896dac2c"/>
+      <column name="KEYID" value="TEXT"/>
+      <column name="TITLE" value="Text"/>
+      <column name="CONTAINER" value="AttributeType"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="cb7ecaea-b4e6-460e-9006-4a3d059b9857"/>
+      <column name="KEYID" value="DATE"/>
+      <column name="TITLE" value="Date"/>
+      <column name="CONTAINER" value="AttributeType"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="14de196a-aaa6-41b9-b503-3df1d45acc1e"/>
+      <column name="KEYID" value="NUMBER"/>
+      <column name="TITLE" value="${NUMBER}"/>
+      <column name="CONTAINER" value="AttributeType"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="8a9791c1-655f-4340-91b4-cfdf6372fc75"/>
+      <column name="KEYID" value="BOOLEAN"/>
+      <column name="TITLE" value="Checkbox"/>
+      <column name="CONTAINER" value="AttributeType"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="1390813c-6b94-4336-9986-9bcaddab69ac"/>
+      <column name="KEYID" value="COMBO"/>
+      <column name="TITLE" value="Combobox"/>
+      <column name="CONTAINER" value="AttributeType"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="2c188a17-2961-45df-bd68-34b55352375c"/>
+      <column name="KEYID" value="GROUP"/>
+      <column name="TITLE" value="Group"/>
+      <column name="CONTAINER" value="AttributeType"/>
+      <column name="SORTING" valueNumeric="5"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="75a67526-6b7c-400d-b958-e1f8f45466aa"/>
+      <column name="KEYID" value="COMBOVALUE"/>
+      <column name="TITLE" value="Combobox Value"/>
+      <column name="CONTAINER" value="AttributeType"/>
+      <column name="SORTING" valueNumeric="6"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <rollback>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="972e5eb1-a457-4b75-b966-1183896dac2c"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="cb7ecaea-b4e6-460e-9006-4a3d059b9857"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="14de196a-aaa6-41b9-b503-3df1d45acc1e"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="8a9791c1-655f-4340-91b4-cfdf6372fc75"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="1390813c-6b94-4336-9986-9bcaddab69ac"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="2c188a17-2961-45df-bd68-34b55352375c"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="75a67526-6b7c-400d-b958-e1f8f45466aa"/>
+        </whereParams>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,67 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.mansour" id="13c8eaf7-39d2-41c0-aff4-9cca30d32422">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="NAME" value="longName"/>
+            <column name="CONTAINER" value="SalesprojectPhase"/>
+            <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="4b4045ac-913c-4618-b6be-9458c2094d21"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="b42caac9-8f8f-46e5-9f1c-d121cdf3ad8f"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Not Qualified Contact"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="b6a9f74b-bfc0-41b5-ac97-48f059cd1051"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="8a2d19c9-bc32-437e-9261-78ed30110e92"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Marketing Accepted Lead"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="77370a25-7b08-4a75-b09b-ff806c184a12"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="46f55a58-dbe4-40ae-9306-481df9095088"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Marketing Qualified Lead"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="16fd4267-46d0-4d66-8241-ad620ba359e0"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="afa8cf58-07e8-4ee9-b24e-96cb6fa76aec"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Sales Accepted Lead"/>
+        </insert>
+                
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="846c6387-56b0-45b5-8f4b-71f1177d7c25"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="c9483fb9-c295-43d2-94e0-8c949cf6dc47"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Sales Qualified Offer"/>
+        </insert>
+        
+         <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="4284c1b3-c217-43b5-a06f-462626aadfdc"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="028af5dd-1071-4108-8685-ed7124376706"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Marketing Qualified Contact"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="945097dd-590f-4c53-bb33-5d425516495e"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="0e8eab64-4c79-4eed-9746-0ac6fc397620"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Offer"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="440bd4c0-9d2a-4adc-a4ee-15aa8109a265"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="405e2b7b-20c2-4824-a8b5-c7a533784ef3"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="f1413a2f-6631-4255-9dc9-a28e6eb30497"/>
+            <column name="CHAR_VALUE" value="Negotiation"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

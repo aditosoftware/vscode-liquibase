@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="m.bilda" id="3d4f843d-9c5d-46b1-9475-9527d45a65b6">
+	<createTable tableName="MST_TEAM">
+		<column name="MST_TEAMID" type="CHAR(36)">
+			<constraints primaryKey="true" primaryKeyName="PK_MST_TEAM_MST_TEAMID"/>
+		</column>   
+                <column name="TEAMNAME" type="NVARCHAR(255)"/>
+                <column name="GENERAL_CHANNELID" type="CHAR(48)"/>
+                <column name="IS_ARCHIVED" type="TINYINT"/>
+                <column name="SERVICE_URL" type="NVARCHAR(255)"/>
+                <column name="WEB_URL" type="NVARCHAR(500)"/>
+	</createTable>      
+</changeSet>
+</databaseChangeLog>

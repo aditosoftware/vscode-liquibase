@@ -1,0 +1,26 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+ <changeSet author="j.luginger" id="82f21109-bd75-4b8a-8099-8b429141c5ae">     
+    
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="625799b0-2fc2-4ca8-8067-7fbd6b71dc26"/>
+      <column name="KEYID"  value="CATEGORY"/>
+      <column name="TITLE" value="Category"/>
+      <column name="CONTAINER" value="InboxFilterTarget"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+     
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="72067ff8-bb99-47bd-a51e-1b1bfbb9a56d"/>
+      <column name="KEYID"  value="ATTRIBUT"/>
+      <column name="TITLE" value="Attribut"/>
+      <column name="CONTAINER" value="InboxFilterTarget"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

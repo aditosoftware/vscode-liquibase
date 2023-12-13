@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="d31d427a-0bf6-4aaf-b728-5a0c8695b37a">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="AB_KEYWORD_ENTRY"/>
+        </not>
+      </preConditions>
+        <createTable tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" type="CHAR(36)">
+                <constraints primaryKey="true"/>
+            </column>
+
+            <column name="KEYID" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TITLE" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTAINER" type="VARCHAR(80)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SORTING" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ISACTIVE" type="TINYINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ISESSENTIAL" type="TINYINT" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

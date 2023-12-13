@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="18da4f91-3334-47c6-958d-6d0efce52d31">
+        <createTable tableName="WORKFLOWSIGNAL">
+            <column name="WORKFLOWSIGNALID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_WORKFLOWSIGNALID"/>
+            </column>
+            <column name="SIGNAL_NAME" type="VARCHAR(255)"/>
+            <column name="OBJECT_TYPE" type="VARCHAR(63)"/>
+            <column name="TRIGGER_EVENT" type="CHAR(36)"/>
+            <column name="PROCESSDEFINITION_KEY" type="VARCHAR(255)"/>
+            <column name="OBJECT_CONDITION" type="NVARCHAR(512)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

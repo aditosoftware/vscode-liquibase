@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="14cb7c3c-9355-4376-b40c-d7a2963569b6">
+        <update tableName="AB_ATTRIBUTE">
+            <column name="ATTRIBUTE_TYPE" value="OBJECTSELECTION" />
+            <column name="DROPDOWNDEFINITION" value="Employee_entity" />
+            <where>AB_ATTRIBUTEID in (?, ?, ?, ?, ?)</where>
+            <whereParams>
+                <param value="3e5736c4-93ff-4471-96f5-48bb34ab53d2" />
+                <param value="3f119858-9d69-4903-a572-d286be151f73" />
+                <param value="d637fc6c-9452-4498-8379-ec71d946cbab" />
+                <param value="ff84c147-27c7-4698-83ff-0e25b1d33851" />
+                <param value="e8999504-5851-4934-a3f1-fb4b513d41e9" />
+            </whereParams>
+        </update>
+        
+        <update tableName="AB_ATTRIBUTE">
+            <column name="ATTRIBUTE_NAME" value="Vacation approval by" />
+            <where>AB_ATTRIBUTEID = ?</where>
+            <whereParams>
+                <param value="3e5736c4-93ff-4471-96f5-48bb34ab53d2" />
+            </whereParams>
+        </update>
+        
+        <update tableName="AB_ATTRIBUTE">
+            <column name="ATTRIBUTE_NAME" value="Vacation examination by" />
+            <where>AB_ATTRIBUTEID = ?</where>
+            <whereParams>
+                <param value="3f119858-9d69-4903-a572-d286be151f73" />
+            </whereParams>
+        </update>
+    </changeSet>
+</databaseChangeLog>

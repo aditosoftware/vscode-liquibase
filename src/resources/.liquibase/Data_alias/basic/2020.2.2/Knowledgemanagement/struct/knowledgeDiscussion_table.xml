@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="e.pollinger" id="1261195c-ffc1-4abb-a31f-0732823ee0cb">
+        <createTable tableName="KNOWLEDGEDISCUSSION">
+            <column name="KNOWLEDGEDISCUSSIONID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_KNOWLEDGEDISCUSSION_KNOWLEDGEDISCUSSIONID"/>
+            </column>
+            <column name="KNOWLEDGEMANAGEMENT_ID" type="CHAR(36)"></column>
+            <column name="DATE_NEW" type="DATETIME2"/>
+            <column name="DATE_EDIT" type="DATETIME2"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="STATUS" type="VARCHAR(36)"/>
+            <column name="AUTHOR" type="NVARCHAR(50)"/>
+            <column name="DISCUSSIONTEXT" type="LONGTEXT"/>
+            <column name="PARENTENTRY" type="CHAR(36)"/>
+        </createTable>
+        <createIndex tableName="KNOWLEDGEDISCUSSION" indexName="IDX_KNOWLEDGEDISCUSSION_KM_ID">
+            <column name="KNOWLEDGEMANAGEMENT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

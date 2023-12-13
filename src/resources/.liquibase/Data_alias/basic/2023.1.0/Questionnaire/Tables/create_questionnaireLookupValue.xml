@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="M.Wachsmuth" id="b03907b5-659e-400a-b02c-251b95993482">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="QUESTIONNAIRELOOKUPVALUE" />
+      </not>
+    </preConditions>
+    <createTable tableName="QUESTIONNAIRELOOKUPVALUE">
+      <column name="QUESTIONNAIRELOOKUPVALUEID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="QUESTIONNAIREQUESTION_ID" type="char(36)" />
+      <column name="VALUE" type="VARCHAR(100)" />
+      <column name="TEXT" type="NCLOB" />
+      <column name="SORTING" type="INT" />
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+    </createTable>
+    <modifySql dbms="mysql,mariadb">
+            <regExpReplace replace="NVARCHAR\(([^\)]*)\)" with="VARCHAR($1) CHARACTER SET utf8mb4" />
+            <replace replace="LONGTEXT CHARACTER SET utf8" with="LONGTEXT CHARACTER SET utf8mb4" />
+    </modifySql>
+  </changeSet>
+  <changeSet author="M.Wachsmuth" id="d7ae8323-f7cc-49bc-9b28-89438fc0ab24">
+    <createIndex indexName="QUESTIONNAIREQUESTION_ID_IDX" tableName="QUESTIONNAIRELOOKUPVALUE">
+      <column name="QUESTIONNAIREQUESTION_ID" />
+    </createIndex>
+  </changeSet>  
+</databaseChangeLog>
+

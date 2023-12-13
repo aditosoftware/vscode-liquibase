@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="981fdd18-d8d9-49a1-950a-86bfdcd43c97">
+    <delete tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <where> AB_KEYWORD_ATTRIBUTERELATIONID in ('e324d406-3fa3-460d-ad89-1874952e3f93', 'f53dcc7d-c5be-4548-a1d2-2122463483b5') </where>
+    </delete>
+    <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+        <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f53dcc7d-c5be-4548-a1d2-2122463483b5"/>
+        <column name="AB_KEYWORD_ATTRIBUTE_ID" value="505a8299-72c0-46eb-9724-fde780046497"/>
+        <column name="AB_KEYWORD_ENTRY_ID" value="804bcce7-f9c4-44ab-ba34-dec3e0863d50"/>
+        <column name="BOOL_VALUE" valueNumeric="1"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

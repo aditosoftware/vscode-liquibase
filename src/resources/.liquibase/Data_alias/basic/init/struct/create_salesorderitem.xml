@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="m.schroeger" id="1a9b2d19-343a-4988-b8e8-be45b559f645">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="SALESORDERITEM"/>
+        </not>
+      </preConditions>
+	<createTable tableName="SALESORDERITEM">
+		<column name="SALESORDERITEMID" type="CHAR(36)">
+			<constraints primaryKey="true"/>
+		</column>   
+                <column name="SALESORDER_ID" type="CHAR(36)"/>
+                <column name="UNIT" type="VARCHAR(36)"/>
+                <column name="QUANTITY" type="NUMERIC(14,2)"/>
+                <column name="GROUPCODEID" type="CHAR(36)"/>
+                <column name="ASSIGNEDTO" type="CHAR(36)">
+                    <constraints foreignKeyName="FK_SALESORDERITEM_ASSIGNEDTO" references="SALESORDERITEM(SALESORDERITEMID)"/>
+                </column>
+                <column name="PRICE" type="NUMERIC(14,2)"/>
+                <column name="ITEMSORT" type="INTEGER"/>
+                <column name="PRODUCT_ID" type="CHAR(36)">
+                    <constraints nullable="false" foreignKeyName="FK_SALESORDERITEM_PRODUCT_ID" references="PRODUCT(PRODUCTID)"/>
+                </column>
+                <column name="VAT" type="NUMERIC(14,2)"/>
+                <column name="ITEMNAME" type="NVARCHAR(250)"/>
+                <column name="OPTIONAL" type="TINYINT">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="DISCOUNT" type="NUMERIC(14,2)"/>
+                <column name="ITEMPOSITION" type="VARCHAR(30)"/>
+                <column name="INFO" type="NCLOB"/>                                                       
+	</createTable>      
+</changeSet>
+</databaseChangeLog>

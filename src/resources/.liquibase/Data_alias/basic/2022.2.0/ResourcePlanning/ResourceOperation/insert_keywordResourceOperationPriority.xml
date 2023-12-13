@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="37924c9f-5b16-4d2f-be12-453cd6a0fef6">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="55db726a-02d8-48aa-97c4-b87f60ed7ed1"/>
+            <column name="NAME" value="ResourceOperationPriority"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="da0b8135-f7a3-4c08-bbc1-dc5e935099d0"/>
+            <column name="KEYID" value="LOW"/>
+            <column name="TITLE" value="low"/>
+            <column name="CONTAINER" value="ResourceOperationPriority"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="55db726a-02d8-48aa-97c4-b87f60ed7ed1"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="e95d89d0-3c17-4739-ab1a-92f10483e29a"/>
+            <column name="KEYID" value="MEDIUM"/>
+            <column name="TITLE" value="medium"/>
+            <column name="CONTAINER" value="ResourceOperationPriority"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="55db726a-02d8-48aa-97c4-b87f60ed7ed1"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="5ca97f75-1e8d-4f8b-a139-6203a8115241"/>
+            <column name="KEYID" value="HIGH"/>
+            <column name="TITLE" value="high"/>
+            <column name="CONTAINER" value="ResourceOperationPriority"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="55db726a-02d8-48aa-97c4-b87f60ed7ed1"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="000a45cf-271d-4ad7-8b28-ac2924f02ffa"/>
+            <column name="KEYID" value="VERYHIGH"/>
+            <column name="TITLE" value="very high"/>
+            <column name="CONTAINER" value="ResourceOperationPriority"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="55db726a-02d8-48aa-97c4-b87f60ed7ed1"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="a577d37c-5016-4170-8bfa-dd9b354d44af"/>
+            <column name="KEYID" value="CRITICAL"/>
+            <column name="TITLE" value="critical"/>
+            <column name="CONTAINER" value="ResourceOperationPriority"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="55db726a-02d8-48aa-97c4-b87f60ed7ed1"/>
+            <column name="SORTING" valueNumeric="5"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

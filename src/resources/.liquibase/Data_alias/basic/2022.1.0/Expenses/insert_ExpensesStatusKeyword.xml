@@ -1,0 +1,45 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="ee0080d1-04d3-4d0e-a9e0-a768d853076a">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="722b2260-fa79-454b-9e1e-243ef14cc863"/>
+            <column name="NAME" value="ExpensesStatus"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+    </changeSet>
+    <changeSet author="m.wachsmuth" id="73a9bf11-1d38-44d6-bb37-a3f3b0c8ca3c">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="be18cbe3-42df-4499-a27a-30bd4d5a4869"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="722b2260-fa79-454b-9e1e-243ef14cc863"/>
+            <column name="KEYID" value="Creation"/>
+            <column name="TITLE" value="in Creation"/>
+            <column name="CONTAINER" value="ExpensesStatus"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="281d70bb-a8d2-4867-8a4c-800d7f4a0493"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="722b2260-fa79-454b-9e1e-243ef14cc863"/>
+            <column name="KEYID" value="Settle"/>
+            <column name="TITLE" value="to be settled"/>
+            <column name="CONTAINER" value="ExpensesStatus"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="e9582b45-c6bf-4ce1-b9b1-b0275107569b"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="722b2260-fa79-454b-9e1e-243ef14cc863"/>
+            <column name="KEYID" value="Settled"/>
+            <column name="TITLE" value="settled up"/>
+            <column name="CONTAINER" value="ExpensesStatus"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

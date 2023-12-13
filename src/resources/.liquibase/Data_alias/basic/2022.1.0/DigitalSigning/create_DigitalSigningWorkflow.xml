@@ -1,0 +1,40 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="c708be00-7bc4-4071-90cd-8127e890526d">
+        <createTable tableName="DIGITALSIGNINGWORKFLOW">
+            <column name="DIGITALSIGNINGWORKFLOWID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_DIGITALSIGNINGWORKFLOWID"/>
+            </column>
+            <column name="WORKFLOW_ID" type="CHAR(36)"/>
+            <column name="OBJECT_TYPE" type="NVARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_ROWID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="CHAR(36)"/>
+            <column name="TITLE" type="NVARCHAR(63)"/>
+            <column name="DESCRIPTION" type="LONGTEXT"/>
+            <column name="SIMPLESIGNATURE" type="TINYINT" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+            
+        </createTable>
+        
+        <createIndex tableName="DIGITALSIGNINGWORKFLOW" indexName="IDX_DIGITALSIGNINGWRKFLW_OBJ_TYPE">
+            <column name="OBJECT_TYPE"/>
+        </createIndex>
+
+        <createIndex tableName="DIGITALSIGNINGWORKFLOW" indexName="IDX_DIGITALSIGNINGWRKFLW_OBJ_ROWID">
+            <column name="OBJECT_ROWID"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

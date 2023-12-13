@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="286b9086-b5a3-4ffc-b747-c8836d874666">
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="f79c7bad-9ff5-45d5-b93e-4ce52bf88c2d"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="25cb446a-24cd-4ebd-aad2-320da20830da"/>
+        <column name="KEYID" value="EMAILBOUNCED_SOFT"/>
+        <column name="TITLE" value="Bounce (Soft)"/>
+        <column name="CONTAINER" value="BulkMailRecipientStatus"/>
+        <column name="SORTING" valueNumeric="4"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="f42932ab-935a-46e9-957c-dd4e7f82daa8"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="25cb446a-24cd-4ebd-aad2-320da20830da"/>
+        <column name="KEYID" value="EMAILBOUNCED_HARD"/>
+        <column name="TITLE" value="Bounce (Hard)"/>
+        <column name="CONTAINER" value="BulkMailRecipientStatus"/>
+        <column name="SORTING" valueNumeric="5"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

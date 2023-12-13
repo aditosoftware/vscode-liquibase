@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="alter_relation-type-title_grandchildof.xml"/>
+    <include relativeToChangelogFile="true" file="alter_display-value_task-status-completed_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="alter_display-name_prospective-customer.xml"/>
+    <include relativeToChangelogFile="true" file="Offer/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="lead_nurturing/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="add_offer_showprice.xml"/>
+    <include relativeToChangelogFile="true" file="Ticket/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="StandardColumns/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Person/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Offeritem/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Salesorderitem/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Salesproject/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Employee/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Mosaico/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Mailbridge/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="OfferOrder/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="BulkMail/changelog.xml"/>
+</databaseChangeLog>

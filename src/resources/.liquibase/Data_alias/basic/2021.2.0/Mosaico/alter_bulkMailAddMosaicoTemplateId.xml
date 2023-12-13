@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="76e38ecb-a7f9-4c63-8089-e14296fb5f09">
+    <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="BULKMAIL" columnName="MOSAICOTEMPLATE_ID" />
+            </not>
+    </preConditions>
+    <addColumn tableName="BULKMAIL">
+          <column name="MOSAICOTEMPLATE_ID" type="CHAR(36)"/>
+    </addColumn>
+  </changeSet>
+</databaseChangeLog>

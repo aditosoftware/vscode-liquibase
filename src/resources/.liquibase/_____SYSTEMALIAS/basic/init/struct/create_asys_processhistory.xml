@@ -1,0 +1,58 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="j.hoermann" id="7d36afb4-2b23-44f0-a889-351a3f999576">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="ASYS_PROCESSHISTORY" />
+      </not>
+    </preConditions>
+    <createTable tableName="ASYS_PROCESSHISTORY">
+        <column name="UUID" type="CHAR(63)">
+            <constraints primaryKey="true" primaryKeyName="PK_ASYS_PROCESSHISTORY_UUID"/>
+        </column>
+        <column name="PROCESSID" type="VARCHAR(127)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="PROCESSNAME" type="VARCHAR(63)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="PROCESSTITLE" type="VARCHAR(63)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="STARTTIME" type="DATETIME">
+            <constraints nullable="false"/>
+        </column>
+        <column name="ENDTIME" type="DATETIME"/>
+        <column name="STATE" type="INTEGER"/>
+        <column name="SERVERID" type="VARCHAR(127)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="SYSTEMID" type="VARCHAR(127)">
+            <constraints nullable="false"/>
+        </column>
+        <column name="PROCESSUSER" type="VARCHAR(255)"/>
+        <column name="STARTEDBY" type="VARCHAR(255)"/>
+        <column name="LONGMESSAGE" type="VARCHAR(2046)"/>
+        <column name="SHORTMESSAGE" type="VARCHAR(255)"/>
+        <column name="STARTTYPE" type="VARCHAR(63)"/>
+    </createTable>
+    <createIndex indexName="IDX_ASYS_PROCESSHISTORY_PROCESSNAME" tableName="ASYS_PROCESSHISTORY">
+        <column name="PROCESSNAME"/>
+    </createIndex>
+    <createIndex indexName="IDX_ASYS_PROCESSHISTORY_STARTTIME" tableName="ASYS_PROCESSHISTORY">
+        <column name="STARTTIME"/>
+    </createIndex>
+    <createIndex indexName="IDX_ASYS_PROCESSHISTORY_ENDTIME" tableName="ASYS_PROCESSHISTORY">
+        <column name="ENDTIME"/>
+    </createIndex>
+     <createIndex indexName="IDX_ASYS_PROCESSHISTORY_STATE" tableName="ASYS_PROCESSHISTORY">
+        <column name="STATE"/>
+    </createIndex>
+    <createIndex indexName="IDX_ASYS_PROCESSHISTORY_SERVERID" tableName="ASYS_PROCESSHISTORY">
+        <column name="SERVERID"/>
+    </createIndex>
+    <createIndex indexName="IDX_ASYS_PROCESSHISTORY_SYSTEMID" tableName="ASYS_PROCESSHISTORY">
+        <column name="SYSTEMID"/>
+    </createIndex>
+</changeSet>
+</databaseChangeLog>

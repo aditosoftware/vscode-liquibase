@@ -1,0 +1,63 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="ee6a25da-3a83-4554-abd1-4c5dd2471130">
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="c60f4fa6-dc09-4a09-b5a0-7371d2cd069d"/>
+      <column name="NAME" value="EventMessageType"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="d02b6dcd-4232-4ff0-a362-dbcae7e07dcf"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="c60f4fa6-dc09-4a09-b5a0-7371d2cd069d"/>
+        <column name="KEYID" value="EVENTMESSAGE_SAVEDATE"/>
+        <column name="TITLE" value="Save the date"/>
+        <column name="CONTAINER" value="EventMessageType"/>
+        <column name="SORTING" valueNumeric="1"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="46d1b3fe-6883-49eb-9e71-f162c98087ed"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="c60f4fa6-dc09-4a09-b5a0-7371d2cd069d"/>
+        <column name="KEYID" value="EVENTMESSAGE_INVITATION"/>
+        <column name="TITLE" value="Invitation"/>
+        <column name="CONTAINER" value="EventMessageType"/>
+        <column name="SORTING" valueNumeric="2"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="b466a77c-35b4-46f5-b35a-a69967c833a0"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="c60f4fa6-dc09-4a09-b5a0-7371d2cd069d"/>
+        <column name="KEYID" value="EVENTMESSAGE_REMINDER"/>
+        <column name="TITLE" value="Reminder mail"/>
+        <column name="CONTAINER" value="EventMessageType"/>
+        <column name="SORTING" valueNumeric="3"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="ca8f7bac-ff74-451d-852f-fac4af4580c4"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="c60f4fa6-dc09-4a09-b5a0-7371d2cd069d"/>
+        <column name="KEYID" value="EVENTMESSAGE_CONFIRMATION"/>
+        <column name="TITLE" value="Confirmation"/>
+        <column name="CONTAINER" value="EventMessageType"/>
+        <column name="SORTING" valueNumeric="4"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="32041c94-45b6-4f49-8e1e-7accdb6dfa15"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="c60f4fa6-dc09-4a09-b5a0-7371d2cd069d"/>
+        <column name="KEYID" value="EVENTMESSAGE_FOLLOWUP"/>
+        <column name="TITLE" value="Follow up"/>
+        <column name="CONTAINER" value="EventMessageType"/>
+        <column name="SORTING" valueNumeric="5"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

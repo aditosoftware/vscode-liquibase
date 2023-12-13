@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="f.maier" id="7eaaf765-cb1d-4060-978e-06966071d6fm">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="EWS_INFO_LOG"/>
+        </not>
+      </preConditions>        
+        <createTable tableName="EWS_INFO_LOG">
+            <column name="EWS_INFO_LOGID" type="CHAR(36)">  
+                <constraints primaryKey="true" primaryKeyName="PK_EWS_INFO_LOG_EWS_INFO_LOGID"/>
+            </column>
+            <column name="DATE_NEW" type="TIMESTAMP"/>
+            <column name="USER_ID" type="VARCHAR(63)"/>
+            <column name="TYPE" type="VARCHAR(50)"/>
+            <column name="INFO" type="VARCHAR(2000)"/>
+            <column name="PRIORITY" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

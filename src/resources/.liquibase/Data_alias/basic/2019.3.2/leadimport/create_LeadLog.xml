@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="f.maier" id="leadimportFmai">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="LEADLOG"/>
+        </not>
+      </preConditions>
+        <createTable tableName="LEADLOG">
+            <column name="LEADLOGID" type="CHAR(36)">
+                <constraints primaryKey="true"/>
+            </column>   
+            <column name="ROWSINSERTED" type="INT"/>                       
+            <column name="LEADIMPORT_ID" type="CHAR(36)"/>                       
+            <column name="IMPORTERRORS" type="INT"/>                       
+            <column name="IMPORTCANCELED" type="CHAR(1)"/>                       
+            <column name="IMPORTSOURCE" type="NVARCHAR(500)"/>                       
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="DATE_EDIT" type="DATETIME" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

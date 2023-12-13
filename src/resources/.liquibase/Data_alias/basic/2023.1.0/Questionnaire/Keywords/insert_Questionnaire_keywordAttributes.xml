@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="M.Wachsmuth" id="8df3d9c1-6082-464f-aa75-0b29fcb7bef7">
+    <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="5ba3f231-14e0-4d70-a784-45b1ae438ccd"/>
+            <column name="NAME" value="Show Lookup"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+            <column name="CONTAINER" value="QuestionnaireAnswerType"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="d055d84a-4354-4699-ad72-97c66f93006f"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="82d4c2bf-1a2e-447c-a7c5-9bb0bc4630ba"/>
+            <column name="NAME" value="Has MinMax"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+            <column name="CONTAINER" value="QuestionnaireAnswerType"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="d055d84a-4354-4699-ad72-97c66f93006f"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="8408b204-a36b-445c-b3be-cc3a41119d6a"/>
+            <column name="NAME" value="Has MinMax Description"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+            <column name="CONTAINER" value="QuestionnaireAnswerType"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="d055d84a-4354-4699-ad72-97c66f93006f"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="dbf064a9-75a0-4c8a-a2cf-099b376ee4c7"/>
+            <column name="NAME" value="Has MinMax"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+            <column name="CONTAINER" value="QuestionnaireInputType"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

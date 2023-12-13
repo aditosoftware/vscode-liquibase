@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="d.buechler" id="53fef445-1c3f-44a7-a55e-33827aac23ea">
+        <createTable tableName="DUPLICATECLUSTERS">
+            <column name="ID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_DUPLICATECLUSTERS_ID"/>
+            </column>
+            <column name="CLUSTERID" type="CHAR(36)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="DUPLICATEID" type="CHAR(36)" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="TARGET_ENTITY" type="NVARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

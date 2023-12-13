@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="d.tran" id="b16e0a6e-74b7-414a-9cc2-fb7f8f1c3d72">
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="bbd50206-c4d5-42e0-a19a-2d11e957af1f"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="12da39a8-6fc9-4220-b09d-179cd611a814"/>
+            <column name="PLACEOFUSE" value="DSGVOReport"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="63f5b453-24af-47a2-8ef1-ee5c91003428"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="12da39a8-6fc9-4220-b09d-179cd611a814"/>
+            <column name="PLACEOFUSE" value="Order"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="910939c0-fe4f-4142-9656-d06ed1fe6d04"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="1cabdde7-870e-4094-a0f7-a335ded3536a"/>
+            <column name="PLACEOFUSE" value="DSGVOReport"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="a5ccf0e5-2c4d-4782-8970-61af4db2dd31"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="1cabdde7-870e-4094-a0f7-a335ded3536a"/>
+            <column name="PLACEOFUSE" value="Order"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="460e8b4c-5124-4b83-ab81-16ad919abe35"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="5e494f97-4d29-4cce-abf7-9eaa2577337f"/>
+            <column name="PLACEOFUSE" value="Organisation"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="346113a2-e3b6-41e5-b058-13342e45984a"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="5e494f97-4d29-4cce-abf7-9eaa2577337f"/>
+            <column name="PLACEOFUSE" value="DSGVOReport"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="b741dc23-8e46-46a6-9485-56a9033d944a"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="5e494f97-4d29-4cce-abf7-9eaa2577337f"/>
+            <column name="PLACEOFUSE" value="Order"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="50cd8a91-5a48-479d-a329-aa9c1d1a3835"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="fb237ade-ce63-40bd-aa41-33d7417fca2c"/>
+            <column name="PLACEOFUSE" value="Organisation"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="5e2011ef-87aa-4b51-bea4-34cbfa11722f"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="fb237ade-ce63-40bd-aa41-33d7417fca2c"/>
+            <column name="PLACEOFUSE" value="DSGVOReport"/>
+        </insert>
+        <insert tableName="DOCUMENTTEMPLATEPLACEOFUSE">
+            <column name="DOCUMENTTEMPLATEPLACEOFUSEID" value="e1422fa3-dcd2-4863-b972-1a3fb4b4fdc6"/>
+            <column name="DOCUMENTTEMPLATE_ID" value="fb237ade-ce63-40bd-aa41-33d7417fca2c"/>
+            <column name="PLACEOFUSE" value="Order"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,82 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.goderbauer" id="e7f911b2-7f89-41b1-b59e-4b359ccbf728">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="c1c736a7-95af-417d-8993-3c6cbf065059"/>
+      <column name="KEYID" value="CONTRACTSTATVALIDUNLI"/>
+      <column name="TITLE" value="Valid, unlimited"/>
+      <column name="CONTAINER" value="ContractStatus"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="41b15842-0d31-4023-b0b9-fa97f25bc444"/>
+      <column name="KEYID" value="CONTRACTSTATVALIDLI"/>
+      <column name="TITLE" value="Valid, limited"/>
+      <column name="CONTAINER" value="ContractStatus"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="1bebbb3c-f412-4031-b533-f1e38c86eb17"/>
+      <column name="KEYID" value="CONTRACTSTATSIGN"/>
+      <column name="TITLE" value="Not signed yet"/>
+      <column name="CONTAINER" value="ContractStatus"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="03f62e1e-0b9a-4e7e-a895-2d10bf57712f"/>
+      <column name="KEYID" value="CONTRACTSTATNONE"/>
+      <column name="TITLE" value="None, individual count"/>
+      <column name="CONTAINER" value="ContractStatus"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="4959d607-b218-4e45-9c4b-b28f3ae6b0ff"/>
+      <column name="KEYID" value="CONTRACTSTATRESIGN"/>
+      <column name="TITLE" value="Resigned"/>
+      <column name="CONTAINER" value="ContractStatus"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <rollback>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="c1c736a7-95af-417d-8993-3c6cbf065059"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="41b15842-0d31-4023-b0b9-fa97f25bc444"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="1bebbb3c-f412-4031-b533-f1e38c86eb17"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="03f62e1e-0b9a-4e7e-a895-2d10bf57712f"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="4959d607-b218-4e45-9c4b-b28f3ae6b0ff"/>
+        </whereParams>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

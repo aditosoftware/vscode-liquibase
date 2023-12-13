@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="t.tasior" id="e0334e1d-7ddc-4af7-8ef9-60e5af6fc630">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="ASYS_MAILREPOSIT" />
+      </not>
+    </preConditions>
+    <createTable tableName="ASYS_MAILREPOSIT">
+	  <column name="ID" type="CHAR(36)">
+         <constraints primaryKey="true" primaryKeyName="PK_ASYS_MAILREPOSIT_ID"/>
+      </column>
+      <column name="SENDER" type="VARCHAR(127)"/>
+	  <column name="RECIPIENT" type="VARCHAR(2046)"/>
+	  <column name="SUBJECT" type="VARCHAR(1023)"/>
+	  <column name="SENTDATE" type="DATETIME(3)"/>
+	  <column name="RECEIVEDATE" type="DATETIME(3)"/>
+      <column name="MAIL" type="LONGTEXT"/>
+	  <column name="SEEN" type="INTEGER"/>
+	  <column name="FLAGGED" type="INTEGER"/>
+	  <column name="FOLDER" type="VARCHAR(255)"/>
+	  <column name="MAILUSER" type="VARCHAR(255)"/>
+	  <column name="RECENT" type="INTEGER"/>
+    </createTable>
+    
+    <createIndex indexName="IDX_ASYS_MAILREPOSIT_RECENT" tableName="ASYS_MAILREPOSIT">
+        <column name="RECENT"/>
+    </createIndex>
+</changeSet>
+<changeSet author="a.niebisch" id="f6b8ee8e-3027-4272-ae8a-dad3267e4e39">
+    <createIndex indexName="IDX_ASYS_MAILREPOSIT_MAILUSER" tableName="ASYS_MAILREPOSIT">
+        <column name="MAILUSER"/>
+    </createIndex>
+</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="67710143-ad12-4537-9995-e7c2beb3c4e7">
+      <sql dbms="mysql,mariadb,mssql,postgresql,oracle">
+            insert into COMMUNICATIONSETTINGS (COMMUNICATIONSETTINGSID, CONTACT_ID, CHANNEL_TYPE, MEDIUM, STATUS, DATE_NEW, USER_NEW)
+            select COMMRESTRICTIONID, CONTACT_ID, 'COMMUNICATIONCHANNEL_COMMUNICATION', MEDIUM, 'COMMUNICATION_REJECTED', CURRENT_TIMESTAMP, 'Admin'
+            from COMMRESTRICTION;
+      </sql>
+      <sql dbms="mysql,mariadb">
+            insert into COMMUNICATIONLEGALBASE (COMMUNICATIONLEGALBASEID, COMMUNICATIONSETTINGS_ID, DATE_NEW, USER_NEW, VERSION, INFO)
+            select UUID(), COMMUNICATIONSETTINGSID, CURRENT_TIMESTAMP, 'Admin', 1, REASON
+            from COMMUNICATIONSETTINGS
+            join COMMRESTRICTION on COMMUNICATIONSETTINGS.COMMUNICATIONSETTINGSID = COMMRESTRICTION.COMMRESTRICTIONID;
+      </sql>
+      <sql dbms="mssql">
+            insert into COMMUNICATIONLEGALBASE (COMMUNICATIONLEGALBASEID, COMMUNICATIONSETTINGS_ID, DATE_NEW, USER_NEW, VERSION, INFO)
+            select NEWID(), COMMUNICATIONSETTINGSID, CURRENT_TIMESTAMP, 'Admin', 1, REASON
+            from COMMUNICATIONSETTINGS
+            join COMMRESTRICTION on COMMUNICATIONSETTINGS.COMMUNICATIONSETTINGSID = COMMRESTRICTION.COMMRESTRICTIONID;
+      </sql>
+      <sql dbms="postgresql">
+            insert into COMMUNICATIONLEGALBASE (COMMUNICATIONLEGALBASEID, COMMUNICATIONSETTINGS_ID, DATE_NEW, USER_NEW, VERSION, INFO)
+            select uuid_in(md5(random()::text || clock_timestamp()::text)::cstring), COMMUNICATIONSETTINGSID, CURRENT_TIMESTAMP, 'Admin', 1, REASON
+            from COMMUNICATIONSETTINGS
+            join COMMRESTRICTION on COMMUNICATIONSETTINGS.COMMUNICATIONSETTINGSID = COMMRESTRICTION.COMMRESTRICTIONID;
+      </sql>
+      <sql dbms="oracle">
+            insert into COMMUNICATIONLEGALBASE (COMMUNICATIONLEGALBASEID, COMMUNICATIONSETTINGS_ID, DATE_NEW, USER_NEW, VERSION, INFO)
+            select SYS_GUID(), COMMUNICATIONSETTINGSID, CURRENT_TIMESTAMP, 'Admin', 1, REASON
+            from COMMUNICATIONSETTINGS
+            join COMMRESTRICTION on COMMUNICATIONSETTINGS.COMMUNICATIONSETTINGSID = COMMRESTRICTION.COMMRESTRICTIONID;
+      </sql>
+  </changeSet>
+</databaseChangeLog>

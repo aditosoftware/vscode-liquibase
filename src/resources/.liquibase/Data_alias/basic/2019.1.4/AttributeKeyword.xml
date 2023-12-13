@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="f527a5cc-f1e5-497f-a069-33aee944d421">
+	<addColumn tableName="AB_ATTRIBUTE">
+            <column name="DROPDOWNDEFINITION" type="VARCHAR(80)"/>
+            <column name="ATTRIBUTE_INFO" type="NCLOB"/>
+            <column name="SORTING" type="INTEGER"/>
+            <column name="DROPDOWNFILTER" type="NVARCHAR(512)"/>
+	</addColumn>
+	<addColumn tableName="AB_ATTRIBUTERELATION">
+            <column name="INT_VALUE" type="INTEGER"/>
+	</addColumn>
+        <dropColumn tableName="AB_ATTRIBUTERELATION">
+            <column name="BOOL_VALUE"/>
+        </dropColumn>
+        <dropColumn tableName="AB_ATTRIBUTE">
+            <column name="ATTRIBUTE_LEVEL"/>
+        </dropColumn>
+	<modifyDataType tableName="AB_ATTRIBUTERELATION" columnName="CHAR_VALUE" newDataType="NVARCHAR(512)"/>
+	<createIndex indexName="IDX_ATTRPARENT" tableName="AB_ATTRIBUTE">
+		<column name="ATTRIBUTE_PARENT_ID"/>
+	</createIndex>
+    </changeSet>
+</databaseChangeLog>

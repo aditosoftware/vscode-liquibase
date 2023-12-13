@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.leierseder" id="49ca80b4-7735-4300-8603-6761672b2048">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="4b05ec8a-6964-40e5-8713-0043ca926eb6"/>
+
+            <column name="NAME" value="defaultAvatarRepresentation"/>
+            <column name="CONTAINER" value="SalesprojectSource"/>
+            <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="4a6b782b-1b15-45d7-9acb-831312d3f745"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="f83c96e3-47be-4ca1-bc47-4a3a2fce7fca"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="4b05ec8a-6964-40e5-8713-0043ca926eb6"/>
+            <column name="CHAR_VALUE" value="VAADIN:GLOBE_WIRE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f3b79959-00e3-4361-b042-6c179dc6cbca"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="1a197ade-0c61-4643-8287-159719d519b4"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="4b05ec8a-6964-40e5-8713-0043ca926eb6"/>
+            <column name="CHAR_VALUE" value="VAADIN:HOME"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="54c417d8-e567-41ae-8d56-277559f7b023"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="f552b84a-b8e7-472a-9ce5-d64e7f14e74b"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="4b05ec8a-6964-40e5-8713-0043ca926eb6"/>
+            <column name="CHAR_VALUE" value="VAADIN:HOME"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="a6157376-f0af-49f2-b55e-5c0acc331742"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="7ea06933-94c9-4a05-ba7d-4266df9e4ab2"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="4b05ec8a-6964-40e5-8713-0043ca926eb6"/>
+            <column name="CHAR_VALUE" value="VAADIN:SHOP"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

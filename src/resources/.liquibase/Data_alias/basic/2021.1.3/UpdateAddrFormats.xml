@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.pongratz" id="cb065db3-bf61-4d6f-8887-d71540089a41">
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="〒%Z%n%S%n%B %A%n%O%n%N"/>
+      <where>ISO2 = 'JP'</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

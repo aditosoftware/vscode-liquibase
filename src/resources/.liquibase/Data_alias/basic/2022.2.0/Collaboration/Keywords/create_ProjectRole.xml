@@ -1,0 +1,115 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="q.billinger" id="d1130a23-be30-427d-b3aa-5ce64eea6f4e">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="6aa891ed-09c2-4ba8-b4f6-c8d465bedf9f"/>
+      <column name="KEYID" value="ProductOwner"/>
+      <column name="TITLE" value="Product Owner"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="c2b20109-1ad4-4f49-950d-9faaa68b419a"/>
+      <column name="KEYID" value="AgileCoach"/>
+      <column name="TITLE" value="Agile Coach"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="2277d294-f5ec-4e85-81b3-ba0321d33b36"/>
+      <column name="KEYID" value="Developer"/>
+      <column name="TITLE" value="Entwickler"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="8edd96f4-3876-4a5c-baf7-f557076acf6f"/>
+      <column name="KEYID" value="Maintainer"/>
+      <column name="TITLE" value="Maintainer"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d982ee6d-fe1f-4c5a-b65d-02d3116a8bee"/>
+      <column name="KEYID" value="Tester"/>
+      <column name="TITLE" value="Tester"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="5"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="5e622ac6-fb31-4a92-85b7-cbfaa0385021"/>
+      <column name="KEYID" value="BuildReleasemanager"/>
+      <column name="TITLE" value="Build- und Releasemanager"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="6"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="88e96f01-2b4a-4e9a-83af-74bea9ce3f71"/>
+      <column name="KEYID" value="QA"/>
+      <column name="TITLE" value="Quality Assistant"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="7"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="028ca5bd-a329-4251-a924-b7ef01f90737"/>
+      <column name="KEYID" value="KnowledgeConsultant"/>
+      <column name="TITLE" value="Knowledge Consultant"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="8"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="484b2226-522e-409d-b809-deeea17f4b55"/>
+      <column name="KEYID" value="Projectcontrolling"/>
+      <column name="TITLE" value="Projektcontrolling"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="9"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="0f0a5d3a-527a-4a37-8a85-2fc9c55b56dd"/>
+      <column name="KEYID" value="ProductCommunication"/>
+      <column name="TITLE" value="Product Communication"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="10"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="786fd8bc-f79c-463d-9429-36fadd1d46cb"/>
+      <column name="KEYID" value="KeyUser"/>
+      <column name="TITLE" value="Key User"/>
+      <column name="CONTAINER" value="ProjectRole"/>
+      <column name="SORTING" valueNumeric="11"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="48d0c5a6-8f94-4c3b-931b-f044c5b5ecca"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

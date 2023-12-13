@@ -1,0 +1,11 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="s.garb" id="82b6cbb3-adaa-47cc-9bb0-199e9061c2bc">
+        <update tableName="AB_COUNTRYINFO">
+            <column name="ADDR_FORMAT" value= "%N%n%O%n%B %A%n%D%n%C%n%S %Z"/>
+            <where>ISO2 = 'IE'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

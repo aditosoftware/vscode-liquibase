@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="v.broens" id="27c0ee46-a456-479e-a5b6-27e4624f6b18">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from AB_KEYWORD_ENTRY where AB_KEYWORD_ENTRYID = '958021c1-e025-4d8c-8cfb-0d963d609dc2';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="AB_KEYWORD_ENTRY">  
+            <column  name="AB_KEYWORD_ENTRYID"  value="958021c1-e025-4d8c-8cfb-0d963d609dc2"/>  
+            <column  name="KEYID"  value="SUBJECT_BODY"/>  
+            <column  name="TITLE"  value="Subject and Body"/>  
+            <column  name="CONTAINER"  value="InboxFilterComponent"/>  
+            <column  name="SORTING"  valueNumeric="3"/>  
+            <column  name="ISACTIVE"  valueNumeric="1"/>  
+            <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+            <column  name="AB_KEYWORD_CATEGORY_ID"  value="7723f275-e9b2-4a77-92de-e2e558638664"/>
+        </insert> 
+  </changeSet>
+</databaseChangeLog>

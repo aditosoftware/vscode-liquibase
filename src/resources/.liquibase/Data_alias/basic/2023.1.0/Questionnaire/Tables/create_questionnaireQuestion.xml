@@ -1,0 +1,59 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="M.Wachsmuth" id="e92c8d9a-df2f-4820-955c-5d72c050f78f">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="QUESTIONNAIREQUESTION" />
+      </not>
+    </preConditions>
+    <createTable tableName="QUESTIONNAIREQUESTION">
+      <column name="QUESTIONNAIREQUESTIONID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="QUESTIONTYPE" type="VARCHAR(36)"/>
+      <column name ="QUESTIONNAIREQUESTIONPARENT_ID" type="VARCHAR(36)"/>
+      <column name ="QUESTIONNAIRE_ID" type="VARCHAR(36)"/>
+      <column name="VALUE" type="VARCHAR(100)" />
+      <column name="TEXT" type="NCLOB" />
+      <column name="DESCRIPTION" type="NVARCHAR(255)" />
+      <column name="PLACEHOLDER" type="NVARCHAR(255)" />
+      <column name="FOREIGNKEYTYPE" type="VARCHAR(100)" />
+      <column name="FOREIGNKEY" type="VARCHAR(100)" />
+      <column name="ANSWERTYPE" type="VARCHAR(36)" />
+      <column name="INPUTTYPE" type="VARCHAR(36)" />
+      <column name="LOOKUPTYPE" type="VARCHAR(36)" />
+      <column name="TITLELOCATION" type="VARCHAR(36)" />
+      <column name="LOOKUPKEYWORD" type="VARCHAR(80)" />
+      <column name="VISIBLECONDITION" type="NCLOB" />
+      <column name="ROWBREAK" type="TINYINT" />
+      <column name="SORTING" type="VARCHAR(10)" />
+      <column name="SORTINGLAYER" type="TINYINT" />
+      <column name="ISREQUIRED" type="TINYINT" />
+      <column name="ISREADONLY" type="TINYINT" />
+      <column name="EXPRESSION" type="VARCHAR(255)"/>
+      <column name="DEFAULTVALUE" type="NVARCHAR(255)" />
+      <column name="MAXLENGTH" type="INT" />
+      <column name="VALUEMINDESCRIPTION" type="NVARCHAR(100)" />
+      <column name="VALUEMAXDESCRIPTION" type="NVARCHAR(100)" />
+      <column name="TARGETTABLE" type="VARCHAR(100)" />
+      <column name="TARGETFIELD" type="VARCHAR(100)" />
+      <column name="VALUEMIN" type="FLOAT" />
+      <column name="VALUEMAX" type="FLOAT" />
+      <column name="COLUMNCOUNT" type="INT" />
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+    </createTable>
+    <createIndex tableName="QUESTIONNAIREQUESTION" indexName="QUESTIONFILTERVIEW">
+          <column name="QUESTIONNAIRE_ID"/>
+          <column name="SORTING"/>
+    </createIndex>
+    <modifySql dbms="mysql,mariadb">
+            <regExpReplace replace="NVARCHAR\(([^\)]*)\)" with="VARCHAR($1) CHARACTER SET utf8mb4" />
+            <replace replace="LONGTEXT CHARACTER SET utf8" with="LONGTEXT CHARACTER SET utf8mb4" />
+    </modifySql>
+  </changeSet>
+</databaseChangeLog>

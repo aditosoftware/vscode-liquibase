@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="1801edd3-72d9-4297-8b9b-7ac14cb57884">
+      <addColumn tableName="BULKMAIL">
+          <column name="CAMPAIGN_ID" type="CHAR(36)"/>
+      </addColumn>
+      <createIndex indexName="IDX_BULKMAIL_CAMPAIGN_ID" tableName="BULKMAIL">
+          <column name="CAMPAIGN_ID" />
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>

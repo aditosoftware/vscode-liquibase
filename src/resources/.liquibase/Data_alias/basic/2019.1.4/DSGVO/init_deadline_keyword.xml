@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="7edcadc6-d9fa-4156-9df8-7be934db5d9e">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="dd955f03-a36d-4217-9449-aa05dcc1e51a"/>
+            <column name="KEYID" value="DSGVOONTIME"/>
+            <column name="TITLE" value="On time"/>
+            <column name="CONTAINER" value="DSGVODeadline"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="6d361b4d-5cc6-48eb-83ee-4a8573ad466a"/>
+            <column name="KEYID" value="DSGVODEADLINECOMPLEX"/>
+            <column name="TITLE" value="Extend - complexity"/>
+            <column name="CONTAINER" value="DSGVODeadline"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="32f48ab8-691e-49e6-951b-be088e7c60ff"/>
+            <column name="KEYID" value="DSGVODEADLINECOUNT"/>
+            <column name="TITLE" value="Extend - request count"/>
+            <column name="CONTAINER" value="DSGVODeadline"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

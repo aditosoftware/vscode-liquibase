@@ -1,0 +1,73 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="763d3fd1-8cd6-4c7d-a7d9-04df78b4b458">
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="a485cbd1-65ff-492c-9388-d5b75dcdbe4c"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+      <column name="NAME" value="QuestionnaireTargetTable"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="f23fa788-0188-408e-b345-9458dac1bc62"/>
+      <column name="KEYID" value="Person"/>
+      <column name="TITLE" value="Person"/>
+      <column name="CONTAINER" value="QuestionnaireTargetTable"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="a485cbd1-65ff-492c-9388-d5b75dcdbe4c"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="3c306f84-cbdf-47ae-894b-0096f24ae0b4"/>
+      <column name="KEYID" value="Contact"/>
+      <column name="TITLE" value="Contact"/>
+      <column name="CONTAINER" value="QuestionnaireTargetTable"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="a485cbd1-65ff-492c-9388-d5b75dcdbe4c"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="55d8f361-6fde-469c-bb74-848a1049e969"/>
+      <column name="KEYID" value="Organisation"/>
+      <column name="TITLE" value="Organisation"/>
+      <column name="CONTAINER" value="QuestionnaireTargetTable"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="a485cbd1-65ff-492c-9388-d5b75dcdbe4c"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d0b97562-d862-4bb3-b220-680386a2b907"/>
+      <column name="KEYID" value="Email"/>
+      <column name="TITLE" value="Email"/>
+      <column name="CONTAINER" value="QuestionnaireTargetTable"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="a485cbd1-65ff-492c-9388-d5b75dcdbe4c"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="314e0e5d-fcc0-445d-a304-e2a62122d213"/>
+      <column name="KEYID" value="Phone"/>
+      <column name="TITLE" value="Phone"/>
+      <column name="CONTAINER" value="QuestionnaireTargetTable"/>
+      <column name="SORTING" valueNumeric="5"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="a485cbd1-65ff-492c-9388-d5b75dcdbe4c"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="ebaccbb7-4922-441e-94af-b9beec2eaced"/>
+      <column name="KEYID" value="Address"/>
+      <column name="TITLE" value="Address"/>
+      <column name="CONTAINER" value="QuestionnaireTargetTable"/>
+      <column name="SORTING" valueNumeric="6"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="a485cbd1-65ff-492c-9388-d5b75dcdbe4c"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

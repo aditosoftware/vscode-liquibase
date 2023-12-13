@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="1dd1c707-1ae3-4df3-9b94-84601e835ab1">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0d30ed22-bb79-450a-a027-6786e7bb6028"/>
+            <column name="KEYID" value="7"/>
+            <column name="TITLE" value="HTML template - Only for .html"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="SORTING" valueNumeric="7"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="1abf63c6-82fb-4eae-9006-2caf467a6c5b"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="5ff35897-8e2e-4b6f-adbe-2f62b4120f00"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2004"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="27ff2187-3013-42c0-91b3-3356f81f3731"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="0d30ed22-bb79-450a-a027-6786e7bb6028"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2004"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

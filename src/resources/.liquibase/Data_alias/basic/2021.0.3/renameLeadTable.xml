@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="d.tran" id="22056191-8d5a-4690-8872-d0aa6cca43b4">
+      <renameTable oldTableName="LEAD" newTableName="LEADS"/>
+      <renameColumn tableName="LEADS" columnDataType="CHAR(36)" oldColumnName="LEADID" newColumnName="LEADSID"/>
+  </changeSet>
+</databaseChangeLog>

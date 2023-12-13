@@ -1,0 +1,47 @@
+[2023-11-22 10:31:23] SCHWERWIEGEND [liquibase.integration] java.lang.RuntimeException: Cannot find database driver: org.mariadb.jdbc.Driver
+liquibase.exception.CommandExecutionException: liquibase.exception.LiquibaseException: Unerwarteter Fehler bei der Ausführung von Liquibase: java.lang.RuntimeException: Cannot find database driver: org.mariadb.jdbc.Driver
+	at liquibase.command.CommandScope.execute(CommandScope.java:153)
+	at liquibase.integration.commandline.CommandRunner.call(CommandRunner.java:45)
+	at liquibase.integration.commandline.CommandRunner.call(CommandRunner.java:15)
+	at picocli.CommandLine.executeUserObject(CommandLine.java:1953)
+	at picocli.CommandLine.access$1300(CommandLine.java:145)
+	at picocli.CommandLine$RunLast.executeUserObjectOfLastSubcommandWithSameParent(CommandLine.java:2352)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2346)
+	at picocli.CommandLine$RunLast.handle(CommandLine.java:2311)
+	at picocli.CommandLine$AbstractParseResultHandler.execute(CommandLine.java:2179)
+	at picocli.CommandLine.execute(CommandLine.java:2078)
+	at liquibase.integration.commandline.LiquibaseCommandLine.lambda$execute$1(LiquibaseCommandLine.java:306)
+	at liquibase.Scope.child(Scope.java:175)
+	at liquibase.Scope.child(Scope.java:151)
+	at liquibase.integration.commandline.LiquibaseCommandLine.execute(LiquibaseCommandLine.java:289)
+	at liquibase.integration.commandline.LiquibaseCommandLine.main(LiquibaseCommandLine.java:83)
+Caused by: liquibase.exception.LiquibaseException: Unerwarteter Fehler bei der Ausführung von Liquibase: java.lang.RuntimeException: Cannot find database driver: org.mariadb.jdbc.Driver
+	at liquibase.integration.commandline.Main$1.run(Main.java:444)
+	at liquibase.integration.commandline.Main$1.run(Main.java:222)
+	at liquibase.Scope.child(Scope.java:175)
+	at liquibase.Scope.child(Scope.java:151)
+	at liquibase.integration.commandline.Main.run(Main.java:222)
+	at liquibase.command.AbstractCliWrapperCommandStep.run(AbstractCliWrapperCommandStep.java:32)
+	at liquibase.command.CommandScope.execute(CommandScope.java:147)
+	... 14 more
+Caused by: liquibase.exception.DatabaseException: liquibase.exception.DatabaseException: java.lang.RuntimeException: Cannot find database driver: org.mariadb.jdbc.Driver
+	at liquibase.integration.commandline.CommandLineUtils.createDatabaseObject(CommandLineUtils.java:125)
+	at liquibase.integration.commandline.Main.doMigration(Main.java:1520)
+	at liquibase.integration.commandline.Main$1.lambda$run$0(Main.java:399)
+	at liquibase.Scope.lambda$child$0(Scope.java:166)
+	at liquibase.Scope.child(Scope.java:175)
+	at liquibase.Scope.child(Scope.java:165)
+	at liquibase.Scope.child(Scope.java:144)
+	at liquibase.integration.commandline.Main$1.run(Main.java:398)
+	... 20 more
+Caused by: liquibase.exception.DatabaseException: java.lang.RuntimeException: Cannot find database driver: org.mariadb.jdbc.Driver
+	at liquibase.database.DatabaseFactory.openConnection(DatabaseFactory.java:217)
+	at liquibase.database.DatabaseFactory.openConnection(DatabaseFactory.java:176)
+	at liquibase.database.DatabaseFactory.openDatabase(DatabaseFactory.java:141)
+	at liquibase.integration.commandline.CommandLineUtils.createDatabaseObject(CommandLineUtils.java:90)
+	... 27 more
+Caused by: java.lang.RuntimeException: Cannot find database driver: org.mariadb.jdbc.Driver
+	at liquibase.database.DatabaseFactory.loadDriver(DatabaseFactory.java:272)
+	at liquibase.database.DatabaseFactory.openConnection(DatabaseFactory.java:201)
+	... 30 more
+

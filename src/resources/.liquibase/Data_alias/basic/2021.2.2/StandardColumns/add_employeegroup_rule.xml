@@ -1,0 +1,18 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="V.Broens" id="0224dc71-d58c-4ac8-ba02-7390718de9b3">
+      <preConditions onFail="MARK_RAN">
+          <not>
+              <columnExists tableName="EMPLOYEEGROUP_RULE" columnName="DATE_EDIT"/>
+          </not>
+      </preConditions>
+      <addColumn tableName="EMPLOYEEGROUP_RULE">
+            <column name="DATE_EDIT" type="DATETIME"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+        </addColumn>
+  </changeSet>
+</databaseChangeLog>

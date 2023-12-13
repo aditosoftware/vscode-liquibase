@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aliasConfig xmlns="http://www.adito.de/2018/ao/Model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" VERSION="1.2.2" xsi:schemaLocation="http://www.adito.de/2018/ao/Model adito://models/xsd/aliasConfig/1.2.2">
+  <name>_____CONFIGURATION_default</name>
+  <serverId>default</serverId>
+  <definitionName>_____CONFIGURATION</definitionName>
+  <aliasConfigSub>
+    <aliasSubInstanceConfiguration>
+      <databaseAuditEnabled v="true" />
+      <databaseAuditProcessUser v="Admin" />
+      <indexsearchEnabled v="true" />
+      <indexsearchAlias>IndexSearch</indexsearchAlias>
+      <loggingConsoleEnabled v="true" />
+      <loggingFileEnabled v="true" />
+      <loggingRemoteEnabled v="false" />
+      <mailGlobalEnabled v="true" />
+      <neonDisableConnectionSecurity v="false" />
+      <neonUseSelfSignedCertificate v="true" />
+      <securityConnectionSSLEnabled v="true" />
+      <securitySSLDisableCertificateCheck v="true" />
+      <customProperties>
+        <customBooleanProperty>
+          <name>dataCaching.client.forceDisable</name>
+          <description>Enabling this option will disable the per-client-context data-cache within the customzing (for exameple the caching of Keywords). This is usefull if you're testing and want to frequently add data like keywords, etc. which are cached which help of the "DataCaching_lib".</description>
+          <property v="false" />
+        </customBooleanProperty>
+      </customProperties>
+    </aliasSubInstanceConfiguration>
+  </aliasConfigSub>
+</aliasConfig>

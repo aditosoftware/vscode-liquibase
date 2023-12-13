@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="update_phase.xml"/>
+    <include relativeToChangelogFile="true" file="update_checklistentry.xml"/>
+    <include relativeToChangelogFile="true" file="update_salesproject.xml"/>
+    <include relativeToChangelogFile="true" file="update_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="update_ab_attributeusage_salesprojectorigin.xml"/>
+    <include relativeToChangelogFile="true" file="change_phase_translation.xml"/>
+    <include relativeToChangelogFile="true" file="alter_salesproject_phase.xml"/>
+    <include relativeToChangelogFile="true" file="alter_checklistentryvalue.xml"/>
+</databaseChangeLog>

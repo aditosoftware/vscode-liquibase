@@ -1,0 +1,78 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="ef2bd9c6-b585-4490-b752-85cb15d3df91" dbms="!oracle">
+        <preConditions onFail="MARK_RAN">
+            <not>
+              <tableExists tableName="RESOURCE"/>
+            </not>
+        </preConditions>
+        <createTable tableName="RESOURCE">
+            <column name="RESOURCEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_RESOURCEID"/>
+            </column>
+            <column name="OBJECT_TYPE" type="NVARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_ROWID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BUSINESSHOURS_FROM" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BUSINESSHOURS_TO" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="RESOURCE" indexName="IDX_RESOURCE_OBJECT_TYPE">
+            <column name="OBJECT_TYPE"/>
+        </createIndex>
+        <createIndex tableName="RESOURCE" indexName="IDX_RESOURCE_OBJECT_ROWID">
+            <column name="OBJECT_ROWID"/>
+        </createIndex>
+    </changeSet>
+    
+    <changeSet author="b.ulrich" id="f848c399-fea5-4907-80a0-bac0b6315f80" dbms="oracle">
+        <preConditions onFail="MARK_RAN">
+            <not>
+              <tableExists tableName="RESOURCES"/>
+            </not>
+        </preConditions>
+        <createTable tableName="RESOURCES">
+            <column name="RESOURCESID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_RESOURCESID"/>
+            </column>
+            <column name="OBJECT_TYPE" type="NVARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_ROWID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BUSINESSHOURS_FROM" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BUSINESSHOURS_TO" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="RESOURCES" indexName="IDX_RESOURCES_OBJECT_TYPE">
+            <column name="OBJECT_TYPE"/>
+        </createIndex>
+        <createIndex tableName="RESOURCES" indexName="IDX_RESOURCES_OBJECT_ROWID">
+            <column name="OBJECT_ROWID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="1f8bb402-3dd8-4732-8409-0ffc784f84f4">
+        <createTable tableName="CONTACT">
+            <column name="STATUS" type="VARCHAR(36)"/>
+            <column name="ISOLANGUAGE" type="CHAR(3)"/>
+            <column name="ORGANISATION_ID" type="CHAR(36)"/>
+            <column name="PERSON_ID" type="CHAR(36)" />
+            <column name="RELATIONSHIP" type="INTEGER"/>
+            <column name="CONTACTID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_CONTACT_RELATIONID"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

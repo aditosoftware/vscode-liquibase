@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="e.pollinger" id="9e24c875-c592-4839-94aa-3de4269b6fe7">
+        <createTable tableName="KNOWLEDGEGITINTERFACE">
+            <column name="KNOWLEDGEGITINTERFACEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_KNOWLEDGEGITINTERFACE_KNOWLEDGEGITINTERFACEID"/>
+            </column>
+            <column name="GITCOMMIT" type="NVARCHAR(200)"/>
+            <column name="SYSTEMNAME" type="NVARCHAR(50)"/>              
+            <column name="DATE_NEW" type="DATETIME2"/>
+            <column name="DATE_EDIT" type="DATETIME2"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,107 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="M.Wachsmuth" id="8ba924ee-e730-41ab-8ba7-f2bcb8fef987">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="0da758cb-8d7c-4aea-a8bf-8b746b7bf770"/>
+      <column name="KEYID" value="text"/>
+      <column name="TITLE" value="Text"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="9407eaff-6eb5-40c1-ba99-8b87425ef1e7"/>
+      <column name="KEYID" value="number"/>
+      <column name="TITLE" value="Number"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="2600d349-edff-4d9c-9e9f-199a5879d03a"/>
+      <column name="KEYID" value="range"/>
+      <column name="TITLE" value="Range"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="2693ccf8-9924-4f63-b93b-639a70ed6948"/>
+      <column name="KEYID" value="email"/>
+      <column name="TITLE" value="E-Mail"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="dfcc17b4-2606-441a-b7b3-0a0a5fad5473"/>
+      <column name="KEYID" value="date"/>
+      <column name="TITLE" value="Date"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="5"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="affbdaa5-58cd-4328-b26f-b26824b96a39"/>
+      <column name="KEYID" value="time"/>
+      <column name="TITLE" value="Time"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="6"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="7d75fbb4-82a4-4abf-98ce-dcf2c82a9cd7"/>
+      <column name="KEYID" value="datetime-local"/>
+      <column name="TITLE" value="Datetime"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="7"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="37819edd-64b1-4b9b-9811-e7a3a8cfafea"/>
+      <column name="KEYID" value="month"/>
+      <column name="TITLE" value="Month"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="8"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="78b1151b-59db-4c5d-b7c7-5d46ac6e58e9"/>
+      <column name="KEYID" value="week"/>
+      <column name="TITLE" value="Week"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="9"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="c9eaea08-cc9c-4013-a5ac-3511736cc0b7"/>
+      <column name="KEYID" value="tel"/>
+      <column name="TITLE" value="Phone"/>
+      <column name="CONTAINER" value="QuestionnaireInputType"/>
+      <column name="SORTING" valueNumeric="10"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="c2217380-eaf6-4ec7-b723-337578846ae0"/>
+    </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="M.Wachsmuth" id="1f7a20e1-e1ad-415f-aa99-c3899adf9e38">
+  <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="e3fd6d9f-91da-4bb2-a917-0bc0962d801a"/>
+      <column name="KEYID" value="Manually"/>
+      <column name="TITLE" value="Manually"/>
+      <column name="CONTAINER" value="QuestionnaireLookupType"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="749deed6-a727-4602-9174-d571d09df283"/>
+    </insert>
+  <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="03cf0a6b-a16f-4ef9-b380-e5c910a14653"/>
+      <column name="KEYID" value="Keyword"/>
+      <column name="TITLE" value="Keyword"/>
+      <column name="CONTAINER" value="QuestionnaireLookupType"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="749deed6-a727-4602-9174-d571d09df283"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d6cee118-8caf-4859-abe8-6f207967b501"/>
+      <column name="KEYID" value="Language"/>
+      <column name="TITLE" value="Language"/>
+      <column name="CONTAINER" value="QuestionnaireLookupType"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="749deed6-a727-4602-9174-d571d09df283"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="872388bb-decd-4cd7-a6aa-e4923c6b092d"/>
+      <column name="KEYID" value="Country"/>
+      <column name="TITLE" value="Country"/>
+      <column name="CONTAINER" value="QuestionnaireLookupType"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="749deed6-a727-4602-9174-d571d09df283"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

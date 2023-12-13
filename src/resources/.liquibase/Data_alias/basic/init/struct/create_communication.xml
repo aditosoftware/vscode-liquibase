@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="t.feldmann" id="33b5d1ac-08cf-3331-90a8-8cbc1439bfca">
+	<createTable tableName="COMMUNICATION">
+		<column name="COMMUNICATIONID" type="CHAR(36)">
+			<constraints primaryKey="true" primaryKeyName="PK_COMM_COMMID"/>
+		</column>    
+                <column name="ADDR" type="NVARCHAR(255)"/>          
+		<column name="MEDIUM_ID" type="INTEGER"/>
+		<column name="CONTACT_ID" type="CHAR(36)"/>
+		<column name="ISSTANDARD" type="TINYINT">
+                    <constraints nullable="false"/>
+                </column>
+	</createTable>      
+</changeSet>
+</databaseChangeLog>

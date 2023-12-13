@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.scheffel" id="414c01eb-2605-441b-8874-c6646860ba7a">
+      <update tableName="AB_KEYWORD_ENTRY">
+          <column name="ISACTIVE" valueNumeric="0"/>
+          <where> AB_KEYWORD_ENTRYID = ? </where>
+          <whereParams>
+              <param value="66d1563a-a76c-47ca-af6b-38586a2f3ce3"/> 
+          </whereParams>
+      </update>
+  </changeSet>
+</databaseChangeLog>

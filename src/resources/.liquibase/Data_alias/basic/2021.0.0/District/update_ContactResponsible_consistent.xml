@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="Pierre Suchacek" id="610e5b84-2428-4294-b513-b4a0c7493e0a">
+        <renameColumn
+            columnDataType="VARCHAR(36)"  
+            newColumnName="ADVISER_STATUS"  
+            oldColumnName="ADVISERSTATUS"   
+            tableName="DISTRICTRESPONSIBLE"/>
+        
+        <renameColumn
+            columnDataType="VARCHAR(36)"  
+            newColumnName="ADVISER_ROLE"  
+            oldColumnName="ADVISERROLE"   
+            tableName="DISTRICTRESPONSIBLE"/>
+                
+        <renameColumn
+            columnDataType="VARCHAR(36)"  
+            newColumnName="VALID_FROM"  
+            oldColumnName="VALIDFROM"   
+            tableName="DISTRICTRESPONSIBLE"/>
+                        
+        <renameColumn
+            columnDataType="VARCHAR(36)"  
+            newColumnName="VALID_UNTIL"  
+            oldColumnName="VALIDTO"   
+            tableName="DISTRICTRESPONSIBLE"/>
+    </changeSet>
+</databaseChangeLog>

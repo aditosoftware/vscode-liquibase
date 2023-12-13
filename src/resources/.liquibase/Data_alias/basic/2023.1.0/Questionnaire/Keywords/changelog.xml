@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireAnswerType.xml"/>
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireLookupType.xml"/>
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireInputType.xml"/>
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireStatus.xml"/>
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireType.xml"/>
+    <include relativeToChangelogFile="true" file="insert_Questionnaire_categories.xml"/>
+    <include relativeToChangelogFile="true" file="insert_Questionnaire_keywordAttributes.xml"/>
+    <include relativeToChangelogFile="true" file="insert_Questionnaire_keywordAttrRel.xml"/>
+    <include relativeToChangelogFile="true" file="insert_DocTempType_Questionnaire.xml"/>
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireTargetTable.xml"/>
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireTitleLocation.xml"/>
+    <include relativeToChangelogFile="true" file="insert_QuestionnaireQuestionType.xml"/>
+</databaseChangeLog>

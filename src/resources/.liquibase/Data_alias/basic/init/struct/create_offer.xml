@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="m.schroeger" id="2f02d14b-731b-4e66-a945-af90b2e3b762">
+	<createTable tableName="OFFER">
+		<column name="OFFERID" type="CHAR(36)">
+			<constraints primaryKey="true"/>
+		</column>   
+                <column name="CONTACT_ID" type="CHAR(36)">
+                    <constraints primaryKey="true" primaryKeyName="PK_OFFER_OFFERID"/>
+                </column>                           
+                <column name="SALESPROJECT_ID" type="CHAR(36)"/>
+		<column name="OFFER_ID" type="CHAR(36)"/>
+                <column name="HEADER" type="NCLOB"/>
+                <column name="FOOTER" type="NCLOB"/>
+                <column name="OFFERDATE" type="DATETIME"/>
+                <column name="ISOLANGUAGE" type="CHAR(3)"/>
+                <column name="OFFERCODE" type="INTEGER"/>
+                <column name="VERSNR" type="INTEGER"/>
+                <column name="STATUS" type="VARCHAR(36)"/>
+                <column name="PROBABILITY" type="INTEGER"/>
+                <column name="NET" type="NUMERIC(14,2)"/>
+                <column name="VAT" type="NUMERIC(14,2)"/>
+                <column name="CURRENCY" type="VARCHAR(36)"/>
+                <column name="ADDRESS" type="NCLOB"/>
+	</createTable>      
+</changeSet>
+</databaseChangeLog>

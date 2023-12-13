@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="b3407931-7898-4e61-872c-89516c7878c0">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="6443344e-8f0b-4699-8d38-5e26dff06b23"/>
+            <column name="NAME" value="DSGVOReason"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

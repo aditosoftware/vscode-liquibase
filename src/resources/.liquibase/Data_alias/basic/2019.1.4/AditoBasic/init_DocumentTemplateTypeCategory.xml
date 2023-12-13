@@ -1,0 +1,131 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="d.lechner" id="documentTemplateTypeCategory-1">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="14c2d515-a42f-4618-b534-7a23369d2001"/>
+            <column name="NAME" value="LET"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="14c2d515-a42f-4618-b534-7a23369d2002"/>
+            <column name="NAME" value="MAI"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="14c2d515-a42f-4618-b534-7a23369d2003"/>
+            <column name="NAME" value="ATT"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="14c2d515-a42f-4618-b534-7a23369d2004"/>
+            <column name="NAME" value="TEX"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="KIND" value="BOOL_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="c564719a-18ef-423e-b130-dp88b2b51123"/>
+            <column name="KEYID" value="1"/>
+            <column name="TITLE" value="Single"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="63110456-3d8a-4756-9a72-9f94dda182f8"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="c564719a-18ef-423e-b130-dp88b2b51123"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2001"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="bb38aa51-ee36-9771-b458-6751f137a999"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="c564719a-18ef-423e-b130-dp88b2b51123"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2002"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="6f4c6e49-36ca-4b98-ba83-c507203wa456"/>
+            <column name="KEYID" value="2"/>
+            <column name="TITLE" value="Serial"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="58334e95-7a89-4255-bf84-0234c386a69f"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="6f4c6e49-36ca-4b98-ba83-c507203wa456"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2001"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="850d17ae-b9f4-464f-ba16-9e22f3d8716c"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="6f4c6e49-36ca-4b98-ba83-c507203wa456"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2002"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="bb386131-ee36-9771-b458-6751f137a789"/>
+            <column name="KEYID" value="3"/>
+            <column name="TITLE" value="Offer Header Text"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="5f3352cf-38aa-403a-8d8e-9f1ca40a5dca"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="bb386131-ee36-9771-b458-6751f137a789"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2004"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="bb38aa51-ee36-9771-b458-6751f137a999"/>
+            <column name="KEYID" value="4"/>
+            <column name="TITLE" value="Offer Footer Text"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f8df9595-5932-4e60-ac50-b903dc739e48"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="bb38aa51-ee36-9771-b458-6751f137a999"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2004"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+         <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="beb7691f-ff9e-4344-89e1-d2664f7384e0"/>
+            <column name="KEYID" value="5"/>
+            <column name="TITLE" value="Receipt Header Text"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="d57bf04f-574e-42b4-99e5-31f630239bf6"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="beb7691f-ff9e-4344-89e1-d2664f7384e0"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2004"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="267d1707-99db-40fa-914a-e36ba22e3ad6"/>
+            <column name="KEYID" value="6"/>
+            <column name="TITLE" value="Receipt Footer Text"/>
+            <column name="CONTAINER" value="DocumentTemplateTypeCategory"/>
+            <column name="SORTING" valueNumeric="5"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="0d7d908e-6b0b-45ec-9e2f-d5b83e8d96df"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="267d1707-99db-40fa-914a-e36ba22e3ad6"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2004"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

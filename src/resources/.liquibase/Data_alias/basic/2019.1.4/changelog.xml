@@ -1,0 +1,194 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="ORGANISATION_private.xml"/>
+    
+    <include relativeToChangelogFile="true" file="update_TaskType_Task.xml"/>
+    
+    <include relativeToChangelogFile="true" file="activity_add_parent.xml"/>
+    <include relativeToChangelogFile="true" file="task_add_parent.xml"/>
+
+    <include relativeToChangelogFile="true" file="create_salutation.xml"/>
+
+    <include relativeToChangelogFile="true" file="drop_estimation_salesproject.xml"/>
+
+    <!--References to the Keyword Values-->
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/OfferProbability.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/ActivityCategory.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/CommunicationMedium.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/AddressType.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/SalesProjectStrength.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/SalesProjectPhase.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/SalesProjectState.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/SalesProjectWeakness.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/SalesProjectPricePolitics.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/TaskPriority.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/SalesprojectCompetitionState.xml"/>
+    <include relativeToChangelogFile="true" file="KeywordRelatedStructureChanges/SalesProjectCompetitionPhase.xml"/>
+
+    <!--References to the reference files-->
+    <include relativeToChangelogFile="true" file="AditoBasic/init_OfferProbability.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_ActivityCategory.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_CommunicationMedium.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_CommunicationMediumCampaign.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_AddressType.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_SalesprojectState.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_SalesprojectPhase.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_TaskPriority.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_TaskProgress.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_SalesprojectCompetitionState.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_AttributeType.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_PaymentTerm.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_DeliveryTerm.xml"/>
+    <include relativeToChangelogFile="true" file="AttributeKeyword.xml"/>
+    <include relativeToChangelogFile="true" file="Contact_add_columns.xml"/>
+    <include relativeToChangelogFile="true" file="SalesOrder_source_offer.xml"/>
+    <include relativeToChangelogFile="true" file="Product_remove_fk.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_YesNo.xml"/>
+
+    <include relativeToChangelogFile="true" file="drop_contact_id_sp_forecast.xml"/>
+
+    <include relativeToChangelogFile="true" file="fix_sp_phases.xml"/>
+
+    <include relativeToChangelogFile="true" file="drop_pricePolitics-weakness-strength.xml"/>
+
+    <include relativeToChangelogFile="true" file="update_pricelist_keyword.xml"/>
+
+    <include relativeToChangelogFile="true" file="create_taskLink.xml"/>
+
+    <include relativeToChangelogFile="true" file="Offer_terms.xml"/>
+
+    <include relativeToChangelogFile="true" file="add_ObjectRelation_type.xml"/>
+
+    <include relativeToChangelogFile="true" file="Salesproject_add_column.xml"/>
+
+    <include relativeToChangelogFile="true" file="AditoBasic/update_Strength_Weakness.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_ContactDepartment.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_ContactContactrole.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_ContactPosition.xml"/>
+
+    <include relativeToChangelogFile="true" file="AditoBasic/init_AttributeKeyword_target_group.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/insert_offer_status_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/insert_salesproject_state_keyword.xml"/>
+
+    <include relativeToChangelogFile="true" file="EditNewFields/organisation_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/person_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/address_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/contact_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/activity_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/activitylink_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/product_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/offer_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/attributerelation_add_date_editnew_user_editnew.xml"/>
+    <include relativeToChangelogFile="true" file="EditNewFields/communication_add_date_editnew_user_editnew.xml"/>
+    
+    <include relativeToChangelogFile="true" file="update_Salesproject_Forecast.xml"/>
+    <include relativeToChangelogFile="true" file="update_Offer.xml"/>
+    <include relativeToChangelogFile="true" file="update_Salesproject_Competition.xml"/>
+    <include relativeToChangelogFile="true" file="update_Salesproject_Member.xml"/>
+    <include relativeToChangelogFile="true" file="update_Memberrole_InternExtern.xml"/>
+    
+    <include relativeToChangelogFile="true" file="constraintsRefactor/indices_ContactManagement.xml"/>
+    <include relativeToChangelogFile="true" file="constraintsRefactor/indices_Keyword.xml"/>
+    <include relativeToChangelogFile="true" file="constraintsRefactor/indices_Activity.xml"/>
+    <include relativeToChangelogFile="true" file="constraintsRefactor/indices_Task.xml"/>
+
+    <include relativeToChangelogFile="true" file="Contactmanagement_added_ImageBlobs.xml" />
+	
+    <include relativeToChangelogFile="true" file="alter_activityLink.xml" />
+    
+    <include relativeToChangelogFile="true" file="renameCycle_to_Milestone.xml" />
+    <include relativeToChangelogFile="true" file="change_Milestone_datatype_to_new_Keyword_logic.xml" />
+    <include relativeToChangelogFile="true" file="update_Milestone_to_new_Keyword.xml" />
+
+    <include relativeToChangelogFile="true" file="AditoBasic/create_ab_loghistory.xml"/>
+    
+    <include relativeToChangelogFile="true" file="activity_rename_Creator_to_Responsible.xml" />
+
+    <include relativeToChangelogFile="true" file="create_documenttemplate.xml" />
+    <include relativeToChangelogFile="true" file="create_documenttemplatelink.xml" />
+    <include relativeToChangelogFile="true" file="AditoBasic/init_DocumentTemplateType.xml" />
+    <include relativeToChangelogFile="true" file="AditoBasic/init_DocumentTemplateTypeCategory.xml" />
+    <include relativeToChangelogFile="true" file="miscellaneous/Contact_additionalColumns.xml" />
+
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaign.xml"/>
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaignStep.xml"/>
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaignParticipant.xml"/>
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaignParticipantLog.xml"/>
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaignState.xml"/>
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaignStepState.xml"/>
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaignCost.xml"/>
+    <include relativeToChangelogFile="true" file="CampaignManagement/create_campaignCostCategory.xml"/>
+    
+    <include relativeToChangelogFile="true" file="AditoBasic/ActivityDirectionKeyword_add_icon_attr.xml"/>
+
+    <include relativeToChangelogFile="true" file="Classification/create_classification_tables.xml"/>
+    <include relativeToChangelogFile="true" file="Classification/insert_classification_scores.xml"/>
+    <include relativeToChangelogFile="true" file="Classification/insert_classification_types.xml"/>
+    <include relativeToChangelogFile="true" file="Classification/delete_salesprocejctClassification.xml"/>
+
+    <include relativeToChangelogFile="true" file="AditoBasic/extendKeywordOrganisationType.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/removeAttributeKeywordTargetGroup.xml"/>
+    
+    <include relativeToChangelogFile="true" file="AditoBasic/insert_permission_keyword.xml"/>
+    
+    <include relativeToChangelogFile="true" file="AditoBasic/ab_keyword_attributerelation_add_longtext_type.xml"/>
+    
+    <include relativeToChangelogFile="true" file="AditoBasic/salesprojectsource_add_icon_attr.xml"/>
+    
+    <include relativeToChangelogFile="true" file="constraintsRefactor/removeFKs.xml"/>
+
+    <include relativeToChangelogFile="true" file="Ticketmanagement/create_Ticket_table.xml"/>
+    <include relativeToChangelogFile="true" file="Ticketmanagement/insertTaskStatus.xml"/>
+    <include relativeToChangelogFile="true" file="Ticketmanagement/insert_TaskType_Ticket.xml"/>
+    <include relativeToChangelogFile="true" file="Ticketmanagement/insertTicketAttributes_TaskType_Task.xml"/>
+    <include relativeToChangelogFile="true" file="Ticketmanagement/insert_TicketTypes.xml"/>
+    
+    <include relativeToChangelogFile="true" file="longerProductName_Code.xml"/>
+    
+    <include relativeToChangelogFile="true" file="BulkMail/create_bulkmail.xml"/>
+    <include relativeToChangelogFile="true" file="BulkMail/create_bulkMailRecipient.xml"/>
+    <include relativeToChangelogFile="true" file="BulkMail/bulkMail_keywords.xml"/>
+    <include relativeToChangelogFile="true" file="BulkMail/create_serialLetter.xml"/>
+    <include relativeToChangelogFile="true" file="BulkMail/create_letterRecipient.xml"/>
+    
+    <include relativeToChangelogFile="true" file="add_objectRelationIcon.xml"/>
+
+    <include relativeToChangelogFile="true" file="DSGVO/create_DSGVO.xml"/>
+    <include relativeToChangelogFile="true" file="DSGVO/init_statuoritysource_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="DSGVO/init_purpose_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="DSGVO/init_dsgvoType_keyword.xml"/>    
+    <include relativeToChangelogFile="true" file="DSGVO/init_deadline_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="DSGVO/init_transmission_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="DSGVO/init_guarantee_keyword.xml"/>
+    
+    <include relativeToChangelogFile="true" file="AditoBasic/init_UnlinkedMail.xml"/>
+
+    <include relativeToChangelogFile="true" file="Attributes/AB_ATTRIBUTE.xml"/>
+    <include relativeToChangelogFile="true" file="Attributes/AB_ATTRIBUTEUSAGE.xml"/>
+
+    <include relativeToChangelogFile="true" file="create_description_translation.xml"/>
+    <include relativeToChangelogFile="true" file="remove_productInfo_language.xml"/>
+    
+    <include relativeToChangelogFile="true" file="update_Keyword_Essentials.xml"/>
+    
+    <include relativeToChangelogFile="true" file="Salesproject_Phase_icons.xml"/>
+    
+    <include relativeToChangelogFile="true" file="Salesprojectmilestone_add_parent.xml"/>
+
+    <include relativeToChangelogFile="true" file="AditoBasic/create_ab_ctilog.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_CallDirection.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_CallAnswerMode.xml"/>    
+    
+    <include relativeToChangelogFile="true" file="alter_appointmentlink.xml"/>
+    
+    <include relativeToChangelogFile="true" file="AditoBasic/init_NotificationPriority.xml"/>
+    <include relativeToChangelogFile="true" file="AditoBasic/init_NotificationState.xml"/>
+    
+    <include relativeToChangelogFile="true" file="Product_added_ImageBlobs.xml"/>
+    
+    <include relativeToChangelogFile="true" file="Salesorder/create_ordertype_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="Salesorder/create_dunninglevel_keyword.xml"/>
+    <include relativeToChangelogFile="true" file="Salesorder/update_Salesorder.xml"/>
+    <include relativeToChangelogFile="true" file="Salesproject_Phase_LongNames.xml"/>
+    <include relativeToChangelogFile="true" file="Salesorder_Payment_DayNumber.xml"/>
+</databaseChangeLog>

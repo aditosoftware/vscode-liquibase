@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="e.pollinger" id="06b5d1ac-08cf-4441-90a2-8cbc1438bfca">
+	<createTable tableName="PERSON">
+		<column name="PERSONID" type="CHAR(36)">
+			<constraints primaryKey="true" primaryKeyName="PK_PERSON_PERSONID"/>
+		</column>
+		<column name="DATEOFBIRTH" type="DATE"/>
+		<column name="FIRSTNAME" type="NVARCHAR(50)"/>
+		<column name="MIDDLENAME" type="NVARCHAR(50)"/>
+		<column name="LASTNAME" type="NVARCHAR(50)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="GENDER" type="VARCHAR(36)"/>
+		<column name="SALUTATION" type="NVARCHAR(16)"/>
+		<column name="TITLE" type="NVARCHAR(50)"/>
+		<column name="TITLESUFFIX" type="NVARCHAR(50)"/>
+	</createTable>
+	<createIndex indexName="IDX_PERS_NAME" tableName="PERSON">
+		<column name="FIRSTNAME"/>
+		<column name="LASTNAME"/>
+	</createIndex>
+</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,23 @@
+<br>
+	{@letterSalutation@},
+<br>
+<br>
+	es&nbsp;freut&nbsp;mich&nbsp;sehr,&nbsp;dass&nbsp;Sie&nbsp;sich&nbsp;dafür&nbsp;entschieden&nbsp;haben,&nbsp;mit&nbsp;uns&nbsp;zusammenzuarbeiten.
+<br><br>
+    Wie&nbsp;besprochen&nbsp;nutzen&nbsp;wir&nbsp;f&uuml;r&nbsp;unsere&nbsp;Vertr&auml;ge&nbsp;die&nbsp;M&ouml;glichkeit&nbsp;der&nbsp;digitalen&nbsp;Signatur.&nbsp;
+	<a href="{@signateLink@}">Klicken&nbsp;Sie&nbsp;auf&nbsp;diesen&nbsp;Link,&nbsp;um&nbsp;den&nbsp;Signiervorgang&nbsp;zu&nbsp;starten.</a>.
+    Sie finden dort alle relevanten Dokumente zur Pr&uuml;fung und k&ouml;nnen diese mit Hilfe des Links auch nach dem Signieren weiterhin einsehen.
+<br><br>
+	Wir&nbsp;stehen&nbsp;Ihnen&nbsp;f&uuml;r&nbsp;weitere&nbsp;Fragen&nbsp;gerne&nbsp;zur&nbsp;Verf&uuml;gung!
+<br>
+	Mit&nbsp;freundlichen&nbsp;Gr&uuml;&szlig;en
+<br>
+<br>{@senderName@}
+<br>
+<br>{@senderOrgname@}
+<br>{@senderAddress@}
+<br>{@senderZipCity@}
+<br>
+<br>FON:&nbsp;&nbsp;&nbsp;&nbsp;{@senderPhone@}
+<br>E-Mail:&nbsp;<a href="{@senderEmail@}">{@senderEmail@}</a><br>
+

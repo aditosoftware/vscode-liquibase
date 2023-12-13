@@ -1,0 +1,11 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="alter_AdvertisingAddDefaultColumns.xml"/>
+    <include relativeToChangelogFile="true" file="alter_AdvertisingItemDropColumns.xml"/>
+    <include relativeToChangelogFile="true" file="alter_productAdvertisingDatatype.xml"/>
+    <include relativeToChangelogFile="true" file="alter_AdvertisingRenameRowId.xml"/>
+    <include relativeToChangelogFile="true" file="alter_AdvertisingItemDropForeignKey.xml"/>
+    <include relativeToChangelogFile="true" file="alter_AdvertisingItemChangeItemPositionColumnType.xml"/>
+</databaseChangeLog>

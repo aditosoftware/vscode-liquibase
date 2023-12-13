@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="63233d76-e377-47a1-8c38-b0e0d0f405be">
+      <preConditions onFail="MARK_RAN">
+          <not>
+              <tableExists tableName="ASYS_VERSIONHISTORY"/>
+          </not>
+      </preConditions>
+      <createTable tableName="ASYS_VERSIONHISTORY">
+          <column name="TABLE_NAME" type="VARCHAR(255)">
+              <constraints nullable="false"/>
+          </column>
+          <column name="VERSION" type="VARCHAR(36)">
+              <constraints nullable="false"/>
+          </column>
+          <column name="OPERATION_TYPE" type="VARCHAR(255)">
+              <constraints nullable="false"/>
+          </column>
+          <column name="OPERATION_DESCRIPTION" type="VARCHAR(255)">
+              <constraints nullable="false"/>
+          </column>
+          <column name="USER_NEW" type="VARCHAR(36)">
+              <constraints nullable="false"/>
+          </column>
+          <column name="DATE_NEW" type="DATETIME">
+              <constraints nullable="false"/>
+          </column>
+      </createTable>
+      <createIndex tableName="ASYS_VERSIONHISTORY" indexName="idx_asysver_tablename">
+          <column name="TABLE_NAME"/>
+      </createIndex>
+      <createIndex tableName="ASYS_VERSIONHISTORY" indexName="idx_asysver_version">
+          <column name="VERSION"/>
+      </createIndex>
+      <createIndex tableName="ASYS_VERSIONHISTORY" indexName="idx_asysver_datenew">
+          <column name="DATE_NEW"/>
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>

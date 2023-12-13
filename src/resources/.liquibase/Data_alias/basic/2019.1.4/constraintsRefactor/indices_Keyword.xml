@@ -1,0 +1,18 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+	<changeSet author="j.goderbauer" id="95a53a6c-6157-4fc8-a4cb-501da22ad326">
+		<!-- the database will propably never use these indices since there are too less entries within the tables 
+		but IF there should be a lot of entries (thanks to imports or else) there are at least indices -->
+		<createIndex indexName="IDX_KWD_ENTRY_CONTAINER" tableName="AB_KEYWORD_ENTRY">
+			<column name="CONTAINER"/>
+		</createIndex>
+		<createIndex indexName="IDX_KWD_ATTR_CONTAINER" tableName="AB_KEYWORD_ATTRIBUTE">
+			<column name="CONTAINER"/>
+		</createIndex>
+		<createIndex indexName="IDX_KWD_ATTRREL_KWD_ENTRY_ID" tableName="AB_KEYWORD_ATTRIBUTERELATION">
+			<column name="AB_KEYWORD_ENTRY_ID"/>
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

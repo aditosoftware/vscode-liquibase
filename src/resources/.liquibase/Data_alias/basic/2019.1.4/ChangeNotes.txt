@@ -1,0 +1,5 @@
+* all TaskTypes are deleted, new Type "Task" is created
+ - you may have to update all Tasks to use type "Tak" (keyid: 4dee8727-8299-422e-ae41-6cdf9de2dfd799)
+* Column CODE is reset to NULL on all tasks (it is curently  not needed by basic)
+* ESTIMATION and ESTIMATIONVALUE from salesproject are droped
+* ObjectRelation: Types are moved from AB_OBJECTRELATION to AB_OBJECTRELATIONTYPE

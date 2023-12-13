@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="3dc18943-714e-4af5-954d-716bb8905bc3">
+        <createTable tableName="VISITPLANENTRYLINK">
+            <column name="VISITPLANENTRYLINKID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_VISITPLANENTRYLINKID"/>
+            </column>
+            <column name="VISITPLANENTRY_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_TYPE" type="NVARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_ROWID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+            
+        </createTable>
+        
+            <createIndex tableName="VISITPLANENTRYLINK" indexName="IDX_VISITPLANENTLINK_OBJ_TYPE">
+                <column name="OBJECT_TYPE"/>
+            </createIndex>
+            
+            <createIndex tableName="VISITPLANENTRYLINK" indexName="IDX_VISITPLANENTLINK_OBJ_ROWID">
+                <column name="OBJECT_ROWID"/>
+            </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

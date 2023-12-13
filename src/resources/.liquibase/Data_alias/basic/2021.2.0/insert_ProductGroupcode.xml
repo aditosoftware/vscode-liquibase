@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="8d48c017-cc36-4d56-a7fc-644d9b2d3446">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_CATEGORY_ID" value="e355059f-5b01-4438-8444-334655d6e136"/>
+            <column name="AB_KEYWORD_ENTRYID" value="db057413-d673-4c0c-8a08-9c3accbee38f"/>
+            <column name="KEYID" value="PRODUCTADVERTISING"/>
+            <column name="TITLE" value="Advertising material"/>
+            <column name="CONTAINER" value="ProductGroupcode"/>
+            <column name="SORTING" valueNumeric="6"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

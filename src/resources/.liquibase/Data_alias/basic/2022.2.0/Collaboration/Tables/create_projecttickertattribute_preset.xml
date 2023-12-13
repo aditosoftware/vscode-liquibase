@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.wachsmuth" id="b0007b2f-29b0-4b7d-9fe7-6c9d393d6d7b">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTTICKETATTRIBUTE_PRESET"/>
+      </not>
+    </preConditions>  
+    <createTable tableName="PROJECTTICKETATTRIBUTE_PRESET">
+      <column name="PROJECTTICKETATTRIBUTE_PRESETID" type="CHAR(36)">
+        <constraints primaryKey="true" primaryKeyName="PK_PROJECTTICKETATTRIBUTE_PRESET_PROJECTTICKETATTRIBUTE_PRESETID"></constraints>
+      </column>
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime"/>
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime"/>
+      <column defaultValueComputed="NULL" name="USER_NEW" type="VARCHAR(63)" />
+      <column defaultValueComputed="NULL" name="USER_EDIT" type="VARCHAR(63)" />
+      <column name="MANDATORY" type="TINYINT"/>
+      <column name="MANDATORY_FILTER" type="CLOB"/>
+      <column name="SORTING" type="INT"/>
+      <column name="MULTIPLE_FILTER" type="CLOB"/>
+      <column name="MULTIPLE" type="TINYINT"/>
+      <column name="PROJECTTICKETTYPE_ID" type="CHAR(36)" />
+      <column name="PROJECTTICKETATTRIBUTE_ID" type="CHAR(36)" />
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
+
+
+

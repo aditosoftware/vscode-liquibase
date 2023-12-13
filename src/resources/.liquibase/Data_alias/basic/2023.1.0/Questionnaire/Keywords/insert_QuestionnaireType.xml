@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="M.Wachsmuth" id="2f06ca06-41d1-4337-b47c-21532bb58167">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="567e23fe-802d-41ea-8d12-339b6ced2a91"/>
+      <column name="KEYID" value="WebForm"/>
+      <column name="TITLE" value="Web Form"/>
+      <column name="CONTAINER" value="QuestionnaireType"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="05a615c0-bc54-4ab6-9704-133efdb58fc4"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="1c3914e7-1c83-4135-8aa2-6aa1a5e9e492"/>
+      <column name="KEYID" value="Survey"/>
+      <column name="TITLE" value="Survey"/>
+      <column name="CONTAINER" value="QuestionnaireType"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="05a615c0-bc54-4ab6-9704-133efdb58fc4"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

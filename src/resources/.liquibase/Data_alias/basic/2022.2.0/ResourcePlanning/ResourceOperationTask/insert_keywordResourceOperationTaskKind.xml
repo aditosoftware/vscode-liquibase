@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="346d0baf-dc5a-4c37-98bf-a3573d9a3bfb">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="52cf6c8a-cc54-4a49-bae9-a637e80f5ab1"/>
+            <column name="NAME" value="ResourceOperationTaskKind"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="76c7010e-c097-442d-b4af-13503ab12af2"/>
+            <column name="KEYID" value="SIMPLETASK"/>
+            <column name="TITLE" value="simple task"/>
+            <column name="CONTAINER" value="ResourceOperationTaskKind"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="52cf6c8a-cc54-4a49-bae9-a637e80f5ab1"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

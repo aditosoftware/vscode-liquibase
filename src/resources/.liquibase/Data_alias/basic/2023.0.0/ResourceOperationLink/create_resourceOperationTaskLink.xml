@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="e3b08c18-dfd1-4d4e-9286-faee056dac63">
+        <preConditions onFail="MARK_RAN">
+          <not>
+            <tableExists tableName="RESOURCEOPERATIONTASKLINK" />
+          </not>
+        </preConditions>
+        <createTable tableName="RESOURCEOPERATIONTASKLINK">
+            <column name="RESOURCEOPERATIONTASKLINKID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_RESOURCEOPERATIONTASKLINKID"/>
+            </column>
+            <column name="RESOURCEOPERATIONTASK_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_TYPE" type="NVARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJECT_ROWID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+        </createTable>
+            
+        <createIndex tableName="RESOURCEOPERATIONTASKLINK" indexName="IDX_RESOURCEOPERATIONTAS_ID">
+            <column name="RESOURCEOPERATIONTASK_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,38 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="26b6680e-b68b-41e6-b747-d104a1992eb8">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="5506389d-b2ba-4774-9fa0-8e68f95816a0"/>
+
+            <column name="KEYID" value="LETTER"/>
+            <column name="TITLE" value="Letter"/>
+            <column name="CONTAINER" value="ActivityCategory"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="d87b78e1-e1f7-42a3-bd1d-b129c3e7820f"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="5506389d-b2ba-4774-9fa0-8e68f95816a0"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d21e6"/>
+            <column name="CHAR_VALUE" value="VAADIN:ENVELOPE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="ddb8d043-f207-41b8-987c-7f539eb5c2eb"/>
+
+            <column name="KEYID" value="FAX"/>
+            <column name="TITLE" value="Fax"/>
+            <column name="CONTAINER" value="ActivityCategory"/>
+            <column name="SORTING" valueNumeric="5"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="464252de-510d-4f13-b513-698d772f21af"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="ddb8d043-f207-41b8-987c-7f539eb5c2eb"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d21e6"/>
+            <column name="CHAR_VALUE" value="VAADIN:PRINT"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

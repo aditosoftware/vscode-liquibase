@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="986ad84f-051d-4629-b8b1-46e74663f887">
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="bbfdce4f-ab1d-4bef-9150-710003b35248"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="893a5e99-1592-4e58-b5a3-4b04820b7a16"/>
+        <column name="KEYID" value="EMAIL_FILTER_AUTORESPONDER"/>
+        <column name="TITLE" value="Autoresponder"/>
+        <column name="CONTAINER" value="EmailFilterType"/>
+        <column name="SORTING" valueNumeric="4"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="7ec72a70-aa7c-41a5-b7ed-1e28ee2fb506">
+      <createTable tableName="INTEREST">
+          <column name="INTERESTID" type="CHAR(36)">
+              <constraints nullable="false" primaryKey="true" primaryKeyName="PK_INTERESTID"/>
+          </column>
+          <column name="TITLE" type="NVARCHAR(50)"/>
+          <column name="DESCRIPTION" type="NVARCHAR(500)"/>
+          <column name="STATUS" type="VARCHAR(36)"/>
+          <column name="IS_DEFAULT" type="TINYINT"/>
+      </createTable>
+  </changeSet>
+</databaseChangeLog>

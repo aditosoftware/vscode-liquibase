@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet dbms="derby" author="j.hoermann" id="be098ba0-30ed-4e01-893e-928b1ac86923">
+        <sql>
+            ALTER TABLE SALESPROJECT_MILESTONE ADD COLUMN KIND_NEW VARCHAR(80);
+            UPDATE SALESPROJECT_MILESTONE SET KIND_NEW=CHAR(KIND);
+            ALTER TABLE SALESPROJECT_MILESTONE DROP COLUMN KIND;
+            RENAME COLUMN SALESPROJECT_MILESTONE.KIND_NEW TO KIND;
+            
+            ALTER TABLE SALESPROJECT_MILESTONE ADD COLUMN MILESTONEVALUE_NEW VARCHAR(36);
+            UPDATE SALESPROJECT_MILESTONE SET MILESTONEVALUE_NEW=CHAR(MILESTONEVALUE);
+            ALTER TABLE SALESPROJECT_MILESTONE DROP COLUMN MILESTONEVALUE;
+            RENAME COLUMN SALESPROJECT_MILESTONE.MILESTONEVALUE_NEW TO MILESTONEVALUE;
+        </sql>
+    </changeSet>
+    
+    <changeSet author="j.hoermann" id="f5074961-4aa0-4cd8-8541-7381ddfb0b71">
+        <preConditions onFail="CONTINUE">
+            <not>
+                <dbms type="derby" />
+            </not>
+        </preConditions>
+
+        <modifyDataType tableName="SALESPROJECT_MILESTONE" columnName="KIND" newDataType="NVARCHAR(80)"/>
+        <modifyDataType tableName="SALESPROJECT_MILESTONE" columnName="MILESTONEVALUE" newDataType="VARCHAR(36)"/>
+    </changeSet>
+</databaseChangeLog>

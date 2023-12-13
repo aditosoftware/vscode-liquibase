@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="v.broens" id="f9c60dc5-bdd4-479c-b955-18e0e0b9736a">
+        <createTable tableName="LEADBUSINESSFAIRENTRY">
+            <column name="LEADBUSINESSFAIRENTRYID" type="CHAR(36)">
+                <constraints  primaryKey="true" primaryKeyName="PK_LEADBUSINESSFAIRENTRYID"/>
+            </column>
+            <column name="ACTIVITY_ID" type="CHAR(36)"/>
+            <column name="LEADBUSINESSFAIR_ID" type="CHAR(36)"/>
+            <column name="ORGANISATION_CONTACT_ID" type="CHAR(36)"/>
+            <column name="CONTACT_ID" type="CHAR(36)"/>   
+            <column name="SALESPROJECT_ID" type="CHAR(36)"/>    
+            <column name="EDITOR_CONTACT_ID" type="CHAR(36)"/> 
+            <column name="STATUS" type="NVARCHAR(36)"/> 
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+        </createTable>
+        <createIndex tableName="LEADBUSINESSFAIRENTRY" indexName="IDX_LEABUSFAIRENT_ACT_ID">
+            <column name="ACTIVITY_ID"/>
+        </createIndex>
+        <createIndex tableName="LEADBUSINESSFAIRENTRY" indexName="IDX_LEABUSFAIRENT_LBF_ID">
+            <column name="LEADBUSINESSFAIR_ID"/>
+        </createIndex>
+        <createIndex tableName="LEADBUSINESSFAIRENTRY" indexName="IDX_LEABUSFAIRENT_OCO_ID">
+            <column name="ORGANISATION_CONTACT_ID"/>
+        </createIndex>
+        <createIndex tableName="LEADBUSINESSFAIRENTRY" indexName="IDX_LEABUSFAIRENT_CON_ID">
+            <column name="CONTACT_ID"/>
+        </createIndex>
+        <createIndex tableName="LEADBUSINESSFAIRENTRY" indexName="IDX_LEABUSFAIRENT_SAL_ID">
+            <column name="SALESPROJECT_ID"/>
+        </createIndex>
+        <createIndex tableName="LEADBUSINESSFAIRENTRY" indexName="IDX_LEABUSFAIRENT_ECO_ID">
+            <column name="EDITOR_CONTACT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

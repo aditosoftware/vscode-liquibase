@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="s.pongratz" id="c7337df0-1ce6-43a3-bef1-bd7da7fa5caf">
+	<insert tableName="ORGANISATION">
+            <column name="ORGANISATIONID" value="1"/>
+            <column name="NAME" value="DSGVO-Anonymisierung"/>
+            <column name="CUSTOMERCODE" value=""/>
+            <column name="KIND" value="ORGCUTOMER"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="DATE_NEW" valueDate="2021-06-09T10:48:25"/>
+	</insert>
+        <insert tableName="CONTACT">
+            <column name="CONTACTID" value="1"/>
+            <column name="ORGANISATION_ID" value="1"/>
+            <column name="ISOLANGUAGE" value="deu"/>
+            <column name="STATUS" value="CONTACTSTATACTIVE"/>
+            <column name="ADDRESS_ID" value="0"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="DATE_NEW" valueDate="2021-06-09T10:48:25"/>
+        </insert>
+	<rollback>
+		<delete tableName="ORGANISATION">
+			<where>ORGANISATIONID = ?</where>
+			<whereParams>
+				<param value="1" />
+			</whereParams>
+		</delete>
+	</rollback>
+</changeSet>
+</databaseChangeLog>

@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="134e089d-0ee6-42ce-942e-0ee3ac32dfb5">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="c1c5fc4c-24c3-4bc1-b1c8-1cc2f05ec994"/>
+            <column name="NAME" value="SigningKind"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="589652c2-85c9-4422-aa40-b85c1a22415c"/>
+            <column name="KEYID" value="REPORT"/>
+            <column name="TITLE" value="report"/>
+            <column name="CONTAINER" value="SigningKind"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="c1c5fc4c-24c3-4bc1-b1c8-1cc2f05ec994"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="bc4db3a2-fb13-4666-8654-9460de6f7925"/>
+            <column name="KEYID" value="TEMPLATE"/>
+            <column name="TITLE" value="template"/>
+            <column name="CONTAINER" value="SigningKind"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="c1c5fc4c-24c3-4bc1-b1c8-1cc2f05ec994"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

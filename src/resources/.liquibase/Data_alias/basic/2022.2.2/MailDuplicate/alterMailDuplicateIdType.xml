@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="ea70a502-5d9c-4dce-8dbd-6baae470332e">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <changeSetExecuted id="ea70a502-5d9c-4dce-8dbd-6baae470332e" author="m.groppe" changeLogFile=".liquibase/Data_alias/basic/2022.2.2/MailDuplicate/alterMailDuplicateIdType.xml"/>
+            </not>
+        </preConditions>
+    <modifyDataType tableName="MAILDUPLICATE" 
+                    columnName="MESSAGEID" 
+                    newDataType="VARCHAR(512)"/>
+  </changeSet>
+</databaseChangeLog>

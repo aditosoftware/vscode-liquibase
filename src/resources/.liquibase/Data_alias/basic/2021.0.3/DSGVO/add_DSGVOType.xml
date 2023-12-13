@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="e96a018a-66ea-4659-a8eb-3d987dd28e14">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="5b6b36b8-b77b-4dcf-92a8-65cf9cacf20b"/>
+            <column name="KEYID" value="TYPE_PRIVACY_NOTICE"/>
+            <column name="TITLE" value="Privacy Notice"/>
+            <column name="CONTAINER" value="DSGVOType"/>
+            <column name="SORTING" valueNumeric="5"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="18e6262a-80a0-4f71-baeb-36a6937e356a"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

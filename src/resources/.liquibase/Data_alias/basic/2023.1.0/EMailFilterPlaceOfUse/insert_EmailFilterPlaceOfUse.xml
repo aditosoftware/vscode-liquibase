@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="v.broens" id="b9319e95-5ba4-4a49-8757-c02de75cedcd">
+      <sql dbms="mysql,mariadb">
+            insert into EMAILFILTERPLACEOFUSE (EMAILFILTERPLACEOFUSEID, EMAIL_FILTER_HANDLING_ID, PLACEOFUSE, DATE_NEW, USER_NEW)
+            select UUID(), EMAIL_FILTER_HANDLINGID, 'BulkMail', CURRENT_TIMESTAMP, 'migrationUser'
+            from EMAIL_FILTER_HANDLING;
+      </sql>
+      <sql dbms="postgresql">
+            insert into EMAILFILTERPLACEOFUSE (EMAILFILTERPLACEOFUSEID, EMAIL_FILTER_HANDLING_ID, PLACEOFUSE, DATE_NEW, USER_NEW)
+            select uuid_in(md5(random()::text || clock_timestamp()::text)::cstring), EMAIL_FILTER_HANDLINGID, 'BulkMail', CURRENT_TIMESTAMP, 'migrationUser'
+            from EMAIL_FILTER_HANDLING;
+      </sql>
+      <sql dbms="oracle">
+            insert into EMAILFILTERPLACEOFUSE (EMAILFILTERPLACEOFUSEID, EMAIL_FILTER_HANDLING_ID, PLACEOFUSE, DATE_NEW, USER_NEW)
+            select SYS_GUID(), EMAIL_FILTER_HANDLINGID, 'BulkMail', CURRENT_TIMESTAMP, 'migrationUser'
+            from EMAIL_FILTER_HANDLING;
+      </sql>
+      <sql dbms="mssql">
+            insert into EMAILFILTERPLACEOFUSE (EMAILFILTERPLACEOFUSEID, EMAIL_FILTER_HANDLING_ID, PLACEOFUSE, DATE_NEW, USER_NEW)
+            select NEWID(), EMAIL_FILTER_HANDLINGID, 'BulkMail', CURRENT_TIMESTAMP, 'migrationUser'
+            from EMAIL_FILTER_HANDLING;
+      </sql>      
+  </changeSet>
+</databaseChangeLog>

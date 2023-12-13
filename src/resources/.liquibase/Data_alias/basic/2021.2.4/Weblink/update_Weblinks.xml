@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="a.fraeder" id="bfbf4ac1-fd8c-4f70-b962-8a770ab35e6f">
+      <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from WEBLINK where WEBLINKID = 'dc0d1d5a-91e8-409f-9926-f5fc9bd17be5';
+            </sqlCheck>
+      </preConditions>
+      <delete tableName="weblink">
+          <where>WEBLINKID in (?, ?, ?)</where>
+          <whereParams>
+              <param value="dc0d1d5a-91e8-409f-9926-f5fc9bd17be5"/>
+              <param value="a54c1a08-779a-4a6f-8322-d7ceb77abf39"/>
+              <param value="46d8ddcf-4287-499a-9524-ec08fce6a2f1"/>
+          </whereParams>
+      </delete>
+      <insert tableName="WEBLINK">
+        <column name="WEBLINKID" value="dc0d1d5a-91e8-409f-9926-f5fc9bd17be5"/>
+        <column name="LINKTYPE" value="WEBLINK_EMAIL"/>
+        <column name="URL" value="https://www.adito.de/fileadmin/user_upload/pixel.png"/>
+        <column name="USER_NEW" value="Admin"/>
+        <column name="DATE_NEW" valueComputed="current_datetime"/>
+        <column name="SCORE" valueNumeric="0"/>
+        <column name="PLACEHOLDER" value="pixel"/>
+        <column name="LINKEVALUATIONTYPE" value="LINKEVALUATION_IGNORE"/>
+        <column name="ISREDIRECT" valueNumeric="1"/>
+      </insert>
+    </changeSet>
+</databaseChangeLog>

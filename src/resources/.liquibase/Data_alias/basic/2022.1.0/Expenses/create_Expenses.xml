@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.wachsmuth" id="b38e6870-50ef-46d4-858e-5e868f7059ba">
+        <createTable tableName="EXPENSES">
+            <column name="EXPENSESID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_EXPENSESID"/>
+            </column>
+            <column name="CONTACT_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>           
+            <column name="STATUS" type="VARCHAR(36)"/>
+            <column name="KM_BILLING" type="NUMERIC(14,2)"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+            <column name="SETTLED" type="DATETIME"/>
+        </createTable>  
+        <createIndex tableName="EXPENSES" indexName="IDX_EXPENSES_CONTACT_ID">
+            <column name="CONTACT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

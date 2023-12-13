@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.mansour" id="9c7ad936-eb94-4e61-b0f8-99e8c88f510c">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="b5087465-4a80-4f2e-8515-7598fea11f56"/>
+            <column name="KEYID" value="3148b773-73b8-43dd-8830-123470ffd91a"/>
+            <column name="TITLE" value="1"/>
+            <column name="CONTAINER" value="DunningLevel"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="460f37dd-2589-499f-89be-7184ff5e0c8a"/>
+            <column name="KEYID" value="937cda17-d0a8-4814-858b-f32ec53ed33f"/>
+            <column name="TITLE" value="2"/>
+            <column name="CONTAINER" value="DunningLevel"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

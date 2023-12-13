@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="c401d253-3946-4bf0-aa5b-d608de345433">
+    <insert tableName="DOCUMENTTEMPLATE">
+      <column name="DOCUMENTTEMPLATEID" value="63e1631d-7ea7-443c-880b-5055e589a8b8"/>
+      <column name="ISOLANGUAGE" value="deu"/>
+      <column name="KIND" value="HTML"/>
+      <column name="NAME" value="Questionnaire_default"/>
+      <column name="DATE_EDIT" valueDate="2023-06-12T06:54:14"/>
+      <column name="DESCRIPTION" value="Questionnaire Template für Formulare und Umfragen"/>
+      <column name="USER_EDIT" value="Admin"/>
+      <column name="CLASSIFICATION" value="16"/>
+      <column name="USER_NEW" value="Admin"/>
+      <column name="ALL_TICKET_CATEGORIES" valueNumeric="0"/>
+      <column name="DATE_NEW" valueDate="2023-03-12T06:52:50"/>
+    </insert>
+    <insert tableName="DOCUMENTTEMPLATE">
+      <column name="DOCUMENTTEMPLATEID" value="42043a9d-f73a-49b0-a61f-a25de3e0b471"/>
+      <column name="ISOLANGUAGE" value="deu"/>
+      <column name="KIND" value="HTML"/>
+      <column name="NAME" value="Questionnaire_adito"/>
+      <column name="DATE_EDIT" valueDate="2023-06-12T06:54:14"/>
+      <column name="DESCRIPTION" value="Questionnaire Template für Formulare und Umfragen"/>
+      <column name="USER_EDIT" value="Admin"/>
+      <column name="CLASSIFICATION" value="16"/>
+      <column name="USER_NEW" value="Admin"/>
+      <column name="ALL_TICKET_CATEGORIES" valueNumeric="0"/>
+      <column name="DATE_NEW" valueDate="2023-03-12T06:52:50"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,81 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.hoermann" id="f904e9fd-d5e1-4f9b-b334-5621132449ce">
+      
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="789667fe-519f-4dea-b691-62c14447d694"/>
+        <column name="KEYID" value="SALESPROJ"/>
+        <column name="TITLE" value="Salesproject"/>
+        <column name="CONTAINER" value="ClassificationType"/>
+        <column name="SORTING" valueNumeric="1"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+      
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="54128957-c80b-4b5a-ad1b-cfce665dfb10"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="1. Classification"/>
+      <column name="SCORETYPE" value="ScoreBased"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="4977ba88-074c-4fe5-b04a-97c9a5eae982"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="1. Classification"/>
+      <column name="SCORETYPE" value="ScoreBranch"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="382b311e-b2b2-49da-b6e1-339afae92657"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="1. Classification"/>
+      <column name="SCORETYPE" value="ScoreUsers"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="d8091374-f3fd-41dc-8468-91469618c6fc"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="2. Classification"/>
+      <column name="SCORETYPE" value="ScoreBudget"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="2031525e-6ca3-46b4-91d4-7f90cd31a630"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="2. Classification"/>
+      <column name="SCORETYPE" value="ScoreCustomizing"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="2a702a31-9907-4f1b-abfd-3342640f1c9e"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="2. Classification"/>
+      <column name="SCORETYPE" value="ScoreStandard"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="8c1e8f81-145f-4efe-936f-3f4147f4d59a"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="3. Classification"/>
+      <column name="SCORETYPE" value="ScoreCloud"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="31c169aa-ba5b-4f9d-9dd3-b0d0e8d1b632"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="3. Classification"/>
+      <column name="SCORETYPE" value="ScoreDepartment"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="57604bc1-d99f-4d61-b28d-55218a72045b"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="3. Classification"/>
+      <column name="SCORETYPE" value="ScoreDecisionPhase"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="a43189fc-b712-45ed-9398-58d6e15760ca"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="3. Classification"/>
+      <column name="SCORETYPE" value="ScorePosition"/>
+    </insert>
+    <insert tableName="CLASSIFICATIONTYPE">
+      <column name="CLASSIFICATIONTYPEID" value="f4d3791e-1717-4473-987b-0cd751805387"/>
+      <column name="CLASSIFICATIONTYPE" value="SALESPROJ"/>
+      <column name="CLASSIFICATIONGROUP" value="3. Classification"/>
+      <column name="SCORETYPE" value="ScoreProjectStart"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

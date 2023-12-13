@@ -1,0 +1,64 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="f.maier" id="leadimportFmai">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="LEAD"/>
+        </not>
+      </preConditions>
+        <createTable tableName="LEAD">
+            <column name="LEADID" type="CHAR(36)">
+                <constraints primaryKey="true"/>
+            </column>   
+            <column name="ADDRESS" type="NVARCHAR(50)"/>                       
+            <column name="ATTRIBUTE_Loyalty" type="NVARCHAR(100)"/>                                             
+            <column name="ATTRIBUTE02" type="NVARCHAR(100)"/>
+            <column name="ATTRIBUTE03" type="NVARCHAR(100)" />
+            <column name="ATTRIBUTE04" type="NVARCHAR(100)" />
+            <column name="BUILDINGNO" type="NVARCHAR(50)" />
+            <column name="CITY" type="NVARCHAR(50)" />
+            <column name="COUNTRY" type="CHAR(2)" />
+            <column name="CUSTOMERCODE" type="NVARCHAR(50)" />
+            <column name="DEPARTMENT" type="NVARCHAR(50)" />
+            <column name="DISTRICT" type="NVARCHAR(50)" />
+            <column name="DATEOFBIRTH" type="DATETIME" />
+            <column name="DUPLICAT" type="INT" />
+            <column name="FIRSTNAME" type="NVARCHAR(50)" />
+            <column name="GENDER" type="NVARCHAR(50)" />
+            <column name="LEADIMPORT_ID" type="CHAR(36)" />
+            <column name="ISOLANGUAGE" type="NVARCHAR(50)" />
+            <column name="LASTNAME" type="NVARCHAR(50)" />
+            <column name="LEGALFORM" type="INT" />
+            <column name="LETTERSALUTATION" type="NVARCHAR(100)" />
+            <column name="MIDDLENAME" type="NVARCHAR(50)" />
+            <column name="ORGANISATION_ID" type="CHAR(36)" />
+            <column name="COMMMOBIL"     type="NVARCHAR(254)" />
+            <column name="COMMEMAIL"     type="NVARCHAR(254)" />
+            <column name="COMMPHONE"     type="NVARCHAR(254)" />
+            <column name="COMMBLOG"      type="NVARCHAR(254)" />
+            <column name="COMMXING"      type="NVARCHAR(254)" />
+            <column name="COMMLINKEDIN"  type="NVARCHAR(254)" />
+            <column name="ORGCOUNTRYCODE" type="NVARCHAR(10)" />
+            <column name="ORGINFO" type="LONGTEXT" />
+            <column name="NAME" type="NVARCHAR(250)" />
+            <column name="PERSON_ID" type="CHAR(36)" />
+            <column name="PERSINFO" type="LONGTEXT" />
+            <column name="REGION" type="NVARCHAR(50)" />
+            <column name="CONTACTPOSITION" type="NVARCHAR(50)" />
+            <column name="CONTACTROLE" type="NVARCHAR(60)" />
+            <column name="SALUTATION" type="NVARCHAR(30)" />
+            <column name="SOURCE" type="NVARCHAR(50)" />
+            <column name="PROVINCE" type="NVARCHAR(50)" />
+            <column name="STATUS" type="INT" />
+            <column name="TAXCODE" type="NVARCHAR(30)" />
+            <column name="TITLE" type="NVARCHAR(50)" />
+            <column name="VATCODE" type="NVARCHAR(30)" />
+            <column name="ZIP" type="NVARCHAR(50)" />
+            <column name="DUPSTATUS" type="NVARCHAR(20)" />
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="DATE_EDIT" type="DATETIME" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

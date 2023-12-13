@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="b564a74d-cba8-406d-8a54-f56663f02c09">
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="a5e6edd3-35cb-4da0-b1c2-463e5ad5cae9"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="be28e8a4-08d4-4697-b248-8b97b4e6e749"/>
+        <column name="KEYID" value="LANDINGPAGE"/>
+        <column name="TITLE" value="Landingpage"/>
+        <column name="CONTAINER" value="MosaicoTemplateCategory"/>
+        <column name="SORTING" valueNumeric="5"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

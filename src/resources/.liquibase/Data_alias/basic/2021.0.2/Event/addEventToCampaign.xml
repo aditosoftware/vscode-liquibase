@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="A.Riedl" id="710d2053-4387-4bc3-8412-5e373f569bb4">
+        <addColumn tableName="CAMPAIGN">
+            <column name="TYPE" type="varchar(36)"/>
+            <column name="CAMPAIGNCODE" type="Integer"/>
+            <column name="EVENT_BEGIN" type="Datetime"/>
+            <column name="EVENT_END" type="Datetime"/>
+            <column name="LOCATION" type="nVarchar(250)"/>
+            <column name="EVENTTYPE" type="varchar(36)"/>
+        </addColumn>
+        <createIndex tableName="CAMPAIGN" indexName="IDX_CAMPAIGNCODE">
+            <column name="CAMPAIGNCODE"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

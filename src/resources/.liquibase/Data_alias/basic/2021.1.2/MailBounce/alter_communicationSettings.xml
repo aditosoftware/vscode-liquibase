@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="e070e7e5-e4e3-4b6c-857a-009e1ee6513c">
+    <addColumn tableName="COMMUNICATIONSETTINGS">
+          <column name="ISACTIVE" type="TINYINT" defaultValueNumeric="1">
+              <constraints nullable="false"/>
+          </column>
+      </addColumn>
+  </changeSet>
+</databaseChangeLog>

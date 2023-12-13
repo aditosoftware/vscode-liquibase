@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="e.pollinger" id="95eabecf-82f8-49c8-87b2-594c338d3c15">
+        <createTable tableName="KNOWLEDGETAG">
+            <column name="KNOWLEDGETAGID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_KNOWLEDGETAG_KNOWLEDGETAGID"/>
+            </column>
+            <column name="TAG" type="VARCHAR(50)"/>
+            <column name="STATUS" type="CHAR(36)"/>
+            <column name="DATE_NEW" type="TIMESTAMP"/>
+            <column name="DATE_EDIT" type="TIMESTAMP"/>
+            <column name="USER_NEW" type="nvarchar(50)"/>
+            <column name="USER_EDIT" type="nvarchar(50)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

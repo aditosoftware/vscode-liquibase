@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="t.kerscher" id="5f061de1-7f86-4c1e-bdd0-b4b47e730b2e">
+
+      <!-- Change data type of CHECKLISTENTRYVALUE.IS_FULFILLED -->
+      <modifyDataType tableName="CHECKLISTENTRYVALUE" columnName="IS_FULFILLED" newDataType="TINYINT" />
+
+      <!-- Change data type of DISTRICT.DISTRICT_AUTOADD -->
+      <modifyDataType tableName="DISTRICT" columnName="DISTRICT_AUTOADD" newDataType="TINYINT" />
+
+      <!-- Change data type of DISTRICT.DISTRICT_STATUS -->
+      <modifyDataType tableName="DISTRICT" columnName="DISTRICT_STATUS" newDataType="TINYINT" />
+
+      <!-- Change data type of INBOX.SENDMAIL -->
+      <modifyDataType tableName="INBOX" columnName="SENDMAIL" newDataType="TINYINT" />
+
+      <!-- Change data type of MAIL_RUN.TESTRUN -->
+      <modifyDataType tableName="MAIL_RUN" columnName="TESTRUN" newDataType="TINYINT" />
+
+      <!-- Change data type of MAILSIGNATURE.SEND_MAIL -->
+      <modifyDataType tableName="MAILSIGNATURE" columnName="SEND_MAIL" newDataType="TINYINT" />
+
+      <!-- Change data type of PRODUCT.STATUS -->
+      <modifyDataType tableName="PRODUCT" columnName="STATUS" newDataType="TINYINT" />
+
+      <!-- Change data type of PROJECT.PROTECTED -->
+      <modifyDataType tableName="PROJECT" columnName="PROTECTED" newDataType="TINYINT" />
+
+      <!-- Change data type of TASK.PROTECTIONLEVEL -->
+      <modifyDataType tableName="TASK" columnName="PROTECTIONLEVEL" newDataType="TINYINT" />
+    </changeSet>
+    
+    <changeSet author="t.kerscher" id="fc63d2f9-4674-4cdf-8ad1-2b432bee4897" dbms="!oracle">
+              <!-- Change data type of DUPLICATESCANNER.EXTERNAL_SERVICE_USAGE_ALLOWED -->
+      <modifyDataType tableName="DUPLICATESCANNER" columnName="EXTERNAL_SERVICE_USAGE_ALLOWED" newDataType="TINYINT" />
+    </changeSet>
+    
+    <changeSet author="t.kerscher" id="e61d5a5a-366d-463d-9940-643aaaead633" dbms="oracle">
+        
+        <sql>
+            ALTER TABLE DUPLICATESCANNER ADD EXTERNAL_SERVICE_USAGE_ALLOWED_NEW SMALLINT;
+            UPDATE DUPLICATESCANNER SET EXTERNAL_SERVICE_USAGE_ALLOWED_NEW = EXTERNAL_SERVICE_USAGE_ALLOWED;
+            ALTER TABLE DUPLICATESCANNER DROP COLUMN EXTERNAL_SERVICE_USAGE_ALLOWED;
+            ALTER TABLE DUPLICATESCANNER RENAME COLUMN EXTERNAL_SERVICE_USAGE_ALLOWED_NEW TO EXTERNAL_SERVICE_USAGE_ALLOWED;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

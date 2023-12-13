@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.aziz" id="9d425d8c-3351-44d1-8b4b-8928eae831a7">
+<insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="16a974fe-25d5-45bc-be96-4377845f9c09"/>
+      <column name="KEYID" value="question"/>
+      <column name="TITLE" value="Question"/>
+      <column name="CONTAINER" value="QuestionType"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="2455ac93-04d3-4cfd-98b4-74d97d3b417f"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="b096d65b-9425-4092-a589-2e718e92226f"/>
+      <column name="KEYID" value="page"/>
+      <column name="TITLE" value="Page"/>
+      <column name="CONTAINER" value="QuestionType"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="2455ac93-04d3-4cfd-98b4-74d97d3b417f"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="bfcfab64-bf5b-444e-9609-a2c5507ec8e5"/>
+      <column name="KEYID" value="panel"/>
+      <column name="TITLE" value="Panel"/>
+      <column name="CONTAINER" value="QuestionType"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="1"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="2455ac93-04d3-4cfd-98b4-74d97d3b417f"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

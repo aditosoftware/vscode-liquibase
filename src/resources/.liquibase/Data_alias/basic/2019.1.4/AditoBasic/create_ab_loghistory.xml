@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.kuhn" id="fbe17fba-5bf7-4203-8f6f-01723e07194c">
+        <createTable tableName="AB_LOGHISTORY">
+            <column name="USER_NEW" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="DATE_NEW" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>          
+            <column name="DESCRIPTION" type="NCLOB"/>
+            <column name="LOGTYPE" type="CHAR(1)"/>
+            <column name="SOURCE_TABLENAME" type="NVARCHAR(30)"/>
+            <column name="SOURCE_TABLENAMEID" type="CHAR(36)"/>
+            <column name="TABLENAME" type="NVARCHAR(30)"/>
+            <column name="TABLENAMEID" type="CHAR(36)"/>
+        </createTable>
+        <createIndex indexName="IDX_AB_LOGHISTORY_TABLES" tableName="AB_LOGHISTORY">
+            <column name="TABLENAME"/>
+            <column name="TABLENAMEID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

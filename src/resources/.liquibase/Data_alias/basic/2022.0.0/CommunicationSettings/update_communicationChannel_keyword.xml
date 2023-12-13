@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.groppe" id="57fbd6bb-6a40-49d0-b602-cc3068424d6a">
+    <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+            <param value="b1234ea8-f560-401d-b63a-06497c873fec" />
+        </whereParams>
+    </delete>
+    <update tableName="AB_KEYWORD_ENTRY">
+        <column name="KEYID" value="COMMUNICATIONCHANNEL_EMAIL"/>
+        <column name="TITLE" value="E-Mail"/>
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+            <param value="a395d73b-6780-41d2-9934-70d4f4a021ff" />
+        </whereParams>
+    </update>
+    <update tableName="AB_KEYWORD_ENTRY">
+        <column name="KEYID" value="COMMUNICATIONCHANNEL_PHONE"/>
+        <column name="TITLE" value="Phone"/>
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+            <param value="10451ef3-9fee-41f9-88f2-8e3c0b326dab" />
+        </whereParams>
+    </update>
+    <update tableName="AB_KEYWORD_ENTRY">
+        <column name="TITLE" value="Letter"/>
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+            <param value="49786329-801b-4adf-b5f9-34234d65111b" />
+        </whereParams>
+    </update>
+    </changeSet>
+</databaseChangeLog>

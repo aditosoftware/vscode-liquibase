@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="cab0b12d-0600-4d46-bbfa-8fd12a5c1e1d">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="QUESTIONNAIREPARTICIPANT" />
+      </not>
+    </preConditions>
+      <createTable tableName="QUESTIONNAIREPARTICIPANT">
+        <column name="QUESTIONNAIREPARTICIPANTID" type="CHAR(36)">
+            <constraints nullable="false" primaryKey="true" />
+        </column>
+        <column name="QUESTIONNAIRE_ID" type="CHAR(36)"/>
+        <column name="CONTACT_ID" type="CHAR(36)"/>
+        <column name="ISANONYM" type="TINYINT"/>
+        <column name="FOREIGNKEYTYPE" type="VARCHAR(100)" />
+        <column name="FOREIGNKEY" type="VARCHAR(100)" />
+        <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+        <column name="USER_EDIT" type="VARCHAR(63)" />
+        <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+        <column name="USER_NEW" type="VARCHAR(63)" />
+      </createTable>
+      <createIndex tableName="QUESTIONNAIREPARTICIPANT" indexName="QPARTCONTACT">
+          <column name="CONTACT_ID"/>
+      </createIndex>
+      <createIndex tableName="QUESTIONNAIREPARTICIPANT" indexName="QUESTIONNAIRE_ID_IDX">
+          <column name="QUESTIONNAIRE_ID"/>
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>

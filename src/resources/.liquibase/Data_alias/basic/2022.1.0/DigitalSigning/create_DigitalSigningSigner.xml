@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="7898cd20-0527-417c-a1bf-917a736e4746">
+        <createTable tableName="DIGITALSIGNINGSIGNER">
+            <column name="DIGITALSIGNINGSIGNERID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_DIGITALSIGNINGSIGNERID"/>
+            </column>
+            <column name="CONTACT_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DIGITALSIGNINGWORKFLOW_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SIGNER_ID" type="CHAR(36)"/>
+            <column name="STATUS" type="CHAR(36)"/>
+            <column name="EMAIL_ADDRESS" type="NVARCHAR(255)"/>
+            <column name="PHONE" type="VARCHAR(64)"/>
+            <column name="POSITION" type="SMALLINT"/>
+            <column name="REFUSE_MESSAGE" type="LONGTEXT"/>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="DIGITALSIGNINGSIGNER" indexName="IDX_DIGITALSIGNINGSGNR_CONTACT_ID">
+            <column name="CONTACT_ID"/>
+        </createIndex>
+        <createIndex tableName="DIGITALSIGNINGSIGNER" indexName="IDX_DIGITALSIGNINGSGNR_WRKFLW_ID">
+            <column name="DIGITALSIGNINGWORKFLOW_ID"/>
+        </createIndex>
+
+    </changeSet>
+</databaseChangeLog>

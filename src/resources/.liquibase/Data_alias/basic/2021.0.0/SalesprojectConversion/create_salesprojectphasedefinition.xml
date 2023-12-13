@@ -1,0 +1,72 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="d.tran" id="87b5a00d-ddb4-42af-b604-ddd795b89c5d">
+        <createTable tableName="SALESPROJECTPHASEDEFINITION">
+            <column name="SALESPROJECTPHASEDEFINITIONID" type="CHAR(36)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_SALESPROJECTPHASEDEFINITION_SALESPROJECTPHASEDEFINITIONID"/>
+            </column>
+            <column name="CHECKLIST_ID" type="CHAR(36)"/>
+            <column name="PHASE" type="VARCHAR(36)"/>
+            <column name="DESCRIPTION" type="VARCHAR(500)"/>
+            <column name="USER_NEW" type="VARCHAR(50)"/>
+            <column name="USER_EDIT" type="VARCHAR(50)"/>
+            <column name="DATE_NEW" type="TIMESTAMP"/>
+            <column name="DATE_EDIT" type="TIMESTAMP"/>
+        </createTable>
+    <createIndex tableName="SALESPROJECTPHASEDEFINITION" indexName="IDX_SPPHASEDEF_CHECKLIST_ID">
+        <column name="CHECKLIST_ID"/>
+    </createIndex>
+    </changeSet>
+    <changeSet author="d.tran" id="65674357-70f6-44b7-b54f-57044130b926">
+        <insert tableName="SALESPROJECTPHASEDEFINITION">
+            <column name="SALESPROJECTPHASEDEFINITIONID" value="14adec36-4f29-446a-9dde-a83e9904813f"/>
+            <column name="CHECKLIST_ID" value="cb340ed2-ea49-45bb-a7a0-1a4f88d6e138"/>
+            <column name="PHASE" value="SALPROJPHASEMQL"/>
+            <column name="DESCRIPTION" value="Voraussetzungen für die Phase: 'MQL'."/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="SALESPROJECTPHASEDEFINITION">
+            <column name="SALESPROJECTPHASEDEFINITIONID" value="52454e8e-d71a-443d-81d0-ab93601b7bf3"/>
+            <column name="CHECKLIST_ID" value="c2bb548c-2f0c-45be-9e49-2ebf86bd6ab8"/>
+            <column name="PHASE" value="SALPROJPHASESAL"/>
+            <column name="DESCRIPTION" value="Voraussetzungen für die Phase: 'SAL'"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="SALESPROJECTPHASEDEFINITION">
+            <column name="SALESPROJECTPHASEDEFINITIONID" value="25796eb6-59c4-4e74-80f3-c66583320155"/>
+            <column name="CHECKLIST_ID" value="c7b847b1-934a-4592-8c10-53da1d43dc4c"/>
+            <column name="PHASE" value="SALPROJPHASESQO"/>
+            <column name="DESCRIPTION" value="Voraussetzungen für die Phase: 'SQO'"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="SALESPROJECTPHASEDEFINITION">
+            <column name="SALESPROJECTPHASEDEFINITIONID" value="e8ff463f-692c-40a7-bafa-d168886700fd"/>
+            <column name="CHECKLIST_ID" value="0f95ce44-3b0d-417b-969f-f84897868558"/>
+            <column name="PHASE" value="SALPROJPHASEOFFER"/>
+            <column name="DESCRIPTION" value="Voraussetzungen für die Phase: 'Offer'"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+        <insert tableName="SALESPROJECTPHASEDEFINITION">
+            <column name="SALESPROJECTPHASEDEFINITIONID" value="21011181-fe9f-4c6c-910e-344ce10e3fc1"/>
+            <column name="CHECKLIST_ID" value="cb0357c9-a222-4d78-b2c5-035fffe3bb51"/>
+            <column name="PHASE" value="SALPROJPHASENEGO"/>
+            <column name="DESCRIPTION" value="Voraussetzungen für die Phase: 'Negotiation'"/>
+            <column name="USER_NEW" value="Admin"/>
+            <column name="USER_EDIT"/>
+            <column name="DATE_NEW"/>
+            <column name="DATE_EDIT"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="1e4d2e89-646c-479b-97a9-d105878de4ae">
+    <createTable tableName="WEBLINK">
+            <column name="WEBLINKID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_WEBLINK_WEBLINKID"/>
+            </column>
+            <column name="URL" type="VARCHAR(512)"/>
+            <column name="LINKTYPE" type="VARCHAR(50)"/>
+            <column name="PLACEHOLDER" type = "VARCHAR(50)"/>
+            <column name="SCORE" type = "INTEGER"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+            <column name="ISREDIRECT" type="TINYINT"/>
+            <column name="WORKFLOWPROCESSDEFINITION_KEY" type="VARCHAR(255)"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

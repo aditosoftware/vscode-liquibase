@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="INBOXFILTERGROUP" id="33f59097-918f-4d3a-9b9e-3804f774ec96">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="INBOXFILTERGROUP"/>
+        </not>
+      </preConditions>
+    <createTable tableName="INBOXFILTERGROUP" >
+        <column name="INBOXFILTERGROUPID" type="char(36)">
+            <constraints primaryKey = "true" nullable = "false"/>
+        </column>
+        <column name="STATE" type="varchar(36)"/>
+        <column name="NAME" type="varchar(50)"/>
+        <column name="DATE" type="datetime"/>
+        <column name="PRIORITY" type="int(10)"/>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

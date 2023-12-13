@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="V.Broens" id="39c0f2fd-4bc8-4c10-a66a-0ac87d270e54">
+        <addColumn tableName="KNOWLEDGEMANAGEMENT">
+            <column name="USEINALLTICKETCATEGORIES" type="TINYINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USEINALLINBOXES" type="TINYINT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBEROFVIEWS" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="KNOWLEDGEMANAGEMENTCATEGORY_ID" type="CHAR(36)"/>
+            <column name="SUMMARY" type="NVARCHAR(255)"/>
+        </addColumn>
+        
+        <createIndex indexName="IDX_KNOLEDGEMNGMTCATTEGORID" tableName="KNOWLEDGEMANAGEMENT">
+            <column name="KNOWLEDGEMANAGEMENTCATEGORY_ID"/>
+        </createIndex>
+        
+    </changeSet>
+</databaseChangeLog>

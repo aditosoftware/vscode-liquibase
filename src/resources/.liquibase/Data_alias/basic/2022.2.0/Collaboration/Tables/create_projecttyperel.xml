@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="A.Voegl" id="9e9e8870-bde2-438d-9daf-fc24f73fc055">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTTYPEREL" />
+      </not>
+    </preConditions>
+    <createTable tableName="PROJECTTYPEREL">
+      <column name="PROJECTTYPERELID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column name="PROJECTTYPE_ID" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="PROJECTTICKETTYPE_ID" type="CHAR(36)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+      <column defaultValueComputed="NULL" name="SORTING" type="INT" />
+      <column defaultValueComputed="NULL" name="SOLUTION_MANDATORY" type="TINYINT" />
+      <column defaultValueComputed="NULL" name="ALLOWCOMMENTS" type="TINYINT" />
+      <column defaultValueComputed="NULL" name="ALLOWTIMES" type="TINYINT" />
+      <column defaultValueComputed="NULL" name="ALPHABETICAL_SORTING" type="TINYINT" />
+    </createTable>
+  </changeSet>
+  <changeSet author="A.Voegl" id="016a9a1b-3589-4321-a1d0-b53061037426">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PRJTCTYPREL_PRJTICKTYP_ID_IDX"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="PRJTCTYPREL_PRJTICKTYP_ID_IDX" tableName="PROJECTTYPEREL">
+      <column name="PROJECTTICKETTYPE_ID" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="A.Voegl" id="d58e4266-2069-4a4f-9c67-1eeae1d1aee4">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PRJYPEREL_PROJECTTYPE_ID_IDX"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="PRJYPEREL_PROJECTTYPE_ID_IDX" tableName="PROJECTTYPEREL">
+      <column name="PROJECTTYPE_ID" />
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

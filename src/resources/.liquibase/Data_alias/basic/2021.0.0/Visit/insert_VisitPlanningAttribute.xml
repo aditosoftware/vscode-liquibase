@@ -1,0 +1,63 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="c.wimmer" id="f03c2c38-bf5d-411a-9b77-3050771d91f9">
+        <delete tableName="AB_ATTRIBUTE">
+                <where>AB_ATTRIBUTEID = ?</where>
+                <whereParams>
+                    <param value="59377864-0745-4a18-8d7b-57a0491a8116" />
+                </whereParams>
+            </delete>
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="59377864-0745-4a18-8d7b-57a0491a8116"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="ATTRIBUTE_NAME" value="Visit Planning"/>
+            <column name="ATTRIBUTE_TYPE" value="GROUP"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="e8770b60-160c-466e-af57-4f90bd6e02d7"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="ATTRIBUTE_NAME" value="Maturity"/>
+            <column name="ATTRIBUTE_PARENT_ID" value="59377864-0745-4a18-8d7b-57a0491a8116"/>
+            <column name="ATTRIBUTE_TYPE" value="COMBO                               "/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="5dd9a89d-2357-4ca7-910c-4365fd338603"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="ATTRIBUTE_NAME" value="2 Weeks"/>
+            <column name="ATTRIBUTE_PARENT_ID" value="e8770b60-160c-466e-af57-4f90bd6e02d7"/>
+            <column name="ATTRIBUTE_TYPE" value="COMBOVALUE                          "/>
+            <column name="SORTING" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="b0eeed9b-38a5-44b9-8fdf-dd03493380b8"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="ATTRIBUTE_NAME" value="1 Month"/>
+            <column name="ATTRIBUTE_PARENT_ID" value="e8770b60-160c-466e-af57-4f90bd6e02d7"/>
+            <column name="ATTRIBUTE_TYPE" value="COMBOVALUE                          "/>
+            <column name="SORTING" valueNumeric="2"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="e7ece5ea-f1f3-47de-b11a-479183e5e95a"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="ATTRIBUTE_NAME" value="6 Months"/>
+            <column name="ATTRIBUTE_PARENT_ID" value="e8770b60-160c-466e-af57-4f90bd6e02d7"/>
+            <column name="ATTRIBUTE_TYPE" value="COMBOVALUE                          "/>
+            <column name="SORTING" valueNumeric="3"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="49dc2a73-a58a-45b7-95d3-ce2ff21326fd"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="ATTRIBUTE_NAME" value="12 Months"/>
+            <column name="ATTRIBUTE_PARENT_ID" value="e8770b60-160c-466e-af57-4f90bd6e02d7"/>
+            <column name="ATTRIBUTE_TYPE" value="COMBOVALUE                          "/>
+            <column name="SORTING" valueNumeric="4"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="AB_ATTRIBUTEUSAGEID" value="ace9e8ea-b586-4299-92ea-b12fce72e4d9"/>
+            <column name="AB_ATTRIBUTE_ID" value="e8770b60-160c-466e-af57-4f90bd6e02d7"/>
+            <column name="MAX_COUNT" valueNumeric="1"/>
+            <column name="OBJECT_TYPE" value="Person"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

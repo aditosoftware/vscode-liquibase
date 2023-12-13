@@ -1,0 +1,217 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.goderbauer" id="e7f911b2-7f89-41b1-b59e-4b359ccbf728">
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="84574d45-8227-42dd-aea0-de2203517a2c"/>
+      <column name="KEYID" value="SALPROJWLPROJVOL"/>
+      <column name="TITLE" value="Project_volume"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="0"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="018a3bb8-5536-461f-8400-25e91550e51f"/>
+      <column name="KEYID" value="SALPROJWLPROJDUR"/>
+      <column name="TITLE" value="Project_duration"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="b4562d6b-9ff1-4884-8694-3339e760ddf1"/>
+      <column name="KEYID" value="SALPROJWLPROJREF"/>
+      <column name="TITLE" value="Project_reference"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="cda9c073-25e4-4a90-b5b7-fe6514355d31"/>
+      <column name="KEYID" value="SALPROJWLPROJTECH"/>
+      <column name="TITLE" value="Product_technic"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="e84b0059-2140-4911-bb3c-73e6f3875022"/>
+      <column name="KEYID" value="SALPROJWLPROJFLEX"/>
+      <column name="TITLE" value="Product_flexibility"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="4"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="b9216c02-7abd-43aa-a02e-89fa7d428e0c"/>
+      <column name="KEYID" value="SALPROJWLPROJGUI"/>
+      <column name="TITLE" value="Product_GUI"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="5"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="6efbc578-4b80-463f-9c4f-16db99a8a9d6"/>
+      <column name="KEYID" value="SALPROJWLPROJFUNC"/>
+      <column name="TITLE" value="Product_functionality"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="6"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="ad252ede-1e46-46ad-8ce1-6788b9103c92"/>
+      <column name="KEYID" value="SALPROJWLPROJINDKOWHOW"/>
+      <column name="TITLE" value="Product_industry knowhow"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="7"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="9fe99387-ea27-4f13-923c-f631486f7bcb"/>
+      <column name="KEYID" value="SALPROJWLPROJMOBIL"/>
+      <column name="TITLE" value="Product_mobile use"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="8"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d1987d3a-fc7f-4882-8292-36e9699f6368"/>
+      <column name="KEYID" value="SALPROJWLPROJCOMPANYSIZE"/>
+      <column name="TITLE" value="Company_size"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="9"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d62db634-94ca-49e5-970a-67696d013ed6"/>
+      <column name="KEYID" value="SALPROJWLPROJCOMPANYINT"/>
+      <column name="TITLE" value="Company_internationality"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="10"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="148176ea-14ed-4a74-8290-e5dffcd71eaa"/>
+      <column name="KEYID" value="SALPROJWLPROJCOMPANYINDKNOW"/>
+      <column name="TITLE" value="Company_industry knowhow"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="11"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="d5827700-2ef1-43a1-a7f1-46a4de1ec6ec"/>
+      <column name="KEYID" value="SALPROJWLPROJOTHERCUSTOM"/>
+      <column name="TITLE" value="Other_existing Customer"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="12"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="1a0ae403-90c0-424c-a13a-8b1c4cfd314d"/>
+      <column name="KEYID" value="SALPROJWLPROJUNKNOWN"/>
+      <column name="TITLE" value="Other_unknown"/>
+      <column name="CONTAINER" value="SalesprojectWonLost"/>
+      <column name="SORTING" valueNumeric="13"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <rollback>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="84574d45-8227-42dd-aea0-de2203517a2c"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="018a3bb8-5536-461f-8400-25e91550e51f"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="b4562d6b-9ff1-4884-8694-3339e760ddf1"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="cda9c073-25e4-4a90-b5b7-fe6514355d31"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="e84b0059-2140-4911-bb3c-73e6f3875022"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="b9216c02-7abd-43aa-a02e-89fa7d428e0c"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="6efbc578-4b80-463f-9c4f-16db99a8a9d6"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="ad252ede-1e46-46ad-8ce1-6788b9103c92"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="9fe99387-ea27-4f13-923c-f631486f7bcb"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="d1987d3a-fc7f-4882-8292-36e9699f6368"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="d62db634-94ca-49e5-970a-67696d013ed6"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="148176ea-14ed-4a74-8290-e5dffcd71eaa"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="d5827700-2ef1-43a1-a7f1-46a4de1ec6ec"/>
+        </whereParams>
+      </delete>
+      <delete tableName="AB_KEYWORD_ENTRY">
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+          <param value="1a0ae403-90c0-424c-a13a-8b1c4cfd314d"/>
+        </whereParams>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>

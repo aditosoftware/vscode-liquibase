@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="13387005-9ca8-44a7-abf5-1800876c48da">
+
+    <update tableName="EMAIL_FILTER_HANDLING">
+        <column name="WORKFLOWDEFINITION_KEY"/>
+        <where>WORKFLOWDEFINITION_KEY = 'rejectEmailCommunication'</where>
+    </update>
+
+  </changeSet>
+</databaseChangeLog>

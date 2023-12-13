@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="v.broens" id="7b0f0001-6722-4210-b74c-1dd532d5164f">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from AB_KEYWORD_ENTRY where AB_KEYWORD_ENTRYID in ('a6c3c183-e2fc-4846-8b1b-fc914420b780', 'cb92c958-f9db-4e33-b50b-818dd2f4c2e8', '983a0c3f-e12f-4aa7-b1a4-03d12052ba7a');
+            </sqlCheck>
+            <sqlCheck expectedResult="0">
+                select count(*) from AB_KEYWORD_CATEGORY where AB_KEYWORD_CATEGORYID = 'fd79afd3-7bea-4733-9ba6-6b784724c1a0';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="AB_KEYWORD_ENTRY">  
+            <column  name="AB_KEYWORD_ENTRYID"  value="a6c3c183-e2fc-4846-8b1b-fc914420b780"/>  
+            <column  name="KEYID"  value="SUCCESS"/>  
+            <column  name="TITLE"  value="Success"/>  
+            <column  name="CONTAINER"  value="TICKETCONCLUSION"/>  
+            <column  name="SORTING"  valueNumeric="0"/>  
+            <column  name="ISACTIVE"  valueNumeric="1"/>  
+            <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+            <column  name="AB_KEYWORD_CATEGORY_ID"  value="fd79afd3-7bea-4733-9ba6-6b784724c1a0"/>  
+        </insert>  
+        <insert tableName="AB_KEYWORD_ENTRY">  
+            <column  name="AB_KEYWORD_ENTRYID"  value="cb92c958-f9db-4e33-b50b-818dd2f4c2e8"/>  
+            <column  name="KEYID"  value="FAILURE_CUSTOMER"/>  
+            <column  name="TITLE"  value="Failure (customer)"/>  
+            <column  name="CONTAINER"  value="TICKETCONCLUSION"/>  
+            <column  name="SORTING"  valueNumeric="0"/>  
+            <column  name="ISACTIVE"  valueNumeric="1"/>  
+            <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+            <column  name="AB_KEYWORD_CATEGORY_ID"  value="fd79afd3-7bea-4733-9ba6-6b784724c1a0"/>  
+        </insert>  
+        <insert tableName="AB_KEYWORD_ENTRY">  
+            <column  name="AB_KEYWORD_ENTRYID"  value="983a0c3f-e12f-4aa7-b1a4-03d12052ba7a"/>  
+            <column  name="KEYID"  value="FAILURE_EMPLOYEE"/>  
+            <column  name="TITLE"  value="Failure (employee)"/>  
+            <column  name="CONTAINER"  value="TICKETCONCLUSION"/>  
+            <column  name="SORTING"  valueNumeric="2"/>  
+            <column  name="ISACTIVE"  valueNumeric="1"/>  
+            <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+            <column  name="AB_KEYWORD_CATEGORY_ID"  value="fd79afd3-7bea-4733-9ba6-6b784724c1a0"/>  
+        </insert>  
+        <insert tableName="AB_KEYWORD_CATEGORY">  
+            <column  name="AB_KEYWORD_CATEGORYID"  value="fd79afd3-7bea-4733-9ba6-6b784724c1a0"/>  
+            <column  name="NAME"  value="TICKETCONCLUSION"/>  
+            <column  name="SORTINGBY"  valueNumeric="0"/>  
+            <column  name="SORTINGDIRECTION"  value="ASC"/>  
+        </insert>  
+  </changeSet>
+</databaseChangeLog>

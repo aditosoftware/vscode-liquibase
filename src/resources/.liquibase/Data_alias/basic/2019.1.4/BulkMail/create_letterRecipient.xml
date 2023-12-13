@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="c54cef0a-8181-40f0-9fdb-14513592137c">
+        <createTable tableName="LETTERRECIPIENT">
+            <column name="LETTERRECIPIENTID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_LETTERRECIPIENT_LETTERRECIPIENTID"/>
+            </column>
+            <column name="CONTACT_ID" type="CHAR(36)"/>
+            <column name="SERIALLETTER_ID" type="CHAR(36)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

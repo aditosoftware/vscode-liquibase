@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="L.Werner" id="30cbcdbc-6fd6-4946-8ce9-6455914c6bc4">
+    <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from AB_KEYWORD_ENTRY where AB_KEYWORD_ENTRYID = '2a0205b7-8521-41a0-b9c3-34ee0c04b3c2';
+            </sqlCheck>
+            <sqlCheck expectedResult="0">
+                select count(*) from AB_KEYWORD_ATTRIBUTERELATION where AB_KEYWORD_ATTRIBUTERELATIONID = '361c07c5-85e5-4c26-9f66-31e66f8fa4a3';
+            </sqlCheck>
+        </preConditions>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="2a0205b7-8521-41a0-b9c3-34ee0c04b3c2" />
+      <column name="KEYID" value="14" />
+      <column name="TITLE" value="Dunning text" />
+      <column name="CONTAINER" />
+      <column name="SORTING" valueNumeric="17" />
+      <column name="ISACTIVE" valueNumeric="1" />
+      <column name="ISESSENTIAL" valueNumeric="0" />
+      <column name="AB_KEYWORD_CATEGORY_ID" value="e23c8316-d43a-4606-803e-d4488823cc52" />
+      <column name="DESCRIPTION" />
+    </insert>
+    <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+      <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="361c07c5-85e5-4c26-9f66-31e66f8fa4a3" />
+      <column name="AB_KEYWORD_ENTRY_ID" value="2a0205b7-8521-41a0-b9c3-34ee0c04b3c2" />
+      <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2004" />
+      <column name="CHAR_VALUE" />
+      <column name="NUMBER_VALUE" />
+      <column name="BOOL_VALUE" valueNumeric="1" />
+      <column name="LONG_CHAR_VALUE" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>

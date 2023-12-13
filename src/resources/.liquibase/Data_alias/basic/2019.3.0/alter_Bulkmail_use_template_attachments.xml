@@ -1,0 +1,9 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="eb370821-3068-49da-9812-494880dabc68">
+        <addColumn tableName="BULKMAIL">
+            <column name="USE_TEMPLATE_ATTACHMENTS" type="TINYINT"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

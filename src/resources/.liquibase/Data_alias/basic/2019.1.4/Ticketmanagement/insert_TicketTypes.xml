@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="aaa7c634-9196-42e7-a65b-954c2a0bed5b">                  
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="af6a0af9-0102-426b-a1f7-c8abfea79793"/>
+            <column name="NAME" value="attributes"/>
+            <column name="CONTAINER" value="TicketType"/>
+            <column name="KIND" value="LONG_CHAR_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="6f10015d-b7ee-43aa-99f9-87960ec2e4fd"/>
+            <column name="NAME" value="availableStatus"/>
+            <column name="CONTAINER" value="TicketType"/>
+            <column name="KIND" value="LONG_CHAR_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="729a41d1-0463-480d-bf7b-0eb6c2e96f37"/>
+            <column name="NAME" value="defaultStatus"/>
+            <column name="CONTAINER" value="TicketType"/>
+            <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="98075159-ecc2-4851-a971-6f3123a495d3"/>
+            <column name="KEYID" value="SUPPORTTICKET"/>
+            <column name="TITLE" value="Supportticket"/>
+            <column name="CONTAINER" value="TicketType"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="1eef7882-90eb-4c5b-a01a-c6cf1ea7a82b"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="98075159-ecc2-4851-a971-6f3123a495d3"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="af6a0af9-0102-426b-a1f7-c8abfea79793"/>
+            <column name="LONG_CHAR_VALUE" value="[&quot;ff8b1caf-cf30-4edb-b5ca-a9a219ba8399&quot;]"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="cd293e92-224f-4bc3-9552-b3f7caa95c99"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="98075159-ecc2-4851-a971-6f3123a495d3"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="6f10015d-b7ee-43aa-99f9-87960ec2e4fd"/>
+            <column name="LONG_CHAR_VALUE" value="[&quot;UNASSIGNED&quot;,&quot;ASSIGNED&quot;,&quot;IN-PROGESS&quot;,&quot;ENDED-DONE&quot;,&quot;ENDED-ABANDONED&quot;,&quot;WAITING&quot;,&quot;STILL-INCORRECT&quot;,&quot;CUSTOMER-CHECKS&quot;]"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="17afe435-c498-45f7-8a16-50d50b78926a"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="98075159-ecc2-4851-a971-6f3123a495d3"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="729a41d1-0463-480d-bf7b-0eb6c2e96f37"/>
+            <column name="CHAR_VALUE" value="UNASSIGNED"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

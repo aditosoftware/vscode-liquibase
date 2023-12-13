@@ -1,0 +1,22 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.schroeger" id="40ad5330-2163-400c-8fa7-d0d2461774b7">
+        <createTable tableName="PRODUCT">
+            <column name="PRODUCTID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_PRODUCT_PRODUCTID"/>
+            </column>    
+            <column name="ADVERTISING" type="CHAR(1)"/>          
+            <column name="GROUPCODEID" type="CHAR(36)"/>
+            <column name="MINSTOCK" type="INTEGER"/>
+            <column name="CONTACT_ID" type="CHAR(36)"/>
+            <column name="PRODUCTCODE" type="NVARCHAR(50)">
+                <constraints  nullable="false" unique="true" uniqueConstraintName="UNIQUE_PRODUCT_PRODUCTCODE"/>
+            </column>
+            <column name="PRODUCTNAME" type="NVARCHAR(50)"/>
+            <column name="LANGUAGE" type="CHAR(3)"/>
+            <column name="INFO" type="NCLOB"/>
+            <column name="STATUS" type="INTEGER"/>
+            <column name="UNIT" type="VARCHAR(36)"/>
+        </createTable>      
+    </changeSet>
+</databaseChangeLog>

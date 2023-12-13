@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="6252e612-73f3-4f1d-93c7-0bfea742fe04">
+      <preConditions onFail="MARK_RAN">
+          <not>
+              <tableExists tableName="ASYS_CALENDARSYNC"/>
+          </not>
+      </preConditions>
+      <createTable tableName="ASYS_CALENDARSYNC">
+          <column name="MASTERUID" type="VARCHAR(512)">
+              <constraints nullable="false"/>
+          </column>
+          <column name="SLAVEUID" type="VARCHAR(127)">
+              <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ASYS_CALENDARSYNC_ID"/>
+          </column>
+          <column name="SUSER" type="VARCHAR(63)">
+              <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ASYS_CALENDARSYNC_ID"/>
+          </column>
+          <column name="LASTMODIFIED" type="DATETIME"/>
+      </createTable>
+      <createIndex tableName="ASYS_CALENDARSYNC" indexName="idx_asyscalsync_muid">
+          <column name="MASTERUID"/>
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="A.Voegl" id="e2d76cbc-6be6-465c-a499-c2990f26a107">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTTICKETCOMMENT" />
+      </not>
+    </preConditions>
+    <createTable tableName="PROJECTTICKETCOMMENT">
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column name="DESCRIPTION" type="LONGTEXT" />
+      <column defaultValueComputed="NULL" name="INTERN" type="TINYINT" />
+      <column name="CONTACT_ID" type="CHAR(36)" />
+      <column name="PROJECTTICKET_ID" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="PROJECT_ID" type="CHAR(36)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+      <column name="PROJECTTICKETCOMMENTID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="CREATOR" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="SOLUTION" type="TINYINT" />
+      <column defaultValueComputed="NULL" name="MIGRATED" type="TINYINT" />
+    </createTable>
+  </changeSet>
+  <changeSet author="A.Voegl" id="0c7ab486-cfc8-4ff3-b9b7-a91d21761126">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PROJTTICKTCOM_PROTICKET_ID_IDX"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="PROJTTICKTCOM_PROTICKET_ID_IDX" tableName="PROJECTTICKETCOMMENT">
+      <column name="PROJECTTICKET_ID" />
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

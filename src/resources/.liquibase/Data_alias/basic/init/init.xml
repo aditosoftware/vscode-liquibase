@@ -1,0 +1,48 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_objectrelation.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_attribute.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_attributerelation.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_attributeusage.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_keyword_entry.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_keyword_attribute.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_keyword_attributerelation.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_countryinfo.xml"/>
+    <include relativeToChangelogFile="true" file="struct/AditoBasic/create_ab_language.xml"/>
+    
+    <include relativeToChangelogFile="true" file="struct/create_person.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_organisation.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_contact.xml"/>    
+    <include relativeToChangelogFile="true" file="struct/create_activity.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_activitylink.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_appointmentlink.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_address.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_communication.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_contract.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_product.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_prod2prod.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_productprice.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_stock.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesproject.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesproject_classification.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesproject_competition.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesproject_cycle.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesproject_forecast.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesproject_member.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesproject_source.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_offer.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_offeritem.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesorder.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_salesorderitem.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_timetracking.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_task.xml"/>
+    <include relativeToChangelogFile="true" file="struct/create_commrestriction.xml"/>
+    
+    <!--reference files for keywords:--> 
+    <include relativeToChangelogFile="true" file="data/AditoBasic/ab_keyword_entry.xml"/>
+    <include relativeToChangelogFile="true" file="data/AditoBasic/ab_keyword_attribute.xml"/>
+    <!--special case countryinfo data-->
+    <include relativeToChangelogFile="true" file="data/AditoBasic/ab_countryinfo/init_ab_countryinfo.xml"/>
+
+    <include relativeToChangelogFile="true" file="data/AditoBasic/init_ab_language.xml"/>
+</databaseChangeLog>

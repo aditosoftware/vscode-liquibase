@@ -1,0 +1,120 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="14dc77c2-067f-4b45-a6ad-f2f973091d64">
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="ISACTIVE" valueNumeric="0"/>
+            <where>AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="75a67526-6b7c-400d-b958-e1f8f45466aa"/>
+            </whereParams>
+        </update>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9d2f9605-1a5e-47d3-8920-168f5637e37f"/>
+            <column name="KEYID" value="KEYWORD"/>
+            <column name="TITLE" value="Keyword"/>
+            <column name="CONTAINER" value="AttributeType"/>
+            <column name="SORTING" valueNumeric="7"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="ee893a1c-d007-46fe-a190-727124c4467b"/>
+            <column name="KEYID" value="MEMO"/>
+            <column name="TITLE" value="Memo"/>
+            <column name="CONTAINER" value="AttributeType"/>
+            <column name="SORTING" valueNumeric="8"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="191d7293-3b3f-4dc7-bbe2-9da1a897f7df"/>
+            <column name="KEYID" value="VOID"/>
+            <column name="TITLE" value="${ATTRIBUTE_VOID}"/>
+            <column name="CONTAINER" value="AttributeType"/>
+            <column name="SORTING" valueNumeric="9"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="00a61337-d3d3-4e7e-bc48-cb08cabe01b3"/>
+            <column name="KEYID" value="OBJECTSELECTION"/>
+            <column name="TITLE" value="Object selection"/>
+            <column name="CONTAINER" value="AttributeType"/>
+            <column name="SORTING" valueNumeric="10"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+                <insert tableName="AB_KEYWORD_ATTRIBUTE">
+                <column name="AB_KEYWORD_ATTRIBUTEID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="NAME" value="defaultAvatarRepresentation"/>
+                <column name="CONTAINER" value="AttributeType"/>
+                <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="0c537ea0-6ba2-4d9a-a27c-7c6a6920e303"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="972e5eb1-a457-4b75-b966-1183896dac2c"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:INPUT"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="8ada9b1e-2f23-4e07-bbd6-16a3b76c5b62"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="cb7ecaea-b4e6-460e-9006-4a3d059b9857"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:DATE_INPUT"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="2ef73c53-30b4-47f9-94fb-87825e14743a"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="14de196a-aaa6-41b9-b503-3df1d45acc1e"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:CALC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="c4cdd0dc-fc7e-443c-9c2f-c3d400ce3a1b"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="8a9791c1-655f-4340-91b4-cfdf6372fc75"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:CHECK_SQUARE_O"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="5afb11f5-e0eb-45f2-8018-cdf85078a236"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="1390813c-6b94-4336-9986-9bcaddab69ac"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:COMBOBOX"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="0954628d-e40e-45e0-a808-3194594b431e"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="2c188a17-2961-45df-bd68-34b55352375c"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:FILE_TREE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="1516db79-6f15-4683-9314-cddebb29f995"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="75a67526-6b7c-400d-b958-e1f8f45466aa"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:DOT_CIRCLE"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="091bf881-e599-4baf-915a-e756ae75c52e"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="9d2f9605-1a5e-47d3-8920-168f5637e37f"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:KEY"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="a85fd75f-7346-41d0-b7fe-6c677bd3f392"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="ee893a1c-d007-46fe-a190-727124c4467b"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:TEXT_INPUT"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="a35c73d5-2719-422b-872b-1c6c1e0707a0"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="191d7293-3b3f-4dc7-bbe2-9da1a897f7df"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:TAG"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+                <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="49f0e116-e32b-4391-8a39-121e7a1ad580"/>
+                <column name="AB_KEYWORD_ENTRY_ID" value="00a61337-d3d3-4e7e-bc48-cb08cabe01b3"/>
+                <column name="AB_KEYWORD_ATTRIBUTE_ID" value="307ecfc6-15c8-4ab9-8afa-e97b90a00c5f"/>
+                <column name="CHAR_VALUE" value="VAADIN:COMBOBOX"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

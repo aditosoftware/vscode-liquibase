@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="8a201365-ec2e-49cf-937e-80e2558ddb40">
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="12780ba9-8009-4257-b4b2-d6ff66f481a7"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="b5afd40b-bfa7-4aee-89ea-06b8c7deb304"/>
+        <column name="KEYID" value="HTML"/>
+        <column name="TITLE" value="HTML"/>
+        <column name="SORTING" valueNumeric="4"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="d56c5fe5-9f68-48d7-9631-c1140fa89cce"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="e23c8316-d43a-4606-803e-d4488823cc52"/>
+        <column name="KEYID" value="8"/>
+        <column name="TITLE" value="Workflow"/>
+        <column name="SORTING" valueNumeric="8"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="48c2c678-9725-4b54-be31-92f4152315bc"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="e23c8316-d43a-4606-803e-d4488823cc52"/>
+        <column name="KEYID" value="9"/>
+        <column name="TITLE" value="Landingpage"/>
+        <column name="SORTING" valueNumeric="9"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="1"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

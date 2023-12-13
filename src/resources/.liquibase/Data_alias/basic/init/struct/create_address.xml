@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="t.feldmann" id="11b5d1ac-08cf-3331-90a8-8cbc1438bfca">
+	<createTable tableName="ADDRESS">
+		<column name="ADDRESSID" type="CHAR(36)">
+			<constraints primaryKey="true" primaryKeyName="PK_ADDRESS_ADDRESSID"/>
+		</column>
+		<column name="ADDR_TYPE" type="SMALLINT"/>
+		<column name="ADDRESS" type="NVARCHAR(50)"/>
+		<column name="ADDRESSADDITION" type="NVARCHAR(60)"/>
+		<column name="ADDRIDENTIFIER" type="NVARCHAR(60)"/>
+		<column name="BUILDINGNO" type="NVARCHAR(50)"/>
+		<column name="CITY" type="NVARCHAR(50)"/>
+		<column name="COUNTRY" type="CHAR(2)"/>
+		<column name="DISTRICT" type="NVARCHAR(50)"/>
+		<column name="REGION" type="NVARCHAR(50)"/>
+                <column name="CONTACT_ID" type="CHAR(36)">
+                    <constraints nullable="false"/>
+                </column>                
+		<column name="PROVINCE" type="NVARCHAR(50)"/>      
+                <column name="ZIP" type="NVARCHAR(50)"/>                                          
+	</createTable>
+        <addColumn 
+            tableName="CONTACT">
+            <column name="ADDRESS_ID" type="CHAR(36)" />
+	</addColumn>        
+</changeSet>
+</databaseChangeLog>

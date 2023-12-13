@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet dbms="derby" author="d.tran" id="34f73f03-86cf-4757-8b03-efb2e74b0762">
+        <sql>
+            ALTER TABLE SALESORDER ADD COLUMN UNPAID_NEW DECIMAL(14,2);
+            UPDATE SALESORDER SET UNPAID_NEW=UNPAID;
+            ALTER TABLE SALESORDER DROP COLUMN UNPAID;
+            RENAME COLUMN SALESORDER.UNPAID_NEW TO UNPAID;
+            ALTER TABLE SALESORDER ADD COLUMN PAID_NEW DECIMAL(14,2);
+            UPDATE SALESORDER SET PAID_NEW=PAID;
+            ALTER TABLE SALESORDER DROP COLUMN PAID;
+            RENAME COLUMN SALESORDER.PAID_NEW TO PAID;
+        </sql>
+    </changeSet>
+    <changeSet author="d.tran" id="917d172f-307e-4412-a648-78f03b019cce">
+        <preConditions onFail="CONTINUE">
+            <not>
+                <dbms type="derby" />
+            </not>
+        </preConditions>
+
+        <modifyDataType tableName="SALESORDER" columnName="PAID" newDataType="DECIMAL(14,2)"/>
+    </changeSet>
+</databaseChangeLog>

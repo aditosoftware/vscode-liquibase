@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="approveOffer" name="AngebotFreigeben" isExecutable="true">
+    <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+    <userTask id="sid-7EE94F7E-20DC-49DF-A751-7EC30166393B" name="Angebot freigeben" flowable:candidateGroups="PROJECT_Inspector1,PROJECT_Inspector2" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="approval" name="Angebot freigegeben?" type="boolean" variable="inspector1approval" required="true"></flowable:formProperty>
+        <flowable:formProperty id="reason" name="Begründung der Ablehnung" type="string" variable="reason" visibilityExpression="${currentValues.approval == false}"></flowable:formProperty>
+        <flowable:formProperty id="inspector2needed" name="2. Freigabe nötig?" type="boolean" expression="#{true}" variable="inspector2needed" visibilityExpression="${currentValues.approval == true}"></flowable:formProperty>
+        <modeler:group-info-name-PROJECT_Inspector1 xmlns:modeler="http://flowable.org/modeler"><![CDATA[PROJECT_Inspector1]]></modeler:group-info-name-PROJECT_Inspector1>
+        <modeler:group-info-name-PROJECT_Inspector2 xmlns:modeler="http://flowable.org/modeler"><![CDATA[executives]]></modeler:group-info-name-PROJECT_Inspector2>
+        <modeler:activiti-idm-candidate-group xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-group>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <exclusiveGateway id="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295"></exclusiveGateway>
+    <sequenceFlow id="sid-24CE050E-5CA0-4410-9359-EAAA687200E3" sourceRef="sid-7EE94F7E-20DC-49DF-A751-7EC30166393B" targetRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295"></sequenceFlow>
+    <serviceTask id="sid-8090E0D9-B068-4596-A6C6-8768C5803456" name="Angebot abgelehnt" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferDeniedActivity_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"firstOrSecond":{"value":"1"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="sid-0DD45B2D-BF99-42FD-85E5-0991CBF13780" name="Angebot freigegeben" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferApprovedActivity_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"description":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <userTask id="approvalTask2" name="Angebot freigeben (2. Freigabe)" flowable:candidateGroups="PROJECT_Pruefer2" flowable:formFieldValidation="true">
+      <extensionElements>
+        <flowable:formProperty id="approval2" name="Angebot freigegeben?" type="boolean" variable="approval2" required="true"></flowable:formProperty>
+        <flowable:formProperty id="reason2" name="Begründung der Ablehnung" type="string" variable="reason2" visibilityExpression="${currentValues.approval2 == false}"></flowable:formProperty>
+        <modeler:group-info-name-PROJECT_Pruefer2 xmlns:modeler="http://flowable.org/modeler"><![CDATA[GF/Leiter Vertrieb]]></modeler:group-info-name-PROJECT_Pruefer2>
+        <modeler:activiti-idm-candidate-group xmlns:modeler="http://flowable.org/modeler"><![CDATA[true]]></modeler:activiti-idm-candidate-group>
+        <modeler:initiator-can-complete xmlns:modeler="http://flowable.org/modeler"><![CDATA[false]]></modeler:initiator-can-complete>
+      </extensionElements>
+    </userTask>
+    <serviceTask id="sid-BEB99CF9-21AB-422C-B5BA-C8F933C4A458" name="Angebot freigegeben (Zweite Freigabe erforderlich)" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferApprovedActivity_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"description":{"value":"Zweite Freigabe erforderlich"},"approval":{"value":2}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <exclusiveGateway id="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A"></exclusiveGateway>
+    <serviceTask id="sid-323AD77E-874D-4856-8E22-825D25989EE2" name="Angebot freigegeben" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferApprovedActivity_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"description":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="sid-EAE0F188-EA97-4818-B99D-70259F2307B0" name="Angebot abgelehnt" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferDeniedActivity_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"firstOrSecond":{"value":"2"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-8A3C7A28-71DD-47C8-9521-803C72A803E9" sourceRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" targetRef="sid-BEB99CF9-21AB-422C-B5BA-C8F933C4A458">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${inspector1approval == true && inspector2needed == true}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7" name="Status ändern" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[UpdateOfferStatus_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"status":{"value":"OFFERSTATTOCHECK"},"time":{"value":1}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-095E3C78-BB9A-4E49-944B-16F7ABA8F097" sourceRef="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7" targetRef="sid-7EE94F7E-20DC-49DF-A751-7EC30166393B"></sequenceFlow>
+    <serviceTask id="sid-93501888-538B-4BAE-8AE6-711A3FECA4FE" name="Status zu 'Freigabe abgelehnt' ändern" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[UpdateOfferStatus_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"status":{"value":"OFFERSTATDENIED"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="sid-90F027C6-9870-40C1-8BCF-A96A25F76AF5"></endEvent>
+    <sequenceFlow id="sid-8142B71B-3DC1-4099-9F3A-F0DB9D0E59E3" sourceRef="sid-93501888-538B-4BAE-8AE6-711A3FECA4FE" targetRef="sid-90F027C6-9870-40C1-8BCF-A96A25F76AF5"></sequenceFlow>
+    <serviceTask id="sid-C4B0ADE8-A005-4AC8-8E47-1E223E2050F0" name="Status zu 'Freigegeben' ändern" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[UpdateOfferStatus_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"status":{"value":"OFFERSTATAPPROVED"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="sid-3B123F1B-D924-4EE3-99E7-B91E776A0F69"></endEvent>
+    <sequenceFlow id="sid-7133F014-E561-45C5-99A2-EF6398DA3E49" sourceRef="sid-C4B0ADE8-A005-4AC8-8E47-1E223E2050F0" targetRef="sid-3B123F1B-D924-4EE3-99E7-B91E776A0F69"></sequenceFlow>
+    <sequenceFlow id="sid-BC4E1929-6C63-42F3-8086-A671EAA09D2E" sourceRef="sid-BEB99CF9-21AB-422C-B5BA-C8F933C4A458" targetRef="approvalTask2"></sequenceFlow>
+    <sequenceFlow id="sid-E529BD6B-1A6A-44AF-A487-5B47D641D22D" sourceRef="approvalTask2" targetRef="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A"></sequenceFlow>
+    <sequenceFlow id="sid-57A915C4-CDCE-4D1F-AFEF-B61495262C8C" sourceRef="startEvent1" targetRef="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7"></sequenceFlow>
+    <sequenceFlow id="sid-F53A65E8-181B-44FD-BCA3-38F530D6C717" sourceRef="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A" targetRef="sid-323AD77E-874D-4856-8E22-825D25989EE2">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approval2 == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-4A941651-157C-4676-BA3D-ECF897AF0FCD" sourceRef="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A" targetRef="sid-EAE0F188-EA97-4818-B99D-70259F2307B0">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approval2 == false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-41EB3FF5-F96D-49CE-8813-5B36FA4392BB" sourceRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" targetRef="sid-0DD45B2D-BF99-42FD-85E5-0991CBF13780">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${inspector1approval == true && inspector2needed == false}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="sid-422FE8C4-DC10-467D-A400-EA087E865F74" sourceRef="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" targetRef="sid-8090E0D9-B068-4596-A6C6-8768C5803456">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${inspector1approval == false}]]></conditionExpression>
+    </sequenceFlow>
+    <serviceTask id="sid-309E736B-EF85-4334-965B-DB8974B26011" name="Angebot abgelehnt (Benachrichtigung)" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferNotification_workflowService]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="sid-64F6F0E9-85B8-43C7-84A8-F29A4C31D81F" name="Angebot freigegeben (Benachrichtigung)" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferApprovedNotification_workflowService]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="sid-C375332E-BD9B-44E5-8498-61736B7E806C" name="Angebot freigegeben (Benachrichtigung)" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferApprovedNotification_workflowService]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <serviceTask id="sid-13EC2DCF-F704-4F8F-A333-5C18C78B231F" name="Angebot abgelehnt (Benachrichtigung)" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateOfferNotification_workflowService]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-12B876BD-B89E-4E27-84F4-2A3E9D33AE36" sourceRef="sid-EAE0F188-EA97-4818-B99D-70259F2307B0" targetRef="sid-13EC2DCF-F704-4F8F-A333-5C18C78B231F"></sequenceFlow>
+    <sequenceFlow id="sid-DA26ED45-18EB-4C4E-A087-63F5FF8FBC80" sourceRef="sid-323AD77E-874D-4856-8E22-825D25989EE2" targetRef="sid-C375332E-BD9B-44E5-8498-61736B7E806C"></sequenceFlow>
+    <sequenceFlow id="sid-830D5DD8-CA32-4A5C-929C-86DBFD5CF289" sourceRef="sid-0DD45B2D-BF99-42FD-85E5-0991CBF13780" targetRef="sid-64F6F0E9-85B8-43C7-84A8-F29A4C31D81F"></sequenceFlow>
+    <sequenceFlow id="sid-E6F2BF23-4ACB-4426-BB61-AEA55BA6691E" sourceRef="sid-8090E0D9-B068-4596-A6C6-8768C5803456" targetRef="sid-309E736B-EF85-4334-965B-DB8974B26011"></sequenceFlow>
+    <sequenceFlow id="sid-4CB7BA5A-CD2E-4C92-A18B-A9AA73EFAE30" sourceRef="sid-309E736B-EF85-4334-965B-DB8974B26011" targetRef="sid-93501888-538B-4BAE-8AE6-711A3FECA4FE"></sequenceFlow>
+    <sequenceFlow id="sid-F9ABC3A1-CC1C-4884-A1DE-E8807C0AEB39" sourceRef="sid-64F6F0E9-85B8-43C7-84A8-F29A4C31D81F" targetRef="sid-C4B0ADE8-A005-4AC8-8E47-1E223E2050F0"></sequenceFlow>
+    <sequenceFlow id="sid-891A4694-41D0-4F9B-9D91-5C51520C308C" sourceRef="sid-13EC2DCF-F704-4F8F-A333-5C18C78B231F" targetRef="sid-93501888-538B-4BAE-8AE6-711A3FECA4FE"></sequenceFlow>
+    <sequenceFlow id="sid-73E245F8-F8AC-4EFC-A339-7B3716A67C0D" sourceRef="sid-C375332E-BD9B-44E5-8498-61736B7E806C" targetRef="sid-C4B0ADE8-A005-4AC8-8E47-1E223E2050F0"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_approveOffer">
+    <bpmndi:BPMNPlane bpmnElement="approveOffer" id="BPMNPlane_approveOffer">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="30.0" y="408.8636382847777"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-7EE94F7E-20DC-49DF-A751-7EC30166393B" id="BPMNShape_sid-7EE94F7E-20DC-49DF-A751-7EC30166393B">
+        <omgdc:Bounds height="80.0" width="100.0" x="255.0" y="383.8636382847777"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295" id="BPMNShape_sid-4D2A9C2D-5D5B-4D4E-8FD1-FBB630DF8295">
+        <omgdc:Bounds height="40.0" width="40.0" x="420.0" y="403.8636382847777"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-8090E0D9-B068-4596-A6C6-8768C5803456" id="BPMNShape_sid-8090E0D9-B068-4596-A6C6-8768C5803456">
+        <omgdc:Bounds height="80.0" width="100.0" x="510.0" y="210.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0DD45B2D-BF99-42FD-85E5-0991CBF13780" id="BPMNShape_sid-0DD45B2D-BF99-42FD-85E5-0991CBF13780">
+        <omgdc:Bounds height="80.0" width="100.0" x="510.0" y="383.8636382847777"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="approvalTask2" id="BPMNShape_approvalTask2">
+        <omgdc:Bounds height="80.0" width="100.0" x="255.0" y="664.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-BEB99CF9-21AB-422C-B5BA-C8F933C4A458" id="BPMNShape_sid-BEB99CF9-21AB-422C-B5BA-C8F933C4A458">
+        <omgdc:Bounds height="80.0" width="99.99999999999997" x="101.42750037460016" y="664.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A" id="BPMNShape_sid-2C59B75E-D7BA-415A-8AA4-96DF9D54560A">
+        <omgdc:Bounds height="40.0" width="40.0" x="420.0" y="684.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-323AD77E-874D-4856-8E22-825D25989EE2" id="BPMNShape_sid-323AD77E-874D-4856-8E22-825D25989EE2">
+        <omgdc:Bounds height="80.0" width="100.0" x="510.0" y="664.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-EAE0F188-EA97-4818-B99D-70259F2307B0" id="BPMNShape_sid-EAE0F188-EA97-4818-B99D-70259F2307B0">
+        <omgdc:Bounds height="80.0" width="100.0" x="510.0" y="825.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7" id="BPMNShape_sid-0ADBAADA-F257-4C7F-9AC1-9565AD03DEB7">
+        <omgdc:Bounds height="80.0" width="100.0" x="105.0" y="383.8636382847777"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-93501888-538B-4BAE-8AE6-711A3FECA4FE" id="BPMNShape_sid-93501888-538B-4BAE-8AE6-711A3FECA4FE">
+        <omgdc:Bounds height="80.0" width="100.0" x="930.0" y="525.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-90F027C6-9870-40C1-8BCF-A96A25F76AF5" id="BPMNShape_sid-90F027C6-9870-40C1-8BCF-A96A25F76AF5">
+        <omgdc:Bounds height="28.0" width="28.0" x="1065.0" y="551.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C4B0ADE8-A005-4AC8-8E47-1E223E2050F0" id="BPMNShape_sid-C4B0ADE8-A005-4AC8-8E47-1E223E2050F0">
+        <omgdc:Bounds height="80.0" width="100.0" x="690.0" y="525.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-3B123F1B-D924-4EE3-99E7-B91E776A0F69" id="BPMNShape_sid-3B123F1B-D924-4EE3-99E7-B91E776A0F69">
+        <omgdc:Bounds height="28.0" width="28.0" x="825.0" y="551.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-309E736B-EF85-4334-965B-DB8974B26011" id="BPMNShape_sid-309E736B-EF85-4334-965B-DB8974B26011">
+        <omgdc:Bounds height="80.0" width="100.0" x="690.0" y="209.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-64F6F0E9-85B8-43C7-84A8-F29A4C31D81F" id="BPMNShape_sid-64F6F0E9-85B8-43C7-84A8-F29A4C31D81F">
+        <omgdc:Bounds height="80.0" width="100.0" x="690.0" y="383.8636382847777"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C375332E-BD9B-44E5-8498-61736B7E806C" id="BPMNShape_sid-C375332E-BD9B-44E5-8498-61736B7E806C">
+        <omgdc:Bounds height="80.0" width="100.0" x="690.0" y="664.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-13EC2DCF-F704-4F8F-A333-5C18C78B231F" id="BPMNShape_sid-13EC2DCF-F704-4F8F-A333-5C18C78B231F">
+        <omgdc:Bounds height="80.0" width="100.0" x="690.0" y="825.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-891A4694-41D0-4F9B-9D91-5C51520C308C" id="BPMNEdge_sid-891A4694-41D0-4F9B-9D91-5C51520C308C">
+        <omgdi:waypoint x="789.9499999999999" y="865.0"></omgdi:waypoint>
+        <omgdi:waypoint x="980.0" y="865.0"></omgdi:waypoint>
+        <omgdi:waypoint x="980.0" y="604.9499999999999"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4CB7BA5A-CD2E-4C92-A18B-A9AA73EFAE30" id="BPMNEdge_sid-4CB7BA5A-CD2E-4C92-A18B-A9AA73EFAE30">
+        <omgdi:waypoint x="789.9499999999477" y="249.0"></omgdi:waypoint>
+        <omgdi:waypoint x="980.0" y="249.0"></omgdi:waypoint>
+        <omgdi:waypoint x="980.0" y="525.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-57A915C4-CDCE-4D1F-AFEF-B61495262C8C" id="BPMNEdge_sid-57A915C4-CDCE-4D1F-AFEF-B61495262C8C">
+        <omgdi:waypoint x="59.9499984899576" y="423.8636382847777"></omgdi:waypoint>
+        <omgdi:waypoint x="105.0" y="423.8636382847777"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-41EB3FF5-F96D-49CE-8813-5B36FA4392BB" id="BPMNEdge_sid-41EB3FF5-F96D-49CE-8813-5B36FA4392BB">
+        <omgdi:waypoint x="459.941694421308" y="423.8636382847777"></omgdi:waypoint>
+        <omgdi:waypoint x="509.9999999999096" y="423.8636382847777"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8142B71B-3DC1-4099-9F3A-F0DB9D0E59E3" id="BPMNEdge_sid-8142B71B-3DC1-4099-9F3A-F0DB9D0E59E3">
+        <omgdi:waypoint x="1029.9499999998811" y="565.0"></omgdi:waypoint>
+        <omgdi:waypoint x="1065.0" y="565.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E529BD6B-1A6A-44AF-A487-5B47D641D22D" id="BPMNEdge_sid-E529BD6B-1A6A-44AF-A487-5B47D641D22D">
+        <omgdi:waypoint x="354.9499999999327" y="704.0"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="704.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-73E245F8-F8AC-4EFC-A339-7B3716A67C0D" id="BPMNEdge_sid-73E245F8-F8AC-4EFC-A339-7B3716A67C0D">
+        <omgdi:waypoint x="740.0" y="664.0"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="604.9499999999999"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-422FE8C4-DC10-467D-A400-EA087E865F74" id="BPMNEdge_sid-422FE8C4-DC10-467D-A400-EA087E865F74">
+        <omgdi:waypoint x="440.0" y="403.8636382847777"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="250.0"></omgdi:waypoint>
+        <omgdi:waypoint x="509.9999999999779" y="250.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-DA26ED45-18EB-4C4E-A087-63F5FF8FBC80" id="BPMNEdge_sid-DA26ED45-18EB-4C4E-A087-63F5FF8FBC80">
+        <omgdi:waypoint x="609.9499999999998" y="704.0"></omgdi:waypoint>
+        <omgdi:waypoint x="690.0" y="704.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-830D5DD8-CA32-4A5C-929C-86DBFD5CF289" id="BPMNEdge_sid-830D5DD8-CA32-4A5C-929C-86DBFD5CF289">
+        <omgdi:waypoint x="609.9499999999431" y="423.8636382847777"></omgdi:waypoint>
+        <omgdi:waypoint x="689.9999999996652" y="423.8636382847777"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-7133F014-E561-45C5-99A2-EF6398DA3E49" id="BPMNEdge_sid-7133F014-E561-45C5-99A2-EF6398DA3E49">
+        <omgdi:waypoint x="789.9499999998811" y="565.0"></omgdi:waypoint>
+        <omgdi:waypoint x="825.0" y="565.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F9ABC3A1-CC1C-4884-A1DE-E8807C0AEB39" id="BPMNEdge_sid-F9ABC3A1-CC1C-4884-A1DE-E8807C0AEB39">
+        <omgdi:waypoint x="740.0" y="463.81363828477777"></omgdi:waypoint>
+        <omgdi:waypoint x="740.0" y="525.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8A3C7A28-71DD-47C8-9521-803C72A803E9" id="BPMNEdge_sid-8A3C7A28-71DD-47C8-9521-803C72A803E9">
+        <omgdi:waypoint x="440.0" y="443.8012062654454"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="504.0"></omgdi:waypoint>
+        <omgdi:waypoint x="151.0" y="504.0"></omgdi:waypoint>
+        <omgdi:waypoint x="151.3420002996801" y="664.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-F53A65E8-181B-44FD-BCA3-38F530D6C717" id="BPMNEdge_sid-F53A65E8-181B-44FD-BCA3-38F530D6C717">
+        <omgdi:waypoint x="459.9416944213154" y="704.0"></omgdi:waypoint>
+        <omgdi:waypoint x="510.0" y="704.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-095E3C78-BB9A-4E49-944B-16F7ABA8F097" id="BPMNEdge_sid-095E3C78-BB9A-4E49-944B-16F7ABA8F097">
+        <omgdi:waypoint x="204.95" y="423.8636382847777"></omgdi:waypoint>
+        <omgdi:waypoint x="255.0" y="423.8636382847777"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-4A941651-157C-4676-BA3D-ECF897AF0FCD" id="BPMNEdge_sid-4A941651-157C-4676-BA3D-ECF897AF0FCD">
+        <omgdi:waypoint x="440.0" y="723.9438081936685"></omgdi:waypoint>
+        <omgdi:waypoint x="440.0" y="865.0"></omgdi:waypoint>
+        <omgdi:waypoint x="509.9999999998528" y="865.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-24CE050E-5CA0-4410-9359-EAAA687200E3" id="BPMNEdge_sid-24CE050E-5CA0-4410-9359-EAAA687200E3">
+        <omgdi:waypoint x="354.94999999972237" y="423.8636382847777"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="423.8636382847777"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BC4E1929-6C63-42F3-8086-A671EAA09D2E" id="BPMNEdge_sid-BC4E1929-6C63-42F3-8086-A671EAA09D2E">
+        <omgdi:waypoint x="201.37750037447097" y="704.0"></omgdi:waypoint>
+        <omgdi:waypoint x="255.0" y="704.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E6F2BF23-4ACB-4426-BB61-AEA55BA6691E" id="BPMNEdge_sid-E6F2BF23-4ACB-4426-BB61-AEA55BA6691E">
+        <omgdi:waypoint x="609.9499999999981" y="249.72222222222223"></omgdi:waypoint>
+        <omgdi:waypoint x="690.0" y="249.2775"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-12B876BD-B89E-4E27-84F4-2A3E9D33AE36" id="BPMNEdge_sid-12B876BD-B89E-4E27-84F4-2A3E9D33AE36">
+        <omgdi:waypoint x="609.9499999999998" y="865.0"></omgdi:waypoint>
+        <omgdi:waypoint x="690.0" y="865.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

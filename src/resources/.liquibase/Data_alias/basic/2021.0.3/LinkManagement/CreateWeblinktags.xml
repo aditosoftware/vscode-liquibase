@@ -1,0 +1,18 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="80490c55-8708-4bf0-a9e7-077ffb0501ef">
+    <createTable tableName="WEBLINKTAG">
+            <column name="WEBLINKTAGID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_WEBLINKTAG_WEBLINKTAGID"/>
+            </column>
+            <column name="WEBLINK_ID" type="char(36)"/>
+            <column name="TAG" type="VARCHAR(100)" />
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+    </createTable>
+  </changeSet>
+</databaseChangeLog>

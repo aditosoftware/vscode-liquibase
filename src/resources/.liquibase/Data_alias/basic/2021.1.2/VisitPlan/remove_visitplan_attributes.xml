@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="27b52f35-8b83-44d1-b57c-7f4fc1b08fcb">
+        <delete tableName="AB_ATTRIBUTE">
+            <where>AB_ATTRIBUTEID = ?</where>
+            <whereParams>
+                <param value="c0b26482-c0aa-413d-a9c3-f44c56bd04a9"/>
+            </whereParams>
+        </delete>
+        <delete tableName="AB_ATTRIBUTEUSAGE">
+            <where>AB_ATTRIBUTE_ID = ?</where>
+            <whereParams>
+                <param value="c0b26482-c0aa-413d-a9c3-f44c56bd04a9"/>
+            </whereParams>
+        </delete>
+        
+        <delete tableName="AB_ATTRIBUTE">
+            <where>AB_ATTRIBUTEID = ?</where>
+            <whereParams>
+                <param value="2f963668-9e8c-41d7-aee4-6beaf37492e4"/>
+            </whereParams>
+        </delete>
+        <delete tableName="AB_ATTRIBUTEUSAGE">
+            <where>AB_ATTRIBUTE_ID = ?</where>
+            <whereParams>
+                <param value="2f963668-9e8c-41d7-aee4-6beaf37492e4"/>
+            </whereParams>
+        </delete>
+        
+        <delete tableName="AB_ATTRIBUTE">
+            <where>AB_ATTRIBUTEID = ?</where>
+            <whereParams>
+                <param value="547b8b9d-88ba-4590-9e01-34d2a58116cc"/>
+            </whereParams>
+        </delete>
+        <delete tableName="AB_ATTRIBUTE">
+            <where>ATTRIBUTE_PARENT_ID = ?</where>
+            <whereParams>
+                <param value="547b8b9d-88ba-4590-9e01-34d2a58116cc"/>
+            </whereParams>
+        </delete>
+        <delete tableName="AB_ATTRIBUTEUSAGE">
+            <where>AB_ATTRIBUTE_ID = ?</where>
+            <whereParams>
+                <param value="547b8b9d-88ba-4590-9e01-34d2a58116cc"/>
+            </whereParams>
+        </delete>
+    </changeSet>
+</databaseChangeLog>

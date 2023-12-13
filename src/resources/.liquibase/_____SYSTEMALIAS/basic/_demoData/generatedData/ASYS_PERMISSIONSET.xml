@@ -1,0 +1,18 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.luginger" id="c83eadc7-c360-411a-8a83-da85eff5e945">
+    <insert tableName="ASYS_PERMISSIONSET">
+      <column name="ACCESSTYPE" value="E"/>
+      <column name="ASYS_PERMISSIONSETID" value="8cc1bee8-0092-4e52-a439-f647eed55441"/>
+      <column name="ENTITY_ID" value="DistrictContact_entity"/>
+      <column name="ROLE_ID" value="INTERNAL_EVERYONE"/>
+    </insert>
+    <insert tableName="ASYS_PERMISSIONSET">
+      <column name="ACCESSTYPE" value="R"/>
+      <column name="ASYS_PERMISSIONSET_ID" value="8cc1bee8-0092-4e52-a439-f647eed55441"/>
+      <column name="ASYS_PERMISSIONSETID" value="295cd7b4-7ffd-4249-919f-daa908dab7ec"/>
+      <column name="ENTITY_ID" value="DistrictContact_entity"/>
+      <column name="ROLE_ID" value="INTERNAL_EVERYONE"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

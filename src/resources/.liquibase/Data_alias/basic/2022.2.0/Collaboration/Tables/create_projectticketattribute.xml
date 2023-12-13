@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="A.Voegl" id="bd98606b-1307-410d-9fb7-aeeec885a65a">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTTICKETATTRIBUTE" />
+      </not>
+    </preConditions>
+    <createTable tableName="PROJECTTICKETATTRIBUTE">
+      <column name="ATTRIBUTE_NAME" type="VARCHAR(150)" />
+      <column name="ATTRIBUTE_TYPE" type="VARCHAR(50)" />
+      <column name="PROJECTTICKETATTRIBUTEID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column defaultValueComputed="NULL" name="ATTRIBUTE_ACTIVE" type="TINYINT" />
+      <column name="ATTRIBUTE_INFO" type="VARCHAR(400)" />
+      <column name="ATTRIBUTE_PARENT_ID" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+      <column name="TARGET_PROJECTTICKETTYPE_ID" type="CHAR(36)" />
+      <column name="KEYWORDCATEGORY_ID" type="CHAR(36)" />
+      <column name="OBJECT_FILTER" type="LONGTEXT" />
+      <column name="OBJECT_TYPE" type="VARCHAR(80)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="A.Voegl" id="8cffef54-5a68-4549-8974-94ac1a9d7980">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="projectticketattribute_keywordcategory_idx"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="projectticketattribute_keywordcategory_idx" tableName="PROJECTTICKETATTRIBUTE">
+      <column name="KEYWORDCATEGORY_ID" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="A.Voegl" id="7b21508d-cff8-4de9-8973-8db0f755e0d5">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="projectticketattribute_targetprojectticket_idx"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="projectticketattribute_targetprojectticket_idx" tableName="PROJECTTICKETATTRIBUTE">
+      <column name="TARGET_PROJECTTICKETTYPE_ID" />
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

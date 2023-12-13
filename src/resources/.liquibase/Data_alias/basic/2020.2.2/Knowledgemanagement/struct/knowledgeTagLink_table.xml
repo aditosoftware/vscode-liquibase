@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="e.pollinger" id="dc0b71e9-616b-4b5a-ad74-1725f0278a15">
+        <createTable tableName="KNOWLEDGETAGLINK">
+            <column name="KNOWLEDGETAGLINKID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_KNOWLEDGETAGLINK_KNOWLEDGETAGLINKID"/>
+            </column>
+            <column name="KNOWLEDGETAG_ID" type="CHAR(36)"/>
+            <column name="KNOWLEDGEMANAGEMENT_ID" type="CHAR(36)"/>
+            <column name="DATE_NEW" type="TIMESTAMP"/>
+            <column name="DATE_EDIT" type="TIMESTAMP"/>
+            <column name="USER_NEW" type="nvarchar(50)"/>
+            <column name="USER_EDIT" type="nvarchar(50)"/>
+        </createTable>
+        <createIndex tableName="KNOWLEDGETAGLINK" indexName="IDX_KNOWLEDGETAGLINK_TAG_ID">
+            <column name="KNOWLEDGETAG_ID"/>
+        </createIndex>
+        <createIndex tableName="KNOWLEDGETAGLINK" indexName="IDX_KNOWLEDGETAGLINK_KM_ID">
+            <column name="KNOWLEDGEMANAGEMENT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

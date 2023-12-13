@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="a.schindlbeck" id="55fc4812-a4b7-4a53-a369-8b644ec78cae">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="ASYS_RECORD" />
+      </not>
+    </preConditions>
+    <createTable tableName="ASYS_RECORD">
+        <column name="ID" type="CHAR(36)">
+            <constraints primaryKey="true" primaryKeyName="PK_ASYS_RECORD_ID"/>
+        </column>
+        <column name="OBJECT_TYPE" type="VARCHAR(64)"/>
+        <column name="ROW_ID" type="CHAR(36)"/>
+        <column name="RECORDGROUP_ID" type="CHAR(36)"/>
+    </createTable>
+    <createIndex indexName="idx_asysrecord_objecttype" tableName="ASYS_RECORD">
+        <column name="OBJECT_TYPE"/>
+    </createIndex>
+    <createIndex indexName="idx_asysrecord_rowid" tableName="ASYS_RECORD">
+        <column name="ROW_ID"/>
+    </createIndex>
+    <createIndex indexName="idx_asysrecord_rdgpid" tableName="ASYS_RECORD">
+        <column name="RECORDGROUP_ID"/>
+    </createIndex>
+</changeSet>
+</databaseChangeLog>

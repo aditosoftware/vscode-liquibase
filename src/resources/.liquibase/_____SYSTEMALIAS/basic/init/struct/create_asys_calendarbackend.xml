@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="a.schindlbeck" id="647ddc15-7bde-4b04-81e4-9a62a24aa5b7">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="ASYS_CALENDARBACKEND" />
+      </not>
+    </preConditions>
+    <createTable tableName="ASYS_CALENDARBACKEND">
+        <column name="DATASETID" type="CHAR(36)">
+            <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ASYS_CALENDARBACKEND_DATASETID"/>
+        </column>
+        <column name="ELEMENTUID" type="VARCHAR(512)"/>
+        <column name="CLASSIFICATION" type="INTEGER"/>
+        <column name="DTEND" type="DATETIME"/>
+        <column name="DTSTART" type="DATETIME"/>
+        <column name="ENDTIME" type="DATETIME"/>
+        <column name="ENTRYTYPE" type="INTEGER"/>
+        <column name="HASALARM" type="INTEGER"/>
+        <column name="ISRECUR" type="INTEGER"/>
+        <column name="LASTMODIFIED" type="DATETIME"/>
+        <column name="MAILBOX" type="VARCHAR(255)"/>
+        <column name="ORGANIZER" type="VARCHAR(255)"/>
+        <column name="OWNER" type="VARCHAR(255)"/>
+        <column name="STARTTIME" type="DATETIME"/>
+        <column name="STATUS" type="VARCHAR(32)"/>
+        <column name="SUMMARY" type="VARCHAR(255)"/>
+        <column name="TRANSP" type="CHAR(1)"/>
+        <column name="VCOMPONENT" type="CLOB"/>
+    </createTable>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_ENTRYTYPE">
+        <column name="ENTRYTYPE"/>
+    </createIndex>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_STARTTIME">
+        <column name="STARTTIME"/>
+    </createIndex>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_STATUS">
+        <column name="STATUS"/>
+    </createIndex>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_ENDTIME">
+        <column name="ENDTIME"/>
+    </createIndex>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_MAILBOX">
+        <column name="MAILBOX"/>
+    </createIndex>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_LASTMOD">
+        <column name="LASTMODIFIED"/>
+    </createIndex>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_DTSTART">
+        <column name="DTSTART"/>
+    </createIndex>
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_DTEND">
+        <column name="DTEND"/>
+    </createIndex>
+</changeSet>
+<changeSet id="4810b7c6-50f6-44f6-a0b5-83a3adfae6f7" author="s.listl" dbms="!mssql,!mysql,!mariadb">
+    <createIndex tableName="ASYS_CALENDARBACKEND" indexName="IDX_CALENDARBACK_ELEMENTUID">
+        <column name="ELEMENTUID"/>
+    </createIndex>
+</changeSet>
+</databaseChangeLog>

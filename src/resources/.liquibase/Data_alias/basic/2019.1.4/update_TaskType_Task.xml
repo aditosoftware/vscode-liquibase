@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="d1440b93-e01c-406b-9f0d-c55cac877fcd">
+        <delete tableName="AB_KEYWORD_ENTRY">
+            <where>AB_KEYWORD_ENTRYID in (?, ?, ?, ?)</where>
+            <whereParams>
+                <param value="7bd67c84-cb9d-4bb8-9189-4dd92c4b38a0" />
+                <param value="971b9424-9dda-4a4b-b6db-66c3ae3258ad" />
+                <param value="54231fc1-050e-4f00-91e1-4968387a6370" />
+                <param value="ac87d05f-2cf5-4c77-8342-c11e0cce7c8b" />
+            </whereParams>
+        </delete>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9e30365b-a9a6-4b57-ae6b-140c9e5a4eb4"/>
+            <column name="KEYID" value="TASK"/>
+            <column name="TITLE" value="Task"/>
+            <column name="CONTAINER" value="TaskType"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

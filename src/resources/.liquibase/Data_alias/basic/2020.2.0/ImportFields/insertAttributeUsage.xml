@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="2cc85c98-51e4-48c6-bb22-bf0bee6055f7">
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="AB_ATTRIBUTEUSAGEID" value="b0d675fc-0f86-476d-89d2-64d8273f9644"/>
+            <column name="AB_ATTRIBUTE_ID" value="7e9927a4-41e4-426f-bddd-c3e9ee3b093e"/>
+            <column name="OBJECT_TYPE" value="Leadimport"/>
+        </insert>
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="AB_ATTRIBUTEUSAGEID" value="01d6548e-c73f-4d61-8407-ba815d07fee7"/>
+            <column name="AB_ATTRIBUTE_ID" value="e73ed929-8631-46de-b28f-eb1423abb808"/>
+            <column name="OBJECT_TYPE" value="Leadimport"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

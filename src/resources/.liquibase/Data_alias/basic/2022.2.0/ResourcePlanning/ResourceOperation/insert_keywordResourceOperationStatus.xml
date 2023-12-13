@@ -1,0 +1,51 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="346d0baf-dc5a-4c37-98bf-a3573d9a3bfb">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="a207d419-5de3-4641-9310-ee481c58d5bc"/>
+            <column name="NAME" value="ResourceOperationStatus"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="ba0df41e-0ae0-418d-b7c9-c561940d677d"/>
+            <column name="KEYID" value="TOPLAN"/>
+            <column name="TITLE" value="to plan"/>
+            <column name="CONTAINER" value="ResourceOperationStatus"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a207d419-5de3-4641-9310-ee481c58d5bc"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="39a828cd-24f1-4256-9825-6c56fe5bf05f"/>
+            <column name="KEYID" value="PREPLANNED"/>
+            <column name="TITLE" value="preplanned"/>
+            <column name="CONTAINER" value="ResourceOperationStatus"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a207d419-5de3-4641-9310-ee481c58d5bc"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0468221e-4e0f-4601-92d6-c0f2476e5303"/>
+            <column name="KEYID" value="PLANNED"/>
+            <column name="TITLE" value="planned"/>
+            <column name="CONTAINER" value="ResourceOperationStatus"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a207d419-5de3-4641-9310-ee481c58d5bc"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="ead56bca-8b54-4bf8-ac88-fd9e41ec778e"/>
+            <column name="KEYID" value="CARRIEDOUT"/>
+            <column name="TITLE" value="carried out"/>
+            <column name="CONTAINER" value="ResourceOperationStatus"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a207d419-5de3-4641-9310-ee481c58d5bc"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

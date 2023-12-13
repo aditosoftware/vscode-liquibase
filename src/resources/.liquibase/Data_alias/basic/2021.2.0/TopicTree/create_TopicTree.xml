@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="9aa9ce72-670d-4122-a50f-0b1e1ca64ca3">
+        <createTable tableName="TOPICTREE">
+            <column name="TOPICTREEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_TOPICTREEID"/>
+            </column>
+            <column name="ASSIGNEDTO" type="CHAR(36)">
+            </column>
+            <column name="TOPIC" type="VARCHAR(36)"/>
+            <column name="DESCRIPTION" type="NVARCHAR(500)"/>
+            <!-- Boolean (1 = true, 0 = false)-->
+            <column name="ACTIVE" type="TINYINT" defaultValueNumeric="1">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SORTING_LAYER_1" type="INTEGER"/>
+            <column name="SORTING_LAYER_2" type="INTEGER"/>
+            <column name="SORTING_LAYER_3" type="INTEGER"/>
+            <column name="SORTING_LAYER_4" type="INTEGER"/>
+            <column name="SORTING_LAYER_5" type="INTEGER"/>
+            <column name="SORTING_LAYER_6" type="INTEGER"/>
+        
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+        </createTable>
+        <createIndex tableName="TOPICTREE" indexName="IDX_TOPICTREE_ASSIGNEDTO">
+            <column name="ASSIGNEDTO"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
+

@@ -1,0 +1,102 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="b.ulrich" id="ff75735b-b95d-4943-b87e-f66ec02966dc">
+        <addColumn tableName="VISITPLANENTRY">
+            <column name="BEGINDATE" type="DATETIME"/>
+            <column name="ENDDATE" type="DATETIME"/>
+        </addColumn>
+        <sql dbms="postgresql">
+            UPDATE VISITPLANENTRY SET BEGINDATE = (select CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS TIMESTAMP) + CAST(case when VISIT_BEGIN_TIME is not null then VISIT_BEGIN_TIME else TIME(0) end AS TIMESTAMP) AS TIMESTAMP)) from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID),
+                ENDDATE = (select CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS TIMESTAMP) + CAST(case when VISIT_END_TIME is not null then VISIT_END_TIME else TIME(0) end AS TIMESTAMP) AS TIMESTAMP) from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID)
+                WHERE VISITPLANEMPLOYEEWEEK_ID IS NULL AND DISTRICTCONTACT_ID IS NOT NULL;
+            
+            UPDATE VISITPLANENTRY SET BEGINDATE = CAST(CAST(CAST(STARTDATE AS DATE) AS TIMESTAMP) + CAST(case when BEGIN_TIME is not null then BEGIN_TIME else TIME(0) end AS TIMESTAMP) AS TIMESTAMP),
+                ENDDATE = CAST(CAST(CAST(STARTDATE AS DATE) AS TIMESTAMP) + CAST(case when END_TIME is not null then END_TIME else  TIME(0) end AS TIMESTAMP) AS TIMESTAMP) 
+                WHERE VISITPLANEMPLOYEEWEEK_ID IS NULL AND DISTRICTCONTACT_ID IS NULL;            
+            
+            UPDATE VISITPLANENTRY SET BEGINDATE = SET BEGINDATE = CAST(CAST(CAST(VISIT_DATE AS DATE) AS TIMESTAMP) + case when BEGIN_TIME is not null then BEGIN_TIME else TIME(0) end AS TIMESTAMP),
+                ENDDATE = SET BEGINDATE = CAST(CAST(CAST(VISIT_DATE AS DATE) AS TIMESTAMP) + case when END_TIME is not null then END_TIME else TIME(0) end AS TIMESTAMP)
+                WHERE VISITPLANEMPLOYEEWEEK_ID IS NOT NULL;
+        </sql>
+        <sql dbms="mysql,mariadb">
+UPDATE VISITPLANENTRY SET BEGINDATE = (select CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS DATETIME) + CAST(case when VISIT_BEGIN_TIME is not null then VISIT_BEGIN_TIME else TIME(0) end AS DATETIME) AS DATETIME) from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID),
+                ENDDATE = (select CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS DATETIME) + CAST(case when VISIT_END_TIME is not null then VISIT_END_TIME else TIME(0) end AS DATETIME) AS DATETIME) from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID) WHERE VISITPLANEMPLOYEEWEEK_ID IS NULL AND DISTRICTCONTACT_ID IS NOT NULL;
+
+            
+            UPDATE VISITPLANENTRY SET BEGINDATE = CAST(CAST(CAST(STARTDATE AS DATE) AS DATETIME) + CAST(case when BEGIN_TIME is not null then BEGIN_TIME else TIME(0) end AS DATETIME) AS DATETIME),
+                ENDDATE = CAST(CAST(CAST(STARTDATE AS DATE) AS DATETIME) + case when END_TIME is not null then END_TIME else TIME(0) end AS DATETIME) WHERE VISITPLANEMPLOYEEWEEK_ID IS NOT NULL;
+            
+            
+            UPDATE VISITPLANENTRY SET BEGINDATE = CAST(CAST(CAST(VISIT_DATE AS DATE) AS DATETIME) + case when BEGIN_TIME is not null then BEGIN_TIME else TIME(0) end AS DATETIME),
+                    ENDDATE = CAST(CAST(CAST(VISIT_DATE AS DATE) AS DATETIME) + case when END_TIME is not null then END_TIME else TIME(0) end AS DATETIME) WHERE VISITPLANEMPLOYEEWEEK_ID IS NOT NULL;
+        </sql>
+        <sql dbms="mssql">
+
+           UPDATE VISITPLANENTRY SET BEGINDATE = (select CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS DATETIME) + CAST(case when VISIT_BEGIN_TIME is not null then VISIT_BEGIN_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME) from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID),
+                ENDDATE = (select CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS DATETIME) + CAST(case when VISIT_END_TIME is not null then VISIT_END_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME) from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID)
+                WHERE VISITPLANEMPLOYEEWEEK_ID IS NULL AND DISTRICTCONTACT_ID IS NOT NULL;
+           
+            UPDATE VISITPLANENTRY SET BEGINDATE = CAST(CAST(CAST(STARTDATE AS DATE) AS DATETIME) + CAST(case when BEGIN_TIME is not null then BEGIN_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME),
+                ENDDATE = CAST(CAST(CAST(STARTDATE AS DATE) AS DATETIME) + CAST(case when END_TIME is not null then END_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME) 
+                WHERE VISITPLANEMPLOYEEWEEK_ID IS NULL AND DISTRICTCONTACT_ID IS NULL;
+            
+            UPDATE VISITPLANENTRY SET BEGINDATE = CAST(CAST(CAST(VISIT_DATE AS DATE) AS DATETIME) + CAST(case when BEGIN_TIME is not null then BEGIN_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME),
+                ENDDATE = CAST(CAST(CAST(VISIT_DATE AS DATE) AS DATETIME) + CAST(case when END_TIME is not null then END_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME) WHERE VISITPLANEMPLOYEEWEEK_ID IS NOT NULL;
+        </sql>
+        <sql dbms="oracle">
+            update VISITPLANENTRY set BEGINDATE = (select TO_DATE (
+            TO_CHAR (VISIT_STARTDATE, 'YYYYMMDD')
+            || case
+                when VISIT_BEGIN_TIME is not null then TO_CHAR (VISIT_BEGIN_TIME, 'HH24MI')
+                else '0000'
+            end, 'YYYYMMDDHH24MI'
+            ) from DISTRICTCONTACT
+                where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID),
+            ENDDATE = (select TO_DATE (TO_CHAR (VISIT_STARTDATE, 'YYYYMMDD')
+                || case
+                    when VISIT_END_TIME is not null then TO_CHAR (VISIT_END_TIME, 'HH24MI')
+                    else '0000'
+                end, 'YYYYMMDDHH24MI'
+            )
+            from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID)
+            where
+                VISITPLANEMPLOYEEWEEK_ID is null
+                and DISTRICTCONTACT_ID is not null;
+            
+            
+            
+            update VISITPLANENTRY set BEGINDATE = (select TO_DATE (
+            TO_CHAR (STARTDATE, 'YYYYMMDD')
+            || case
+                when BEGIN_TIME is not null then TO_CHAR (BEGIN_TIME, 'HH24MI')
+                else '0000'
+            end,
+            'YYYYMMDDHH24MI'
+            ) from DISTRICTCONTACT
+                    where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID),
+            ENDDATE = (select TO_DATE (TO_CHAR (STARTDATE, 'YYYYMMDD')
+                || case
+                when END_TIME is not null then TO_CHAR (END_TIME, 'HH24MI')
+                else '0000'
+            end, 'YYYYMMDDHH24MI'
+            )
+            from DISTRICTCONTACT where DISTRICTCONTACT.DISTRICTCONTACTID = VISITPLANENTRY.DISTRICTCONTACT_ID)
+            where
+                VISITPLANEMPLOYEEWEEK_ID is null
+                and DISTRICTCONTACT_ID is not null;
+            
+            
+            
+            UPDATE VISITPLANENTRY SET BEGINDATE = to_date
+                 (to_char (VISIT_DATE,'YYYYMMDD')
+                     || case when BEGIN_TIME is not null then to_char (BEGIN_TIME,'HH24MI') else '0000' end,
+                   'YYYYMMDDHH24MI'),
+            ENDDATE = to_date
+                 (to_char (VISIT_DATE,'YYYYMMDD')
+                    || case when END_TIME is not null then to_char (END_TIME,'HH24MI') else '0000' end,
+                    'YYYYMMDDHH24MI') WHERE VISITPLANEMPLOYEEWEEK_ID IS NOT NULL;
+        </sql>
+  </changeSet>  
+</databaseChangeLog>

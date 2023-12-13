@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="ce2e8db2-5ea0-4a6e-952b-cd81c53031cd">                  
+        <insert tableName="AB_ATTRIBUTE">
+            <column name="AB_ATTRIBUTEID" value="fdcb07f0-a815-44f3-be47-00eaebfffe0d"/>
+            <column name="ATTRIBUTE_ACTIVE" valueNumeric="1"/>
+            <column name="SORTING" valueNumeric="-1"/>
+            <column name="ATTRIBUTE_NAME" value="unknown"/>
+            <column name="ATTRIBUTE_PARENT_ID" value="e73ed929-8631-46de-b28f-eb1423abb808"/>
+            <column name="ATTRIBUTE_TYPE" value="COMBOVALUE"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

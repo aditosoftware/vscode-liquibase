@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.leierseder" id="leadimport-2">
+        <createTable tableName="LEADIMPORT">
+            <column name="LEADIMPORTID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_LEADIMPORT_LEADIMPORTID"/>
+            </column>   
+            <column name="IMPORTSOURCE" type="NVARCHAR(500)"/>                       
+            <column name="NAME" type="NVARCHAR(50)"/>                                             
+            <column name="STATUS" type="VARCHAR(36)"/>
+            <column name="IMPORT_DATE" type="DATETIME"/>
+            <column name="RECORD_SEPARATOR" type="VARCHAR(36)"/>
+            <column name="FIELD_SEPARATOR" type="VARCHAR(36)"/>
+            <column name="FIELD_DELIMITER" type="VARCHAR(36)"/>
+            <column name="HEADLINE" type="CHAR(1)"/>
+            <column name="IMPORTEMPLOYEE" type="CHAR(36)"/>
+            <column name="DATE_NEW" type="DATETIME" />
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

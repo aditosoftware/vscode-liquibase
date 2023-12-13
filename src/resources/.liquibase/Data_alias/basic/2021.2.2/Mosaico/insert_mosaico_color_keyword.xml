@@ -1,0 +1,63 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="38c3216e-d0dd-4f4b-97fd-2a76d8892a72">
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="dc4cc24d-5df2-481f-a028-8d22ce6f6e64"/>
+      <column name="NAME" value="MosaicoColor"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="0037e823-4e16-4504-9f26-82dd226733f0"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="dc4cc24d-5df2-481f-a028-8d22ce6f6e64"/>
+        <column name="KEYID" value="0B2D3A"/>
+        <column name="TITLE" value="Adito dark blue"/>
+        <column name="CONTAINER" value="MosaicoColor"/>
+        <column name="SORTING" valueNumeric="1"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="6f3b9635-679c-47b4-9fe3-0770aaca719c"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="dc4cc24d-5df2-481f-a028-8d22ce6f6e64"/>
+        <column name="KEYID" value="009AB9"/>
+        <column name="TITLE" value="Adito light blue"/>
+        <column name="CONTAINER" value="MosaicoColor"/>
+        <column name="SORTING" valueNumeric="2"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="b9ce199e-a4e1-4b48-ba61-85ee6139b89c"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="dc4cc24d-5df2-481f-a028-8d22ce6f6e64"/>
+        <column name="KEYID" value="ED1652"/>
+        <column name="TITLE" value="Adito red"/>
+        <column name="CONTAINER" value="MosaicoColor"/>
+        <column name="SORTING" valueNumeric="3"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="09f299f7-9faa-40c4-a53d-e7b5c33dca53"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="dc4cc24d-5df2-481f-a028-8d22ce6f6e64"/>
+        <column name="KEYID" value="EEF5F7"/>
+        <column name="TITLE" value="Adito grey"/>
+        <column name="CONTAINER" value="MosaicoColor"/>
+        <column name="SORTING" valueNumeric="4"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="692699de-d7ad-4500-b71e-153555a2ceac"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="dc4cc24d-5df2-481f-a028-8d22ce6f6e64"/>
+        <column name="KEYID" value="FFFFFF"/>
+        <column name="TITLE" value="White"/>
+        <column name="CONTAINER" value="MosaicoColor"/>
+        <column name="SORTING" valueNumeric="5"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="v.broens" id="35273f69-c794-462f-aba5-8a08efa59980">      
+    <insert tableName="AB_KEYWORD_CATEGORY">
+      <column name="AB_KEYWORD_CATEGORYID" value="7be9b3f4-3c36-46c4-9104-f109ce5870e8"/>
+      <column name="NAME" value="incomingCallContext"/>
+      <column name="SORTINGBY" valueNumeric="0"/>
+      <column name="SORTINGDIRECTION" value="ASC"/>
+    </insert>  
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="7328b7a8-8f15-4afd-8f21-df83d138659c"/>
+      <column name="KEYID" value="CONTACT"/>
+      <column name="TITLE" value="Contact"/>
+      <column name="CONTAINER" value="incomingCallContext"/>
+      <column name="SORTING" valueNumeric="1"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="7be9b3f4-3c36-46c4-9104-f109ce5870e8"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="35273f69-c794-462f-aba5-8a08efa59980"/>
+      <column name="KEYID" value="SERVICETICKET"/>
+      <column name="TITLE" value="Serviceticket"/>
+      <column name="CONTAINER" value="incomingCallContext"/>
+      <column name="SORTING" valueNumeric="2"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="7be9b3f4-3c36-46c4-9104-f109ce5870e8"/>
+    </insert>
+    <insert tableName="AB_KEYWORD_ENTRY">
+      <column name="AB_KEYWORD_ENTRYID" value="382652d9-5e8e-403d-a40c-43cc04b12e5f"/>
+      <column name="KEYID" value="NOACTION"/>
+      <column name="TITLE" value="No action"/>
+      <column name="CONTAINER" value="incomingCallContext"/>
+      <column name="SORTING" valueNumeric="3"/>
+      <column name="ISACTIVE" valueNumeric="1"/>
+      <column name="ISESSENTIAL" valueNumeric="0"/>
+      <column name="AB_KEYWORD_CATEGORY_ID" value="7be9b3f4-3c36-46c4-9104-f109ce5870e8"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

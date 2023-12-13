@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="a.schindlbeck" id="6b25f062-fb39-4230-9348-b67ec5ec45a1">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="ASYS_NOTIFICATIONCONTENTS" />
+      </not>
+    </preConditions>
+    <createTable tableName="ASYS_NOTIFICATIONCONTENTS">
+        <column name="CONTENTID" type="CHAR(36)">
+            <constraints primaryKey="true" primaryKeyName="PK_ASYS_NOTIFICATIONCONTENTS_CONTENTID"/>
+        </column>
+        <column name="BACKPACK" type="CLOB"/>
+        <column name="CAPTION" type="VARCHAR(512)"/>
+        <column name="CREATEDATE" type="DATETIME"/>
+        <column name="DESCRIPTION" type="VARCHAR(1023)"/>
+        <column name="FORCEDPRIORITY" type="VARCHAR(15)"/>
+        <column name="ICON_INFO" type="VARCHAR(1023)"/>
+        <column name="DELETEDATE" type="DATETIME"/>
+        <column name="LINK_INFO" type="VARCHAR(1023)"/>
+        <column name="ORIGINATORNAME" type="CHAR(36)"/>
+        <column name="RECIPIENTUSERIDS" type="CLOB"/>
+        <column name="TYPECODE" type="VARCHAR(63)"/>
+        <column name="VERSION" type="INTEGER"/>
+        <column name="SUBCATEGORY" type="VARCHAR(256)"/>
+    </createTable>
+    <createIndex tableName="ASYS_NOTIFICATIONCONTENTS" indexName="IDX_ASYS_NOTIFICATIONCONTENTS_CONTENTID">
+        <column name="CONTENTID"/>
+    </createIndex>
+</changeSet>
+</databaseChangeLog>

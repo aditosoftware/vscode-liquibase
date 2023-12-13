@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="19c6a8a0-fe0a-4139-ad62-d99a26d95c48">
+    <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="c40e1342-ab42-46fc-a146-55dc7420b1c2"/>
+            <column name="KEYID" value="BULKMAILFAILED"/>
+            <column name="TITLE" value="Failed"/>
+            <column name="CONTAINER" value="BulkMailStatus"/>
+            <column name="SORTING" valueNumeric="6"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="76fc02b9-a1b6-4c76-bdd5-a52d0e1ef286"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

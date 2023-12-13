@@ -1,0 +1,1005 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="e.rohrmeyer" id="6c8c603d-262b-46b2-af80-2061ceb06d58">
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%S%n%Z %C%n%A %B%n%O%n%N"/>
+      <where>ISO2 = 'BY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'BE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'VI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'GU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'AF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%nAX-%Z %C%nÅLAND"/>
+      <where>ISO2 = 'AX'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z%n%C"/>
+      <where>ISO2 = 'AL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'DZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'AS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'MK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'MG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %X"/>
+      <where>ISO2 = 'MW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D%n%Z %C%n%S"/>
+      <where>ISO2 = 'MY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'MV'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'AD'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'AO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'AI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'AQ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'AG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C%n%S"/>
+      <where>ISO2 = 'AR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z%n%C%n%S"/>
+      <where>ISO2 = 'AM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'AW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'AU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'AT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nAZ %Z %C"/>
+      <where>ISO2 = 'AZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %S"/>
+      <where>ISO2 = 'BS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'BH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C - %Z"/>
+      <where>ISO2 = 'BD'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %S %Z"/>
+      <where>ISO2 = 'BB'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'BZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'BJ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'BM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'BT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'BO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'BQ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'BA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'BW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'BV'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%D%n%C-%S%n%Z"/>
+      <where>ISO2 = 'BR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'KH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'CM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'CA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C%n%S"/>
+      <where>ISO2 = 'CV'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'IO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'UM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'VG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'BN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'BG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %X"/>
+      <where>ISO2 = 'BF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'BI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%S %Z"/>
+      <where>ISO2 = 'KY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'CF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'TD'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C%n%S"/>
+      <where>ISO2 = 'CL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%Z%n%S%C%D%n%A %B%n%O%n%N"/>
+      <where>ISO2 = 'CN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'CX'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'CC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %S, %Z"/>
+      <where>ISO2 = 'CO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'KM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'CG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'CD'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'CK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%S, %C%n%Z"/>
+      <where>ISO2 = 'CR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'HM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%nJERSEY%n%Z"/>
+      <where>ISO2 = 'JE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nHR-%Z %C"/>
+      <where>ISO2 = 'HR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S%n%Z"/>
+      <where>ISO2 = 'CU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'CW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'CY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'CZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'DK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'DJ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'DM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'DO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z%n%C"/>
+      <where>ISO2 = 'EC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S%n%Z"/>
+      <where>ISO2 = 'EG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z-%C%n%S"/>
+      <where>ISO2 = 'SV'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'GQ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'ER'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'EE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'ET'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'FK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nFO%Z %C"/>
+      <where>ISO2 = 'FO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'FJ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%nFI-%Z %C"/>
+      <where>ISO2 = 'FI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%B %A%n%Z %C %X"/>
+      <where>ISO2 = 'FR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'GF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C %S"/>
+      <where>ISO2 = 'PF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'TF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'GA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'GM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'GE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'DE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'GH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nGIBRALTAR%n%Z"/>
+      <where>ISO2 = 'GI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'GR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'GL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'GD'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'GP'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z- %C"/>
+      <where>ISO2 = 'GT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%nGUERNSEY%n%Z"/>
+      <where>ISO2 = 'GG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%Z %A %B %C"/>
+      <where>ISO2 = 'GN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'GW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'GY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nHT%Z %C"/>
+      <where>ISO2 = 'HT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'VA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %S%n%Z"/>
+      <where>ISO2 = 'HN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%S%n%C%n%A %B%n%O%n%N"/>
+      <where>ISO2 = 'HK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%C%n%A %B%n%Z"/>
+      <where>ISO2 = 'HU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'IS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z%n%S"/>
+      <where>ISO2 = 'IN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S %Z"/>
+      <where>ISO2 = 'ID'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%X %A %B %C %X"/>
+      <where>ISO2 = 'CI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%S%n%C, %D%n%A %B%n%Z"/>
+      <where>ISO2 = 'IR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%C, %S%n%Z"/>
+      <where>ISO2 = 'IQ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D%n%C%n%S %Z"/>
+      <where>ISO2 = 'IE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'IM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'IL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C %S"/>
+      <where>ISO2 = 'IT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S %X"/>
+      <where>ISO2 = 'JM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="?%Z%n%S%n%B %A%n%O%n%N"/>
+      <where>ISO2 = 'JP'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'JO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'LS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'LR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'LY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%Z%n%S%n%C%n%A %B%n%O%n%N"/>
+      <where>ISO2 = 'KZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'KE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%S%n%C"/>
+      <where>ISO2 = 'KI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'KW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'KG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'LA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %Z"/>
+      <where>ISO2 = 'LV'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'LB'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%nFL-%Z %C"/>
+      <where>ISO2 = 'LI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%nLT-%Z %C"/>
+      <where>ISO2 = 'LT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%nL-%Z %C"/>
+      <where>ISO2 = 'LU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%A %B%n%O%n%N"/>
+      <where>ISO2 = 'MO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'ML'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'MT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'MH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'MQ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'MR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z%n%C"/>
+      <where>ISO2 = 'MU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'YT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D%n%Z %C, %S"/>
+      <where>ISO2 = 'MX'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'FM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nMD-%Z %C"/>
+      <where>ISO2 = 'MD'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nMC-%Z %C %X"/>
+      <where>ISO2 = 'MC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S %Z"/>
+      <where>ISO2 = 'MN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'ME'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'MS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'MA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C%S"/>
+      <where>ISO2 = 'MZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %Z"/>
+      <where>ISO2 = 'MM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'NA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%S"/>
+      <where>ISO2 = 'NR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'NP'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'NL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'NC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D%n%C %Z"/>
+      <where>ISO2 = 'NZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z%n%C, %S"/>
+      <where>ISO2 = 'NI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'NE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D%n%C %Z%n%S"/>
+      <where>ISO2 = 'NG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'NU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'NF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%Z%n%S%n%C%n%A %B%n%O%n%N"/>
+      <where>ISO2 = 'KP'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'MP'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'NO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z%n%C"/>
+      <where>ISO2 = 'OM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C-%Z"/>
+      <where>ISO2 = 'PK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %S %Z"/>
+      <where>ISO2 = 'PW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'PS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S"/>
+      <where>ISO2 = 'PA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z %S"/>
+      <where>ISO2 = 'PG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'PY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z%n%S"/>
+      <where>ISO2 = 'PE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D, %C%n%Z %S"/>
+      <where>ISO2 = 'PH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'PN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'PL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'PT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C PR %Z"/>
+      <where>ISO2 = 'PR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'QA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'XK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'RE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'RO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S%n%Z"/>
+      <where>ISO2 = 'RU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'RW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'BL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'SH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %S"/>
+      <where>ISO2 = 'KN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'LC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'MF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'PM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'VC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'WS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'SM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'ST'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z"/>
+      <where>ISO2 = 'SA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'SN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'RS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S"/>
+      <where>ISO2 = 'SC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'SL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nSINGAPORE %Z"/>
+      <where>ISO2 = 'SG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'SX'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'SK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%nSI-%Z %C"/>
+      <where>ISO2 = 'SI'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'SB'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C, %S %Z"/>
+      <where>ISO2 = 'SO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D%n%C%n%Z"/>
+      <where>ISO2 = 'ZA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%n%C%n%Z"/>
+      <where>ISO2 = 'GS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%S %C%D%n%A %B%n%O%n%N%n%Z"/>
+      <where>ISO2 = 'KR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'SS'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C %S"/>
+      <where>ISO2 = 'ES'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'LK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'SD'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S"/>
+      <where>ISO2 = 'SR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'SJ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'SZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%nSE-%Z %C"/>
+      <where>ISO2 = 'SE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%nCH-%Z %C"/>
+      <where>ISO2 = 'CH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'SY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%Z%n%S%C%n%A %B%n%O%n%N"/>
+      <where>ISO2 = 'TW'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'TJ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'TZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%D %C%n%S %Z"/>
+      <where>ISO2 = 'TH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'TL'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'TG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'TK'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'TO'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'TT'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'TN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C/%S"/>
+      <where>ISO2 = 'TR'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'TM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%Z"/>
+      <where>ISO2 = 'TC'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S"/>
+      <where>ISO2 = 'TV'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'UG'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S%n%Z"/>
+      <where>ISO2 = 'UA'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%S"/>
+      <where>ISO2 = 'AE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%B, %A%n%C%n%Z"/>
+      <where>ISO2 = 'GB'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%B %A%n%C, %S %Z"/>
+      <where>ISO2 = 'US'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C %S"/>
+      <where>ISO2 = 'UY'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C%n%S"/>
+      <where>ISO2 = 'UZ'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'VU'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C %Z, %S"/>
+      <where>ISO2 = 'VE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C%n%S %Z"/>
+      <where>ISO2 = 'VN'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%O%n%N%n%A %B%n%Z %C %X"/>
+      <where>ISO2 = 'WF'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'EH'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'YE'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%Z %C"/>
+      <where>ISO2 = 'ZM'</where>
+    </update>
+    <update tableName="AB_COUNTRYINFO">
+      <column name="ADDR_FORMAT" value="%N%n%O%n%A %B%n%C"/>
+      <where>ISO2 = 'ZW'</where>
+    </update>
+  </changeSet>
+</databaseChangeLog>

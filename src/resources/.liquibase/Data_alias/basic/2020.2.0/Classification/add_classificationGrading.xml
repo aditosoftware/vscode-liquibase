@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="094af11f-c308-42bf-a78e-99d55883900a">
+        <createTable tableName="CLASSIFICATIONGRADING">
+            <column name="CLASSIFICATIONGRADINGID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_CLASSIFICATIONGRADING_CLASSIFICATIONGRADINGID"/>
+            </column>
+            <column name="GRADING" type="CHAR(1)"/>
+            <column name="MAXGRADEFORSCORE" type="INTEGER"/>
+            <column name="CLASSIFICATIONTYPE_GROUP" type="CHAR(36)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

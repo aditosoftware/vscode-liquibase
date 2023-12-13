@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="f16d43fa-37ed-49a9-8684-346dff957c35">
+        
+        <update tableName="AB_ATTRIBUTEUSAGE">
+            <column name="MAX_COUNT" valueNumeric="1" />
+            <where>AB_ATTRIBUTEUSAGEID in (?)</where>
+            <whereParams>
+                <param value="3234f4e2-0ee7-4782-9b10-c953b7b1be29" />
+            </whereParams>
+        </update>
+    </changeSet>
+</databaseChangeLog>

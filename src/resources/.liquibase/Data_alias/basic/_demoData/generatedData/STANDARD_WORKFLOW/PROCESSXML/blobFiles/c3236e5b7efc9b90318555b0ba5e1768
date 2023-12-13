@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="LeadNurturing" name="LeadNurturing" isExecutable="true">
+    <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+    <serviceTask id="sid-4D120919-A283-4B46-AE8E-42A417265D2A" name="send doi" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[AddToAdHocMailing_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"bulkMailId":{"value":"5867d781-ec36-49ae-be4f-d955b9e597d7"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-56A99009-6F70-4E23-A76D-B3D769D07F4C" sourceRef="startEvent1" targetRef="sid-4D120919-A283-4B46-AE8E-42A417265D2A"></sequenceFlow>
+    <userTask id="sid-A0F45409-EE81-4169-B1E8-41EC2958247A" name="wait for doi confirmation" flowable:formFieldValidation="true"></userTask>
+    <sequenceFlow id="sid-51EAC220-464F-46E9-AD5E-0F252FFBFC70" sourceRef="sid-4D120919-A283-4B46-AE8E-42A417265D2A" targetRef="sid-A0F45409-EE81-4169-B1E8-41EC2958247A"></sequenceFlow>
+    <endEvent id="sid-0EDE6BFE-705A-4C0F-A815-7E97BADF3202"></endEvent>
+    <sequenceFlow id="sid-C7245DD4-DF3F-4FB0-A30C-DF1F3B33018E" sourceRef="sid-B656EA49-F646-4BBE-8880-581EE0031019" targetRef="sid-0EDE6BFE-705A-4C0F-A815-7E97BADF3202"></sequenceFlow>
+    <serviceTask id="sid-77289978-BA46-4B11-A378-BD53C3B52006" name="add to nurturing campaign" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[SetCampaignStep_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"campaignId":{"value":"74d61a7b-1624-4cc6-b41b-b6973f02d5c9"},"campaignStepId":{"value":"2c7a1c72-e010-458c-8899-60a865281e92"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-82D54DBB-B964-493F-8CD1-096EC79979B1" sourceRef="sid-A0F45409-EE81-4169-B1E8-41EC2958247A" targetRef="sid-77289978-BA46-4B11-A378-BD53C3B52006"></sequenceFlow>
+    <intermediateCatchEvent id="sid-0A339EF0-B537-484D-9787-D09EF3E54350">
+      <timerEventDefinition>
+        <timeDuration>PT1M</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <sequenceFlow id="sid-A765E1B6-1457-43BD-A3FF-5CDF3D2C62CE" sourceRef="sid-77289978-BA46-4B11-A378-BD53C3B52006" targetRef="sid-0A339EF0-B537-484D-9787-D09EF3E54350"></sequenceFlow>
+    <serviceTask id="sid-776247A3-EEB4-4397-A1FE-7B7D7F401A26" name="send info mail" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[AddToAdHocMailing_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"bulkMailId":{"value":"1f858970-2693-4c26-9899-949c195c81de"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-589539E9-F602-401C-8B3C-5E55201AD358" sourceRef="sid-0A339EF0-B537-484D-9787-D09EF3E54350" targetRef="sid-776247A3-EEB4-4397-A1FE-7B7D7F401A26"></sequenceFlow>
+    <userTask id="sid-1D6768B3-140C-4BE3-A559-04DD86C6D1EB" name="wait for lead to open info link" flowable:formFieldValidation="true"></userTask>
+    <sequenceFlow id="sid-309F35AD-568D-46E4-9A01-93B988DBAC8A" sourceRef="sid-776247A3-EEB4-4397-A1FE-7B7D7F401A26" targetRef="sid-1D6768B3-140C-4BE3-A559-04DD86C6D1EB"></sequenceFlow>
+    <serviceTask id="sid-BDE90EA4-3117-4817-BB9B-A650EDCA4CF1" name="send first reminder" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[AddToAdHocMailing_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"bulkMailId":{"value":"97e91590-20e0-41c7-9da1-15959ad99a36"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-A6B1F31C-4620-4C14-A37C-A4C8F1BD21D9" sourceRef="sid-40B7D3FC-B2A3-44F0-A5CA-B3019F23EFA5" targetRef="sid-BDE90EA4-3117-4817-BB9B-A650EDCA4CF1"></sequenceFlow>
+    <serviceTask id="sid-84262BED-08FE-467C-88A9-768E206C4961" name="set campaignstep to success" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[SetCampaignStep_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"campaignId":{"value":"74d61a7b-1624-4cc6-b41b-b6973f02d5c9"},"campaignStepId":{"value":"4aa515a6-4280-4aa4-90a2-595f7ffc2ece"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <endEvent id="sid-3A245037-36C8-47DC-BDBE-85A9789B57BB"></endEvent>
+    <userTask id="sid-40641340-0781-4BB4-82FF-2D6B111C29FE" name="wait for lead to open second reminder link" flowable:formFieldValidation="true"></userTask>
+    <serviceTask id="sid-AF928AFC-EEAE-46E3-AD8B-74B6A667CE46" name="set campaignstep to failed" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[SetCampaignStep_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"campaignId":{"value":"74d61a7b-1624-4cc6-b41b-b6973f02d5c9"},"campaignStepId":{"value":"e60c2127-4f58-4069-a339-6ff9d1409c1d"}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-E3276894-DA3C-4379-AA91-7672659D1DF7" sourceRef="sid-5EEC9BF1-8335-4B59-94D9-2524E0794728" targetRef="sid-AF928AFC-EEAE-46E3-AD8B-74B6A667CE46"></sequenceFlow>
+    <endEvent id="sid-C078051E-207D-4ABB-8FD9-B238386E12A9"></endEvent>
+    <sequenceFlow id="sid-8D780D2E-8E8D-4379-9F56-60FF9779481D" sourceRef="sid-AF928AFC-EEAE-46E3-AD8B-74B6A667CE46" targetRef="sid-C078051E-207D-4ABB-8FD9-B238386E12A9"></sequenceFlow>
+    <boundaryEvent id="sid-B656EA49-F646-4BBE-8880-581EE0031019" attachedToRef="sid-A0F45409-EE81-4169-B1E8-41EC2958247A" cancelActivity="true">
+      <timerEventDefinition>
+        <timeDuration>PT1M</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <boundaryEvent id="sid-5EEC9BF1-8335-4B59-94D9-2524E0794728" attachedToRef="sid-40641340-0781-4BB4-82FF-2D6B111C29FE" cancelActivity="true">
+      <timerEventDefinition>
+        <timeDuration>PT1M</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <boundaryEvent id="sid-40B7D3FC-B2A3-44F0-A5CA-B3019F23EFA5" attachedToRef="sid-1D6768B3-140C-4BE3-A559-04DD86C6D1EB" cancelActivity="true">
+      <timerEventDefinition>
+        <timeDuration>PT1M</timeDuration>
+      </timerEventDefinition>
+    </boundaryEvent>
+    <sequenceFlow id="sid-32321EE3-FB71-4E16-9232-938F6CCC1906" sourceRef="sid-BDE90EA4-3117-4817-BB9B-A650EDCA4CF1" targetRef="sid-40641340-0781-4BB4-82FF-2D6B111C29FE"></sequenceFlow>
+    <sequenceFlow id="sid-9B939FB2-78AB-4DEF-9D87-5F9179C98914" sourceRef="sid-40641340-0781-4BB4-82FF-2D6B111C29FE" targetRef="sid-84262BED-08FE-467C-88A9-768E206C4961"></sequenceFlow>
+    <sequenceFlow id="sid-BCF4C827-CBE8-49F3-866A-556B8A77D889" sourceRef="sid-1D6768B3-140C-4BE3-A559-04DD86C6D1EB" targetRef="sid-84262BED-08FE-467C-88A9-768E206C4961"></sequenceFlow>
+    <serviceTask id="sid-8058C1F0-80A5-4370-B4F5-1F5ACBC8198F" name="notification to tim admin" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[CreateNotification_workflowService]]></flowable:string>
+        </flowable:field>
+        <flowable:field name="taskVariables">
+          <flowable:string><![CDATA[{"notificationCaption":{"value":"Lead Konvertierung"},"notificationDescription":{"value":"Neue Konvertierung über die Lead Nurturing Kampagne"},"notificationUser":{"value":"_____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046"},"skipTranslation":{"value":""}}]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-1611779A-4BA8-4984-AF3B-197C5C9463F8" sourceRef="sid-84262BED-08FE-467C-88A9-768E206C4961" targetRef="sid-8058C1F0-80A5-4370-B4F5-1F5ACBC8198F"></sequenceFlow>
+    <sequenceFlow id="sid-25C26253-641C-4446-8A18-73A5C0BB8DD1" sourceRef="sid-8058C1F0-80A5-4370-B4F5-1F5ACBC8198F" targetRef="sid-3A245037-36C8-47DC-BDBE-85A9789B57BB"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_LeadNurturing">
+    <bpmndi:BPMNPlane bpmnElement="LeadNurturing" id="BPMNPlane_LeadNurturing">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="15.0" y="40.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-4D120919-A283-4B46-AE8E-42A417265D2A" id="BPMNShape_sid-4D120919-A283-4B46-AE8E-42A417265D2A">
+        <omgdc:Bounds height="80.0" width="100.0" x="75.0" y="15.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-A0F45409-EE81-4169-B1E8-41EC2958247A" id="BPMNShape_sid-A0F45409-EE81-4169-B1E8-41EC2958247A">
+        <omgdc:Bounds height="80.0" width="100.0" x="225.0" y="15.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0EDE6BFE-705A-4C0F-A815-7E97BADF3202" id="BPMNShape_sid-0EDE6BFE-705A-4C0F-A815-7E97BADF3202">
+        <omgdc:Bounds height="28.0" width="28.0" x="258.9500623830561" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-77289978-BA46-4B11-A378-BD53C3B52006" id="BPMNShape_sid-77289978-BA46-4B11-A378-BD53C3B52006">
+        <omgdc:Bounds height="80.0" width="100.0" x="370.0" y="15.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-0A339EF0-B537-484D-9787-D09EF3E54350" id="BPMNShape_sid-0A339EF0-B537-484D-9787-D09EF3E54350">
+        <omgdc:Bounds height="31.0" width="31.0" x="404.5" y="150.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-776247A3-EEB4-4397-A1FE-7B7D7F401A26" id="BPMNShape_sid-776247A3-EEB4-4397-A1FE-7B7D7F401A26">
+        <omgdc:Bounds height="80.0" width="100.0" x="90.0" y="270.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-1D6768B3-140C-4BE3-A559-04DD86C6D1EB" id="BPMNShape_sid-1D6768B3-140C-4BE3-A559-04DD86C6D1EB">
+        <omgdc:Bounds height="80.0" width="100.0" x="235.0" y="270.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-BDE90EA4-3117-4817-BB9B-A650EDCA4CF1" id="BPMNShape_sid-BDE90EA4-3117-4817-BB9B-A650EDCA4CF1">
+        <omgdc:Bounds height="80.0" width="100.0" x="396.16468474484003" y="272.2270191096633"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-84262BED-08FE-467C-88A9-768E206C4961" id="BPMNShape_sid-84262BED-08FE-467C-88A9-768E206C4961">
+        <omgdc:Bounds height="80.0" width="100.0" x="586.3034478316671" y="400.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-3A245037-36C8-47DC-BDBE-85A9789B57BB" id="BPMNShape_sid-3A245037-36C8-47DC-BDBE-85A9789B57BB">
+        <omgdc:Bounds height="28.0" width="28.0" x="945.0" y="426.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-40641340-0781-4BB4-82FF-2D6B111C29FE" id="BPMNShape_sid-40641340-0781-4BB4-82FF-2D6B111C29FE">
+        <omgdc:Bounds height="80.0" width="100.0" x="586.3034478316671" y="273.2270191096633"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-AF928AFC-EEAE-46E3-AD8B-74B6A667CE46" id="BPMNShape_sid-AF928AFC-EEAE-46E3-AD8B-74B6A667CE46">
+        <omgdc:Bounds height="80.0" width="100.00000000000011" x="585.0" y="135.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-C078051E-207D-4ABB-8FD9-B238386E12A9" id="BPMNShape_sid-C078051E-207D-4ABB-8FD9-B238386E12A9">
+        <omgdc:Bounds height="28.0" width="28.0" x="945.0" y="161.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-B656EA49-F646-4BBE-8880-581EE0031019" id="BPMNShape_sid-B656EA49-F646-4BBE-8880-581EE0031019">
+        <omgdc:Bounds height="31.0" width="31.0" x="257.5" y="80.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-5EEC9BF1-8335-4B59-94D9-2524E0794728" id="BPMNShape_sid-5EEC9BF1-8335-4B59-94D9-2524E0794728">
+        <omgdc:Bounds height="31.0" width="31.0" x="619.8034478316671" y="256.7270191096633"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-40B7D3FC-B2A3-44F0-A5CA-B3019F23EFA5" id="BPMNShape_sid-40B7D3FC-B2A3-44F0-A5CA-B3019F23EFA5">
+        <omgdc:Bounds height="31.0" width="31.0" x="320.5" y="296.5"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-8058C1F0-80A5-4370-B4F5-1F5ACBC8198F" id="BPMNShape_sid-8058C1F0-80A5-4370-B4F5-1F5ACBC8198F">
+        <omgdc:Bounds height="80.0" width="100.0" x="752.638763086827" y="400.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-25C26253-641C-4446-8A18-73A5C0BB8DD1" id="BPMNEdge_sid-25C26253-641C-4446-8A18-73A5C0BB8DD1">
+        <omgdi:waypoint x="852.5887630868269" y="440.0"></omgdi:waypoint>
+        <omgdi:waypoint x="945.0" y="440.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-51EAC220-464F-46E9-AD5E-0F252FFBFC70" id="BPMNEdge_sid-51EAC220-464F-46E9-AD5E-0F252FFBFC70">
+        <omgdi:waypoint x="174.94999999997228" y="55.0"></omgdi:waypoint>
+        <omgdi:waypoint x="225.0" y="55.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-1611779A-4BA8-4984-AF3B-197C5C9463F8" id="BPMNEdge_sid-1611779A-4BA8-4984-AF3B-197C5C9463F8">
+        <omgdi:waypoint x="686.2534478315869" y="440.0"></omgdi:waypoint>
+        <omgdi:waypoint x="752.638763086605" y="440.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-BCF4C827-CBE8-49F3-866A-556B8A77D889" id="BPMNEdge_sid-BCF4C827-CBE8-49F3-866A-556B8A77D889">
+        <omgdi:waypoint x="285.0" y="349.95000000000005"></omgdi:waypoint>
+        <omgdi:waypoint x="285.0" y="440.0"></omgdi:waypoint>
+        <omgdi:waypoint x="586.3034478314764" y="440.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A6B1F31C-4620-4C14-A37C-A4C8F1BD21D9" id="BPMNEdge_sid-A6B1F31C-4620-4C14-A37C-A4C8F1BD21D9">
+        <omgdi:waypoint x="351.44995223580395" y="312.0318381396245"></omgdi:waypoint>
+        <omgdi:waypoint x="396.1646847448261" y="312.1239828643415"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-56A99009-6F70-4E23-A76D-B3D769D07F4C" id="BPMNEdge_sid-56A99009-6F70-4E23-A76D-B3D769D07F4C">
+        <omgdi:waypoint x="44.94999797575196" y="55.0"></omgdi:waypoint>
+        <omgdi:waypoint x="75.0" y="55.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-8D780D2E-8E8D-4379-9F56-60FF9779481D" id="BPMNEdge_sid-8D780D2E-8E8D-4379-9F56-60FF9779481D">
+        <omgdi:waypoint x="684.95" y="175.0"></omgdi:waypoint>
+        <omgdi:waypoint x="945.0" y="175.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-32321EE3-FB71-4E16-9232-938F6CCC1906" id="BPMNEdge_sid-32321EE3-FB71-4E16-9232-938F6CCC1906">
+        <omgdi:waypoint x="496.11468474483877" y="312.4897219861787"></omgdi:waypoint>
+        <omgdi:waypoint x="586.3034478316586" y="312.9640532673054"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-C7245DD4-DF3F-4FB0-A30C-DF1F3B33018E" id="BPMNEdge_sid-C7245DD4-DF3F-4FB0-A30C-DF1F3B33018E">
+        <omgdi:waypoint x="272.98861716384744" y="111.44999592298554"></omgdi:waypoint>
+        <omgdi:waypoint x="272.9603069352815" y="150.00000411106916"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-309F35AD-568D-46E4-9A01-93B988DBAC8A" id="BPMNEdge_sid-309F35AD-568D-46E4-9A01-93B988DBAC8A">
+        <omgdi:waypoint x="189.95" y="310.0"></omgdi:waypoint>
+        <omgdi:waypoint x="234.99999999998067" y="310.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-A765E1B6-1457-43BD-A3FF-5CDF3D2C62CE" id="BPMNEdge_sid-A765E1B6-1457-43BD-A3FF-5CDF3D2C62CE">
+        <omgdi:waypoint x="420.0" y="94.95"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="150.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-589539E9-F602-401C-8B3C-5E55201AD358" id="BPMNEdge_sid-589539E9-F602-401C-8B3C-5E55201AD358">
+        <omgdi:waypoint x="420.0" y="180.9499946705359"></omgdi:waypoint>
+        <omgdi:waypoint x="420.0" y="225.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="225.0"></omgdi:waypoint>
+        <omgdi:waypoint x="140.0" y="270.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-82D54DBB-B964-493F-8CD1-096EC79979B1" id="BPMNEdge_sid-82D54DBB-B964-493F-8CD1-096EC79979B1">
+        <omgdi:waypoint x="324.9499999999843" y="55.0"></omgdi:waypoint>
+        <omgdi:waypoint x="370.0" y="55.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-9B939FB2-78AB-4DEF-9D87-5F9179C98914" id="BPMNEdge_sid-9B939FB2-78AB-4DEF-9D87-5F9179C98914">
+        <omgdi:waypoint x="636.3034478316671" y="353.1770191096633"></omgdi:waypoint>
+        <omgdi:waypoint x="636.3034478316671" y="400.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-E3276894-DA3C-4379-AA91-7672659D1DF7" id="BPMNEdge_sid-E3276894-DA3C-4379-AA91-7672659D1DF7">
+        <omgdi:waypoint x="635.2545800255051" y="256.72707096210524"></omgdi:waypoint>
+        <omgdi:waypoint x="635.1246848971213" y="214.95000000000002"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

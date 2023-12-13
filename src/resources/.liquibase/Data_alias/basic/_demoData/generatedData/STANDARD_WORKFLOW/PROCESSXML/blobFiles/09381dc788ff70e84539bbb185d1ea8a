@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:flowable="http://flowable.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.flowable.org/processdef">
+  <process id="unsubscribeInterest" name="Unsubscribe Interest" isExecutable="true">
+    <startEvent id="startEvent1" flowable:formFieldValidation="true"></startEvent>
+    <serviceTask id="sid-82168C15-ACC8-4369-A92F-A4F8A82EDDD7" name="Change interest link" flowable:class="de.adito.aditoweb.server.neon.workflow.WorkflowServiceTask">
+      <extensionElements>
+        <flowable:field name="jditoProcess">
+          <flowable:string><![CDATA[SetInterestLink_workflowService]]></flowable:string>
+        </flowable:field>
+      </extensionElements>
+    </serviceTask>
+    <sequenceFlow id="sid-7C8AD2EA-BD4C-4251-B369-DC80DA765953" sourceRef="startEvent1" targetRef="sid-82168C15-ACC8-4369-A92F-A4F8A82EDDD7"></sequenceFlow>
+    <endEvent id="sid-7C072C86-5A44-4054-833B-F7B39838C118"></endEvent>
+    <sequenceFlow id="sid-692F5534-B5CD-45AA-84DE-4BD5B0AC18BD" sourceRef="sid-82168C15-ACC8-4369-A92F-A4F8A82EDDD7" targetRef="sid-7C072C86-5A44-4054-833B-F7B39838C118"></sequenceFlow>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_unsubscribeInterest">
+    <bpmndi:BPMNPlane bpmnElement="unsubscribeInterest" id="BPMNPlane_unsubscribeInterest">
+      <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+        <omgdc:Bounds height="30.0" width="30.0" x="100.0" y="163.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-82168C15-ACC8-4369-A92F-A4F8A82EDDD7" id="BPMNShape_sid-82168C15-ACC8-4369-A92F-A4F8A82EDDD7">
+        <omgdc:Bounds height="80.0" width="100.0" x="175.0" y="138.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="sid-7C072C86-5A44-4054-833B-F7B39838C118" id="BPMNShape_sid-7C072C86-5A44-4054-833B-F7B39838C118">
+        <omgdc:Bounds height="28.0" width="28.0" x="332.5" y="164.0"></omgdc:Bounds>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="sid-7C8AD2EA-BD4C-4251-B369-DC80DA765953" id="BPMNEdge_sid-7C8AD2EA-BD4C-4251-B369-DC80DA765953">
+        <omgdi:waypoint x="129.9499984899576" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="174.9999999999917" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="sid-692F5534-B5CD-45AA-84DE-4BD5B0AC18BD" id="BPMNEdge_sid-692F5534-B5CD-45AA-84DE-4BD5B0AC18BD">
+        <omgdi:waypoint x="274.94999999998043" y="178.0"></omgdi:waypoint>
+        <omgdi:waypoint x="332.5" y="178.0"></omgdi:waypoint>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

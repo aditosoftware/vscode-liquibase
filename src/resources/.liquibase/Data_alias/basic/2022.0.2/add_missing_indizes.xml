@@ -1,0 +1,37 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="6cc79dc1-bf5e-4423-a7b3-476993097df5">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="IDX_ADVERTISING_CURRENCYRATE_ID"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="ADVERTISING" indexName="IDX_ADVERTISING_CURRENCYRATE_ID">
+            <column name="CURRENCYRATE_ID"/>
+        </createIndex>
+        <createIndex tableName="OFFER" indexName="IDX_OFFER_CURRENCYRATE_ID">
+            <column name="CURRENCYRATE_ID"/>
+        </createIndex>
+        <createIndex tableName="PRODUCTPRICE" indexName="IDX_PRODUCTPRICE_CURRENCYRATE_ID">
+            <column name="CURRENCYRATE_ID"/>
+        </createIndex>
+        <createIndex tableName="SALESORDER" indexName="IDX_SALESORDER_CURRENCYRATE_ID">
+            <column name="CURRENCYRATE_ID"/>
+        </createIndex>
+        <createIndex tableName="SALESPROJECT" indexName="IDX_SALESPROJECT_CURRENCYRATE_ID">
+            <column name="CURRENCYRATE_ID"/>
+        </createIndex>
+        
+        <createIndex tableName="SALESPROJECT" indexName="IDX_SALESPROJECT_INACTIVETASK_ID">
+            <column name="INACTIVETASK_ID"/>
+        </createIndex>
+        <createIndex tableName="MAILDUPLICATE" indexName="IDX_MAILDUPLICATE_OBJECT_ROWID">
+            <column name="OBJECT_ROWID"/>
+        </createIndex>
+        <createIndex tableName="VISITPLANENTRYLINK" indexName="IDX_VISITPLANENTRYLINK_VISITPLANENTRY_ID">
+            <column name="VISITPLANENTRY_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

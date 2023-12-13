@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="033b6fcb-53d9-4e23-8c29-4e739294a704">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="115495eb-dff4-436d-8114-b9a7644586bf"/>
+
+            <column name="KEYID" value="SALPROJSTATPOSTPONED"/>
+            <column name="TITLE" value="Postponed"/>
+            <column name="CONTAINER" value="SalesprojectState"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9212a797-4470-4170-b4d1-330a5d991625"/>
+
+            <column name="KEYID" value="SALPROJSTATABORT"/>
+            <column name="TITLE" value="Aborted"/>
+            <column name="CONTAINER" value="SalesprojectState"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="1f857be1-7de0-479f-bac8-59b22d48fe39"/>
+
+            <column name="KEYID" value="SALPROJSTATPARTIAL"/>
+            <column name="TITLE" value="Partial order"/>
+            <column name="CONTAINER" value="SalesprojectState"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="19997ffa-bfe3-4f6a-82f8-e862acb24655"/>
+
+            <column name="KEYID" value="SALPROJSTATORDER"/>
+            <column name="TITLE" value="Order"/>
+            <column name="CONTAINER" value="SalesprojectState"/>
+            <column name="SORTING" valueNumeric="5"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="d8e2cc64-cc61-440e-b0fc-3d5b45d75ba0"/>
+
+            <column name="KEYID" value="SALPROJSTATLOST"/>
+            <column name="TITLE" value="Lost"/>
+            <column name="CONTAINER" value="SalesprojectState"/>
+            <column name="SORTING" valueNumeric="6"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

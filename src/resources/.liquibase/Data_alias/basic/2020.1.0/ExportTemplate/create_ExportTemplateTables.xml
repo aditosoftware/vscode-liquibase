@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="d1b03d92-482f-4655-a380-6d2f83da3873">
+        <createTable tableName="EXPORTTEMPLATE">
+            <column name="EXPORTTEMPLATEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_EXPORTTEMPLATEID"/>
+            </column>
+            <column name="TITLE" type="VARCHAR(100)"/>
+            <column name="FIELDSEPARATOR" type="VARCHAR(36)"/>
+            <column name="SENTENCESEPARATOR" type="VARCHAR(36)"/>
+            <column name="FIELDDELIMITER" type="VARCHAR(36)"/>
+            <column name="ISOLANGUAGE" type="CHAR(3)"/>
+            <column name="DESCRIPTION" type="VARCHAR(1337)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="VARCHAR(50)"/>
+            <column name="USER_NEW" type="VARCHAR(50)"/>
+        </createTable>
+        <createTable tableName="EXPORTTEMPLATEFIELD">
+            <column name="EXPORTTEMPLATEFIELDID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_EXPORTTEMPLATEFIELDID"/>
+            </column>
+            <column name="EXPORTTEMPLATE_ID" type="VARCHAR(36)"/>
+            <column name="FIELD" type="VARCHAR(36)"/>
+            <column name="SORTING" type="SMALLINT"/>
+        </createTable>
+        <createIndex indexName="idx_exprttmpfld_tmpltid" tableName="EXPORTTEMPLATEFIELD">
+            <column name="EXPORTTEMPLATE_ID"/>
+        </createIndex>
+        <createTable tableName="EXPORTTEMPLATEPLACEOFUSE">
+            <column name="EXPORTTEMPLATEPLACEOFUSEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_EXPORTTEMPLATEPLACEOFUSEID"/>
+            </column>
+            <column name="EXPORTTEMPLATE_ID" type="VARCHAR(36)"/>
+            <column name="PLACEOFUSE" type="VARCHAR(36)"/>
+        </createTable>
+        <createIndex indexName="idx_exprttmppou_tmpltid" tableName="EXPORTTEMPLATEPLACEOFUSE">
+            <column name="EXPORTTEMPLATE_ID"/>
+        </createIndex>
+        <createTable tableName="EXPORTTEMPLATESELECTION">
+            <column name="EXPORTTEMPLATESELECTIONID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_EXPORTTEMPLATESELECTIONID"/>
+            </column>
+            <column name="EXPORTTEMPLATE_ID" type="VARCHAR(36)"/>
+           <column name="FILENAME" type="VARCHAR(33)"/>
+        </createTable>
+        <createIndex indexName="idx_exprttmpselection_tmpltid" tableName="EXPORTTEMPLATESELECTION">
+            <column name="EXPORTTEMPLATE_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

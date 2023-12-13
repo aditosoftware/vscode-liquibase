@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="s.pongratz" id="c3d7324e-0621-4aca-b73a-b6d43442046d">
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="020aa467-855e-4d00-b52b-4dd02df03e75" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="1011 | Projekt - Fortsetzung  | Offen" />
+      <column name="CREATEDATE" valueDate="2023-03-15T10:28:20" />
+      <column name="DESCRIPTION" value=" Roll Out wurde gesetzt auf &quot;01.04.2025&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 9fd97f71-54ca-4373-bd5c-16702e376639; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_883d4192-8150-4d64-ad53-d2435c5d63e9; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="054178b5-9148-4481-b563-44380e0a28df" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="https://www.techtoolsgmbh.de" />
+      <column name="CREATEDATE" valueDate="2023-03-15T16:16:20" />
+      <column name="DESCRIPTION" value=" Adresse wurde gesetzt auf &quot;https://www.techtoolsgmbh.de&quot; und Medium wurde gesetzt auf &quot;Website&quot; und STANDARD wurde gesetzt auf &quot;0&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; d6a2b1d6-3d28-4828-a52b-f01658719934; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Tech Tools GmbH" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="09c8ff92-6630-494d-af72-94656f28c0b1" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="+49 491 7684643" />
+      <column name="CREATEDATE" valueDate="2023-03-15T16:18:20" />
+      <column name="DESCRIPTION" value=" Adresse wurde gesetzt auf &quot;+49 491 7684643&quot; und Medium wurde gesetzt auf &quot;Handy&quot; und STANDARD wurde gesetzt auf &quot;0&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Person; 701569b7-d791-4682-89a1-bf26682187af; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Herr Frank Baer MdB" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="0ae0e527-b1da-4030-9e15-77238c55da93" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseSystemalias_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T14:24:57" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="0b96474a-c15c-4985-865e-5763993969b6" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Infobrochüre runtergeladen" />
+      <column name="CREATEDATE" valueDate="2023-01-14T14:54:39" />
+      <column name="DESCRIPTION" value="Datum wurde gesetzt auf &quot;08.12.2021 10:52&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Industrial Steel AG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="2e7546f4-fcd9-4c82-b32c-7a865d84f533" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="b.berge@hochbauberger.de" />
+      <column name="CREATEDATE" valueDate="2023-03-15T16:19:20" />
+      <column name="DESCRIPTION" value=" Adresse wurde gesetzt auf &quot;b.berge@hochbauberger.de&quot; und Medium wurde gesetzt auf &quot;E-Mail&quot; und STANDARD wurde gesetzt auf &quot;0&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Person; 3a8ba3f1-d659-455e-adbf-e6dc94aa2fc9; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Herr Benno Berger" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="377b2788-79a9-41f5-aa28-73f2aa857390" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Cache geleert" />
+      <column name="CREATEDATE" valueDate="2023-03-16T15:15:31" />
+      <column name="DESCRIPTION" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:MAILBOX" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ClearCache" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="38c6c496-ec51-40a5-9250-4b23972894fc" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="1002 | Erstprojekt | Bestellung" />
+      <column name="CREATEDATE" valueDate="2023-03-16T10:58:20" />
+      <column name="DESCRIPTION" value=" Projektstart wurde gesetzt auf &quot;05.11.2022&quot; und Begründung wurde gesetzt auf &quot;; SALPROJWLPROJVOL; SALPROJWLPROJREF; SALPROJWLPROJGUI; SALPROJWLPROJFLEX; &quot; und Volumen wurde gesetzt auf &quot;550000&quot; und Volumen wurde gesetzt auf &quot;550000&quot; und Volumen wurde gesetzt auf &quot;550000&quot; und Volumen wurde gesetzt auf &quot;550000&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 438537db-0dc6-4aed-b1d1-813011baf88c; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="4" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="3c5d7e4e-e572-434b-8a88-ad91cba0f18d" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="SuperBauer AG" />
+      <column name="CREATEDATE" valueDate="2023-03-15T10:25:20" />
+      <column name="DESCRIPTION" value=" Information wurde gesetzt auf &quot;ab Mitte 2024 interessant&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; 8eecb5e5-40d9-4bf0-a152-1ca456795563; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_883d4192-8150-4d64-ad53-d2435c5d63e9; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="3ea791c0-646a-4421-815b-2a583d2e6349" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Besprechung Inhalte Angebot" />
+      <column name="CREATEDATE" valueDate="2023-01-14T14:59:45" />
+      <column name="DESCRIPTION" value="Richtung wurde gesetzt auf &quot;eingehend&quot; und Datum wurde gesetzt auf &quot;28.09.2021 15:58&quot; und Beschreibung wurde gesetzt auf &quot;&lt;p&gt;Ausf&amp;uuml;hrlich Schitt-f&amp;uuml;r-Schritt-Erkl&amp;auml;rung des Angebotes&lt;/p&gt; &quot; und Kategorie wurde gesetzt auf &quot;Online-Meeting&quot; und Betreff wurde gesetzt auf &quot;Besprechung Inhalte Angebot&quot; und Verantwortlich wurde gesetzt auf &quot;Frau Lisa Sommer&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Industrial Steel AG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="4091f5ef-8e6f-4176-8d24-e45fc24f9d01" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Beurteilung / Bonität" />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:05:38" />
+      <column name="DESCRIPTION" value="Eigenschaft wurde gesetzt auf &quot;Beurteilung / Bonität&quot; und Wert wurde gesetzt auf &quot;C&quot; und Wert wurde gesetzt auf &quot;undefined&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Industrial Steel AG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="47325c06-22d9-4958-ac46-c22a36373b4d" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseSystemalias_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T14:19:41" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="48cd566f-c39e-4f57-abcd-e66d29762c8e" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="1005 | Kronen Pilotprojekt | Offen" />
+      <column name="CREATEDATE" valueDate="2023-03-16T11:05:20" />
+      <column name="DESCRIPTION" value=" Volumen wurde gesetzt auf &quot;25000&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 7e2680f6-a438-45aa-956a-787363f85923; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_883d4192-8150-4d64-ad53-d2435c5d63e9; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="5a214a8a-09d0-4830-83ba-041788dde8b5" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Abstimmung wegen unklarer Anforderungen" />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:01:05" />
+      <column name="DESCRIPTION" value="Datum wurde gesetzt auf &quot;30.11.2021 15:38&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 9fd97f71-54ca-4373-bd5c-16702e376639; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="1011 | Projekt - Fortsetzung  | Open" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="5cb8c936-992a-4a79-a469-4a4e915447ef" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Besprechung Inhalte Angebot" />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:01:23" />
+      <column name="DESCRIPTION" value="Datum wurde gesetzt auf &quot;26.11.2021 15:58&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 9fd97f71-54ca-4373-bd5c-16702e376639; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="1011 | Projekt - Fortsetzung  | Open" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="5d47ecef-6e3c-47c0-bddc-540179788097" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Konditionen / Preisliste" />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:05:52" />
+      <column name="DESCRIPTION" value="Eigenschaft wurde gesetzt auf &quot;Konditionen / Preisliste&quot; und Wert wurde gesetzt auf &quot;Sonderpreisliste&quot; und Wert wurde gesetzt auf &quot;undefined&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Industrial Steel AG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="5e46a425-3be6-4589-abb2-87f9f22b63dd" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="+49 40 3560232" />
+      <column name="CREATEDATE" valueDate="2023-03-15T16:14:20" />
+      <column name="DESCRIPTION" value=" Adresse wurde gesetzt auf &quot;+49 40 3560232&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; 3273620b-e526-425c-96dd-cff866d51d92; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Kran und Kollegen KG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="61a2186b-2e1f-4d27-bd7c-b5814c25d092" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="+49 4908 74372673" />
+      <column name="CREATEDATE" valueDate="2023-03-15T16:20:20" />
+      <column name="DESCRIPTION" value=" Adresse wurde gesetzt auf &quot;+49 4908 74372673&quot; und Medium wurde gesetzt auf &quot;Telefon&quot; und STANDARD wurde gesetzt auf &quot;0&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Person; 7c0b4ee5-2012-4c91-8980-502c1602329b; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Herr Josef Gruber" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="62831d8e-3024-47f1-a045-d767317d1e33" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Beurteilung / Risiko" />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:06:17" />
+      <column name="DESCRIPTION" value="Eigenschaft wurde gesetzt auf &quot;Beurteilung / Risiko&quot; und Wert wurde gesetzt auf &quot;kein Risiko&quot; und Wert wurde gesetzt auf &quot;undefined&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Industrial Steel AG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="6a640e4e-6291-4bd0-a27c-42d94d2bc8d8" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Industrial Steel AG" />
+      <column name="CREATEDATE" valueDate="2023-03-15T10:26:20" />
+      <column name="DESCRIPTION" value=" Information wurde gesetzt auf &quot;Die Industrial Steel AG ist einer der führenden Stahlhersteller weltweit. Das Unternehmen agiert mit über 5.000 Mitarbeitern in über 32 Ländern. &quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_883d4192-8150-4d64-ad53-d2435c5d63e9; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="6d48d8a1-ddbc-473e-8ac3-aa7a5a14ec5f" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="1011 | Projekt - Fortsetzung  | Offen" />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:03:35" />
+      <column name="DESCRIPTION" value="Roll Out wurde gesetzt auf &quot;07.09.2022&quot; und Projektstart wurde gesetzt auf &quot;01.11.2021&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 9fd97f71-54ca-4373-bd5c-16702e376639; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="7123d026-c58e-48e8-bed0-f84749fd1b09" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Cache geleert" />
+      <column name="CREATEDATE" valueDate="2023-01-09T11:14:29" />
+      <column name="DESCRIPTION" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:MAILBOX" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ClearCache" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="78f74a63-84b4-4c56-921c-2933bf7187b3" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Ansprechpartner aktualisiert" />
+      <column name="CREATEDATE" valueDate="2023-01-14T14:58:15" />
+      <column name="DESCRIPTION" value="Richtung wurde gesetzt auf &quot;Intern&quot; und Datum wurde gesetzt auf &quot;14.12.2021 15:57&quot; und Beschreibung wurde gesetzt auf &quot;&lt;p&gt;Auf Vollst&amp;auml;ndigkeit gepr&amp;uuml;ft und Liste angepasst&lt;/p&gt; &quot; und Kategorie wurde gesetzt auf &quot;Notiz&quot; und Betreff wurde gesetzt auf &quot;Ansprechpartner aktualisiert&quot; und Verantwortlich wurde gesetzt auf &quot;Frau Lisa Sommer&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; fc465f2f-803b-4a1f-b79d-7b466d7ecff4; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Skyscraper Bau GmbH" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="7972021d-9f23-47dc-b380-66b8694cadff" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Cache geleert" />
+      <column name="CREATEDATE" valueDate="2023-03-16T15:22:12" />
+      <column name="DESCRIPTION" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:MAILBOX" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ClearCache" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="7ce2f80a-b472-4e4b-b11d-cb5bbb1b288b" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseSystemalias_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T14:31:56" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="7f50884a-49bb-4c31-850b-f620d5f101d1" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseSystemalias_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T15:22:29" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="82999e98-4857-4cf0-8b06-d0c23b73c807" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseContent_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T13:42:00" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="83206c48-6132-4218-82f9-83475cc59724" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Austausch zur aktuellen Situation " />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:04:34" />
+      <column name="DESCRIPTION" value="Datum wurde gesetzt auf &quot;07.12.2021 06:21&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Industrial Steel AG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="8d279acf-c559-4db0-880a-a5d6931bca7a" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="b.berge@hochbauberger.de" />
+      <column name="CREATEDATE" valueDate="2023-03-15T16:19:20" />
+      <column name="DESCRIPTION" value=" Adresse wurde gesetzt auf &quot;https://www.linkedin.de/Bennoberger&quot; und Medium wurde gesetzt auf &quot;LinkedIn&quot; und STANDARD wurde gesetzt auf &quot;0&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Person; 3a8ba3f1-d659-455e-adbf-e6dc94aa2fc9; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Herr Benno Berger" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="8f57adbb-5132-48c7-99bf-3ff2c67b7de5" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="DataTimeshift, " />
+      <column name="CREATEDATE" valueDate="2023-03-07T13:15:03" />
+      <column name="DESCRIPTION" value="Intervall(e) wurden gestartet" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="9126a5f1-efc6-4eb0-ba7a-9d37756f6c67" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseSystemalias_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-01-16T12:29:11" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="9da876e4-7ca0-431a-918b-e8384786ac8f" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseContent_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T15:00:52" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="9e7a8df1-79ee-4a16-b35f-d7519c0a3960" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" />
+      <column name="CREATEDATE" valueDate="2023-01-08T10:05:11" />
+      <column name="DESCRIPTION" value="Interval(s) have been started" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="a3e07482-0fe2-433c-8b6d-dffaa263a865" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="updateChecklistProgress_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-01-08T10:13:14" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="ada1432d-850a-48e1-94d5-df5af3ef2c3d" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Cache geleert" />
+      <column name="CREATEDATE" valueDate="2023-03-16T15:06:28" />
+      <column name="DESCRIPTION" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:MAILBOX" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ClearCache" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="b6237040-097c-43e9-a147-2a32c0ce9e3c" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseContent_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T14:02:30" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="bc031c70-c4cf-44cf-82e1-3f3acbf226b5" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseContent_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T13:47:09" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="bd0cf00a-cc72-43c3-84c8-2220cff77374" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="DataTimeshift" />
+      <column name="CREATEDATE" valueDate="2023-03-07T13:14:55" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="c778e031-a592-4ca2-90c7-694c51b0e5b5" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="https://www.xing.de/feorieawate" />
+      <column name="CREATEDATE" valueDate="2023-03-15T10:22:20" />
+      <column name="DESCRIPTION" value=" Adresse wurde gesetzt auf &quot;https://www.xing.de/feorieawate&quot; und Medium wurde gesetzt auf &quot;Xing&quot; und STANDARD wurde gesetzt auf &quot;0&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Person; 5b6c177e-5bf5-4c75-9263-ba4c69f7a23c; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_883d4192-8150-4d64-ad53-d2435c5d63e9; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Frau Feorie Awate" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="ca742596-bd96-4c1c-8a47-0ef85498ae17" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Cache geleert" />
+      <column name="CREATEDATE" valueDate="2023-03-16T14:07:59" />
+      <column name="DESCRIPTION" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:MAILBOX" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ClearCache" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="d5dfc13b-ecdf-467b-9a3a-cfdfda6b339c" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Beurteilung / Mitarbeiterzahl" />
+      <column name="CREATEDATE" valueDate="2023-01-14T15:05:17" />
+      <column name="DESCRIPTION" value="Eigenschaft wurde gesetzt auf &quot;Beurteilung / Mitarbeiterzahl&quot; und Wert wurde gesetzt auf &quot;268&quot; und Wert wurde gesetzt auf &quot;undefined&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Organisation; dec94545-2487-46d5-978d-26ee0fcf0f5f; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Industrial Steel AG" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="d80f6021-f1cb-4c6e-8979-4b9bcf3aae99" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="1003 | Skyscraper / Pilotprojekt | Offen" />
+      <column name="CREATEDATE" valueDate="2023-03-16T11:03:20" />
+      <column name="DESCRIPTION" value=" Volumen wurde gesetzt auf &quot;146000&quot; und Volumen wurde gesetzt auf &quot;146000&quot; und Volumen wurde gesetzt auf &quot;146000&quot; und Volumen wurde gesetzt auf &quot;146000&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 6d3d16cd-733e-41d1-ab6c-8a6cba63ba4a; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="3" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="e00924a1-c972-4a91-ad97-b6b2f3ba6b00" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Cache geleert" />
+      <column name="CREATEDATE" valueDate="2023-03-16T14:31:16" />
+      <column name="DESCRIPTION" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:MAILBOX" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ClearCache" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="e8b7c04e-67a4-4f61-a899-78372077abf9" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseSystemalias_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T14:38:14" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="eaff9a98-f382-4de4-a8fa-c50e38c9af43" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="erstes Kennenlernen" />
+      <column name="CREATEDATE" valueDate="2023-03-15T10:24:20" />
+      <column name="DESCRIPTION" value=" Richtung wurde gesetzt auf &quot;eingehend&quot; und Kategorie wurde gesetzt auf &quot;Messe&quot; und Betreff wurde gesetzt auf &quot;erstes Kennenlernen&quot; und Verantwortlich wurde gesetzt auf &quot;Herr Tim Admin&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Activity; 8ed0059d-2d8b-46d4-9339-05f92f0e0121; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_883d4192-8150-4d64-ad53-d2435c5d63e9; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="efc2690a-46fe-4d75-92ed-e65eba6eb35b" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="DataTimeshift" />
+      <column name="CREATEDATE" valueDate="2023-03-15T14:08:06" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="f57763fd-7159-450e-8f5a-3bf7cc4be3a5" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Klärung der technischen Voraussetzungen" />
+      <column name="CREATEDATE" valueDate="2023-01-14T14:51:07" />
+      <column name="DESCRIPTION" value="Datum wurde gesetzt auf &quot;09.12.2021 15:46&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Salesproject; 9fd97f71-54ca-4373-bd5c-16702e376639; " />
+      <column name="ORIGINATORNAME" value="883d4192-8150-4d64-ad53-d2435c5d63e9" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="1011 | Projekt - Fortsetzung  | Open" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="f8ece7b0-16f7-4ac5-8822-a347cf4d3a65" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Projekt gestoppt - soll in Q4 2023 wieder aufgenommen werden" />
+      <column name="CREATEDATE" valueDate="2023-03-15T16:16:20" />
+      <column name="DESCRIPTION" value=" Richtung wurde gesetzt auf &quot;eingehend&quot; und Kategorie wurde gesetzt auf &quot;Telefon&quot; und Betreff wurde gesetzt auf &quot;Projekt gestoppt - soll in Q4 2023 wieder aufgenommen werden&quot; und Verantwortlich wurde gesetzt auf &quot;Herr Tim Admin&quot;" />
+      <column name="FORCEDPRIORITY" value="NORMAL" />
+      <column name="ICON_INFO" value="VAADIN:EYE" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" value="; Activity; 5dd48ba2-eafd-44b4-bea0-3868620f46a4; " />
+      <column name="ORIGINATORNAME" value="bcdfb521-c7d0-4ef1-8916-78e7d3232046" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_c8625e26-1597-4ce9-9558-3fb787892e65; " />
+      <column name="TYPECODE" value="ObservationNotification" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="f9a7e481-bfb1-4366-8dc3-d6becc97f93d" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="exportLiquibaseContent_serverProcess" />
+      <column name="CREATEDATE" valueDate="2023-03-16T15:16:20" />
+      <column name="DESCRIPTION" value="Serverprozess wurde ausgeführt" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:TIMER" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ProcessExecuted" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" value="Prozess wurde ausgeführt" />
+    </insert>
+    <insert tableName="ASYS_NOTIFICATIONCONTENTS">
+      <column name="CONTENTID" value="fd7bdc34-8884-4e14-9b51-8fcf16e5380e" />
+      <column name="BACKPACK" />
+      <column name="CAPTION" value="Cache geleert" />
+      <column name="CREATEDATE" valueDate="2023-03-16T15:20:59" />
+      <column name="DESCRIPTION" />
+      <column name="FORCEDPRIORITY" value="NONE" />
+      <column name="ICON_INFO" value="VAADIN:MAILBOX" />
+      <column name="DELETEDATE" valueDate="1970-01-01T01:00:00" />
+      <column name="LINK_INFO" />
+      <column name="ORIGINATORNAME" />
+      <column name="RECIPIENTUSERIDS" value="; _____USER_bcdfb521-c7d0-4ef1-8916-78e7d3232046; " />
+      <column name="TYPECODE" value="ClearCache" />
+      <column name="VERSION" valueNumeric="0" />
+      <column name="SUBCATEGORY" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>

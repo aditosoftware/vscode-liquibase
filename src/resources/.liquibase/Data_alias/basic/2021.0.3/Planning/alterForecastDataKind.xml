@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.luginger" id="26f06b1d-c550-4a6c-81a5-c9f061c7f50f">
+     
+    <update tableName="FORECAST">
+        <column name="KIND" value="FORECAST"/>
+        <where>KIND is null</where>
+    </update>
+    </changeSet>
+</databaseChangeLog>

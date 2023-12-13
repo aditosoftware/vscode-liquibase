@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+	<changeSet author="j.goderbauer" id="038575fd-cbf2-452a-8eae-0b594779cd1b">
+		<createIndex indexName="IDX_TASK_REQUESTOR_CONTACT_ID" tableName="TASK">
+			<column name="REQUESTOR_CONTACT_ID"/>
+		</createIndex>
+		<createIndex indexName="IDX_TASK_EDITOR_CONTACT_ID" tableName="TASK">
+			<column name="EDITOR_CONTACT_ID"/>
+		</createIndex>
+		<createIndex indexName="IDX_TASK_PARENT" tableName="TASK">
+			<column name="PARENT_CONTEXT"/>
+			<column name="PARENT_ID"/>
+		</createIndex>
+		<createIndex indexName="IDX_TASKLINK_TASK_ID" tableName="TASKLINK">
+			<column name="TASK_ID"/>
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

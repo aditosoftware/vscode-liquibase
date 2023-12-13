@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="b8d9e809-b65e-1997-bd7b-183727ehabba" author="e.rohrmeyer">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="2e7852c6-a957-45ca-b971-0a7841e2460b"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="3b0a4044-9cfd-4466-9edd-50876a926e76"/>
+            <column name="KEYID" value="OFFERSTATAPPROVED"/>
+            <column name="TITLE" value="Approved"/>
+            <column name="CONTAINER" value="OfferStatus"/>
+            <column name="SORTING" valueNumeric="5"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="347cad21-4a72-4df5-a8b1-3ed5005eb8e2"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="3b0a4044-9cfd-4466-9edd-50876a926e76"/>
+            <column name="KEYID" value="OFFERSTATDENIED"/>
+            <column name="TITLE" value="Approval denied"/>
+            <column name="CONTAINER" value="OfferStatus"/>
+            <column name="SORTING" valueNumeric="6"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

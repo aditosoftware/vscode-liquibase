@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="34080ecf-c2a4-4787-ac3f-b3cd22cd40e0">
+        <createTable tableName="DIGITALSIGNINGTEMPLATEPOSITION">
+            <column name="DIGITALSIGNINGTEMPLATEPOSITIONID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_DIGITALSIGNINGTEMPLATEPOSITIONID"/>
+            </column>
+            
+            <column name="DIGITALSIGNINGTEMPLATE_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAGE" type="INTEGER"/>
+            <column name="SPACINGLEFT" type="INTEGER"/>
+            <column name="SPACINGBOTTOM" type="INTEGER"/>
+            <column name="SPACINGRIGHT" type="INTEGER"/>
+            <column name="SPACINGTOP" type="INTEGER"/>
+            <column name="SORTING" type="SMALLINT"/>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </createTable>
+        <createIndex tableName="DIGITALSIGNINGTEMPLATEPOSITION" indexName="IDX_DGSGNTMPLTPSTN_TEMPLATE_ID">
+            <column name="DIGITALSIGNINGTEMPLATE_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

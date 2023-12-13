@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="insert_commMediumTitleKeywordAttribute.xml"/>
+    <include relativeToChangelogFile="true" file="Knowledgemanagement/changelog_knowledgeManagement.xml"/>
+    <include relativeToChangelogFile="true" file="insert_employeeCountAttribute.xml"/>
+    <include relativeToChangelogFile="true" file="alter_CampaignParticipantResponsible.xml"/>
+    <include relativeToChangelogFile="true" file="alter_TableLeadStatus.xml"/>
+    <include relativeToChangelogFile="true" file="alter_CampaignParticipantResponsibleIndex.xml"/>
+    <include relativeToChangelogFile="true" file="MSTeams/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="insert_newsletterAttribute.xml"/>
+    <include relativeToChangelogFile="true" file="readd_ExporttemplateIndizes.xml"/>
+</databaseChangeLog>

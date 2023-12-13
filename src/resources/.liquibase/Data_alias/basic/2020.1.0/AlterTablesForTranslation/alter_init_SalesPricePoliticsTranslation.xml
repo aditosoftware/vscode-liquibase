@@ -1,0 +1,10 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="8ae53220-55c4-41b6-8436-d46d853adf44">
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="Subscription model"/>
+            <where>AB_KEYWORD_ENTRYID='c899faa1-6b89-4616-8640-cd2c8011d123'</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>

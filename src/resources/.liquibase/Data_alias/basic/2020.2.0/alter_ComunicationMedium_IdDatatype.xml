@@ -1,0 +1,48 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">   
+    <!--*****
+        The data type has been changed by accident to CHAR(36) so let's change it back to VARCHAR(36) and update the data that is already persistant.
+        Tested on Apache Derby DB.
+    ******-->
+    <!--first: remove the index (if it's there) because on some dbms this prevents the column from changing/dropping-->
+    <changeSet author="j.goderbauer" id="763ea49e-8c9b-4262-9e2a-c59488358cd4">
+        <preConditions onFail="MARK_RAN">
+            <indexExists indexName="IDX_COMMUNICATION_MEDIUM_ID" tableName="COMMUNICATION"/>
+        </preConditions>
+        <dropIndex indexName="IDX_COMMUNICATION_MEDIUM_ID" tableName="COMMUNICATION" />
+    </changeSet>
+    <!--second: change the type, dependent on the dbms-->
+    <changeSet dbms="derby" author="j.goderbauer" id="c6e4a017-6e48-4238-80d7-41e2b210874d">
+        <sql>
+            ALTER TABLE COMMUNICATION ADD COLUMN MEDIUM_ID_NEW VARCHAR(36);
+            UPDATE COMMUNICATION SET MEDIUM_ID_NEW=MEDIUM_ID;
+            ALTER TABLE COMMUNICATION DROP COLUMN MEDIUM_ID;
+            RENAME COLUMN COMMUNICATION.MEDIUM_ID_NEW TO MEDIUM_ID;
+        </sql>
+    </changeSet>
+    <changeSet dbms="!derby" author="j.goderbauer" id="fbee4d8c-681d-4bea-b665-9fa951c3daa8">
+        <modifyDataType tableName="COMMUNICATION" columnName="MEDIUM_ID" newDataType="VARCHAR(36)"/>
+    </changeSet>
+    <!--third: update data that now contains the data with spaces at the end-->
+    <!--MS SQL supports the regular trim-function with  MS SQL 2017 or higher, so lets use the old ltrim/rtrim functions for better compability -->
+    <!--sauce: https://docs.microsoft.com/de-de/sql/t-sql/functions/trim-transact-sql?view=sql-server-ver15-->
+    <changeSet dbms="mssql" author="j.goderbauer" id="74b69edd-74f6-42c6-8164-e41614b47140">
+        <update tableName="COMMUNICATION">
+            <column name="MEDIUM_ID" valueComputed="ltrim(rtrim(MEDIUM_ID))" />
+            <where>MEDIUM_ID is not null</where>
+        </update>
+    </changeSet>
+    <changeSet dbms="!mssql" author="j.goderbauer" id="ee6466ce-ef57-44fd-b3c7-4e8fe305f25e">
+        <update tableName="COMMUNICATION">
+            <column name="MEDIUM_ID" valueComputed="trim(MEDIUM_ID)" />
+            <where>MEDIUM_ID is not null</where>
+        </update>
+    </changeSet>
+    <!--fourth: recreate the index with the original name-->
+    <changeSet author="j.goderbauer" id="071450d1-2cd6-487e-9b12-7f8b042f179c">
+        <createIndex indexName="IDX_COMMUNICATION_MEDIUM_ID" tableName="COMMUNICATION">
+            <column name="MEDIUM_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

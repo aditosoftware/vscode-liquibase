@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="5d43fb21-4b28-4256-a6e1-bac454f84c2b" author="a.riedl">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0">
+                select count(*) from AB_KEYWORD_ENTRY where AB_KEYWORD_ENTRYID = 'af00e6ba-d7d4-4ebf-8d38-892b4df701c8';
+            </sqlCheck>
+        </preConditions>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="af00e6ba-d7d4-4ebf-8d38-892b4df701c8"/>
+            <column name="KEYID" value="MEMROLEEVENTPLANER"/>
+            <column name="TITLE" value="Event Planer"/>
+            <column name="CONTAINER" value="MEMBERROLE"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a3a157f4-9bf2-44bb-8359-76766cc789d1"/>
+            <column name="SORTING" valueNumeric="7"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ENTRY_ID" value="af00e6ba-d7d4-4ebf-8d38-892b4df701c8"/>
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="e950f6a7-10fd-4475-ab70-bdfeae0eb597"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="6dbf5ebe-604a-4b67-b664-09f2af048570"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ENTRY_ID" value="8cb1b843-713a-4193-aa50-9f5ca06820f8"/>
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="df993a29-661c-44db-a328-2a33e59ad6f4"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="6dbf5ebe-604a-4b67-b664-09f2af048570"/>
+            <column name="BOOL_VALUE" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="71f9e4c9-7950-4276-9f4c-2e42256a5e32">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="248a5fc3-7949-4d24-b5d2-6d9a1b2e54a7"/>
+            <column name="NAME" value="DSGVOConfiguration"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="51f106b6-b593-4279-bf39-c8d226ebc607"/>
+            <column name="KEYID" value="DSGVO_CONFIGURATION"/>
+            <column name="TITLE" value="DSGVO Configuration"/>
+            <column name="CONTAINER" value="DSGVOConfiguration"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="248a5fc3-7949-4d24-b5d2-6d9a1b2e54a7"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="da1227b0-7bda-4aad-a2d5-ba438cac355a"/>
+            <column name="NAME" value="Delete Delay in Days"/>
+            <column name="CONTAINER" value="DSGVOConfiguration"/>
+            <column name="KIND" value="NUMBER_VALUE"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="248a5fc3-7949-4d24-b5d2-6d9a1b2e54a7"/>
+        </insert>
+         <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="ddf253e2-e6e1-477e-89e3-1d5d34a47540"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="51f106b6-b593-4279-bf39-c8d226ebc607"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="da1227b0-7bda-4aad-a2d5-ba438cac355a"/>
+            <column name="NUMBER_VALUE" valueNumeric="7"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

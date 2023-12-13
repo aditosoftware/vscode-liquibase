@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="create_leadimport.xml"/>
+    <include relativeToChangelogFile="true" file="create_importField.xml"/>
+    <include relativeToChangelogFile="true" file="create_Lead.xml"/>
+    <include relativeToChangelogFile="true" file="create_LeadTemp.xml"/>
+    <include relativeToChangelogFile="true" file="create_LeadLog.xml"/>
+    
+    <include relativeToChangelogFile="true" file="init_Field_Separator.xml"/>
+    <include relativeToChangelogFile="true" file="init_Import_Status.xml"/>
+    <include relativeToChangelogFile="true" file="init_Record_Separator.xml"/>
+    <include relativeToChangelogFile="true" file="init_Field_Limit.xml"/>
+    <include relativeToChangelogFile="true" file="init_importFields.xml"/>
+    <include relativeToChangelogFile="true" file="init_dupStatus.xml"/>
+</databaseChangeLog>

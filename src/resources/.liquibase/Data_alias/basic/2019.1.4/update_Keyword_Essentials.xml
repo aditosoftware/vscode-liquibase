@@ -1,0 +1,61 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.loreth" id="b1629529-92ab-437d-b864-0fd68fe5ceab">
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'QuantityUnit' and KEYID in ('QUANTITYPIECES                      ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'ActivityDirection' and KEYID in ('i                                   ', 'o                                   ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'ContactStatus' and KEYID in ('CONTACTSTATACTIVE                   ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'TaskStatus' and KEYID in ('NEW                                 ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'TaskType' and KEYID in ('TASK                                ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'ProductPricelist' and KEYID in ('PRICELISTDEFAULT                    ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'TaskPriority' and KEYID in ('TASKPRIOMEDIUM                      ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'TaskProgress' and KEYID in ('TASKPROG0                           ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'ContractStatus' and KEYID in ('CONTRACTSTATVALIDUNLI               ', 'CONTRACTSTATVALIDLI                 ', 'CONTRACTSTATSIGN                    ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'SalesprojectState' and KEYID in ('SALPROJSTATOPEN                     ', 'SALPROJSTATPOSTPONED                ')</where>
+    </update>
+    
+    <update tableName="AB_KEYWORD_ENTRY">
+      <column name="ISESSENTIAL" valueNumeric="1" />
+      <where>CONTAINER = 'TaskStatus' and KEYID in ('NEW                                 ', 'ASSIGNED                            ', 'IN-PROGRESS                         ', 'WAITING                             ', 'ENDED                               ', 'CUSTOMER-CHECKS                     ', 'UNASSIGNED                          ')</where>
+    </update>
+    
+    
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="A.Riedl" id="9820d74b-1b58-4ffd-9f5d-8c4d670bda47">
+        <createTable tableName="AB_SYNCCONTACT">
+            <column name="SYNCCONTACTID" type="char(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_SYNCCONTACTID"/>
+            </column>
+            <column name="ASYS_FAVORITEID" type="char(36)"/>
+            <column name="EXCHANGEID" type="varchar(254)"/>
+            <column name="USER_ID" type="char(46)"/>            
+            <column name="CONTACT_ID" type="char(36)"/>
+            <column name="DATE_DEL" type="datetime"/>
+            <column name="DATE_EDIT" type="datetime"/>
+            <column name="DATE_NEW" type="datetime"/>
+        </createTable>
+        <createIndex indexName="idx_exchangeId" tableName="AB_SYNCCONTACT">
+            <column name="EXCHANGEID"/>
+        </createIndex>
+        <createIndex tableName="AB_SYNCCONTACT" indexName="idx_UserId">
+            <column name="USER_ID"/>
+        </createIndex>
+        <createIndex tableName="AB_SYNCCONTACT" indexName="idx_ContactId">
+            <column name="CONTACT_ID"/>
+        </createIndex>
+        <addUniqueConstraint 
+            columnNames="ASYS_FAVORITEID"
+            constraintName="const_uniqueFavoriteId"  
+            tableName="AB_SYNCCONTACT"/>  
+    </changeSet>
+</databaseChangeLog>

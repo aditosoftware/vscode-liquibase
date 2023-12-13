@@ -1,0 +1,135 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="ec9bae68-ca27-4597-9808-fc333246b3a0">
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="KIND" value="SalesprojectPhase"/>
+            <where>KIND = ?</where>
+            <whereParams>
+                <param value="1" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJPHASENQC"/>
+            <where>KIND = ? and MILESTONEVALUE in (?,?,?,?,?,?,?,?,?,?,?)</where>
+            <whereParams>
+                <param value="SalesprojectPhase" />
+                <param value="1" />
+                <param value="7" />
+                <param value="8" />
+                <param value="9" />
+                <param value="10" />
+                <param value="11" />
+                <param value="12" />
+                <param value="13" />
+                <param value="14" />
+                <param value="15" />
+                <param value="16" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJPHASEMAL"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectPhase" />
+                <param value="2" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJPHASEMQL"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectPhase" />
+                <param value="3" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJPHASESAL"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectPhase" />
+                <param value="4" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJPHASESQO"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectPhase" />
+                <param value="5" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJPHASEOFFER"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectPhase" />
+                <param value="6" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJPHASENEGO"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectPhase" />
+                <param value="7" />
+            </whereParams>
+        </update>
+        
+        
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="KIND" value="SalesprojectState"/>
+            <where>KIND = ?</where>
+            <whereParams>
+                <param value="2" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJSTATOPEN"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectState" />
+                <param value="1" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJSTATPOST"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectState" />
+                <param value="2" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJSTATABORT"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectState" />
+                <param value="3" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJSTATPARTIAL"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectState" />
+                <param value="4" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="SALPROJSTATLOST"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectState" />
+                <param value="5" />
+            </whereParams>
+        </update>
+        <update tableName="SALESPROJECT_MILESTONE">
+            <column name="MILESTONEVALUE" value="d8a60f60-a4e6-46ee-88ec-bac53e1afedd"/>
+            <where>KIND = ? and MILESTONEVALUE = ?</where>
+            <whereParams>
+                <param value="SalesprojectState" />
+                <param value="6" />
+            </whereParams>
+        </update>
+   </changeSet>
+</databaseChangeLog>

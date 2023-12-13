@@ -1,0 +1,28 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="16c86e2e-618d-4d77-8112-d92af904bd3c">
+        <createTable tableName="DIGITALSIGNINGTEMPLATE">
+            <column name="DIGITALSIGNINGTEMPLATEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_DIGITALSIGNINGTEMPLATEID"/>
+            </column>
+            
+            <column name="OBJECT_TYPE" type="VARCHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TITLE" type="NVARCHAR(50)"/>
+            <column name="DESCRIPTION" type="NVARCHAR(500)"/>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </createTable>
+        
+        
+        <createIndex tableName="DIGITALSIGNINGTEMPLATE" indexName="IDX_DIGSIGNINGTEMPLATE_OBJTYPE">
+            <column name="OBJECT_TYPE"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

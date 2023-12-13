@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="e7634c6d-f880-4ddd-83e8-830b970cf952">
+        <insert tableName="AB_ATTRIBUTEUSAGE">
+            <column name="AB_ATTRIBUTEUSAGEID" value="a50b6c1d-cab6-4342-919e-ca56297b3d3d"/>
+            <column name="AB_ATTRIBUTE_ID" value="59377864-0745-4a18-8d7b-57a0491a8116"/>
+            <column name="OBJECT_TYPE" value="Person"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

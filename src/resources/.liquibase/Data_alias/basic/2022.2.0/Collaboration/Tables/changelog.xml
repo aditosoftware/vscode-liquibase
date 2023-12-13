@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="create_objectlink.xml"/>
+    <include relativeToChangelogFile="true" file="create_project.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectattributevalues.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectmember.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectmemberrole.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectpermission.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectticket.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectticketattribute.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectticketattributerelation.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectticketcomment.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectticketrelation.xml"/>    
+    <include relativeToChangelogFile="true" file="create_projecttickettype.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttickettypeattributerelation.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttickettyperel.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttime.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttype.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttypeattributevalue.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttyperel.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttypestatusreason.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttickertattribute_preset.xml"/>
+    <include relativeToChangelogFile="true" file="create_projectticketattributeprojecttype.xml"/>
+    <include relativeToChangelogFile="true" file="create_projecttypedocumentrel.xml"/>
+</databaseChangeLog>

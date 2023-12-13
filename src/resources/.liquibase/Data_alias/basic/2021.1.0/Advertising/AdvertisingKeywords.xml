@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+ 
+    <changeSet author="A.Riedl" id="e361ec95-f6cc-43ea-afe9-98d7600acc8a">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="cf3cd723-687d-42ac-9ce2-aa3cd59aba7a"/>
+            <column name="NAME" value="AdvertisingStatus"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="6257dcf2-636c-4de8-be36-11d703af00a4"/>
+            <column name="KEYID" value="ADVERTISINGSTATOPEN"/>
+            <column name="TITLE" value="Open"/>
+            <column name="CONTAINER"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="cf3cd723-687d-42ac-9ce2-aa3cd59aba7a"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="7b95821d-1992-43b0-9384-e07460308019"/>
+            <column name="KEYID" value="ADVERTISINGFOLLOWEDUP"/>
+            <column name="TITLE" value="Followed up"/>
+            <column name="CONTAINER"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="cf3cd723-687d-42ac-9ce2-aa3cd59aba7a"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="fe53d26a-9fe2-4bb3-9afe-61f980fa1d17"/>
+            <column name="KEYID" value="ADVERTISINGSTATSENT"/>
+            <column name="TITLE" value="Sent"/>
+            <column name="CONTAINER"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="cf3cd723-687d-42ac-9ce2-aa3cd59aba7a"/>
+        </insert>        
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="60b31bd8-2c5e-461c-b4a1-6c4e31d505e8"/>
+            <column name="NAME" value="AdvertisingDelivery"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="36c9729f-168b-4801-9b17-1bc3630ea114"/>
+            <column name="KEYID" value="ADVERTDELIVERYPERSONAL"/>
+            <column name="TITLE" value="personal"/>
+            <column name="CONTAINER"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="60b31bd8-2c5e-461c-b4a1-6c4e31d505e8"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="87f6b1b5-43ce-492e-9baa-d1ad95a06dc0"/>
+            <column name="KEYID" value="ADVERTDELIVERYMAIL"/>
+            <column name="TITLE" value="via mail"/>
+            <column name="CONTAINER"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="60b31bd8-2c5e-461c-b4a1-6c4e31d505e8"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="092dcb14-b207-4c20-b5c7-5aeaf07ca081"/>
+            <column name="KEYID" value="ADVERTDELIVERYPOST"/>
+            <column name="TITLE" value="via post"/>
+            <column name="CONTAINER"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="60b31bd8-2c5e-461c-b4a1-6c4e31d505e8"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

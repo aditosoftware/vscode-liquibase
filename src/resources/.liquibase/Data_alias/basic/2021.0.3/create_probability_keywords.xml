@@ -1,0 +1,120 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="d9d6e2dd-5d9f-4c92-bd78-f33e6320b273">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="2d4a7918-6105-4746-b196-504ebe352250"/>
+            <column name="NAME" value="ProbabilitySalesproject"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="d8c35e5a-6935-4262-b919-84196bce8e6d"/>
+            <column name="CONTAINER" value="ProbabilitySalesproject"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="2d4a7918-6105-4746-b196-504ebe352250"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="0"/>
+            <column name="TITLE" value="0%"/>
+            <column name="SORTING" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="59fbb811-d183-4746-9b88-ed3c275f6f82"/>
+            <column name="CONTAINER" value="ProbabilitySalesproject"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="2d4a7918-6105-4746-b196-504ebe352250"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="25"/>
+            <column name="TITLE" value="25%"/>
+            <column name="SORTING" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9fcc2591-9e96-466e-8fd0-223337a50a8f"/>
+            <column name="CONTAINER" value="ProbabilitySalesproject"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="2d4a7918-6105-4746-b196-504ebe352250"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="50"/>
+            <column name="TITLE" value="50%"/>
+            <column name="SORTING" valueNumeric="2"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="70cef9ee-b221-4097-be5e-08a8f3e5a8b4"/>
+            <column name="CONTAINER" value="ProbabilitySalesproject"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="2d4a7918-6105-4746-b196-504ebe352250"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="75"/>
+            <column name="TITLE" value="75%"/>
+            <column name="SORTING" valueNumeric="3"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="5de50a13-7871-4cee-9fab-9c419b2ce620"/>
+            <column name="CONTAINER" value="ProbabilitySalesproject"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="2d4a7918-6105-4746-b196-504ebe352250"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="100"/>
+            <column name="TITLE" value="100%"/>
+            <column name="SORTING" valueNumeric="4"/>
+        </insert>
+
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="aba6b313-7e35-4eeb-95e2-0e262c66fa9c"/>
+            <column name="NAME" value="ProbabilityOffer"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="38f30441-2d94-4558-9c53-a29d066731b9"/>
+            <column name="CONTAINER" value="ProbabilityOffer"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="aba6b313-7e35-4eeb-95e2-0e262c66fa9c"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="0"/>
+            <column name="TITLE" value="0%"/>
+            <column name="SORTING" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="1f411441-7677-4c64-88c0-d0f5b24f8a4c"/>
+            <column name="CONTAINER" value="ProbabilityOffer"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="aba6b313-7e35-4eeb-95e2-0e262c66fa9c"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="25"/>
+            <column name="TITLE" value="25%"/>
+            <column name="SORTING" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="26225ece-fdf9-4e72-a2b3-8ea295429157"/>
+            <column name="CONTAINER" value="ProbabilityOffer"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="aba6b313-7e35-4eeb-95e2-0e262c66fa9c"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="50"/>
+            <column name="TITLE" value="50%"/>
+            <column name="SORTING" valueNumeric="2"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="01865353-6137-44fe-8817-6d67e33f895e"/>
+            <column name="CONTAINER" value="ProbabilityOffer"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="aba6b313-7e35-4eeb-95e2-0e262c66fa9c"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="75"/>
+            <column name="TITLE" value="75%"/>
+            <column name="SORTING" valueNumeric="3"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="755eefec-ecb6-485d-91c9-8763b2a24ebf"/>
+            <column name="CONTAINER" value="ProbabilityOffer"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="aba6b313-7e35-4eeb-95e2-0e262c66fa9c"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="KEYID" value="100"/>
+            <column name="TITLE" value="100%"/>
+            <column name="SORTING" valueNumeric="4"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

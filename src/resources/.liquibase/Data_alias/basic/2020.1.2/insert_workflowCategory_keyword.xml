@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="38b13161-5163-48d9-9791-f9c7027cac62">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="f241b36a-c2fe-40be-9e2e-8293c700d096"/>
+            <column name="KEYID" value="WORKFLOWCATEGORYMARKETING"/>
+            <column name="TITLE" value="Marketing"/>
+            <column name="CONTAINER" value="WorkflowCategory"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="00a72718-554e-46ab-b83c-fb9b81be4be6"/>
+            <column name="KEYID" value="WORKFLOWCATEGORYRELEASE"/>
+            <column name="TITLE" value="Release"/>
+            <column name="CONTAINER" value="WorkflowCategory"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

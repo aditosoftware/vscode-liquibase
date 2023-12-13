@@ -1,0 +1,20 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="449607ad-177a-4766-b069-67c388afdc70">
+    <delete tableName="AB_KEYWORD_ENTRY">
+      <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+      <whereParams>
+           <param value="a7d5d212-f99f-4200-8872-b24e7de2cc37" />
+      </whereParams>
+    </delete>
+    <update tableName="AB_KEYWORD_ENTRY">
+        <column name="SORTING" valueNumeric="4"/>
+        <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+            <param value="c40e1342-ab42-46fc-a146-55dc7420b1c2" />
+        </whereParams>
+    </update>
+  </changeSet>
+</databaseChangeLog>

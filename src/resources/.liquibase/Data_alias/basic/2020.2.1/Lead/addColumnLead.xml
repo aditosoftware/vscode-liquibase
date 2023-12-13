@@ -1,0 +1,11 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.pongratz" id="a894e971-4ce9-4142-ac27-1782d454a01f">
+       <addColumn tableName="LEAD">
+            <column name="P_COMMINTERNET"  type="NVARCHAR(254)" />
+            <column name="O_COMMINTERNET"  type="NVARCHAR(254)" />
+       </addColumn>
+  </changeSet>
+</databaseChangeLog>

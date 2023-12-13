@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="b.ulrich" id="22a4ad0d-3608-43c1-9aa1-bfd6f63c1149">
+        <addColumn tableName="DISTRICTCONTACT">
+            <column name="VISIT_BEGINDATE" type="DATETIME"/>
+            <column name="VISIT_ENDDATE" type="DATETIME"/>
+        </addColumn>
+        
+        <sql dbms="postgresql">
+            UPDATE DISTRICTCONTACT SET VISIT_BEGINDATE = CAST(VISIT_STARTDATE AS TIMESTAMP) + case when VISIT_BEGIN_TIME is not null then VISIT_BEGIN_TIME else TIME(0) end,
+                    VISIT_ENDDATE = CAST(VISIT_STARTDATE AS TIMESTAMP) + case when VISIT_END_TIME is not null then VISIT_END_TIME else TIME(0) end where VISIT_STARTDATE is not null;
+        </sql>
+        <sql dbms="mysql,mariadb">
+            UPDATE DISTRICTCONTACT SET VISIT_BEGINDATE = CAST(VISIT_STARTDATE AS DATETIME) + case when VISIT_BEGIN_TIME is not null then VISIT_BEGIN_TIME else TIME(0) end,
+                    VISIT_ENDDATE = CAST(VISIT_STARTDATE AS DATETIME) + case when VISIT_END_TIME is not null then VISIT_END_TIME else TIME(0) end where VISIT_STARTDATE is not null;
+        </sql>
+        <sql dbms="mssql">
+            UPDATE DISTRICTCONTACT SET VISIT_BEGINDATE = CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS DATETIME) + CAST(case when VISIT_BEGIN_TIME is not null then VISIT_BEGIN_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME),
+                VISIT_ENDDATE = CAST(CAST(CAST(VISIT_STARTDATE AS DATE) AS DATETIME) + CAST(case when VISIT_END_TIME is not null then VISIT_END_TIME else PARSE('00:00:00' as time) end AS DATETIME) AS DATETIME) WHERE VISIT_STARTDATE IS NOT NULL;
+        </sql>
+        <sql dbms="oracle">
+            UPDATE DISTRICTCONTACT SET VISIT_BEGINDATE = to_date
+                (to_char (VISIT_STARTDATE,'YYYYMMDD')
+                    || case when VISIT_BEGIN_TIME is not null then to_char(VISIT_BEGIN_TIME,'HH24MI') else '0000' end,
+                    'YYYYMMDDHH24MI'),
+                VISIT_ENDDATE = to_date
+                (to_char (VISIT_STARTDATE,'YYYYMMDD')
+                    || case when VISIT_END_TIME is not null then to_char(VISIT_END_TIME,'HH24MI') else '0000' end,
+                    'YYYYMMDDHH24MI') where VISIT_STARTDATE is not null;
+        </sql>
+  </changeSet>  
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="fe62cfa4-d335-4dc9-aac7-c272b73d73de">
+      <createTable tableName="EVENTMESSAGE">
+          <column name="EVENTMESSAGEID" type="CHAR(36)">
+              <constraints nullable="false" primaryKey="true" />
+          </column>
+          <column name="BULKMAIL_ID" type="CHAR(36)"/>
+          <column name="MESSAGETYPE" type="VARCHAR(36)"/>
+          <column name="EVENT_ID" type="CHAR(36)"/>
+          <column name="USER_NEW" type="varchar(50)"/>
+          <column name="USER_EDIT" type="varchar(50)"/>
+          <column name="DATE_NEW" type="datetime"/>
+          <column name="DATE_EDIT" type="datetime"/>
+      </createTable>
+      <createIndex tableName="EVENTMESSAGE" indexName="EVTMSG_EVTID">
+          <column name="EVENT_ID"/>
+      </createIndex>
+      <createIndex tableName="EVENTMESSAGE" indexName="EVTMSG_BLKMID">
+          <column name="BULKMAIL_ID"/>
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>

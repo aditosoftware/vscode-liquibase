@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <include relativeToChangelogFile="true" file="Checklist/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="CurrencyRate/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="CommunicationSettings/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Interest/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Currency/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="alter_SalesprojectMilestone.xml"/>
+    <include relativeToChangelogFile="true" file="Eventmanagement/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="BusinessFair/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="MissingIndizes/add_MissingIndizes.xml"/>
+    <include relativeToChangelogFile="true" file="VisitPlan/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="WebTracking/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="alter_salesproject_probability_type.xml"/>
+    <include relativeToChangelogFile="true" file="create_mailduplicate.xml"/>
+    <include relativeToChangelogFile="true" file="create_salesproject_conversion_rate_target.xml"/>
+    <include relativeToChangelogFile="true" file="Duplicate/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="InboxMedium/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="add_salesproject_inactivetask_id.xml"/>
+    <include relativeToChangelogFile="true" file="KnowledgeManagement/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Weblinks/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="Bulkmail/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="IncomingCall/changelog.xml"/>
+    <include relativeToChangelogFile="true" file="add_salesproject_phase_deal.xml"/>
+    <include relativeToChangelogFile="true" file="update_activitycategory_keyword_attributes.xml"/>
+    <include relativeToChangelogFile="true" file="add_IndexActivity.xml"/>
+</databaseChangeLog>

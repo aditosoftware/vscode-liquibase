@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="d.tran" id="43e6595f-5d5c-40d6-8d0f-4690337fab3a">
+      <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="264b8a1c-45c8-4b41-9d11-4b6fb538b79c"/>
+            <column name="KEYID" value="MANUAL"/>
+            <column name="TITLE" value="Manually"/>
+            <column name="CONTAINER" value="ChecklistEntryType"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+      <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0af9044d-6eeb-4db0-be95-91e63a30aa19"/>
+            <column name="KEYID" value="AUTO"/>
+            <column name="TITLE" value="Automatically"/>
+            <column name="CONTAINER" value="ChecklistEntryType"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+  </changeSet>
+</databaseChangeLog>

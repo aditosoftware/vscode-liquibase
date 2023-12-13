@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="p.neub" id="dbee2caa-50f2-4516-b5ea-e7e1087e4456">
+    <renameColumn columnDataType="VARCHAR(36)" newColumnName="PROBABILITY_OLD" oldColumnName="PROBABILITY" tableName="SALESPROJECT"/>
+    <addColumn tableName="SALESPROJECT">
+      <column afterColumn="PROBABILITY_OLD" name="PROBABILITY" type="DECIMAL(6, 2)"/>
+    </addColumn>
+    
+    <update tableName="SALESPROJECT">
+      <column name="PROBABILITY" valueNumeric="0"/>
+      <where>SALESPROJECT.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="SALPROJPROB0"/>
+      </whereParams>
+    </update>
+    <update tableName="SALESPROJECT">
+      <column name="PROBABILITY" valueNumeric="25"/>
+      <where>SALESPROJECT.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="SALPROJPROB25"/>
+      </whereParams>
+    </update>
+    <update tableName="SALESPROJECT">
+      <column name="PROBABILITY" valueNumeric="50"/>
+      <where>SALESPROJECT.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="SALPROJPROB50"/>
+      </whereParams>
+    </update>
+    <update tableName="SALESPROJECT">
+      <column name="PROBABILITY" valueNumeric="75"/>
+      <where>SALESPROJECT.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="SALPROJPROB75"/>
+      </whereParams>
+    </update>
+    <update tableName="SALESPROJECT">
+      <column name="PROBABILITY" valueNumeric="100"/>
+      <where>SALESPROJECT.PROBABILITY_OLD = ?</where>
+      <whereParams>
+        <param value="SALPROJPROB100"/>
+      </whereParams>
+    </update>
+    
+    <dropColumn tableName="SALESPROJECT">
+      <column name="PROBABILITY_OLD"/>
+    </dropColumn>
+  </changeSet>
+</databaseChangeLog>

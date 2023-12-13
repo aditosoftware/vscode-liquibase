@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="9b8cba08-c1dd-4412-b8bf-a7c341f1cbe0">
+        <createTable tableName="AB_UNLINKEDMAIL">
+            <column name="AB_UNLINKEDMAILID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_AB_UNLINKEDMAIL_AB_UNLINKEDMAILID"/>
+            </column>
+            <column name="USER_NEW" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column> 
+            <column name="DATE_NEW" type="DATETIME">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_EDIT" type="NVARCHAR(50)" />
+            <column name="DATE_EDIT" type="DATETIME" />
+            
+            <column name="SUBJECT" type="NVARCHAR(200)"/>
+            <column name="SENTDATE" type="DATETIME"/>
+            <column name="SENDER" type="NVARCHAR(1000)"/>
+            <column name="RECIPIENTS" type="NCLOB"/>
+            <column name="MAIL" type="NCLOB"/>
+        </createTable>
+        <createIndex indexName="IDX_AB_UNLINKEDMAILID_SENTDATE" tableName="AB_UNLINKEDMAIL">
+            <column name="SENTDATE" descending="true"/>
+        </createIndex>
+        <!--
+        removed index since a index on such a large column cannot be created.
+        the maximum size of a column on mariaDB (nvarchar-column, utf8mb4, innodb-large-prefix=OFF, not nullable) is 190 which is too less for the sender information
+        therefor: do not create the index and leaf the column size the same
+        <createIndex indexName="IDX_AB_UNLINKEDMAILID_SENDER" tableName="AB_UNLINKEDMAIL">
+            <column name="SENDER"/>
+        </createIndex>
+        -->
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet dbms="!derby,!oracle" author="t.kerscher" id="05044d56-f541-4ee4-8368-8e922b0ea6bf">
+        <update tableName="DUPLICATESCANNER">
+            <column name="SCAN_PATTERN" value="{&quot;entity&quot;:&quot;Organisation_entity&quot;,&quot;filter&quot;:{&quot;type&quot;:&quot;group&quot;,&quot;operator&quot;:&quot;AND&quot;,&quot;childs&quot;:[{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;NAME&quot;,&quot;operator&quot;:&quot;CONTAINS&quot;,&quot;value&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;key&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;STANDARD_CITY&quot;,&quot;operator&quot;:&quot;ISNOTNULL&quot;,&quot;value&quot;:&quot;&quot;,&quot;key&quot;:&quot;&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;CONTACTID&quot;,&quot;operator&quot;:&quot;NOT_EQUAL&quot;,&quot;value&quot;:&quot;{\&quot;technical\&quot;:true}&quot;,&quot;key&quot;:&quot;{\&quot;technical\&quot;:true}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;}]},&quot;provider&quot;:&quot;Duplicates&quot;}"></column>
+            <where>ID = ? and SCAN_PATTERN = ?</where>
+            <whereParams>
+                <param name="id" value="8fa3ab66-cc01-45b6-88f3-a9e76bad7db0"/>
+                <param name="pattern" value="{&quot;entity&quot;:&quot;Organisation_entity&quot;,&quot;filter&quot;:{&quot;type&quot;:&quot;group&quot;,&quot;operator&quot;:&quot;AND&quot;,&quot;childs&quot;:[{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;NAME&quot;,&quot;operator&quot;:&quot;CONTAINS&quot;,&quot;value&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;key&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;STANDARD_CITY&quot;,&quot;operator&quot;:&quot;ISNOTNULL&quot;,&quot;value&quot;:&quot;&quot;,&quot;key&quot;:&quot;&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;}]},&quot;provider&quot;:&quot;Duplicates&quot;}"/>
+            </whereParams>
+        </update>
+    </changeSet>
+    
+    <changeSet dbms="oracle" author="b.ulrich" id="8dfd6b8d-76c2-4c8a-a6d2-9093b9f0ea01">
+        <sql>
+            UPDATE DUPLICATESCANNER SET SCAN_PATTERN = to_clob('{&quot;entity&quot;:&quot;Organisation_entity&quot;,&quot;filter&quot;:{&quot;type&quot;:&quot;group&quot;,&quot;operator&quot;:&quot;AND&quot;,&quot;childs&quot;:[{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;NAME&quot;,&quot;operator&quot;:&quot;CONTAINS&quot;,&quot;value&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;key&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;STANDARD_CITY&quot;,&quot;operator&quot;:&quot;ISNOTNULL&quot;,&quot;value&quot;:&quot;&quot;,&quot;key&quot;:&quot;&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;CONTACTID&quot;,&quot;operator&quot;:&quot;NOT_EQUAL&quot;,&quot;value&quot;:&quot;{\&quot;technical\&quot;:true}&quot;,&quot;key&quot;:&quot;{\&quot;technical\&quot;:true}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;}]},&quot;provider&quot;:&quot;Duplicates&quot;}')
+            WHERE DUPLICATESCANNER.ID = 'a8363f75-dc0a-412c-afe1-80ebacc26744'
+            AND dbms_lob.compare(DUPLICATESCANNER.SCAN_PATTERN, to_clob('{&quot;entity&quot;:&quot;Organisation_entity&quot;,&quot;filter&quot;:{&quot;type&quot;:&quot;group&quot;,&quot;operator&quot;:&quot;AND&quot;,&quot;childs&quot;:[{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;NAME&quot;,&quot;operator&quot;:&quot;CONTAINS&quot;,&quot;value&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;key&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;STANDARD_CITY&quot;,&quot;operator&quot;:&quot;ISNOTNULL&quot;,&quot;value&quot;:&quot;&quot;,&quot;key&quot;:&quot;&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;}]},&quot;provider&quot;:&quot;Duplicates&quot;}')) = 0;
+        </sql>
+    </changeSet>
+    
+    <!--Derby has problems  with the second where condition ("Comparisons between 'CLOB (UCS_BASIC)' and 'CHAR (UCS_BASIC)' are not supported")
+    we do need this condition so the customer set patterns don't get overwritten.
+    No Customer uses derby, so we can just ignore the condition if dbms="derby"-->
+    <changeSet dbms="derby" author="t.kerscher" id="c1d5b798-c042-4a21-b4c6-7369e6def774">
+        <update tableName="DUPLICATESCANNER">
+            <column name="SCAN_PATTERN" value="{&quot;entity&quot;:&quot;Organisation_entity&quot;,&quot;filter&quot;:{&quot;type&quot;:&quot;group&quot;,&quot;operator&quot;:&quot;AND&quot;,&quot;childs&quot;:[{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;NAME&quot;,&quot;operator&quot;:&quot;CONTAINS&quot;,&quot;value&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;key&quot;:&quot;{\&quot;exclude\&quot;: [\&quot;gmbh\&quot;, \&quot;co\&quot;, \&quot;kg\&quot;, \&quot;AG\&quot;, \&quot;bank\&quot;]}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;STANDARD_CITY&quot;,&quot;operator&quot;:&quot;ISNOTNULL&quot;,&quot;value&quot;:&quot;&quot;,&quot;key&quot;:&quot;&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;},{&quot;type&quot;:&quot;row&quot;,&quot;name&quot;:&quot;CONTACTID&quot;,&quot;operator&quot;:&quot;NOT_EQUAL&quot;,&quot;value&quot;:&quot;{\&quot;technical\&quot;:true}&quot;,&quot;key&quot;:&quot;{\&quot;technical\&quot;:true}&quot;,&quot;contenttype&quot;:&quot;TEXT&quot;}]},&quot;provider&quot;:&quot;Duplicates&quot;}"></column>
+            <where>ID = ?</where>
+            <whereParams>
+                <param name="id" value="8fa3ab66-cc01-45b6-88f3-a9e76bad7db0"/>
+            </whereParams>
+        </update>
+    </changeSet>
+</databaseChangeLog>

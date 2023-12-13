@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="eb84935b-98d4-45a5-8e67-7188bdd76135">
+        <delete tableName="CHECKLISTENTRYVALUE">
+            <where>CHECKLISTENTRYVALUEID = ?</where>
+            <whereParams>
+                <param value="c4dc8c1e-e291-4d3f-8b36-cd8a0960abbf"/>
+            </whereParams>
+        </delete>
+        <delete tableName="CHECKLISTENTRYVALUE">
+            <where>CHECKLISTENTRYVALUEID = ?</where>
+            <whereParams>
+                <param value="e12dbddc-301f-4da5-b48d-3fabad4c8634"/>
+            </whereParams>
+        </delete>
+
+        <!--Contact-->
+        <update tableName="CHECKLISTENTRY">
+            <column name="CHECKLIST_ID" value="179dcc0d-e6fa-411d-b5ee-cb25b9735dbe"></column>
+            <where>CHECKLIST_ID = ?</where>
+            <whereParams>
+                <param value="179dcc0d-e6fa-411d-b5ee-cb25b9735dbe"/>
+            </whereParams>
+        </update>
+
+        <!--Lead-->
+        <update tableName="CHECKLISTENTRY">
+            <column name="CHECKLIST_ID" value="3d0f1d25-cee8-4b83-a0de-3fded83ff9c4"></column>
+            <where>CHECKLIST_ID = ?</where>
+            <whereParams>
+                <param value="cb340ed2-ea49-45bb-a7a0-1a4f88d6e138"/>
+            </whereParams>
+        </update>
+        <update tableName="CHECKLISTENTRY">
+            <column name="CHECKLIST_ID" value="3d0f1d25-cee8-4b83-a0de-3fded83ff9c4"></column>
+            <where>CHECKLIST_ID = ?</where>
+            <whereParams>
+                <param value="c2bb548c-2f0c-45be-9e49-2ebf86bd6ab8"/>
+            </whereParams>
+        </update>
+
+        <!--Offer-->
+        <update tableName="CHECKLISTENTRY">
+            <column name="CHECKLIST_ID" value="0f95ce44-3b0d-417b-969f-f84897868558"></column>
+            <where>CHECKLIST_ID = ?</where>
+            <whereParams>
+                <param value="c7b847b1-934a-4592-8c10-53da1d43dc4c"/>
+            </whereParams>
+        </update>
+    </changeSet>
+</databaseChangeLog>

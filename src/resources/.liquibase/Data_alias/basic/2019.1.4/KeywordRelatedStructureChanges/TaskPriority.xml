@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="a.voegl" id="d748d3d3-762f-4b1d-bb2a-9035a7373ae6">
+        <renameColumn newColumnName="PRIORITY_OLD" oldColumnName="PRIORITY" columnDataType="INTEGER" tableName="TASK"/>
+	<addColumn tableName="TASK">
+            <column name="PRIORITY" type="VARCHAR(36)"/>
+	</addColumn> 
+        <update tableName="TASK">
+            <column name="PRIORITY" value="TASKPRIONONE"/>
+            <where>PRIORITY_OLD = 0</where>
+        </update>
+        <update tableName="TASK">
+            <column name="PRIORITY" value="TASKPRIONORMAL"/>
+            <where>PRIORITY_OLD = 1</where>
+        </update>
+        <update tableName="TASK">
+            <column name="PRIORITY" value="SALPROJPHASEMQL"/>
+            <where>PRIORITY_OLD = 2</where>
+        </update>
+        <update tableName="TASK">
+            <column name="PRIORITY" value="SALPROJPHASESAL"/>
+            <where>PRIORITY_OLD = 3</where>
+        </update>
+        <dropColumn tableName="TASK" columnName="PRIORITY_OLD"/>
+        <rollback>
+            <renameColumn newColumnName="PRIORITY_OLD" oldColumnName="PRIORITY" columnDataType="VARCHAR(36)" tableName="TASK"/>
+            <addColumn tableName="TASK">
+                <column name="PRIORITY" type="INTEGER"/>
+            </addColumn>   
+            <update tableName="TASK">
+                <column name="PRIORITY" valueNumeric="0"/>
+                <where>PRIORITY_OLD = 'TASKPRIONONE'</where>
+            </update>
+            <update tableName="TASK">
+                <column name="PRIORITY" valueNumeric="1"/>
+                <where>PRIORITY_OLD = 'TASKPRIONORMAL'</where>
+            </update>
+            <update tableName="TASK">
+                <column name="PRIORITY" valueNumeric="2"/>
+                <where>PRIORITY_OLD = 'SALPROJPHASEMQL'</where>
+            </update>
+            <update tableName="TASK">
+                <column name="PRIORITY" valueNumeric="3"/>
+                <where>PRIORITY_OLD = 'SALPROJPHASESAL'</where>
+            </update>
+            <dropColumn tableName="TASK" columnName="PRIORITY_OLD"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

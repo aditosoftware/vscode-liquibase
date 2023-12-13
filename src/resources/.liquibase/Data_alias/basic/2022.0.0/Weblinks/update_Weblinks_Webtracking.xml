@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="34c13368-5b6b-479c-a299-58edf66bf05f">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="e2eef179-c240-49b0-b928-c73ed6051356"/>
+            <column name="KEYID" value="WEBLINK_WEBTRACKING"/>
+            <column name="TITLE" value="Web Tracking"/>
+            <column name="CONTAINER" value="WeblinkType"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="c2034fe5-6157-4fb2-b774-4aaeda302b15"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+  </changeSet>
+</databaseChangeLog>

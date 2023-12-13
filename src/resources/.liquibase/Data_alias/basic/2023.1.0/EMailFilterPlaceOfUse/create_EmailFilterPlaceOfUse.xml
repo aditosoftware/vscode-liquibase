@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="v.broens" id="9f67bd76-ed8b-4d51-943b-b15e26a04588">
+        <createTable tableName="EMAILFILTERPLACEOFUSE">
+            <column name="EMAILFILTERPLACEOFUSEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_EMAILFILTERPLACEOFUSEID"/>
+            </column>
+            <column name="EMAIL_FILTER_HANDLING_ID" type="VARCHAR(36)"/>
+            <column name="PLACEOFUSE" type="VARCHAR(36)"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </createTable>
+        <createIndex indexName="IDX_EMAILFILTERPLACEOFUSE" tableName="EMAILFILTERPLACEOFUSE">
+            <column name="EMAILFILTERPLACEOFUSEID"/>
+            <column name="EMAIL_FILTER_HANDLING_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

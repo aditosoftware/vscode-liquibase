@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="a2cee514-2b0a-4ac4-815a-9b40abfea920">
+        <addColumn tableName="CLASSIFICATIONSCORE">
+            <column name="FIELDVALUE" type="VARCHAR(1000)"/>
+        </addColumn>
+        <addColumn tableName="CLASSIFICATIONSCORE">
+            <column name="INDICATORTEXT" type="VARCHAR(100)"/>
+        </addColumn>
+        <addColumn tableName="CLASSIFICATIONSCORE">
+            <column name="INDICATORNUMBER" type="VARCHAR(100)"/>
+        </addColumn>
+        <addColumn tableName="CLASSIFICATIONSCORE">
+            <column name="INDICATORINTEGER" type="VARCHAR(100)"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

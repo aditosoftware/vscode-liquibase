@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.garb" id="995a11c7-fb16-4c33-b5ad-0c35f44905c3">
+        <addColumn tableName="OFFER">
+            <column name="DISCOUNT"  type="NUMERIC(14,2)" />
+            <column name="DISCOUNTED_NET"  type="NUMERIC(14,2)" />
+        </addColumn>
+    </changeSet> 
+    <changeSet author="s.garb" id="801708bd-91f0-4468-bed9-0bbab7e46997">
+        <addColumn tableName="OFFER">
+            <column name="DISCOUNTED_VAT"  type="NUMERIC(14,2)" />
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

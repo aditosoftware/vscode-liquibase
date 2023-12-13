@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="deb46cd2-c2e7-424b-93a1-052cd0a5aef7">
+      <insert tableName="AB_KEYWORD_ATTRIBUTE">
+          <column name="AB_KEYWORD_ATTRIBUTEID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="CONTAINER" value="CommunicationMedium"/>
+          <column name="KIND" value="CHAR_VALUE"/>
+          <column name="NAME" value="placeholderTitle"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="ebf5a52c-34db-4394-9fc1-21dfbdc3c6ea"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="cc16d938-b95f-4e07-a3b4-73f8524bb664"/>
+          <column name="CHAR_VALUE" value="Phone number"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="5a2bb861-31c8-471d-8fb9-a3c28d589b9f"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="66950de5-fa8b-465c-8db1-4eb7aac98bd3"/>
+          <column name="CHAR_VALUE" value="Email address"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="c860637f-4182-4cc4-9879-7ed3d009aee4"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="aa2b9cc9-3e87-4fe9-98a2-a4e417a3324f"/>
+          <column name="CHAR_VALUE" value="Phone number"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="def9c03f-4f8b-4158-9f9c-4f2c6f1f52be"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="cfebe176-0a64-428d-b0ec-bba454d2ca3e"/>
+          <column name="CHAR_VALUE" value="URL"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="bf7be765-ebcc-409f-9c81-66665b6b55f6"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="d80c3689-7e0a-45ac-801d-91d199c08bd5"/>
+          <column name="CHAR_VALUE" value="URL"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="9fc7f919-b04c-40f3-8124-9e1d4d8198f5"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="e6c36792-763d-44f8-8afe-157c8f158ef8"/>
+          <column name="CHAR_VALUE" value="URL"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="5d64759f-acd2-4dbc-9df3-c38bceaf8f6b"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="ace00630-1e07-4615-8d61-2478995538fa"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="7abf7fc5-08a1-4bae-b0ca-ec5e406d154c"/>
+          <column name="CHAR_VALUE" value="URL"/>
+      </insert>
+  </changeSet>
+</databaseChangeLog>

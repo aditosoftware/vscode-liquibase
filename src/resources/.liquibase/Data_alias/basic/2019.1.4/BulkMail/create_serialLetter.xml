@@ -1,0 +1,14 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="94b312d0-c7e1-43da-b1d4-3a7ea850edfd">
+        <createTable tableName="SERIALLETTER">
+            <column name="SERIALLETTERID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_SERIALLETTER_SERIALLETTERID"/>
+            </column>
+            <column name="DOCUMENTTEMPLATE_ID" type="CHAR(36)"/>
+            <column name="TITLE" type="NVARCHAR(50)"/>
+            <column name="DESCRIPTION" type="NVARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

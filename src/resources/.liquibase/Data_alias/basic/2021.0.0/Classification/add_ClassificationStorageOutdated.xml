@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="0dce5058-8b2f-43b1-8e53-03ccebe93cb8">        
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <columnExists tableName="CLASSIFICATIONSTORAGE" columnName="OUTDATED"/>
+        </not>
+      </preConditions>
+        <addColumn tableName="CLASSIFICATIONSTORAGE">
+            <column name="OUTDATED" type="TINYINT" defaultValueNumeric="1"/>
+        </addColumn>
+        <update tableName="CLASSIFICATIONSTORAGE">
+            <column name="OUTDATED" valueNumeric="0"/>
+            <where>OUTDATED IS NULL</where>
+        </update>        
+    </changeSet>
+    
+    <!--oracle doesn't let us add this constraint because of the default constraint: 'ORA-01442: column to be modified to NOT NULL is already NOT NULL'-->
+    <changeSet author="b.ulrich" id="03de6647-0310-42a3-82ec-542eef59ae42" dbms="!oracle">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <columnExists tableName="CLASSIFICATIONSTORAGE" columnName="OUTDATED"/>
+        </not>
+      </preConditions>
+        <addNotNullConstraint
+            columnDataType="TINYINT"
+            columnName="OUTDATED"
+            tableName="CLASSIFICATIONTYPE"/>
+    </changeSet>
+</databaseChangeLog>

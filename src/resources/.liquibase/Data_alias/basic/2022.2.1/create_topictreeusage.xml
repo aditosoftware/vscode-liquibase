@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="6be07e86-a71a-472b-b18a-eccc8680413b">
+        <createTable tableName="TOPICTREEUSAGE">
+            <column name="TOPICTREEUSAGEID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_TOPICTREEUSAGEID"></constraints>
+            </column>
+            <column name="TOPICTREE_ID" type="CHAR(36)"/>
+            <column name="OBJECT_TYPE" type="NVARCHAR(63)"/>
+        </createTable>
+        
+        <createIndex tableName="TOPICTREEUSAGE" indexName="IDX_TOPICTREEUSAGE_OBJECT_TYPE">
+            <column name="OBJECT_TYPE"/>
+        </createIndex>
+        <createIndex tableName="TOPICTREEUSAGE" indexName="IDX_TOPICTREEUSAGE_TOPICTREEID">
+            <column name="TOPICTREE_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

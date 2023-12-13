@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="863294b7-532b-47aa-84b6-94cfb637dd3a">
+        <createTable tableName="VISITPLANEMPLOYEEWEEK">
+            <column name="VISITPLANEMPLOYEEWEEKID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_VISITPLANEMPLOYEEWEEK_VISITPLANEMPLOYEEWEEKID"/>
+            </column>
+            <column name="VISITPLAN_YEAR" type="INT"/>
+            <column name="VISITPLAN_WEEK" type="INT"/>
+            <column name="CONTACT_ID" type="CHAR(36)"/>
+            <column name="INFO" type="NCLOB"/>
+        </createTable>
+        <createTable tableName="VISITPLANENTRY">
+            <column name="VISITPLANENTRYID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_VISITPLANENTRY_VISITPLANENTRYID"/>
+            </column>
+            <column name="ENTRYDATE" type="DATE"/>
+            <column name="BEGIN_TIME" type="TIME"/>
+            <column name="END_TIME" type="TIME"/>
+            <column name="ORGANISATION_ID" type="CHAR(36)"/>
+            <column name="CONTACT_ID" type="CHAR(36)"/>
+            <column name="VISITPLANEMPLOYEEWEEK_ID" type="CHAR(36)"/>
+            <column name="STATUS" type="CHAR(36)"/>
+            <column name="VISITRECOMMENDATION_ID" type="CHAR(36)"/>
+            <column name="APPOINTMENT_ID" type="CHAR(36)"/>
+        </createTable>
+        <createTable tableName="VISITRECOMMENDATION">
+            <column name="VISITRECOMMENDATIONID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_VISITRECOMMENDATION_VISITRECOMMENDATIONID"/>
+            </column>
+            <column name="DUE_DATE" type="DATETIME"/>
+            <column name="PRIORITY" type="CHAR(36)"/>
+            <column name="SOURCE" type="NVARCHAR(255)"/>
+            <column name="CONTACT_ID" type="CHAR(36)"/>
+            <column name="INFO" type="NCLOB"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

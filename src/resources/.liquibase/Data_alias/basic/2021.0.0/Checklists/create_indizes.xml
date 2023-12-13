@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="d.tran" id="90f1d603-d9b0-4c0e-be0c-8a2a1b41b472">
+        <createIndex tableName="CHECKLISTENTRY" indexName="IDX_CHKLSTENTRY_CHECKLIST_ID">
+            <column name="CHECKLIST_ID"/>
+        </createIndex>
+        <createIndex tableName="CHECKLISTENTRYVALUE" indexName="IDX_CHKLSTENTRYVAL_ROWID">
+            <column name="OBJECT_ROWID"/>
+        </createIndex>
+        <createIndex tableName="CHECKLISTENTRYVALUE" indexName="IDX_CHKLSTENTRYVAL_CHKENTRY_ID">
+            <column name="CHECKLISTENTRY_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

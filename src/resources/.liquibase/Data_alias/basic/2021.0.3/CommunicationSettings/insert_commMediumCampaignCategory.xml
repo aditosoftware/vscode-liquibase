@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="s.listl" id="fa4ac9a6-3194-4a1a-8a51-7ed46ef11ef7">
+      <insert tableName="AB_KEYWORD_ATTRIBUTE">
+          <column name="AB_KEYWORD_ATTRIBUTEID" value="14d30a19-cdeb-4042-8f20-06224a6f8180"/>
+          <column name="AB_KEYWORD_CATEGORY_ID" value="cda60290-b041-450c-8397-6e462c45835f"/>
+          <column name="CONTAINER" value=""/>
+          <column name="KIND" value="CHAR_VALUE"/>
+          <column name="NAME" value="category"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="2ad2a9ac-7e26-471e-b1d8-2c5594fed717"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14d30a19-cdeb-4042-8f20-06224a6f8180"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="2acd3694-ccef-4d0b-ae7a-b3d31f8d9cc0"/>
+          <column name="CHAR_VALUE" value="PHONE"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="76b7befa-d89b-41df-915a-4ac28e010f28"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14d30a19-cdeb-4042-8f20-06224a6f8180"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="cb07397b-a976-4960-b8e5-9edf189c5caf"/>
+          <column name="CHAR_VALUE" value="EMAIL"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="b0d6fc6b-3e97-44fe-a717-be12af65c081"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14d30a19-cdeb-4042-8f20-06224a6f8180"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="990a03e0-aeb4-4bdb-9d22-09b66eee6b85"/>
+          <column name="CHAR_VALUE" value="OTHER"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="2a86f19c-45d4-46a9-aa9a-1dee1dfd567d"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14d30a19-cdeb-4042-8f20-06224a6f8180"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="51085b8b-ded0-4d1d-9e85-ae89bd1480fe"/>
+          <column name="CHAR_VALUE" value="PHONE"/>
+      </insert>
+      <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+          <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="88e944af-4951-4e5e-904a-aa26da278c78"/>
+          <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14d30a19-cdeb-4042-8f20-06224a6f8180"/>
+          <column name="AB_KEYWORD_ENTRY_ID" value="b72ba2f5-612b-4ef6-832e-62089892b8d7"/>
+          <column name="CHAR_VALUE" value="PHONE"/>
+      </insert>
+  </changeSet>
+</databaseChangeLog>

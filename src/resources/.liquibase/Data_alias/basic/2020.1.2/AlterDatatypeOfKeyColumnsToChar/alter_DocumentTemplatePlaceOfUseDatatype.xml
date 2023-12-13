@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet dbms="derby" author="b.ulrich" id="83c25119-cf41-42ab-b42f-370195f9de87">
+        <!--not null must be set in derby before adding a primary key constraint-->
+        <sql>
+            ALTER TABLE DOCUMENTTEMPLATE ADD COLUMN DOCUMENTTEMPLATEID_NEW CHAR(36);
+            UPDATE DOCUMENTTEMPLATE SET DOCUMENTTEMPLATEID_NEW=DOCUMENTTEMPLATEID;
+            ALTER TABLE DOCUMENTTEMPLATE DROP COLUMN DOCUMENTTEMPLATEID;
+            RENAME COLUMN DOCUMENTTEMPLATE.DOCUMENTTEMPLATEID_NEW TO DOCUMENTTEMPLATEID;
+            ALTER TABLE DOCUMENTTEMPLATE ALTER COLUMN DOCUMENTTEMPLATEID NOT NULL;
+            ALTER TABLE DOCUMENTTEMPLATE ADD CONSTRAINT PK_DOCUMENTTEMPLATE_DOCUMENTTEMPLATEID  PRIMARY KEY (DOCUMENTTEMPLATEID);
+        </sql>
+    </changeSet>
+    
+    <changeSet dbms="!derby" author="b.ulrich" id="85ba6a61-9318-4118-ac4c-e33730f6581d">
+        <dropPrimaryKey tableName="DOCUMENTTEMPLATE" constraintName="PK_DOCUMENTTEMPLATE_DOCUMENTTEMPLATEID" dropIndex="true"/>
+        <dropNotNullConstraint tableName="DOCUMENTTEMPLATE" columnName="DOCUMENTTEMPLATEID" columnDataType="VARCHAR(36)"/>
+        <modifyDataType tableName="DOCUMENTTEMPLATE" columnName="DOCUMENTTEMPLATEID" newDataType="CHAR(36)"/>
+        <addNotNullConstraint columnName="DOCUMENTTEMPLATEID" tableName="DOCUMENTTEMPLATE" columnDataType="CHAR(36)" validate="true"/>
+        <addPrimaryKey tableName="DOCUMENTTEMPLATE" constraintName="PK_DOCUMENTTEMPLATE_DOCUMENTTEMPLATEID" columnNames="DOCUMENTTEMPLATEID"/>
+    </changeSet>
+</databaseChangeLog>

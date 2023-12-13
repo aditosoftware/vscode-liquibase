@@ -1,0 +1,38 @@
+Serienmail / Einzelmail 
+
+Ziel
+Es besteht zum xRM-Basic Release die Möglichkeit Serienmails und Einzelmails zu versenden. 
+Dafür stehen mir die Dokuvorlagen für Emails zur Verfügung, die ich vor dem versenden nochmal bearbeiten kann. 
+Die Platzhalter innerhalb der Vorlage werden dementsprechenden befüllt. Eine Aktivität soll erstellt werden sobald die Email versendet wurde. 
+
+Zielgruppe
+Anwender, Fachadmin, Entwickler
+
+Betroffene Bereiche
+- Kontaktmanagement
+- Marketing (Serienmails) ? 
+- Replacement Platzhalter
+- Emailversand
+
+Abhängigkeiten
+- Dokuvorlagen
+- Textbausteine
+
+Lösung / Anforderung
+
+1. Kontaktmanagement 
+- Ich möchte aus einer Firma oder aus einem Kontakt heraus eine Einzelmail an den ausgewählten Datensatz schreiben
+- Ich möchte im Firmen- und im Kontaktcontext an eine Auswahl an Firmen oder Personen eine Serienmail senden
+- Nach Auswahl einer Vorlage wird ein HTML-Editor (bereits existierender Editor von Basic LITE) geöffnet, in der die ausgewählt Vorlage vorliegt
+- Ich möchte die Vorlage ändern können und dabei drei Möglichkeiten haben:
+-- Ich möchte die Bearbeitete Datei als neue Vorlage speichern
+-- Ich möchte die bestehende Vorlage mit meinen Änderungen überschreiben
+-- Ich möchte  die Anpassungen nur temporär für diesen Brief übernehmen  
+
+2. Replacement Platzhalter
+- Ich möchte eine Ersetzungslogik für die Platzhalter die in den Vorlagen vorhanden sind (siehe  Funktionalitäten in Swing)
+- Das heißt wenn ich eine Vorlage öffne möchte ich, auswählen ob ich die Platzhalter mit Feldern aus der Datenbank befüllen will und wenn ja mit welchen. 
+Die Platzhalter werden dann mit den dementsprechenden Daten aus der Datenbank gefüllt. 
+
+3. Emailversand
+- Es muss die Möglichkeit bestehen Emails zu versenden! 

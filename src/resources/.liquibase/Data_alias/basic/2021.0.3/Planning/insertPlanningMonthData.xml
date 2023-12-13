@@ -1,0 +1,65 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="j.luginger" id="24f68f1a-6103-4051-9f22-6b64428f6c38">
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="80dc07b0-1ba7-42fb-b708-86488452c158"/>
+      <column name="MONTH_NUMBER" valueNumeric="1"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="dbd384d4-fe89-4522-8c3e-67c2dc8068d9"/>
+      <column name="MONTH_NUMBER" valueNumeric="2"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="3f16cc60-b166-42c8-bd78-6b5f6aa4d7b0"/>
+      <column name="MONTH_NUMBER" valueNumeric="3"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="3bdb09ed-17f3-4eff-aa71-3e31bff9cbb6"/>
+      <column name="MONTH_NUMBER" valueNumeric="4"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="9add0690-e967-40e4-8d6b-255e4d32a75e"/>
+      <column name="MONTH_NUMBER" valueNumeric="5"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="5d00016a-2302-4011-9f98-db6ccc371f32"/>
+      <column name="MONTH_NUMBER" valueNumeric="6"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="68f67a69-a62a-4925-83f8-c4c06f587f6d"/>
+      <column name="MONTH_NUMBER" valueNumeric="7"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="e44f4275-7aa2-4218-9a28-c7da41083881"/>
+      <column name="MONTH_NUMBER" valueNumeric="8"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="38547f0a-0752-4a8f-b6ce-280f09db6108"/>
+      <column name="MONTH_NUMBER" valueNumeric="9"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="a821c1ef-3805-450a-83fd-ef3e1bb96ff6"/>
+      <column name="MONTH_NUMBER" valueNumeric="10"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="c824e7c2-112c-483b-a116-e0bd9f4bc9bc"/>
+      <column name="MONTH_NUMBER" valueNumeric="11"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+    <insert tableName="PLANNING_MONTH">
+      <column name="PLANNING_MONTHID" value="6f7428c5-473d-4622-826e-5225658cf5f6"/>
+      <column name="MONTH_NUMBER" valueNumeric="12"/>
+      <column name="MONTH_FACTOR" valueNumeric="8.33"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

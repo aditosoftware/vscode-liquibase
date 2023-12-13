@@ -1,0 +1,101 @@
+1. Wählen Sie die richtige E-Mail-Adresse
+
+
+Nutzen Sie stets die identische E-Mail-Adresse für Ihren Geschäftsverkehr. Dabei sollte es sich auch um Ihre geschäftliche Adresse handeln. Sobald Sie mehrere E-Mail-Adressen vermischen, mal die geschäftliche, mal die private nutzen, kommt der Empfänger durcheinander und Sie selbst verlieren auch den Überblick über Ihre elektronische Konversation.
+
+
+2. Schreiben Sie eine aussagekräftige Betreffzeile
+
+
+Eine gute Betreffzeile sollte vermitteln, worum es in der E-Mail geht. Benennen Sie das Thema kurz: Keine ganzen Sätze! Viele denken, dass eine knappe Betreffzeile unhöflich ist. Dabei ist ein kurzer Betreff zielführender und spart Zeit. Höflich sind Sie in der Anrede.
+
+
+Beispiel: Statt zu schreiben „Übersendung des Kurzkonzepts für den Messestand auf der Frankfurter Buchmesse am TT.MM.JJJJ“, schreiben Sie lieber „Freigabe: Kurzkonzept für Messestand“. Der Empfänger weiß sofort, worum es geht und was er zu tun hat.
+
+
+3. Wählen Sie die passende Anrede
+
+
+Vermeiden Sie eine anonyme Anrede wie „Sehr geehrte Damen und Herren“ und schreiben Sie Ihre Kontaktperson stattdessen persönlich an: „Sehr geehrter Herr Mayer“.
+
+
+	Mehrere Personen
+
+	Wenn Sie an mehrere Personen eine E-Mail schreiben, gibt es eine bestimmte Reihenfolge zu beachten: Entscheidend ist hier die Hierarchie. Befinden sich die Angesprochenen auf derselben Hierarchieebene, haben Sie mehrere Optionen: Alphabetische Nennung empfiehlt sich bei zwei Männern, also: „Sehr geehrter Herr Bäumer, sehr geehrter Herr Schneider.“ Anderenfalls sollten Sie Frauen den Vorzug geben: „Sehr geehrte Frau Trott, sehr geehrter Herr Abels.“ Handelt es sich um unterschiedliche Hierarchien, nennen Sie den Chef vor dem Assistenten, also: „Sehr geehrte Frau Boss, sehr geehrter Herr Schneider.“
+	Professor & Doktor
+
+	Unterschlagen Sie keine möglichen Titel. Bei einem Professor und/oder Doktor verzichten Sie auf die Anrede „Herr“ oder „Frau“ und verwenden ausschließlich den (ranghöheren) Titel. Herrn Professor Doktor Müller schreiben Sie demzufolge so an: „Sehr geehrter Professor Müller“. Einen Doktortitel dürfen Sie mit „Dr.“ abkürzen, also: Sehr geehrte Frau Dr. Schneider.
+	Formelle Anrede
+
+	Verzichten sollten Sie in jedem Fall auf einen lockeren Einstieg à la „Moin moin“, „Hey“ oder „Servus“, selbst wenn Sie den Geschäftspartner oder Kunden nicht als überkorrekt kennengelernt haben. Dann fahren Sie mit einem simplen „Hallo“ deutlich besser.
+
+
+
+4. Führen Sie den Schriftverkehr fort
+
+
+Behalten Sie die bisher geschriebenen Nachrichten. Damit geben Sie dem Leser die Gelegenheit, noch einmal herunterzuscrollen und etwas nachzulesen, falls noch Unklarheiten bestehen. Es macht auch das Verweisen auf bisherige Fristen und Aufgaben leichter.
+
+
+5. Formulieren Sie Ihr Anliegen
+
+
+Verzichten Sie auf übermäßig viele Fremdwörter, Denglisch-Wortschöpfungen und überbordendes Fachchinesisch. Klare Sprache und kurze Sätze machen es dem Empfänger leichter. Berufliche E-Mails sind keine Romane und auch keine Gedichte. Sie sollten in Ihrer E-Post schnell und mit verständlichen Worten auf den Punkt kommen.
+
+
+	Wichtiger Einstieg
+
+	Der erste Satz Ihrer E-Mail sollte bereits alle wichtigen Informationen enthalten. Dem Leser sollte sofort klar sein, warum Sie ihn kontaktieren.
+	Höfliche Form
+
+	Sie dürfen zwar eine kurze E-Mail schreiben, aber niemals eine unhöfliche. Auch aus E-Mails kann man einen höflichen oder weniger höflichen Tonfall herauslesen. Setzen Sie unnötig viele Ausrufezeichen oder gar mehrere Rufzeichen hintereinander, wirkt das beim Empfänger wie lautes Schreien. Gleiches gilt für konstantes Großschreiben. Eine höfliche E-Mail-Anrede und eine freundliche Verabschiedung sind ohnehin Grundvoraussetzungen.
+	Notwendige Informationen
+
+	Liefern Sie nur notwendige Hintergrundinformationen, um Ihre E-Mail in einen Kontext zu packen. Diskutieren Sie nie mehr als ein Thema pro E-Mail. Schicken Sie lieber zwei E-Mails, wenn Sie unterschiedliche Themen besprechen wollen. Das ist wichtig, damit der Empfänger Ihre E-Mail archivieren kann und auch noch in ein paar Wochen wiederfindet. Bei einem Thema kann die E-Mail einem Ordner oder Stichwort zugeordnet werden und lässt sich so wiederfinden. Bei zwei Themen muss sich der Leser für eine Kategorie entscheiden. Das erschwert eine spätere Erinnerung, in welcher E-Mail Sie was besprochen haben.
+
+
+
+6. Strukturieren Sie Ihre E-Mails
+
+
+Nichts ist anstrengender für das Auge als ein großer Textblock. Absätze erhöhen die Leserfreundlichkeit. Stichpunkte verleihen Ihrer E-Mail zusätzlich Struktur. Das Praktische daran: Der Leser erkennt auf den ersten Blick, was wichtig ist.
+
+
+7. Vereinheitlichen Sie das Format
+
+
+Verwenden Sie nur ein einziges Schriftformat und eine Schriftgröße. So verleihen Sie Ihrer E-Mail ein seriöses Erscheinungsbild. Markieren Sie auf der anderen Seite To-Dos und Fristen. Helfen Sie dem Auge dabei zu erkennen, was wichtig ist. Fristen, die unbedingt eingehalten werden sollen, können Sie ruhig fetten. Davon abgesehen sollten Sie aber nicht einzelne Passagen willkürlich fetten oder kursiv schreiben.
+
+
+8. Formulieren Sie ein Call-to-Action
+
+
+Den Schluss in E-Mails sollten Sie nutzen, um eine Handlungsaufforderung an den Empfänger zu richten, einen sogenannten Call-to-Action: Was war der Anlass Ihrer Mail, welche Schritte sind als nächstes erforderlich? Halten Sie es so konkret wie nötig: Geben Sie eine Frist an, bis wann Sie eine Antwort oder einen Rückruf erwarten oder verabschieden Sie sich freundlich.
+
+
+Zum Beispiel so: „Ich habe hier einmal einen Entwurf ausgearbeitet, wie das Ganze aussehen könnte. Wenn dir der Vorschlag gefällt und du keinerlei Anmerkungen hast, könnte das so morgen an den Kunden herausgehen. Bitte gib mir bis morgen früh 9 Uhr Bescheid. Vielen Dank.“ Oder: „Für weitere Fragen stehe ich Ihnen gerne zur Verfügung. Sie können mich bis 17 Uhr im Haus unter der Telefonnummer 123/456789 erreichen.“
+
+
+9. Vergessen Sie nie den Gruß am Ende
+
+
+Ein kurzes MfG ist das Mindeste, wirkt aber trotz der geschäftlichen Natur Ihrer Mail extrem förmlich. Gute und bedenkenlose Grußformeln sind „Herzliche Grüße“, „Viele Grüße“ oder „Freundliche Grüße“. Bei persönlichem Verhältnis oder entsprechender Unternehmenskultur können Sie das vertraute „Liebe Grüße“ schreiben.
+
+
+Auch hier gilt: Die Verabschiedung sollte nicht zu flapsig sein („Bis dann“). Einen sehr guten letzten Eindruck hinterlassen Sie, wenn Sie Ihrem Gruß noch eine persönliche Note verleihen, etwa so: „Viele Grüße nach Köln“ oder „Herzliche Grüße ins winterliche Berlin“.
+
+
+10. Kontrollieren Sie Ihre Mail
+
+
+Es wirkt unprofessionell, wenn Sie eine E-Mail voller Rechtschreib- und Zeichenfehler verschicken, selbst wenn es nur Flüchtigkeitsfehler sind. Dazu zählt auch eine korrekte Groß- und Kleinschreibung, die heutzutage oftmals vernachlässigt wird. Nehmen Sie sich die Zeit, den Text noch einmal kurz Korrektur zu lesen, bevor Sie ihn versenden.
+
+
+Ihre Adresse und die Telefonnummer(n) in der Signatur sollten in jedem Fall auf dem neuesten Stand sein. Andernfalls erreicht Sie Ihr E-Mail-Kontakt im Zweifelsfall nicht, was sehr ärgerlich und unprofessionell wäre. Kontrollieren Sie auch die Adresszeile, bevor Sie Senden drücken. Es ist schon passiert, dass eine E-Mail, die an den Kollegen gehen sollte, versehentlich an einen Kunden oder an alle geschickt wurde.
+
+
+11. Versenden Sie Ihre E-Mail
+
+
+Wenn Sie alles beachtet haben, steht dem Versand Ihrer E-Mail nichts mehr im Weg. Übrigens haben Sie in vielen Mail-Programmen auch die Möglichkeit, Ihre elektronische Post zeitversetzt zu versenden. Das bietet sich zum Beispiel an, wenn Sie Ihre Mail schon am Sonntag verfassen, aber erst am Montag verschicken wollen.
+

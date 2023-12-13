@@ -1,0 +1,103 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="d437af42-d727-4e0f-b8df-7d0b52ab9e19">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+            <column name="NAME" value="ReceiptType"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="3b7b7700-f385-4cc5-a5d6-77950ac2d157"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="WorkEquipment"/>
+            <column name="TITLE" value="Work equipment"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9a65b56a-403f-4ead-ad45-4f1509f1c493"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="Hospitality"/>
+            <column name="TITLE" value="Hospitality"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="e830c69c-d073-4146-92eb-9f5775852b96"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="RideCosts"/>
+            <column name="TITLE" value="Ride costs"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="78e7e51c-cc72-48ba-941b-73f9973c6730"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="RentalCar"/>
+            <column name="TITLE" value="Rental car"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="41d6eb97-433d-4a54-995c-b1bcd60b741a"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="ParkingFees"/>
+            <column name="TITLE" value="Parking fees"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="5"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="4ae4f75c-ba2b-4766-baeb-59ac994b8e89"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="SpecialExpenses"/>
+            <column name="TITLE" value="Special expenses"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="6"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="d8f51b8f-85b8-425c-956f-769d06eb2113"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="Refuel"/>
+            <column name="TITLE" value="Refuel"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="7"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9a39845e-0eba-4f6b-bb47-9a3857fc77f2"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="Taxi"/>
+            <column name="TITLE" value="Taxi"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="8"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="eaff1015-b0f5-4bdc-bfbc-c04eb32420e5"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="0e608c3c-000d-45d2-9e8d-c45205a2f1d2"/>
+            <column name="KEYID" value="OvernightStay"/>
+            <column name="TITLE" value="Overnight stay"/>
+            <column name="CONTAINER" value="ReceiptType"/>
+            <column name="SORTING" valueNumeric="9"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

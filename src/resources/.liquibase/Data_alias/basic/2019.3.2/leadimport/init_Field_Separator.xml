@@ -1,0 +1,46 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="f.maier" id="leadimportFmai">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="0c2203a0-6704-4400-b413-5deb876d67a5"/>
+            <column name="NAME" value="technicalValue"/>
+            <column name="CONTAINER" value="FieldSeparator"/>
+            <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="2324a950-6767-4366-abf5-a343b7fd11f6"/>
+            <column name="KEYID" value="TAB"/>
+            <column name="TITLE" value="Tab"/>
+            <column name="CONTAINER" value="FieldSeparator"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="b4a5cd3d-f3ea-4a0e-97d0-1429bee29edc"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="2324a950-6767-4366-abf5-a343b7fd11f6"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="0c2203a0-6704-4400-b413-5deb876d67a5"/>
+            <column name="CHAR_VALUE" value="\t"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="0c89fdc7-63cb-4e2b-a65a-ad77d3e58cc7"/>
+            <column name="KEYID" value="SEMICOLON"/>
+            <column name="TITLE" value=";"/>
+            <column name="CONTAINER" value="FieldSeparator"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="7ab68748-27ca-4a21-a84e-aab22cdcb550"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="0c89fdc7-63cb-4e2b-a65a-ad77d3e58cc7"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="0c2203a0-6704-4400-b413-5deb876d67a5"/>
+            <column name="CHAR_VALUE" value=";"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

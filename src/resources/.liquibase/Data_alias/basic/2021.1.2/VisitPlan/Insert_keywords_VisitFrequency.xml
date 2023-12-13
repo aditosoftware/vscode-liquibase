@@ -1,0 +1,63 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="I.BenAissa" id="9d91bd4d-56dd-4ce3-85fb-8de1ed33f2ba">
+        <insert tableName="AB_KEYWORD_CATEGORY">
+            <column name="AB_KEYWORD_CATEGORYID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+            <column name="NAME" value="VISITFREQUENCY"/>
+            <column name="SORTINGBY" valueNumeric="0"/>
+            <column name="SORTINGDIRECTION" value="ASC"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="44cf5275-0fa0-416a-b41f-1e4e87dabc14"/>
+            <column name="KEYID" value="VISITFREQUENCYYEARLY"/>
+            <column name="TITLE" value="Yearly"/>
+            <column name="CONTAINER" value="VISITFREQUENCY"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+        </insert>         
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="d392e3a8-fb05-4ab4-8985-34399836fceb"/>
+            <column name="KEYID" value="VISITFREQUENCYSEMIANNUALLY"/>
+            <column name="TITLE" value="Semiannually"/>
+            <column name="CONTAINER" value="VISITFREQUENCY"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+        </insert>   
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="2f97c210-5963-4776-b171-c9146581a2b3"/>
+            <column name="KEYID" value="VISITFREQUENCYQUARTELRY"/>
+            <column name="TITLE" value="Quarterly"/>
+            <column name="CONTAINER" value="VISITFREQUENCY"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+        </insert> 
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="42cc5696-3984-420a-be51-aec265b2885b"/>
+            <column name="KEYID" value="VISITFREQUENCYMONTHLY"/>
+            <column name="TITLE" value="Monthly"/>
+            <column name="CONTAINER" value="VISITFREQUENCY"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+        </insert>                                                                                                                                                                
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="53fe29ef-86ac-42ee-bb4b-e874340c463e"/>
+            <column name="KEYID" value="VISITFREQUENCYWEEKLY"/>
+            <column name="TITLE" value="Weekly"/>
+            <column name="CONTAINER" value="VISITFREQUENCY"/>
+            <column name="SORTING" valueNumeric="4"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a268c3e5-317f-4c94-8d03-06b4f42b6129"/>
+        </insert>
+  </changeSet>
+</databaseChangeLog>

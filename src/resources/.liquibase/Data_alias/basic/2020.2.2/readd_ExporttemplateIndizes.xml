@@ -1,0 +1,36 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <!-- in some cases -->
+  <changeSet author="j.goderbauer" id="140794d8-eb75-4087-a45a-71b0f547e60a">
+      <preConditions  onFail="MARK_RAN">
+          <not>
+            <indexExists indexName="idx_exprttmpfld_tmpltid" />
+          </not>
+      </preConditions>
+      <createIndex indexName="idx_exprttmpfld_tmpltid" tableName="EXPORTTEMPLATEFIELD">
+          <column name="EXPORTTEMPLATE_ID"/>
+      </createIndex>
+  </changeSet>
+  <changeSet author="j.goderbauer" id="e952abd0-29f4-4d6c-b650-ef925248ae18">
+      <preConditions  onFail="MARK_RAN">
+          <not>
+              <indexExists indexName="idx_exprttmppou_tmpltid" />
+          </not>
+      </preConditions>
+      <createIndex indexName="idx_exprttmppou_tmpltid" tableName="EXPORTTEMPLATEPLACEOFUSE">
+          <column name="EXPORTTEMPLATE_ID"/>
+      </createIndex>
+  </changeSet>
+  <changeSet author="j.goderbauer" id="b49a1ac9-80b2-4cfd-b7cd-bdfee4bc0cd8">
+      <preConditions  onFail="MARK_RAN">
+          <not>
+              <indexExists indexName="idx_exprttmpselection_tmpltid" />
+          </not>
+      </preConditions>
+      <createIndex indexName="idx_exprttmpselection_tmpltid" tableName="EXPORTTEMPLATESELECTION">
+          <column name="EXPORTTEMPLATE_ID"/>
+      </createIndex>
+  </changeSet>
+</databaseChangeLog>

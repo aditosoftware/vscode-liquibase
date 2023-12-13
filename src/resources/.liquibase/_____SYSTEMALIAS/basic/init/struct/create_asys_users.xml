@@ -1,0 +1,43 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.hoermann" id="77e5fc97-1e89-45e2-a00f-29742d28ab7e">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ASYS_USERS" />
+            </not>
+        </preConditions>
+        <createTable tableName="ASYS_USERS">
+            <column name="ID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_ASYS_USERS_ID"/>
+            </column>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+            <column name="NAME" type="NVARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUPID" type="NVARCHAR(63)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPKEY" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPVAL" type="VARCHAR(1024)"/>
+            <column name="PROPVAL_CLOB" type="CLOB"/>
+        </createTable>
+        <createIndex indexName="IDX_ASYS_USERS_NAME" tableName="ASYS_USERS">
+            <column name="NAME"/>
+        </createIndex>
+        <createIndex indexName="idx_asysusers_groupid" tableName="ASYS_USERS">
+            <column name="GROUPID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="4d1dc8cd-2bca-4501-9458-9178287a4f38" author="s.listl" dbms="!mssql,!mysql,!mariadb">
+        <!--index can't be created on all dbms because of size restrictions-->
+        <createIndex indexName="idx_asysusers_propkey" tableName="ASYS_USERS">
+            <column name="PROPKEY"/>
+        </createIndex>
+        <createIndex indexName="idx_asysusers_propval" tableName="ASYS_USERS">
+            <column name="PROPVAL"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

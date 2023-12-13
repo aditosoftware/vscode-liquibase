@@ -1,0 +1,35 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="m.schroeger" id="52da4775-e669-4633-ac22-3c5a74e44be9">
+      <preConditions onFail="MARK_RAN">
+        <not>
+          <tableExists tableName="SALESPROJECT"/>
+        </not>
+      </preConditions>
+        <createTable tableName="SALESPROJECT">
+            
+            <column name="PROJECTCODE" type="INTEGER">
+                <constraints nullable="false" unique="true" uniqueConstraintName="UNIQUE_SALESPROJECT_PROJECTCODE" />
+            </column>
+            <column name="PROJECTTITLE" type="NVARCHAR(30)"/>
+            <column name="CONTACT_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>  
+            <column name="INFO" type="NCLOB"/>
+            <column name="STATUS" type="INTEGER"/>
+            <column name="PHASE" type="INTEGER"/>
+            <column name="VOLUME" type="NUMERIC(14,2)"/>
+            <column name="STARTDATE" type="DATETIME"/>
+            <column name="ENDDATE" type="DATETIME"/>
+            <column name="ESTIMATION" type="NVARCHAR(50)"/>
+            <column name="ESTIMATIONVALUE" type="INTEGER"/>
+            <column name="PROBABILITY" type="VARCHAR(36)"/>
+
+            <column name="SALESPROJECTID" type="CHAR(36)">
+                <constraints primaryKey="true"/>
+            </column>
+            
+            
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

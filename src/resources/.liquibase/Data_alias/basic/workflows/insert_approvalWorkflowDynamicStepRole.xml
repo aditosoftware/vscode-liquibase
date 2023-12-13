@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="c.groeger" id="3211b1e8-d022-4d1b-9ce3-c303a73bb63d">
+      <insert tableName="STANDARD_WORKFLOW">
+          <column name="STANDARD_WORKFLOWID" value="3211b1e8-d022-4d1b-9ce3-c303a73bb63d"/>
+          <column name="PROCESSKEY" value="approvalWorkflow_dynamicStep_Role"/>
+          <column name="NAME" value="Approval Workflow -dynamicStep -Role"/>
+          <column name="DESCRIPTION" value="Approval Workflow with dynamic Steps (1 or 2) and candidate groups(Role).Can be used for any target entity"/>
+          <column name="PROCESSXML" valueBlobFile="blob/approvalWorkflowDynamicStepRole.xml"/>
+          <column name="DIAGRAM" valueBlobFile="blob/approvalWorkflowDynamicStepRole.png"/>
+      </insert>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,60 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="c.groeger" id="8021271b-0d80-464a-bf22-000351948821">
+        
+        <!-- workflow status (system Satus  & must be displayed at the end of the lists),thats why SORTING: 200+ -->
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="8c0b82ce-13fe-4753-88af-ac977df7a3e6"/>
+            <column name="KEYID" value="TOCHECK"/>
+            <column name="TITLE" value="To check"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="200"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="6818d2a6-f47a-4d72-a0b2-3fc6fc74fb27"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="56fe7699-edd1-41e0-b227-96d327cfae0b"/>
+            <column name="KEYID" value="TOCHECK-1"/>
+            <column name="TITLE" value="To check (1.Empl)"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="201"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="6818d2a6-f47a-4d72-a0b2-3fc6fc74fb27"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="d74bc2f9-72a2-448b-ba03-730b977f219f"/>
+            <column name="KEYID" value="TOCHECK-2"/>
+            <column name="TITLE" value="To check (2.Empl)"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="202"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="6818d2a6-f47a-4d72-a0b2-3fc6fc74fb27"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="317e1140-072d-46ce-b45f-1e3b819cd5ae"/>
+            <column name="KEYID" value="APPROVED"/>
+            <column name="TITLE" value="Approved"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="203"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="6818d2a6-f47a-4d72-a0b2-3fc6fc74fb27"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="e72bf6d3-5280-4191-9084-742863917bbf"/>
+            <column name="KEYID" value="DENIED"/>
+            <column name="TITLE" value="Approval denied"/>
+            <column name="CONTAINER" value="TaskStatus"/>
+            <column name="SORTING" valueNumeric="204"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="6818d2a6-f47a-4d72-a0b2-3fc6fc74fb27"/>
+        </insert>
+        
+    </changeSet>
+</databaseChangeLog>

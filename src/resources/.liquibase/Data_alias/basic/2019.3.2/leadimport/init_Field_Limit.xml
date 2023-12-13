@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog
+http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="f.maier" id="leadimportFmai">
+        <insert tableName="AB_KEYWORD_ATTRIBUTE">
+            <column name="AB_KEYWORD_ATTRIBUTEID" value="38997f56-c86a-4dd3-b2ed-1fb73da604ae"/>
+            <column name="NAME" value="technicalValue"/>
+            <column name="CONTAINER" value="FieldLimit"/>
+            <column name="KIND" value="CHAR_VALUE"/>
+        </insert>
+        
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="73b3b4b3-6ba1-4551-b9dd-161079a1c755"/>
+            <column name="KEYID" value="DOUBLEQUOTATION"/>
+            <column name="TITLE" value='&quot;'/>
+            <column name="CONTAINER" value="FieldLimit"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+            <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="3b9fb859-3dd6-49c9-8ad4-cdefac3958f9"/>
+            <column name="AB_KEYWORD_ENTRY_ID" value="73b3b4b3-6ba1-4551-b9dd-161079a1c755"/>
+            <column name="AB_KEYWORD_ATTRIBUTE_ID" value="38997f56-c86a-4dd3-b2ed-1fb73da604ae"/>
+            <column name="CHAR_VALUE" value="&quot;"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

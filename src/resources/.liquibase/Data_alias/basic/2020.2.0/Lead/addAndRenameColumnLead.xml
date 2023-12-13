@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="bcd6cb02-d074-444f-a307-34973b3dd4e1">
+        <renameColumn
+            columnDataType="NVARCHAR(254)"  
+            newColumnName="O_COMMMOBIL"  
+            oldColumnName="COMMMOBIL"  
+            tableName="LEAD"/>
+        <renameColumn
+            columnDataType="NVARCHAR(254)"  
+            newColumnName="O_COMMEMAIL"  
+            oldColumnName="COMMEMAIL"  
+            tableName="LEAD"/> 
+        <renameColumn
+            columnDataType="NVARCHAR(254)"  
+            newColumnName="O_COMMBLOG"  
+            oldColumnName="COMMBLOG"  
+            tableName="LEAD"/> 
+        <renameColumn
+            columnDataType="NVARCHAR(254)"  
+            newColumnName="O_COMMPHONE"  
+            oldColumnName="COMMPHONE"  
+            tableName="LEAD"/> 
+        <renameColumn
+            columnDataType="NVARCHAR(254)"  
+            newColumnName="O_COMMXING"  
+            oldColumnName="COMMXING"  
+            tableName="LEAD"/> 
+        <renameColumn
+            columnDataType="NVARCHAR(254)"  
+            newColumnName="O_COMMLINKEDIN"  
+            oldColumnName="COMMLINKEDIN"  
+            tableName="LEAD"/>
+        
+        <addColumn tableName="LEAD">
+            <column name="P_COMMMOBIL"     type="NVARCHAR(254)" />
+            <column name="P_COMMEMAIL"     type="NVARCHAR(254)" />
+            <column name="P_COMMPHONE"     type="NVARCHAR(254)" />
+            <column name="P_COMMBLOG"      type="NVARCHAR(254)" />
+            <column name="P_COMMXING"      type="NVARCHAR(254)" />
+            <column name="P_COMMLINKEDIN"  type="NVARCHAR(254)" />
+	</addColumn>
+    </changeSet>
+</databaseChangeLog>

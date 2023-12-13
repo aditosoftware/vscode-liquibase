@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="989b7d7d-ba1e-40b8-99b0-e4a1c13e9375">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="78367cf3-111a-4852-9a4f-a505ad2953cd"/>
+            <column name="KEYID" value="TRIGGEREVENTINSERT"/>
+            <column name="TITLE" value="Creation"/>
+            <column name="CONTAINER" value="WorkflowSignalTrigger"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="94cc11ec-a384-439f-b5c7-70d7168959a5"/>
+            <column name="KEYID" value="TRIGGEREVENTUPDATE"/>
+            <column name="TITLE" value="Update"/>
+            <column name="CONTAINER" value="WorkflowSignalTrigger"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="d8b78606-30bf-4633-9aaf-4da691ef6d8f"/>
+            <column name="KEYID" value="TRIGGEREVENTDELETE"/>
+            <column name="TITLE" value="Deletion"/>
+            <column name="CONTAINER" value="WorkflowSignalTrigger"/>
+            <column name="SORTING" valueNumeric="3"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

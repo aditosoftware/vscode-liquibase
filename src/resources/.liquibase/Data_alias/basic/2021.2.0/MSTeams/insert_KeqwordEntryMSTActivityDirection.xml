@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="29a9e33a-4c3f-4409-af9f-d676ef399103">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="7e21e85e-8091-48cb-8bdc-e7bef7fa1f80"/>
+            <column name="AB_KEYWORD_CATEGORY_ID" value="a5206aff-79f8-413e-a76d-4cb9d39694d3"/>
+            <column name="KEYID" value="MST-MESSAGE"/>
+            <column name="TITLE" value="MS-Teams Message"/>
+            <column name="CONTAINER" value="ActivityCategory"/>
+            <column name="SORTING" valueNumeric="8"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

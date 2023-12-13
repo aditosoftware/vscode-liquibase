@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.listl" id="7fb6a9f2-88c3-49cf-9c93-9210c4ccc127">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="9509c6b8-208a-4e97-bdcd-53642d0c7489"/>
+
+            <column name="KEYID" value="FREE"/>
+            <column name="TITLE" value="carriage free"/>
+            <column name="CONTAINER" value="DeliveryTerm"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="d713c45a-6f87-4516-ae21-1d8f1c217949"/>
+
+            <column name="KEYID" value="DELIVERCIF"/>
+            <column name="TITLE" value="CIF"/>
+            <column name="CONTAINER" value="DeliveryTerm"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="410a389b-67d4-4155-8d9e-1e8d816ecfb9"/>
+
+            <column name="KEYID" value="DELIVEREX"/>
+            <column name="TITLE" value="ex works"/>
+            <column name="CONTAINER" value="DeliveryTerm"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <rollback>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="9509c6b8-208a-4e97-bdcd-53642d0c7489" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="d713c45a-6f87-4516-ae21-1d8f1c217949" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="410a389b-67d4-4155-8d9e-1e8d816ecfb9" />
+                </whereParams>
+            </delete>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

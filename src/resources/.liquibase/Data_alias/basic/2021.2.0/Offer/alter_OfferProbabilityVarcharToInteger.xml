@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet dbms="derby" author="b.ulrich" id="58fad879-afc5-48b3-984f-a9ebba7185cd">
+        <sql>
+            ALTER TABLE OFFER ADD COLUMN PROBABILITY_NEW CHAR(10);
+            UPDATE OFFER SET PROBABILITY_NEW=CAST ( PROBABILITY as CHAR(10));
+            ALTER TABLE OFFER DROP COLUMN PROBABILITY;
+            RENAME COLUMN OFFER.PROBABILITY_NEW TO PROBABILITY;
+
+            ALTER TABLE OFFER ADD COLUMN PROBABILITY_NEW INTEGER;
+            UPDATE OFFER SET PROBABILITY_NEW=CAST ( PROBABILITY as INTEGER);
+            ALTER TABLE OFFER DROP COLUMN PROBABILITY;
+            RENAME COLUMN OFFER.PROBABILITY_NEW TO PROBABILITY;
+        </sql>
+    </changeSet>
+    
+    <changeSet author="b.ulrich" id="1dc2d055-0f1a-447a-af36-fb0b36bb5558">
+        <preConditions onFail="CONTINUE">
+            <not>
+                <dbms type="derby" />
+            </not>
+        </preConditions>
+        <modifyDataType columnName="PROBABILITY" newDataType="INTEGER" tableName="OFFER"/>
+    </changeSet>
+</databaseChangeLog>

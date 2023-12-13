@@ -1,0 +1,38 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+<changeSet author="j.hoermann" id="fcb1ff99-55bd-4ebc-8137-ec05b4cacbd7">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="ASYS_ALIASCONFIG" />
+      </not>
+    </preConditions>
+    <createTable tableName="ASYS_ALIASCONFIG">
+        <column name="ID" type="CHAR(36)">
+            <constraints primaryKey="true" primaryKeyName="PK_ASYS_ALIASCONFIG_ID"/>
+        </column>
+        <column name="USER_EDIT" type="VARCHAR(63)"/>
+        <column name="USER_NEW" type="VARCHAR(63)"/>
+        <column name="DATE_EDIT" type="DATETIME"/>
+        <column name="DATE_NEW" type="DATETIME"/>
+        <column name="KIND" type="INTEGER">
+            <constraints nullable="false"/>
+        </column>
+        <column name="NAME" type="NVARCHAR(63)">
+            <constraints nullable="false" unique="true"/>
+        </column>
+        <column name="TITLE" type="NVARCHAR(63)"/>
+        <column name="DESCRIPTION" type="NVARCHAR(255)"/>
+        <column name="ICON" type="LONGBLOB"/>        
+        <column name="XMLDATA" type="LONGBLOB"/>
+        <column name="SERVERID" type="VARCHAR(63)"/>
+        <column name="ALIASID" type="VARCHAR(63)"/>
+        <column name="TENANTID" type="VARCHAR(63)"/>
+    </createTable>
+    <createIndex tableName="ASYS_ALIASCONFIG" indexName="IDX_ASYS_ALIASCONFIG_SERVERID">
+        <column name="SERVERID"/>
+    </createIndex>
+    <createIndex tableName="ASYS_ALIASCONFIG" indexName="IDX_ASYS_ALIASCONFIG_ALIASID">
+        <column name="ALIASID"/>
+    </createIndex>
+</changeSet>
+</databaseChangeLog>

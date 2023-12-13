@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="A.Voegl" id="1bee1422-facb-4b19-a996-e19ba768d69b">
+    <preConditions onFail="MARK_RAN">
+      <not>
+        <tableExists tableName="PROJECTTICKETATTRIBUTERELATION" />
+      </not>
+    </preConditions>
+    <createTable tableName="PROJECTTICKETATTRIBUTERELATION">
+      <column defaultValueComputed="NULL" name="INT_VALUE" type="BIGINT" />
+      <column name="CHAR_VALUE" type="VARCHAR(256)" />
+      <column name="PROJECTTICKETATTRIBUTERELATIONID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column defaultValueComputed="NULL" name="DATE_EDIT" type="datetime" />
+      <column defaultValueComputed="NULL" name="DATE_VALUE" type="date" />
+      <column name="ID_VALUE" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="NUMBER_VALUE" type="DECIMAL(10, 2)" />
+      <column name="PROJECTTICKET_ID" type="CHAR(36)" />
+      <column defaultValueComputed="NULL" name="DATE_NEW" type="datetime" />
+      <column name="USER_NEW" type="VARCHAR(63)" />
+      <column name="USER_EDIT" type="VARCHAR(63)" />
+      <column name="PROJECTTICKETATTRIBUTE_ID" type="CHAR(36)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="A.Voegl" id="fe370480-f105-4aba-8c71-74d6e2855305">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PROJECTTICKETATTRIBUTERELATION"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="ID_VALUE_IDX" tableName="PROJECTTICKETATTRIBUTERELATION">
+      <column name="ID_VALUE" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="A.Voegl" id="3214db4f-1328-4ca1-a171-b2f89f4a7c4e">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PROJATTRREL_PROJTTATTRE_ID_IDX"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="PROJATTRREL_PROJTTATTRE_ID_IDX" tableName="PROJECTTICKETATTRIBUTERELATION">
+      <column name="PROJECTTICKETATTRIBUTE_ID" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="A.Voegl" id="16df692d-2397-464f-b77b-b96800933f0d">
+      <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists indexName="PROJTICKTATTR_PROTICKET_ID_IDX"/>
+            </not>
+      </preConditions>
+    <createIndex indexName="PROJTICKTATTR_PROTICKET_ID_IDX" tableName="PROJECTTICKETATTRIBUTERELATION">
+      <column name="PROJECTTICKET_ID" />
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

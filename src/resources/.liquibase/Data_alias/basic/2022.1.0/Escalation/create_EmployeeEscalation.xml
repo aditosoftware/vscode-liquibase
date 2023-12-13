@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="v.broens" id="c2a2282e-fb3e-47cd-bbe6-defba40fceba">
+        <createTable tableName="EMPLOYEEESCALATION" >
+            <column name="EMPLOYEEESCALATIONID" type="char(36)">
+            <constraints primaryKey = "true" nullable = "false"/>
+            </column>
+            <column name="CONTACT_ID" type="char(36)"/>
+            <column name="EMPLOYEEGROUP_ID" type="char(36)"/>
+            <column name="TICKETESCALATION_ID" type="char(36)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+             <column name="TYPE" type="VARCHAR(63)"/>
+        </createTable>
+        <createIndex tableName="EMPLOYEEESCALATION" indexName="IDX_EMPESC_CONTACT_ID">
+            <column name="CONTACT_ID"/>
+        </createIndex>
+        <createIndex tableName="EMPLOYEEESCALATION" indexName="IDX_EMPESC_EMPLGROUP_ID">
+            <column name="EMPLOYEEGROUP_ID"/>
+        </createIndex>
+        <createIndex tableName="EMPLOYEEESCALATION" indexName="IDX_EMPESC_ESCAL_ID">
+            <column name="TICKETESCALATION_ID"/>
+        </createIndex>
+  </changeSet>
+</databaseChangeLog>

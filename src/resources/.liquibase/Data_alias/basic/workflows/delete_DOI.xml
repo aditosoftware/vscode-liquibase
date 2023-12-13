@@ -1,0 +1,10 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="2089b5d2-97e0-44c3-b705-f160c209f924">
+    <delete tableName="STANDARD_WORKFLOW">
+        <where>STANDARD_WORKFLOWID = '00dc24eb-a757-43c5-b8ca-889fd2b55da2'</where>
+    </delete>           
+  </changeSet>
+</databaseChangeLog>

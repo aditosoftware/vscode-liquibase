@@ -1,0 +1,15 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="d.tran" id="7dbaa3ae-ba37-4fd1-9b63-fab48975fb87">
+        <createIndex tableName="DISTRICTRESPONSIBLE" indexName="IDX_DEPARTMENT_ATTRIBUTE_ID">
+            <column name="DEPARTMENT_ATTRIBUTE_ID"/>
+        </createIndex>
+        <createIndex tableName="DISTRICTRESPONSIBLE" indexName="IDX_DISTRICTRESPONSIBLE_DISTRICT_ID">
+            <column name="DISTRICT_ID"/>
+        </createIndex>
+        <createIndex tableName="DISTRICTRESPONSIBLE" indexName="IDX_EMPLOYEE_CONTACT_ID">
+            <column name="EMPLOYEE_CONTACT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

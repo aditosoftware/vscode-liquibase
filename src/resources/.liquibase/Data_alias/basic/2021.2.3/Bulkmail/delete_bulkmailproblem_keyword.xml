@@ -1,0 +1,25 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="85f8e0b2-57a7-427e-8c88-85ce0ea015df">
+        <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="9f11c52f-4c79-4027-877a-0f6eb828fa22" />
+                </whereParams>
+       </delete>
+       <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="a18e7a37-c5f6-4f7b-8db6-3018dedbd43f" />
+                </whereParams>
+       </delete>
+       <delete tableName="AB_KEYWORD_CATEGORY">
+                <where>AB_KEYWORD_CATEGORYID = ?</where>
+                <whereParams>
+                    <param value="e685dcfe-cbf9-4a3f-b45f-3f449779a48f" />
+                </whereParams>
+       </delete>
+  </changeSet>
+</databaseChangeLog>

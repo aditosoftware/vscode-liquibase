@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="j.goderbauer" id="88938510-188f-4814-b25d-0b5e393cd837">
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="ba369295-c717-48eb-ae76-314087375e06"/>
+
+            <column name="KEYID" value="CONTACTPOSCEO"/>
+            <column name="TITLE" value="CEO"/>
+            <column name="CONTAINER" value="ContactPosition"/>
+            <column name="SORTING" valueNumeric="0"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="dcacb175-4c8a-4941-a417-69a971f52583"/>
+
+            <column name="KEYID" value="CONTACTPOSCSO"/>
+            <column name="TITLE" value="CSO"/>
+            <column name="CONTAINER" value="ContactPosition"/>
+            <column name="SORTING" valueNumeric="1"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <insert tableName="AB_KEYWORD_ENTRY">
+            <column name="AB_KEYWORD_ENTRYID" value="1a508899-e2bf-409d-8a57-3ca31c9c832d"/>
+
+            <column name="KEYID" value="CONTACTPOSPROD"/>
+            <column name="TITLE" value="Production manager"/>
+            <column name="CONTAINER" value="ContactPosition"/>
+            <column name="SORTING" valueNumeric="2"/>
+            <column name="ISACTIVE" valueNumeric="1"/>
+            <column name="ISESSENTIAL" valueNumeric="0"/>
+        </insert>
+        <rollback>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="ba369295-c717-48eb-ae76-314087375e06" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="dcacb175-4c8a-4941-a417-69a971f52583" />
+                </whereParams>
+            </delete>
+            <delete tableName="AB_KEYWORD_ENTRY">
+                <where>AB_KEYWORD_ENTRYID = ?</where>
+                <whereParams>
+                    <param value="1a508899-e2bf-409d-8a57-3ca31c9c832d" />
+                </whereParams>
+            </delete>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

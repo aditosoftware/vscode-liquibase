@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="a.fraeder" id="2cd572f6-bbf1-42b8-8fe3-f5561f99a799">
+    <update tableName="AB_KEYWORD_ENTRY">
+        <column name="SORTING" valueNumeric="4"/>
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+            <param value="6eda0974-5e4a-4dc2-b963-266d67cb96df"/>
+        </whereParams>
+    </update>            
+    <update tableName="AB_KEYWORD_ENTRY">
+        <column name="SORTING" valueNumeric="6"/>
+        <where>AB_KEYWORD_ENTRYID = ?</where>
+        <whereParams>
+            <param value="943a22d1-21b0-402e-a5e1-b1d54b4e6265"/>
+        </whereParams>
+    </update>            
+      
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="804bcce7-f9c4-44ab-ba34-dec3e0863d50"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="dc5b95d5-c715-4a83-8c6f-d90925a39d2e"/>
+        <column name="KEYID" value="EVENTPARTICIPANT_REGISTERED"/>
+        <column name="TITLE" value="Registered"/>
+        <column name="CONTAINER" value="EventParticipantStatus"/>
+        <column name="SORTING" valueNumeric="3"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>      
+    <insert tableName="AB_KEYWORD_ENTRY">
+        <column name="AB_KEYWORD_ENTRYID" value="de53d96a-8c4f-4a6b-baf4-41b6d3ce0405"/>
+        <column name="AB_KEYWORD_CATEGORY_ID" value="dc5b95d5-c715-4a83-8c6f-d90925a39d2e"/>
+        <column name="KEYID" value="EVENTPARTICIPANT_WAITINGLIST"/>
+        <column name="TITLE" value="Waiting list"/>
+        <column name="CONTAINER" value="EventParticipantStatus"/>
+        <column name="SORTING" valueNumeric="7"/>
+        <column name="ISACTIVE" valueNumeric="1"/>
+        <column name="ISESSENTIAL" valueNumeric="0"/>
+    </insert>
+  </changeSet>
+</databaseChangeLog>

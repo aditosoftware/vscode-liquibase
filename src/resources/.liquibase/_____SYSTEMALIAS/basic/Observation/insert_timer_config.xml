@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+  <changeSet author="s.pongratz" id="9ab7bcab-9683-4cb0-91f0-e87265d7fd2f">
+    <insert tableName="ASYS_TIMERS">
+      <column name="TIMERID" value="ObservationBG_serverProzess.process" />
+      <column name="ACTIVE" value="true" />
+      <column name="INTERVALDESCRIPTION" />
+      <column name="INTERVALUNIT" valueNumeric="1" />
+      <column name="INTERVALVALUE" valueNumeric="1" />
+      <column name="KEEPJDITO" value="false" />
+      <column name="LASTRUN" />
+      <column name="PROCESSNAME" value="ObservationBG_serverProzess" />
+      <column name="PROCESSUSER" value="admin" />
+      <column name="STARTTIME" />
+      <column name="THREADPRIORITY" valueNumeric="0" />
+      <column name="TIMERTYPE" valueNumeric="2" />
+      <column name="TIMEZONE" value="GMT" />
+    </insert>
+  </changeSet>
+</databaseChangeLog>

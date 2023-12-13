@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+  <changeSet author="m.groppe" id="5dc9072b-e3e6-4a4e-aa22-e26dbe4ba9e7">
+    <createTable tableName="EVENTSLOT">
+      <column name="EVENTSLOTID" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true" />
+      </column>
+      <column name="NAME" type="VARCHAR(255)"/>
+      <column name="EVENTSLOTTYPE" type="VARCHAR(36)"/>
+      <column name="EVENT_ID" type="CHAR(36)"/>
+      <column name="SORTING" type="INTEGER"/>
+      <column name="USER_NEW" type="VARCHAR(50)"/>
+      <column name="DATE_NEW" type="datetime"/>
+      <column name="USER_EDIT" type="VARCHAR(50)" />
+      <column name="DATE_EDIT" type="datetime"/>
+      <column name="RESPONSIBLE_CONTACT_ID" type="CHAR(36)" />
+      <column name="STARTTIME" type="datetime"/>
+      <column name="ENDTIME" type="datetime"/>
+    </createTable>
+    <createIndex tableName="EVENTSLOT" indexName="EVTSLT_EVTID">
+        <column name="EVENT_ID"/>
+    </createIndex>
+    <createIndex tableName="EVENTSLOT" indexName="EVTSLT_RSPID">
+        <column name="RESPONSIBLE_CONTACT_ID"/>
+    </createIndex>
+  </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="06ef916c-e6c6-423b-a268-e3ab7b6c33cc">
+        <preConditions onFail="MARK_RAN">
+            <not>
+              <tableExists tableName="RESOURCEOPERATIONTASK"/>
+            </not>
+        </preConditions>
+        <createTable tableName="RESOURCEPLANNING">
+            <column name="RESOURCEPLANNINGID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_RESOURCEPLANNINGID"/>
+            </column>
+            <column name="RESOURCE_ID" type="CHAR(36)"/>
+            <column name="RESOURCEOPERATION_ID" type="CHAR(36)">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="DATE_NEW" type="DATETIME"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </createTable>
+
+        <createIndex tableName="RESOURCEPLANNING" indexName="IDX_RESOURCEPLNNNG_RESOURCE_ID">
+            <column name="RESOURCE_ID"/>
+        </createIndex>
+        <createIndex tableName="RESOURCEPLANNING" indexName="IDX_RESOURCPLNNNG_OPERATION_ID">
+            <column name="RESOURCEOPERATION_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

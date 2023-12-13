@@ -1,0 +1,11 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="p.neub" id="b5cd257d-1df9-4704-9e66-45c220c67158">
+        <dropColumn tableName="SALESORDER">
+            <column name="DISCOUNTED_NET"/>
+            <column name="DISCOUNTED_VAT"/>
+        </dropColumn>
+    </changeSet>
+</databaseChangeLog>

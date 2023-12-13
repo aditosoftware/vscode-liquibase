@@ -1,0 +1,17 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="24712f1e-f3f2-48c7-956b-3bf8a708a7d6">
+        <createTable tableName="DSGVODELETEFLAG">
+            <column name="DSGVODELETEFLAGID" type="CHAR(36)">
+                <constraints primaryKey="true" primaryKeyName="PK_DSGVODELETEFLAG_DSGVODELETEFLAGID"/>
+            </column>
+            <column name="REASON" type="CHAR(36)"/>
+            <column name="CONTACT_ID" type="CHAR(36)"/>
+            <column name="USER_NEW" type="NVARCHAR(50)" />
+            <column name="DATE_NEW" type="DATETIME" />
+        </createTable>
+        <createIndex tableName="DSGVODELETEFLAG" indexName="IDX_DSGVODELETEFLAG_CONTACT_ID">
+            <column name="CONTACT_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

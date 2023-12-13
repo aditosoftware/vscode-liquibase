@@ -1,0 +1,12 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="s.pongratz" id="28627941-6c9b-46e8-922a-b4660b33723c">
+        <preConditions onFail="CONTINUE">
+            <columnExists tableName="OBJECTMEMBER" columnName="DECIDER"/>
+        </preConditions>
+        <dropNotNullConstraint tableName="OBJECTMEMBER" columnName="DECIDER" columnDataType="TINYINT"/>
+        <dropDefaultValue tableName="OBJECTMEMBER" columnName="DECIDER"/>
+        <dropColumn tableName="OBJECTMEMBER" columnName="DECIDER"/>
+    </changeSet>
+</databaseChangeLog>

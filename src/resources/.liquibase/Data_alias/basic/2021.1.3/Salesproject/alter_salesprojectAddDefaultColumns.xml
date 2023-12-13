@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="e6db8a44-8854-4939-8566-456d88ae1c5f">
+        <addColumn tableName="SALESPROJECT">
+            <column name="USER_NEW" type="NVARCHAR(50)"/>
+            <column name="USER_EDIT" type="NVARCHAR(50)"/>
+            <!--DATE_NEW already exists-->
+            <column name="DATE_EDIT" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

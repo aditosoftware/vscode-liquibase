@@ -1,0 +1,13 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="0aa81d84-7456-4240-91e0-a915f38abbd7" author="s.pongratz" dbms="!oracle">
+        <addNotNullConstraint columnName="DATE_NEW" tableName="CAMPAIGNCOST" columnDataType="DATETIME" validate="true"/>
+        <addNotNullConstraint columnName="DATE_NEW" tableName="CAMPAIGNPARTICIPANT" columnDataType="DATETIME" validate="true"/>
+        <addNotNullConstraint columnName="DATE_NEW" tableName="CAMPAIGNSTEP" columnDataType="DATETIME" validate="true"/>
+        <addNotNullConstraint columnName="DATE_NEW" tableName="DOCUMENTTEMPLATELINK" columnDataType="DATETIME" validate="true"/>
+        <addNotNullConstraint columnName="DATE_NEW" tableName="DUPLICATESCANNER" columnDataType="DATETIME" validate="true"/>
+        <addNotNullConstraint columnName="DATE_NEW" tableName="DUPLICATESCANNERRESULTFIELDCONFIG" columnDataType="DATETIME" validate="true"/>
+        <addNotNullConstraint columnName="DATE_NEW" tableName="CAMPAIGN" columnDataType="DATETIME" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

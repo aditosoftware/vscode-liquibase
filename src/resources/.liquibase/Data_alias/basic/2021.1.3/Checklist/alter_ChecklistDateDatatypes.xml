@@ -1,0 +1,71 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet dbms="derby" author="b.ulrich" id="d8876524-6cb0-4d7f-a4be-da2c182adab9">
+        <sql>
+            ALTER TABLE CHECKLIST ADD COLUMN DATE_NEW_NEW TIMESTAMP;
+            UPDATE CHECKLIST SET DATE_NEW_NEW=CAST ( DATE_NEW as TIMESTAMP);
+            ALTER TABLE CHECKLIST DROP COLUMN DATE_NEW;
+            RENAME COLUMN CHECKLIST.DATE_NEW_NEW TO DATE_NEW;
+        </sql>
+
+        <sql>
+            ALTER TABLE CHECKLIST ADD COLUMN DATE_EDIT_NEW TIMESTAMP;
+            UPDATE CHECKLIST SET DATE_EDIT_NEW=CAST ( DATE_EDIT as TIMESTAMP);
+            ALTER TABLE CHECKLIST DROP COLUMN DATE_EDIT;
+            RENAME COLUMN CHECKLIST.DATE_EDIT_NEW TO DATE_EDIT;
+        </sql>
+
+        <sql>
+            ALTER TABLE CHECKLISTENTRY ADD COLUMN DATE_NEW_NEW TIMESTAMP;
+            UPDATE CHECKLISTENTRY SET DATE_NEW_NEW=CAST ( DATE_NEW as TIMESTAMP);
+            ALTER TABLE CHECKLISTENTRY DROP COLUMN DATE_NEW;
+            RENAME COLUMN CHECKLISTENTRY.DATE_NEW_NEW TO DATE_NEW;
+        </sql>
+
+        <sql>
+            ALTER TABLE CHECKLISTENTRY ADD COLUMN DATE_EDIT_NEW TIMESTAMP;
+            UPDATE CHECKLISTENTRY SET DATE_EDIT_NEW=CAST ( DATE_EDIT as TIMESTAMP);
+            ALTER TABLE CHECKLISTENTRY DROP COLUMN DATE_EDIT;
+            RENAME COLUMN CHECKLISTENTRY.DATE_EDIT_NEW TO DATE_EDIT;
+        </sql>
+
+        <sql>
+            ALTER TABLE CHECKLISTENTRYVALUE ADD COLUMN DATE_NEW_NEW TIMESTAMP;
+            UPDATE CHECKLISTENTRYVALUE SET DATE_NEW_NEW=CAST ( DATE_NEW as TIMESTAMP);
+            ALTER TABLE CHECKLISTENTRYVALUE DROP COLUMN DATE_NEW;
+            RENAME COLUMN CHECKLISTENTRYVALUE.DATE_NEW_NEW TO DATE_NEW;
+        </sql>
+
+        <sql>
+            ALTER TABLE CHECKLISTENTRYVALUE ADD COLUMN DATE_EDIT_NEW TIMESTAMP;
+            UPDATE CHECKLISTENTRYVALUE SET DATE_EDIT_NEW=CAST ( DATE_EDIT as TIMESTAMP);
+            ALTER TABLE CHECKLISTENTRYVALUE DROP COLUMN DATE_EDIT;
+            RENAME COLUMN CHECKLISTENTRYVALUE.DATE_EDIT_NEW TO DATE_EDIT;
+        </sql>
+        
+        <sql>
+            ALTER TABLE CHECKLISTENTRYVALUE ADD COLUMN DONEDATE_NEW TIMESTAMP;
+            UPDATE CHECKLISTENTRYVALUE SET DONEDATE_NEW=CAST ( DONEDATE as TIMESTAMP);
+            ALTER TABLE CHECKLISTENTRYVALUE DROP COLUMN DONEDATE;
+            RENAME COLUMN CHECKLISTENTRYVALUE.DONEDATE_NEW TO DONEDATE;
+        </sql>
+    </changeSet>
+    
+    <changeSet author="b.ulrich" id="768fa137-dc44-4cda-8d21-4bad84b88f9c">
+        <preConditions onFail="CONTINUE">
+            <not>
+                <dbms type="derby" />
+            </not>
+        </preConditions>
+        <modifyDataType columnName="DATE_NEW" newDataType="DATETIME" tableName="CHECKLIST"/>
+        <modifyDataType columnName="DATE_EDIT" newDataType="DATETIME" tableName="CHECKLIST"/>
+        
+        <modifyDataType columnName="DATE_NEW" newDataType="DATETIME" tableName="CHECKLISTENTRY"/>
+        <modifyDataType columnName="DATE_EDIT" newDataType="DATETIME" tableName="CHECKLISTENTRY"/>
+        
+        <modifyDataType columnName="DATE_NEW" newDataType="DATETIME" tableName="CHECKLISTENTRYVALUE"/>
+        <modifyDataType columnName="DATE_EDIT" newDataType="DATETIME" tableName="CHECKLISTENTRYVALUE"/>
+        <modifyDataType columnName="DONEDATE" newDataType="DATETIME" tableName="CHECKLISTENTRYVALUE"/>
+        
+    </changeSet>
+</databaseChangeLog>

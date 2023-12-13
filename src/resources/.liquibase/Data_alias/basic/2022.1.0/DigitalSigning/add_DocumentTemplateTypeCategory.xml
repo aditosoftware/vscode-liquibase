@@ -1,0 +1,23 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="723d5663-52ed-48c6-a7de-79774e7836cc">
+     <insert tableName="AB_KEYWORD_ENTRY">  
+        <column  name="AB_KEYWORD_ENTRYID"  value="be77706c-ee67-42cd-ae65-c7edc94cf968"/>  
+        <column  name="KEYID"  value="13"/>  
+        <column  name="TITLE"  value="Digital Signature"/>  
+        <column  name="CONTAINER"  value="DocumentTemplateTypeCategory"/>  
+        <column  name="SORTING"  valueNumeric="13"/>  
+        <column  name="ISACTIVE"  valueNumeric="1"/>  
+        <column  name="ISESSENTIAL"  valueNumeric="0"/>  
+        <column  name="AB_KEYWORD_CATEGORY_ID"  value="e23c8316-d43a-4606-803e-d4488823cc52"/>
+     </insert>
+     <insert tableName="AB_KEYWORD_ATTRIBUTERELATION">
+       <column name="AB_KEYWORD_ATTRIBUTERELATIONID" value="f31b5df8-653e-408d-b4a8-0c9ba010536b"/>
+       <column name="AB_KEYWORD_ENTRY_ID" value="be77706c-ee67-42cd-ae65-c7edc94cf968"/> 
+       <column name="AB_KEYWORD_ATTRIBUTE_ID" value="14c2d515-a42f-4618-b534-7a23369d2002"/> 
+       <column name="BOOL_VALUE" valueNumeric="1"/>
+     </insert>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet author="b.ulrich" id="e154a849-911f-478c-921d-ec4a37c666b4">
+        <preConditions onFail="MARK_RAN">
+          <sqlCheck expectedResult="0">
+              select count(*) from AB_KEYWORD_ENTRY where AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = '17905c4d-1c88-4cee-83da-164c13bbe848'
+              and AB_KEYWORD_ENTRY.TITLE = 'Operation frequency';
+          </sqlCheck>
+        </preConditions>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="Operation frequency"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="17905c4d-1c88-4cee-83da-164c13bbe848"/>
+            </whereParams>
+        </update>
+        <update tableName="AB_KEYWORD_ENTRY">
+            <column name="TITLE" value="Operationreport created"/>
+            <where>AB_KEYWORD_ENTRY.AB_KEYWORD_ENTRYID = ?</where>
+            <whereParams>
+                <param value="dd276100-b867-489c-8128-a3b71aa7564f"/>
+            </whereParams>
+        </update>        
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,21 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+	<changeSet author="j.goderbauer" id="9b4644f6-3060-4791-b9f5-684939b78dcb">
+		<createIndex indexName="IDX_ACTIVITY_PARENT" tableName="ACTIVITY">
+			<column name="PARENT_CONTEXT"/>
+			<column name="PARENT_ID"/>
+		</createIndex>
+		<createIndex indexName="IDX_ACTIVITY_ENTRYDATE" tableName="ACTIVITY">
+			<column name="ENTRYDATE" descending="true"/>
+		</createIndex>
+		<createIndex indexName="IDX_ACTIVITYLINK_ACTIVITY_ID" tableName="ACTIVITYLINK">
+			<column name="ACTIVITY_ID" />
+		</createIndex>
+		<createIndex indexName="IDX_ACTIVITYLINK_OBJECT" tableName="ACTIVITYLINK">
+			<column name="OBJECT_TYPE"/>
+			<column name="OBJECT_ROWID"/>
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>
