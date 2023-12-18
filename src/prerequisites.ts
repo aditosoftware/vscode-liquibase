@@ -39,7 +39,7 @@ export async function prerequisites(
     const filePath = path.join(resoucePath, file);
     if (!fs.existsSync(filePath)) {
       vscode.window.showErrorMessage(
-        `Required file ${filePath} is missing. Please check your Extension installation.`
+        `Required file ${filePath} is missing. Trying to download the missing files. Try again`
       );
       downloadLiquibaseFiles(resoucePath);
       return;

@@ -10,7 +10,7 @@ import * as vscode from "vscode";
  */
 export function showQuickPickItemPanel(
   items: vscode.QuickPickItem[],
-  step: string,
+  step: number,
   maximumSteps: number,
   allowMultiple: boolean = false
 ): Thenable<vscode.QuickPickItem[] | vscode.QuickPickItem | undefined> {

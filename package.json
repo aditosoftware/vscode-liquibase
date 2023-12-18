@@ -15,25 +15,66 @@
     "commands": [
       {
         "command": "Liquibase.update",
-        "title": "Liquibase Update"
+        "title": "Liquibase Update",
+        "category": "Liquibase"
       },
       {
         "command": "Liquibase.drop-all",
-        "title": "Liquibase Drop-all"
+        "title": "Liquibase Drop-all",
+        "category": "Liquibase"
       },
       {
         "command": "Liquibase.validate",
-        "title": "Liquibase Validate"
+        "title": "Liquibase Validate",
+        "category": "Liquibase"
       },
       {
         "command": "Liquibase.status",
-        "title": "Liquibase Status"
+        "title": "Liquibase Status",
+        "category": "Liquibase"
       },
       {
         "command": "Liquibase.diff",
-        "title": "Liquibase Diff"
+        "title": "Liquibase Diff",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.db-doc",
+        "title": "Liquibase db-doc",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.generate-changelog",
+        "title": "Liquibase Generate Changelog",
+        "category": "Liquibase"
       }
-    ]
+    ],
+    "submenus": [
+      {
+        "id": "liquibase.submenu",
+        "label": "Liquibase"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "liquibase.submenu",
+          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml",
+          "group": "Liquibase"
+        }
+      ],
+      "liquibase.submenu":[
+        {
+          "command": "Liquibase.update"
+        },
+        {
+          "command": "Liquibase.validate"
+        },
+        {
+          "command": "Liquibase.drop-all"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
@@ -47,15 +88,16 @@
     "download": "^8.0.0"
   },
   "devDependencies": {
-    "@types/vscode": "^1.84.0",
+    "@types/download": "^8.0.5",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
+    "@types/vscode": "^1.84.0",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
-    "eslint": "^8.54.0",
-    "download": "^8.0.0",
-    "typescript": "^5.3.2",
     "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.8"
+    "@vscode/test-electron": "^2.3.8",
+    "download": "^8.0.0",
+    "eslint": "^8.54.0",
+    "typescript": "^5.3.2"
   }
 }
