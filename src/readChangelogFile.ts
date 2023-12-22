@@ -1,72 +1,96 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as yaml from 'js-yaml';
+import * as fs from "fs";
+import * as xml2js from "xml2js";
+import * as vscode from "vscode";
+import { QuickPickItem } from "vscode";
+import path from "path";
 
-// interface ChangeSet {
-//   id: string;
-//   author: string;
-//   context: string;
-// }
+/**
+ * Reads context values from a Liquibase XML file and returns them as an array of QuickPickItem objects.
+ *
+ * @param xmlFilePath - The path to the Liquibase XML file.
+ * @returns A Promise that resolves to an array of QuickPickItem objects representing the context values.
+ */
+export async function readContextValues(
+  xmlFilePath: string
+): Promise<QuickPickItem[]> {
+  // Initialize variables
+  let workFolder: string;
 
-// export function readLiquibaseChangelog(filePath: string): vscode.QuickPickItem[] {
-//   try {
-//     const fileContent = fs.readFileSync(filePath, 'utf-8');
-//     const fileExtension = path.extname(filePath).toLowerCase();
+  // Read Liquibase XML file content
+  const liquibaseFile: string = fs.readFileSync(
+    path.normalize(xmlFilePath),
+    "utf-8"
+  );
+  const lines = liquibaseFile.split("\n");
 
-//     switch (fileExtension) {
-//       case '.sql':
-//         return extractContextsFromSQL(fileContent);
-//       case '.json':
-//         return extractContextsFromJSON(fileContent);
-//       case '.xml':
-//         return extractContextsFromXML(fileContent);
-//       case '.yaml':
-//       case '.yml':
-//         return extractContextsFromYAML(fileContent);
-//       default:
-//         throw new Error(`Unsupported file extension: ${fileExtension}`);
-//     }
-//   } catch (error) {
-//     throw new Error(`Error reading changelog file`);
-//   }
-// }
+  // TODO: find a more robost way to get the infos
+  // Find the line containing 'changelogFile:'
+  const changelogFileLine = lines.find((line) =>
+    line.trim().startsWith("changelogFile:")
+  );
 
-// function extractContextsFromSQL(content: string): vscode.QuickPickItem[] {
-//   const regex = /--changeset\s+\w+:\w+\s+context:([^\s]+)/g;
-//   const matches = content.match(regex);
-//   return matches ? matches.map(match => match.split(':')[1].trim()) : [];
-// }
+  // Get the workspace folder
+  workFolder = getWorkFolder();
 
-// function extractContextsFromJSON(content: string): string[] {
-//   const jsonData = JSON.parse(content);
-//   return extractContextsFromChangeSets(jsonData.changeSet);
-// }
+  // Process changelogFileLine if found
+  if (changelogFileLine) {
+    const [, changelogFileValue] = changelogFileLine
+      .split(":")
+      .map((part) => part.trim());
 
-// function extractContextsFromXML(content: string): string[] {
-//     const regexChangeSet = /<changeSet[^>]*?context="([^"]+)"/g;
-//     const regexInclude = /<include[^>]*?context="([^"]+)"/g;
-  
-//     const matchesChangeSet = content.match(regexChangeSet) || [];
-//     const matchesInclude = content.match(regexInclude) || [];
-  
-//     const contextsFromChangeSet = matchesChangeSet.map(match => match.split('"')[1]);
-//     const contextsFromInclude = matchesInclude.map(match => match.split('"')[1]);
-  
-//     return [...contextsFromChangeSet, ...contextsFromInclude];
-//   }
+    // Read and parse the specified XML file
+    const xmlData: string = fs.readFileSync(
+      path.join(workFolder, path.normalize(changelogFileValue)),
+      "utf-8"
+    );
+    const parser = new xml2js.Parser({ explicitArray: false });
+    const parsedData = await parser.parseStringPromise(xmlData);
 
-// function extractContextsFromYAML(content: string): string[] {
-//   const yamlData = yaml.safeLoad(content);
-//   return extractContextsFromChangeSets(yamlData.changeSet);
-// }
+    // Extract context values from parsed XML
+    const includes = parsedData.databaseChangeLog.include;
+    const contextValues: QuickPickItem[] = [];
 
-// function extractContextsFromChangeSets(changeSets: any): string[] {
-//   if (Array.isArray(changeSets)) {
-//     return changeSets.map((changeSet: ChangeSet) => changeSet.context);
-//   } else if (changeSets) {
-//     return [changeSets.context];
-//   } else {
-//     return [];
-//   }
-// }
+    contextValues.push({ label: "default" });
+
+    if (Array.isArray(includes)) {
+      for (const include of includes) {
+        if (include.$.context) {
+          contextValues.push({ label: include.$.context });
+        }
+      }
+    } else if (includes && includes.$.context) {
+      contextValues.push({ label: includes.$.context });
+    }
+
+    return contextValues;
+  }
+
+  // Return an empty array if 'changelogFile:' line is not found
+  return [];
+}
+
+/**
+ * Retrieves the workspace folder for the currently active file in Visual Studio Code.
+ *
+ * @returns A string representing the normalized path of the workspace folder.
+ */
+export function getWorkFolder() {
+  const activeTextEditor = vscode.window.activeTextEditor;
+
+  if (activeTextEditor) {
+    // If a file is open, use its workspace folder
+    const workspaceFolder = vscode.workspace.getWorkspaceFolder(
+      activeTextEditor.document.uri
+    );
+
+    if (workspaceFolder) {
+      return path.normalize(workspaceFolder.uri.fsPath);
+    }
+  } else if (vscode.workspace.workspaceFolders) {
+    // If no file is open, use the first workspace folder
+    return path.normalize(vscode.workspace.workspaceFolders[0].uri.fsPath);
+  }
+
+  // Return an empty string if no workspace folder is found
+  return "";
+}

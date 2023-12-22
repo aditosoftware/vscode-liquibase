@@ -1,26 +1,14 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { executeJar } from "./executeJar";
 import { loadItemsFromJson } from "./loadItemsFromJson";
-import { showQuickPickItemPanel } from "./QuickPickItemHelper";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
-
-enum InputType {
-  InputBox,
-  OpenDialog,
-  QuickPick,
-  SaveDialog,
-  TextDocument,
-  WorkspaceFolderPick,
-}
-interface PickPanelConfig {
-  panelType: InputType;
-  currentStep: number;
-  items: any;
-  allowMultiple?: boolean;
-  cmdArgs?: string;
-}
+import {
+  InputType,
+  getResultValue,
+  registerLiquibaseCommand,
+} from "./registerLiquibaseCommand";
+import { getWorkFolder, readContextValues } from "./readChangelogFile";
 
 /**
  * Main-Function that will execute all the code within
@@ -28,18 +16,16 @@ interface PickPanelConfig {
  *                  It represents the lifecycle of the extension and can be used
  *                  to store and retrieve global state.
  */
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   // Constructing the path to the resources folder within the extension
   const resourcePath = path.join(context.extensionPath, "src", "resources");
 
   // Paths to JSON files and Liquibase changelog directory
-  const jsonFileSystem = path.join(resourcePath, "dropdownSystems.json"); //TODO: read the fucking system
-  const jsonFileItems = path.join(resourcePath, "dropdownItems.json"); //TODO: delete after demo
-  const changelogPath = path.join(resourcePath, ".liquibase", "Data"); //TODO: read the fucking context
+  const jsonFileSystem = path.join(resourcePath, "dropdownSystems.json"); //TODO: read the system in real world use-case (pending on Ramonas impl) and maybe fallback?
 
   // Load items from JSON files
   const systems: vscode.QuickPickItem[] = loadItemsFromJson(jsonFileSystem);
-  const contexts: vscode.QuickPickItem[] = loadItemsFromJson(jsonFileItems);
+
   const possibleFormats: vscode.QuickPickItem[] = [
     { label: "XML", description: "xml" },
     { label: "JSON", description: "json" },
@@ -52,16 +38,23 @@ export function activate(context: vscode.ExtensionContext) {
   prerequisites(context, resourcePath).then(() => {
     // Command that will be executed when the extension command is triggered
     let disposable1 = registerLiquibaseCommand(
+      //TODO: rename disposable
       "Liquibase.update",
       "update",
       [
         {
           panelType: InputType.QuickPick,
-          items: contexts,
+          items: systems,
           currentStep: 1,
+          resultShouldBeExposed: true,
+        }, //systems
+        {
+          panelType: InputType.QuickPick,
+          items: () => readContextValues(getResultValue()),
+          currentStep: 2,
           allowMultiple: true,
+          cmdArgs: "--contexts",
         }, //context
-        { panelType: InputType.QuickPick, items: systems, currentStep: 2 }, //systems
       ],
       context,
       resourcePath
@@ -106,24 +99,39 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     //TODO: Generate-Changelog -> more steps and user-input
+    // this may not work atm!
     let disposable6 = registerLiquibaseCommand(
       "Liquibase.generate-changelog",
       "generate-changelog",
       [
         {
           panelType: InputType.QuickPick,
-          items: possibleFormats,
-          currentStep: 1,
+          items: systems,
+          currentStep: 2,
         },
-        { panelType: InputType.QuickPick, items: systems, currentStep: 2 },
+        {
+          panelType: InputType.OpenDialog,
+          currentStep: 2,
+          items: {
+            canSelectFiles: false,
+            canSelectFolders: true,
+            canSelectMany: false,
+          },
+          resultShouldBeExposed: true,
+        },
         {
           panelType: InputType.InputBox,
           items: {
-            title: "generate changelog",
+            title: "File Name",
             value: "changelog",
           },
           currentStep: 3,
-          cmdArgs: "--data-output-directory"
+          cmdArgs: "--data-output-directory",
+        },
+        {
+          panelType: InputType.QuickPick,
+          items: possibleFormats,
+          currentStep: 1,
         },
       ],
       context,
@@ -135,7 +143,11 @@ export function activate(context: vscode.ExtensionContext) {
       "Liquibase.db-doc",
       "db-doc",
       [
-        { panelType: InputType.QuickPick, items: systems, currentStep: 1 },
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
         {
           panelType: InputType.OpenDialog,
           currentStep: 2,
@@ -148,8 +160,130 @@ export function activate(context: vscode.ExtensionContext) {
         },
       ],
       context,
+      resourcePath
+    );
+
+    let disposable8 = registerLiquibaseCommand(
+      "Liquibase.unexpected-changesets",
+      "unexpected-changesets",
+      [
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
+      ],
+      context,
       resourcePath,
-      []
+      ["--verbose"]
+    );
+
+    let disposable9 = registerLiquibaseCommand(
+      "Liquibase.changelog-sync",
+      "changelog-sync",
+      [
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
+      ],
+      context,
+      resourcePath
+    );
+
+    let disposable10 = registerLiquibaseCommand(
+      "Liquibase.clear-checksums",
+      "clear-checksums",
+      [
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
+      ],
+      context,
+      resourcePath
+    );
+
+    let disposable11 = registerLiquibaseCommand(
+      "Liquibase.history",
+      "history",
+      [
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
+      ],
+      context,
+      resourcePath
+    );
+
+    let disposable12 = registerLiquibaseCommand(
+      "Liquibase.tag",
+      "tag",
+      [
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
+        {
+          panelType: InputType.InputBox,
+          items: {
+            title: "Tag",
+          },
+          currentStep: 2,
+          cmdArgs: "--tag",
+        },
+      ],
+      context,
+      resourcePath
+    );
+
+    let disposable13 = registerLiquibaseCommand(
+      "Liquibase.tag-exists",
+      "tag-exists",
+      [
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
+        {
+          panelType: InputType.InputBox,
+          items: {
+            title: "Tag to check if it exists",
+          },
+          currentStep: 2,
+          cmdArgs: "--tag",
+        },
+      ],
+      context,
+      resourcePath
+    );
+
+    let disposable14 = registerLiquibaseCommand(
+      "Liquibase.rollback",
+      "rollback",
+      [
+        {
+          panelType: InputType.QuickPick,
+          items: systems,
+          currentStep: 1,
+        },
+        {
+          panelType: InputType.InputBox,
+          items: {
+            title: "Tag to rollback to",
+          },
+          currentStep: 2,
+          cmdArgs: "--tag",
+        },
+      ],
+      context,
+      resourcePath
     );
 
     // Add the disposables to subscriptions for cleanup on extension deactivation
@@ -160,87 +294,16 @@ export function activate(context: vscode.ExtensionContext) {
       disposable4,
       disposable5,
       disposable6,
-      disposable7
+      disposable7,
+      disposable8,
+      disposable9,
+      disposable10,
+      disposable11,
+      disposable12,
+      disposable13,
+      disposable14
     );
   });
-}
-
-function registerLiquibaseCommand(
-  commandId: string,
-  action: string,
-  pickPanelConfigs: PickPanelConfig[],
-  context: vscode.ExtensionContext,
-  resourcePath: string,
-  args?: string[]
-) {
-  return vscode.commands.registerCommand(commandId, async () => {
-    try {
-      // Use for...of to iterate over async functions sequentially
-      for (const config of pickPanelConfigs) {
-        let result = await getInputByType(config, pickPanelConfigs.length);
-
-        if (!result) {
-          // User canceled the selection
-          vscode.window.showInformationMessage("Command was cancelled");
-          return;
-        }
-
-        // Handle the selected result as needed
-        console.log(result);
-        if (config.cmdArgs) {
-          args?.push(config.cmdArgs + "=" + result);
-        }
-      }
-
-      // Execute Liquibase update with the final selections
-      executeJar(resourcePath, action, args)
-        .then(() =>
-          vscode.window.showInformationMessage(
-            `Liquibase ${action} was successful`
-          )
-        )
-        .catch((error) => console.error("Error:", error.message));
-    } catch (error) {
-      console.error("Error:");
-      // Handle errors as needed
-    }
-  });
-}
-
-async function getInputByType(config: PickPanelConfig, maximumSteps: number) {
-  switch (config.panelType) {
-    case InputType.QuickPick:
-      return await showQuickPickItemPanel(
-        config.items,
-        config.currentStep,
-        maximumSteps,
-        config.allowMultiple
-      );
-    case InputType.OpenDialog:
-      config.items.openLabel = `Select Directory - (Step ${config.currentStep} of ${maximumSteps})`;
-      return await vscode.window.showOpenDialog(config.items).then((uri) => {
-        if (uri && uri[0]) {
-          return uri[0].fsPath;
-        }
-      });
-    case InputType.InputBox:
-      config.items.placeHolder = `Choose a name - (Step ${config.currentStep} of ${maximumSteps})`;
-      return await vscode.window.showInputBox(config.items).then((name) => {
-        return name;
-      });
-    case InputType.SaveDialog:
-      //
-      break;
-    case InputType.TextDocument:
-      //
-      break;
-    case InputType.WorkspaceFolderPick:
-      //
-      break;
-    default:
-      console.log("you fucked up");
-      return;
-  }
 }
 
 /**

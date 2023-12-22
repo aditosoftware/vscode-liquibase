@@ -13,20 +13,20 @@ class CustomError extends Error {
  * @param args - Additional arguments for the Liquibase command.
  * @returns A Promise that resolves when the process completes successfully or rejects on error.
  */
-export function executeJar(rootPath: string, operation: string, args: string[] = []): Promise<void> {
+export function executeJar(rootPath: string, operation: string, args: string[] = [], propertyPath: string): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const javaHome = process.env['JAVA_HOME'];
 
     if (!javaHome) {
       const error = new CustomError('JAVA_HOME environment variable is not set.');
-      reject(error);
+      reject(error); //TODO: let the user set a JRE to execute the extension?
       return;
     }
 
     const javaExecutable = path.join(javaHome, 'bin', 'java');
     const liquibasePath = path.join(rootPath, "liquibase-core-4.24.0.jar"); //TODO: Find version that isn't fucked
     const picocliPath = path.join(rootPath, "picocli-4.7.5.jar");
-    const propertyFile = path.join(rootPath, ".liquibase", "liquibase.properties"); //TODO: get selected System
+    const propertyFile = propertyPath; //TODO: get selected System //path.join(rootPath, ".liquibase", "liquibase.properties");
 
     const cp = `${liquibasePath};${picocliPath}`;
     const argsArray = [
@@ -42,7 +42,8 @@ export function executeJar(rootPath: string, operation: string, args: string[] =
 
     let stdoutData = "";
     let stderrData = "";
-
+    
+    //TODO: bring stream of output to the users vscode output
     childProcess.stdout.on('data', (data) => {
       stdoutData += data;
       console.log(`${data}`);
@@ -50,7 +51,7 @@ export function executeJar(rootPath: string, operation: string, args: string[] =
 
     childProcess.stderr.on('data', (data) => {
       stderrData += data;
-      console.log(`${data}`); //ToDo: fix this to console.error
+      console.log(`${data}`); //TODO: fix this to console.error -> maybe never
     });
 
     childProcess.on('close', (code) => {

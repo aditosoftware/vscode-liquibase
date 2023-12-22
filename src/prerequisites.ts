@@ -6,17 +6,17 @@ import download from "download";
 /**
  * Check and perform one-time setup tasks if it's the first activation of the extension.
  * @param context - The context object provided by VSCode to the extension.
- * @param resoucePath - The path to the resources folder within the extension.
+ * @param resourcePath - The path to the resources folder within the extension.
  */
 export async function prerequisites(
   context: vscode.ExtensionContext,
-  resoucePath: string
+  resourcePath: string
 ) {
   // Check if it's the first activation
   if (!context.globalState.get("liquibase-first-activation")) {
     // Perform one-time setup tasks (e.g., download files)
     console.log("Liquibase was executed for the first time");
-    downloadLiquibaseFiles(resoucePath);
+    downloadLiquibaseFiles(resourcePath);
 
     // Mark first activation as completed
     context.globalState.update("liquibase-first-activation", true);
@@ -24,7 +24,7 @@ export async function prerequisites(
 
   // Check beforehand if action is ready to be used
   // Check if JAVA_HOME is set
-  const javaHome = process.env["JAVA_HOME"]; // maybe let the user set the executable path
+  const javaHome = process.env["JAVA_HOME"]; //TODO: maybe let the user set the executable path
   if (!javaHome) {
     vscode.window.showErrorMessage(
       "JAVA_HOME environment variable is not set. Please set JAVA_HOME accordingly and restart VSCode."
@@ -36,12 +36,12 @@ export async function prerequisites(
   const requiredFiles = ["liquibase-core-4.24.0.jar", "picocli-4.7.5.jar"];
 
   for (const file of requiredFiles) {
-    const filePath = path.join(resoucePath, file);
+    const filePath = path.join(resourcePath, file);
     if (!fs.existsSync(filePath)) {
       vscode.window.showErrorMessage(
         `Required file ${filePath} is missing. Trying to download the missing files. Try again`
       );
-      downloadLiquibaseFiles(resoucePath);
+      downloadLiquibaseFiles(resourcePath); 
       return;
     }
   }

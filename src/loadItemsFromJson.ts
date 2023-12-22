@@ -7,6 +7,7 @@ import * as fs from "fs";
 export interface DropdownItem {
   label: string;
   description: string;
+  path: string;
 }
 
 /**
@@ -25,7 +26,7 @@ export function loadItemsFromJson(jsonFilePath: string): vscode.QuickPickItem[] 
     // Convert the JSON object into an array of QuickPickItem objects
     return Object.keys(jsonContent).map((key) => {
       const item = jsonContent[key] as DropdownItem;
-      return { label: item.label, description: item.description };
+      return { label: item.label, description: item.description, path: item.path };
     });
   } catch (error) {
     // Handle errors, log them, and return an empty array

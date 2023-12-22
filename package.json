@@ -15,37 +15,72 @@
     "commands": [
       {
         "command": "Liquibase.update",
-        "title": "Liquibase Update",
+        "title": "Update",
         "category": "Liquibase"
       },
       {
         "command": "Liquibase.drop-all",
-        "title": "Liquibase Drop-all",
+        "title": "Drop-all",
         "category": "Liquibase"
       },
       {
         "command": "Liquibase.validate",
-        "title": "Liquibase Validate",
+        "title": "Validate",
         "category": "Liquibase"
       },
       {
         "command": "Liquibase.status",
-        "title": "Liquibase Status",
+        "title": "Status",
         "category": "Liquibase"
       },
       {
         "command": "Liquibase.diff",
-        "title": "Liquibase Diff",
+        "title": "Diff",
         "category": "Liquibase"
       },
       {
         "command": "Liquibase.db-doc",
-        "title": "Liquibase db-doc",
+        "title": "db-doc",
         "category": "Liquibase"
       },
       {
         "command": "Liquibase.generate-changelog",
-        "title": "Liquibase Generate Changelog",
+        "title": "Generate Changelog",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.unexpected-changesets",
+        "title": "Unexpected Changesets",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.changelog-sync",
+        "title": "Changelog Sync",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.clear-checksums",
+        "title": "Clear Checksums",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.history",
+        "title": "History",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.tag",
+        "title": "Tag",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.tag-exists",
+        "title": "Tag Exists",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.rollback",
+        "title": "Rollback",
         "category": "Liquibase"
       }
     ],
@@ -63,7 +98,7 @@
           "group": "Liquibase"
         }
       ],
-      "liquibase.submenu":[
+      "liquibase.submenu": [
         {
           "command": "Liquibase.update"
         },
@@ -89,15 +124,18 @@
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
+    "@types/js-yaml": "^4.0.9",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.84.0",
+    "@types/xml2js": "^0.4.14",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
     "download": "^8.0.0",
     "eslint": "^8.54.0",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.2",
+    "xml2js": "0.6.2"
   }
 }
