@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { StepResults } from "./multiStepInput";
 import { PropertiesEditor } from "properties-file/editor";
 import * as fs from "fs";
+import path from "path";
 
 /**
  * How the liquibase path will be queried in the inputs.
@@ -19,14 +20,16 @@ const configurationName: string = "liquibase";
 const liquibaseConfigurationName: string = "liquibaseConfigurationFiles";
 
 /**
+ * The file ending of all liquibase configuration files.
+ */
+const fileEnding: string = ".properties";
+
+/**
  * Reads the database configuration and return all names.
  */
 export function readLiquibaseConfigurationNames(): string[] {
   let configuration = vscode.workspace.getConfiguration(configurationName);
-  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(
-    liquibaseConfigurationName,
-    {}
-  );
+  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
 
   return Object.keys(liquibaseConfiguration);
 }
@@ -38,29 +41,31 @@ export function readLiquibaseConfigurationNames(): string[] {
  */
 export function addToLiquibaseConfiguration(pName: string, pPath: string) {
   let configuration = vscode.workspace.getConfiguration(configurationName);
-  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(
-    liquibaseConfigurationName,
-    {}
-  );
+  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
 
   liquibaseConfiguration[pName] = pPath;
 
   configuration.update(liquibaseConfigurationName, liquibaseConfiguration);
 
-  vscode.window.showInformationMessage(
-    `Configuration for ${pName} was successfully added to the settings.`
-  );
+  vscode.window.showInformationMessage(`Configuration for ${pName} was successfully added to the settings.`);
 }
 
 /**
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
  * @param pConfiguration the results of the multi step dialog
+ * @param pFolder the folder where the configuration should be created
  */
-export function createLiquibaseProperties(pConfiguration: StepResults) {
+export function createLiquibaseProperties(pConfiguration: StepResults, pFolder: string) {
   // TODO check if file exists
   // TODO check if directory, then create file
 
-  const filePath: string = pConfiguration[liquibasePath];
+  // build file name and path
+  let fileName: string = pConfiguration[liquibasePath];
+  if (!fileName.endsWith(fileEnding)) {
+    fileName = fileName + fileEnding;
+  }
+  const filePath: string = path.join(pFolder, fileName);
+
   const name: string = pConfiguration["name"];
 
   let properties = new PropertiesEditor("");
@@ -83,19 +88,14 @@ export function createLiquibaseProperties(pConfiguration: StepResults) {
  */
 export function testLiquibaseConnection(pName: string) {
   let configuration = vscode.workspace.getConfiguration(configurationName);
-  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(
-    liquibaseConfigurationName,
-    {}
-  );
+  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
 
   const path: string = liquibaseConfiguration[pName];
   if (path) {
     // TODO Read properties for path
     // TODO create dummy changelog and call validate / status of liquibase, then handle the results
 
-    vscode.window.showInformationMessage(
-      `Testing connection for ${pName} and ${path} in the future`
-    );
+    vscode.window.showInformationMessage(`Testing connection for ${pName} and ${path} in the future`);
   }
 }
 
