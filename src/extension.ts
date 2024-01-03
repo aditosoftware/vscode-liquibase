@@ -8,8 +8,16 @@ import {
 } from "./liquibaseConfiguration";
 import { StepOption, StepResults, multiStepInput } from "./multiStepInput";
 import path from "path";
+import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 
 export function activate(context: vscode.ExtensionContext) {
+  // FIXME Position
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.createLiquibaseConfigurationGraphically", () => {
+      LiquibaseConfigurationPanel.render(context.extensionUri);
+    })
+  );
+
   registerCommandsForLiquibasePropertiesHandling(context);
 }
 
