@@ -2,6 +2,7 @@ import { vscode } from "./utilities/vscode";
 import { VSCodeButton, VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
 import "./App.css";
 import { ChangeEvent, useState } from "react";
+import { StorageLocation } from "./components/StorageLocation";
 
 function App() {
   function handleButtonClick() {
@@ -21,12 +22,22 @@ function App() {
   return (
     <main>
       <h1>Liquibase Configuration</h1>
-      <section className="component-container">
+
+      <StorageLocation></StorageLocation>
+      <hr></hr>
+      {/* <section className="component-container">
         <h2>General configuration</h2>
-        <VSCodeTextField maxlength={50} value={textFieldValue} onChange={handleTextFieldChange as any}>
+        <VSCodeTextField
+          maxlength={50}
+          value={textFieldValue}
+          onInput={
+            // @ts-ignore
+            (e) => setTextFieldValue(e.target.value)
+          }
+        >
           Name
         </VSCodeTextField>
-      </section>
+      </section> */}
       <VSCodeButton onClick={handleButtonClick}>Howdy!</VSCodeButton>
     </main>
   );

@@ -59,7 +59,7 @@ export class LiquibaseConfigurationPanel {
         // Extra panel configurations
         {
           // Enable JavaScript in the webview
-          enableScripts: true,
+          enableScripts: false, // TODO ok?
           // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
           localResourceRoots: [Uri.joinPath(extensionUri, "out"), Uri.joinPath(extensionUri, "webview-ui/build")],
         }
@@ -143,6 +143,10 @@ export class LiquibaseConfigurationPanel {
           case "hello":
             // Code that should run in response to the hello message command
             window.showInformationMessage(text + " " + data);
+            webview.postMessage({ command: "world", text: "yolo" });
+            return;
+          case "world":
+            window.showInformationMessage("yay");
             return;
           // Add more switch case statements here as more webview message commands
           // are created within the webview context (i.e. inside media/main.js)
