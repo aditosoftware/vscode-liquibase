@@ -1,11 +1,5 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
-import {
-  VSCodeRadioGroup,
-  VSCodeDivider,
-  VSCodeTextField,
-  VSCodeRadio,
-  VSCodeButton,
-} from "@vscode/webview-ui-toolkit/react";
+import { VSCodeRadioGroup, VSCodeDivider, VSCodeTextField, VSCodeRadio } from "@vscode/webview-ui-toolkit/react";
 import { ALL_DRIVERS, NO_PRE_CONFIGURED_DRIVER } from "../../../src/drivers";
 import { DatabaseConnection } from "../../../src/transferData";
 import { useState } from "react";
@@ -51,9 +45,10 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
           <VSCodeRadioGroup
             orientation="vertical"
             value={selectedDatabaseType}
-            onChange={(e: any) => {
-              setSelectedDatabaseType(e.target.value);
-            }}>
+            onChange={
+              // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
+              (e) => setSelectedDatabaseType(e.target.value)
+            }>
             <label>Database type for the configuration</label>
             {createDatabaseSelections()}
           </VSCodeRadioGroup>
@@ -130,8 +125,8 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
   function handleTextFieldChange(
     pProperties: DatabaseConfigurationProps,
     pFieldName: keyof DatabaseConnection
-  ): (e: any) => void {
-    return (e: any): void => {
+  ): (e: React.FocusEvent<HTMLInputElement>) => void {
+    return (e: React.FocusEvent<HTMLInputElement>): void => {
       pProperties.onUpdate(pFieldName, e.target.value);
     };
   }

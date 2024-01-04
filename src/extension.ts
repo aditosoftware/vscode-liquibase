@@ -1,13 +1,10 @@
 import * as vscode from "vscode";
 import {
   addToLiquibaseConfiguration,
-  createLiquibaseProperties,
-  liquibasePath,
   readLiquibaseConfigurationNames,
   testLiquibaseConnection,
 } from "./liquibaseConfiguration";
 import { StepOption, StepResults, multiStepInput } from "./multiStepInput";
-import path from "path";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 
 export function activate(context: vscode.ExtensionContext) {

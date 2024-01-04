@@ -1,19 +1,11 @@
 import { vscode } from "./utilities/vscode";
-import {
-  VSCodeButton,
-  VSCodeDivider,
-  VSCodeLink,
-  VSCodeRadio,
-  VSCodeRadioGroup,
-  VSCodeTextField,
-} from "@vscode/webview-ui-toolkit/react";
+import { VSCodeButton, VSCodeDivider, VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
 import "./App.css";
 import "./codicon.css";
 import { useState } from "react";
-import { TextFieldType } from "@vscode/webview-ui-toolkit";
 import { LiquibaseConfigurationData, DatabaseConnection } from "../../src/transferData";
-import { ALL_DRIVERS, NO_PRE_CONFIGURED_DRIVER } from "../../src/drivers";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
+import React from "react";
 
 function App() {
   // let data: Data = new Data();
@@ -69,7 +61,7 @@ function App() {
           <VSCodeTextField
             size={75}
             required
-            onBlur={(event: any) => {
+            onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
               data.name = event.target.value;
             }}>
             The name under which the configuration should be stored
@@ -88,7 +80,7 @@ function App() {
           <VSCodeButton
             formnovalidate={true}
             disabled={referenceConnection}
-            onClick={(e) => handleAddRemoveReferenceConnection(true)}
+            onClick={() => handleAddRemoveReferenceConnection(true)}
             appearance="secondary">
             Add reference connection
             <span slot="start" className="codicon codicon-add"></span>
@@ -96,7 +88,7 @@ function App() {
           <VSCodeButton
             formnovalidate={true}
             disabled={!referenceConnection}
-            onClick={(e) => handleAddRemoveReferenceConnection(false)}
+            onClick={() => handleAddRemoveReferenceConnection(false)}
             appearance="secondary">
             <span slot="start" className="codicon codicon-remove"></span>
             Remove reference connection

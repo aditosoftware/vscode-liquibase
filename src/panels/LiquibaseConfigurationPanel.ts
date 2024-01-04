@@ -145,7 +145,7 @@ export class LiquibaseConfigurationPanel {
    */
   private _setWebviewMessageListener(webview: Webview) {
     webview.onDidReceiveMessage(
-      (message: any) => {
+      (message: unknown) => {
         const messageData: MessageData = message as MessageData;
 
         const command: string = messageData.command;

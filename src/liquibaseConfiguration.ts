@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { StepResults } from "./multiStepInput";
 import { PropertiesEditor } from "properties-file/editor";
 import * as fs from "fs";
 import path from "path";
@@ -30,8 +29,8 @@ const fileEnding: string = ".liquibase.properties";
  * Reads the database configuration and return all names.
  */
 export function readLiquibaseConfigurationNames(): string[] {
-  let configuration = vscode.workspace.getConfiguration(configurationName);
-  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
+  const configuration = vscode.workspace.getConfiguration(configurationName);
+  const liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
 
   return Object.keys(liquibaseConfiguration);
 }
@@ -42,8 +41,8 @@ export function readLiquibaseConfigurationNames(): string[] {
  * @param pPath the path to the configuration file
  */
 export function addToLiquibaseConfiguration(pName: string, pPath: string) {
-  let configuration = vscode.workspace.getConfiguration(configurationName);
-  let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
+  const configuration = vscode.workspace.getConfiguration(configurationName);
+  const liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
 
   liquibaseConfiguration[pName] = pPath;
 
@@ -99,7 +98,7 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
   }
 
   // Build the properties
-  let properties: PropertiesEditor = new PropertiesEditor("");
+  const properties: PropertiesEditor = new PropertiesEditor("");
   // TODO FIXME
   Object.entries(pMessageData.databaseConnection).forEach(([key, value]) => {
     if (key && value) {
@@ -136,8 +135,8 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
  */
 export function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
   if (typeof pConfiguration === "string") {
-    let configuration = vscode.workspace.getConfiguration(configurationName);
-    let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
+    const configuration = vscode.workspace.getConfiguration(configurationName);
+    const liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
 
     const path: string = liquibaseConfiguration[pConfiguration];
     if (path) {

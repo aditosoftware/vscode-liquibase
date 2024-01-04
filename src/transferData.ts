@@ -68,6 +68,6 @@ export class DatabaseConnection {
    * @param pValue the value that should be set
    */
   public setValue(pName: keyof DatabaseConnection, pValue: string): void {
-    this[pName] = pValue as any;
+    Object.defineProperty(this, pName, { value: pValue });
   }
 }
