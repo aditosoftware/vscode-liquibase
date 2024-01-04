@@ -6,6 +6,7 @@ import { useState } from "react";
 import { LiquibaseConfigurationData, DatabaseConnection } from "../../src/transferData";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import React from "react";
+import { AdditionalElements } from "./components/AdditionalElements";
 
 function App() {
   // let data: Data = new Data();
@@ -78,6 +79,7 @@ function App() {
 
         <section>
           <VSCodeButton
+            className="normalButton"
             formnovalidate={true}
             disabled={referenceConnection}
             onClick={() => handleAddRemoveReferenceConnection(true)}
@@ -86,6 +88,7 @@ function App() {
             <span slot="start" className="codicon codicon-add"></span>
           </VSCodeButton>
           <VSCodeButton
+            className="normalButton"
             formnovalidate={true}
             disabled={!referenceConnection}
             onClick={() => handleAddRemoveReferenceConnection(false)}
@@ -108,13 +111,23 @@ function App() {
         )}
 
         <VSCodeDivider />
+        <AdditionalElements
+          onValueChange={(pValues) => {
+            data.additionalConfiguration = new Map<string, string>(pValues);
+          }}
+        />
+        <VSCodeDivider />
 
-        <VSCodeButton onClick={handleSaveConfiguration} appearance="primary">
+        <VSCodeButton onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
           Save configuration
           <span slot="start" className="codicon codicon-save"></span>
         </VSCodeButton>
 
-        <VSCodeButton onClick={handleTestConfiguration} appearance="secondary" formnovalidate={true}>
+        <VSCodeButton
+          onClick={handleTestConfiguration}
+          appearance="secondary"
+          formnovalidate={true}
+          className="normalButton">
           Test configuration
           <span slot="start" className="codicon codicon-beaker"></span>
         </VSCodeButton>
