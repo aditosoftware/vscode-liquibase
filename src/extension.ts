@@ -11,17 +11,11 @@ import path from "path";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 
 export function activate(context: vscode.ExtensionContext) {
-  // FIXME Position
-  context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.createLiquibaseConfigurationGraphically", () => {
-      LiquibaseConfigurationPanel.render(context.extensionUri);
-    })
-  );
-
   registerCommandsForLiquibasePropertiesHandling(context);
 }
 
 // FIXME Next Steps
+// * edit existing -> file selection !
 // * Download the needed driver files
 // * Graphic dialog for creating the properties
 // * error handling
@@ -34,71 +28,8 @@ export function activate(context: vscode.ExtensionContext) {
  */
 function registerCommandsForLiquibasePropertiesHandling(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.createLiquibaseConfiguration", async () => {
-      const options: StepOption[] = [
-        {
-          key: "name",
-          inputBoxOption: {
-            prompt: "The unique name for this configuration",
-          },
-        },
-        {
-          key: "url",
-          inputBoxOption: {
-            prompt: "The JDBC url of the database",
-          },
-        },
-        {
-          key: "username",
-          inputBoxOption: {
-            prompt: "The user of the database url",
-          },
-        },
-        {
-          key: "password",
-          inputBoxOption: {
-            prompt: "The password of the database url",
-            password: true,
-          },
-        },
-        {
-          key: "driver",
-          inputBoxOption: {
-            prompt: "The driver class of database",
-          },
-        },
-        {
-          key: "classpath",
-          inputBoxOption: {
-            prompt: "The path to the driver",
-          },
-        },
-        {
-          key: liquibasePath,
-          inputBoxOption: {
-            prompt: "The name under which the properties file should be saved",
-          },
-        },
-      ];
-      multiStepInput("Create a new liquibase.properties file", options).then(
-        async (results: StepResults | undefined) => {
-          if (results) {
-            const result: vscode.Uri[] | undefined = await vscode.window.showOpenDialog({
-              canSelectFiles: false,
-              canSelectFolders: true,
-              canSelectMany: false,
-            });
-
-            if (result && result.length > 0) {
-              // Map the Uri objects to their file paths
-              const folderPaths = result.map((uri) => uri.fsPath);
-              const concatenatedPath = path.join(...folderPaths);
-
-              createLiquibaseProperties(results, concatenatedPath);
-            }
-          }
-        }
-      );
+    vscode.commands.registerCommand("liquibase.createLiquibaseConfiguration", () => {
+      LiquibaseConfigurationPanel.render(context.extensionUri);
     })
   );
 

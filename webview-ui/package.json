@@ -1,5 +1,5 @@
 {
-  "name": "hello-world",
+  "name": "liquibase-webview",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -8,16 +8,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vscode/webview-ui-toolkit": "^1.2.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "@vscode/webview-ui-toolkit": "^1.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@types/react": "^17.0.33",
-    "@types/react-dom": "^17.0.10",
-    "@types/vscode-webview": "^1.57.0",
-    "@vitejs/plugin-react": "^1.0.7",
-    "typescript": "^5.3.2",
-    "vite": "^2.9.13"
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@types/vscode-webview": "^1.57.4",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10"
   }
 }

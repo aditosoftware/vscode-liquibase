@@ -1,6 +1,8 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
+import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
+import { InputValues } from "../interfaces";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -59,7 +61,7 @@ export class LiquibaseConfigurationPanel {
         // Extra panel configurations
         {
           // Enable JavaScript in the webview
-          enableScripts: false, // TODO ok?
+          enableScripts: true,
           // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
           localResourceRoots: [Uri.joinPath(extensionUri, "out"), Uri.joinPath(extensionUri, "webview-ui/build")],
         }
@@ -136,20 +138,19 @@ export class LiquibaseConfigurationPanel {
     webview.onDidReceiveMessage(
       (message: any) => {
         const command = message.command;
-        const text = message.text;
-        const data = message.data;
+        const data = message.data as InputValues;
 
         switch (command) {
-          case "hello":
-            // Code that should run in response to the hello message command
-            window.showInformationMessage(text + " " + data);
-            webview.postMessage({ command: "world", text: "yolo" });
-            return;
-          case "world":
-            window.showInformationMessage("yay");
-            return;
-          // Add more switch case statements here as more webview message commands
-          // are created within the webview context (i.e. inside media/main.js)
+          case "saveConfiguration":
+            createLiquibaseProperties(data);
+            break;
+          case "testConfiguration":
+            testLiquibaseConnection(data);
+            break;
+          default:
+            // TODO better handling
+            window.showErrorMessage(`Command ${command} not found. Message was ${message}`);
+            break;
         }
       },
       undefined,
