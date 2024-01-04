@@ -3,7 +3,7 @@ import { StepResults } from "./multiStepInput";
 import { PropertiesEditor } from "properties-file/editor";
 import * as fs from "fs";
 import path from "path";
-import { InputValues, MessageData } from "./interfaces";
+import { LiquibaseConfigurationData } from "./transferData";
 import { NO_PRE_CONFIGURED_DRIVER } from "./drivers";
 
 /**
@@ -56,7 +56,7 @@ export function addToLiquibaseConfiguration(pName: string, pPath: string) {
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
  * @param pMessageData the inputted values from the user
  */
-export async function createLiquibaseProperties(pMessageData: MessageData) {
+export async function createLiquibaseProperties(pMessageData: LiquibaseConfigurationData) {
   // TODO check if file exists
   // TODO check if directory, then create file
 
@@ -84,14 +84,14 @@ export async function createLiquibaseProperties(pMessageData: MessageData) {
   const absolutePath: string = path.join(...selectedFolder.map((uri) => uri.fsPath));
 
   // build file name and path
-  const name: string = pMessageData.inputValues.name;
+  const name: string = pMessageData.name;
   let fileName: string = name;
   if (!fileName.endsWith(fileEnding)) {
     fileName = fileName + fileEnding;
   }
 
   // FIXME Driver
-  const databaseType: string = pMessageData.databaseType;
+  const databaseType: string = pMessageData.databaseConnection.databaseType;
 
   if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
     // TODO download
@@ -100,11 +100,27 @@ export async function createLiquibaseProperties(pMessageData: MessageData) {
 
   // Build the properties
   let properties: PropertiesEditor = new PropertiesEditor("");
-  Object.entries(pMessageData.inputValues).forEach(([key, value]) => {
-    if (key && value && key !== "name" && typeof value === "string") {
+  // TODO FIXME
+  Object.entries(pMessageData.databaseConnection).forEach(([key, value]) => {
+    if (key && value) {
       properties.insert(key, value);
     }
   });
+
+  if (pMessageData.referenceDatabaseConnection) {
+    Object.entries(pMessageData.referenceDatabaseConnection).forEach(([key, value]) => {
+      if (key && value) {
+        const referenceKey = "reference" + key.charAt(0).toUpperCase() + key.substring(1);
+        properties.insert(referenceKey, value);
+      }
+    });
+  }
+
+  if (pMessageData.additionalConfiguration) {
+    pMessageData.additionalConfiguration.forEach((pValue, pKey) => {
+      properties.insert(pKey, pValue);
+    });
+  }
 
   // TODO  error handling?
   // save file with absolute path
@@ -118,7 +134,7 @@ export async function createLiquibaseProperties(pMessageData: MessageData) {
  * Tests a existing liquibase configuration.
  * @param pConfiguration the name of the configuration or the whole configuration that should be tested
  */
-export function testLiquibaseConnection(pConfiguration: string | MessageData) {
+export function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
   if (typeof pConfiguration === "string") {
     let configuration = vscode.workspace.getConfiguration(configurationName);
     let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});

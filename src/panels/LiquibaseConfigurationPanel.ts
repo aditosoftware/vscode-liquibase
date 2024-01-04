@@ -2,7 +2,7 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
-import { InputValues, MessageData } from "../interfaces";
+import { LiquibaseConfigurationData, MessageData } from "../transferData";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -103,6 +103,8 @@ export class LiquibaseConfigurationPanel {
   private _getWebviewContent(webview: Webview, extensionUri: Uri) {
     // The CSS file from the React build output
     const stylesUri = getUri(webview, extensionUri, ["webview-ui", "build", "assets", "index.css"]);
+    // Codicon font file from the React build output
+    const codiconFontUri = getUri(webview, extensionUri, ["webview-ui", "build", "assets", "codicon.ttf"]);
     // The JS file from the React build output
     const scriptUri = getUri(webview, extensionUri, ["webview-ui", "build", "assets", "index.js"]);
 
@@ -115,9 +117,16 @@ export class LiquibaseConfigurationPanel {
         <head>
           <meta charset="UTF-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource} 'nonce-${nonce}'; font-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
           <link rel="stylesheet" type="text/css" href="${stylesUri}">
           <title>Liquibase Configuration</title>
+          <style nonce="${nonce}">
+            @font-face {
+              font-family: "codicon";
+              font-display: block;
+              src: url("${codiconFontUri}") format("truetype");
+            }
+          </style>
         </head>
         <body>
           <div id="root"></div>
@@ -140,12 +149,14 @@ export class LiquibaseConfigurationPanel {
         const messageData: MessageData = message as MessageData;
 
         const command: string = messageData.command;
+        const data: LiquibaseConfigurationData = messageData.data;
+
         switch (command) {
           case "saveConfiguration":
-            createLiquibaseProperties(messageData);
+            createLiquibaseProperties(data);
             break;
           case "testConfiguration":
-            testLiquibaseConnection(messageData);
+            testLiquibaseConnection(data);
             break;
           default:
             // TODO better handling

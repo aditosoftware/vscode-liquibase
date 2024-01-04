@@ -8,28 +8,27 @@ import {
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import "./App.css";
+import "./codicon.css";
 import { useState } from "react";
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
-import { InputValues, MessageData } from "../../src/interfaces";
+import { LiquibaseConfigurationData, DatabaseConnection } from "../../src/transferData";
 import { ALL_DRIVERS, NO_PRE_CONFIGURED_DRIVER } from "../../src/drivers";
+import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 
 function App() {
+  // let data: Data = new Data();
+
+  const [data] = useState<LiquibaseConfigurationData>(new LiquibaseConfigurationData());
+
   /**
    * Handles the saving of the configuration.
    * Saving is only allowed when a name is present.
    */
   function handleSaveConfiguration(): void {
-    if (inputValues.name) {
-      vscode.postMessage(createMessageData("saveConfiguration"));
+    console.log(data);
+    if (data.name) {
+      vscode.postMessage({ command: "saveConfiguration", data });
     }
-  }
-
-  function createMessageData(pCommand: string): MessageData {
-    return {
-      command: pCommand,
-      inputValues,
-      databaseType: selectedDatabaseType,
-    };
   }
 
   /**
@@ -37,35 +36,20 @@ function App() {
    */
   function handleTestConfiguration(): void {
     // TODO async ?
-    vscode.postMessage(createMessageData("testConfiguration"));
+    vscode.postMessage({ command: "testConfiguration", data });
   }
 
-  // Initializes all input values with empty elements.
-  const [inputValues, setInputValues] = useState<InputValues>({
-    name: "",
-    username: "",
-    password: "",
-    url: "",
-    driver: "",
-    classpath: "",
-  });
+  const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
 
   /**
-   * Handles the change event for a text field.
-   *
-   * @param {keyof InputValues} pFieldName  The name of the field to update.
-   * @returns {(e: React.ChangeEvent<HTMLInputElement>) => void} A function to handle the input change event.
+   * Creates and removes a dummy connection for the reference connection. This will also trigger the appearing or disappearing of the reference connection element.
+   * @param added indicator weather the reference connection was added (`true`) or removed (`false`)
    */
-  function handleTextFieldChange(pFieldName: keyof InputValues): (e: any) => void {
-    return (e: any): void => {
-      setInputValues((prevValues) => ({
-        ...prevValues,
-        [pFieldName]: e.target.value,
-      }));
-    };
-  }
+  function handleAddRemoveReferenceConnection(added: boolean): void {
+    data.referenceDatabaseConnection = added ? new DatabaseConnection() : undefined;
 
-  const [selectedDatabaseType, setSelectedDatabaseType] = useState<string>(NO_PRE_CONFIGURED_DRIVER);
+    setReferenceConnection(added);
+  }
 
   return (
     <main>
@@ -82,101 +66,69 @@ function App() {
       <form>
         <fieldset>
           <legend>General information</legend>
-          {createInput("text", "name", "The name under which the configuration should be stored", true)}
-          <label>
-            For instance the name <code>dev</code> will result in a <code>dev.liquibase.properties</code> file.
-          </label>
-        </fieldset>
-
-        <fieldset>
-          <legend>Connection configuration</legend>
-          {createInput("text", "username", "Username of the database")}
-          {createInput("password", "password", "Password of the database")}
-          {createInput("text", "url", "The JDBC url of the database")}
-        </fieldset>
-
-        <fieldset>
-          <legend>Database type</legend>
-          <VSCodeRadioGroup
-            orientation="vertical"
-            value={selectedDatabaseType}
-            onChange={(e: any) => {
-              setSelectedDatabaseType(e.target.value);
+          <VSCodeTextField
+            size={75}
+            required
+            onBlur={(event: any) => {
+              data.name = event.target.value;
             }}>
-            <label>Database type for the configuration</label>
-            {createDatabaseSelections()}
-          </VSCodeRadioGroup>
-
-          {selectedDatabaseType === NO_PRE_CONFIGURED_DRIVER && (
-            <>
-              <VSCodeDivider />
-              {createInput("text", "driver", "The driver class of database")}
-              {createInput("text", "classpath", "The path to the driver")}
-            </>
-          )}
+            The name under which the configuration should be stored
+          </VSCodeTextField>
+          <p>
+            For instance the name <code>dev</code> will result in a <code>dev.liquibase.properties</code> file.
+          </p>
         </fieldset>
+
+        <DatabaseConfiguration
+          title="Database configuration"
+          onUpdate={(pComponent, pInputValue) => data.databaseConnection.setValue(pComponent, pInputValue)}
+        />
+
+        <section>
+          <VSCodeButton
+            formnovalidate={true}
+            disabled={referenceConnection}
+            onClick={(e) => handleAddRemoveReferenceConnection(true)}
+            appearance="secondary">
+            Add reference connection
+            <span slot="start" className="codicon codicon-add"></span>
+          </VSCodeButton>
+          <VSCodeButton
+            formnovalidate={true}
+            disabled={!referenceConnection}
+            onClick={(e) => handleAddRemoveReferenceConnection(false)}
+            appearance="secondary">
+            <span slot="start" className="codicon codicon-remove"></span>
+            Remove reference connection
+          </VSCodeButton>
+        </section>
+
+        {/* Show reference connection only when the button for creating such was selected */}
+        {referenceConnection && (
+          <DatabaseConfiguration
+            title="Reference Database configuration"
+            onUpdate={(pComponent, pInputValue) => {
+              if (data.referenceDatabaseConnection) {
+                data.referenceDatabaseConnection.setValue(pComponent, pInputValue);
+              }
+            }}
+          />
+        )}
+
+        <VSCodeDivider />
 
         <VSCodeButton onClick={handleSaveConfiguration} appearance="primary">
           Save configuration
+          <span slot="start" className="codicon codicon-save"></span>
         </VSCodeButton>
 
-        <VSCodeButton onClick={handleTestConfiguration} appearance="secondary">
+        <VSCodeButton onClick={handleTestConfiguration} appearance="secondary" formnovalidate={true}>
           Test configuration
+          <span slot="start" className="codicon codicon-beaker"></span>
         </VSCodeButton>
       </form>
     </main>
   );
-
-  /**
-   * Creates all the radio elements for all the possible pre-configured drivers and a wildcard driver entry.
-   * @returns the created `VSCodeRadio` elements
-   */
-  function createDatabaseSelections(): JSX.Element[] {
-    const radioElements: JSX.Element[] = [];
-
-    // add all drivers
-    ALL_DRIVERS.forEach((pDriver, pKey) =>
-      radioElements.push(<VSCodeRadio value={pKey}>{pDriver.displayName}</VSCodeRadio>)
-    );
-
-    // and add a none element
-    radioElements.push(
-      <VSCodeRadio value={NO_PRE_CONFIGURED_DRIVER} checked>
-        none of the above
-      </VSCodeRadio>
-    );
-
-    return radioElements;
-  }
-
-  /**
-   * Creates an input inside a section.
-   * @param pType the type of the text input field, e.g. text, password,...
-   * @param pFieldName the name of the field. This is used for setting the new value when the value has changed
-   *
-   * @param pLabel the label of the text field
-   * @param pRequired flag if this text field is required
-   * @returns the created input
-   */
-  function createInput(
-    pType: TextFieldType,
-    pFieldName: keyof InputValues,
-    pLabel: string,
-    pRequired?: boolean
-  ): JSX.Element {
-    return (
-      <section>
-        <VSCodeTextField
-          size={75}
-          value={inputValues[pFieldName]}
-          type={pType}
-          required={pRequired}
-          onInput={handleTextFieldChange(pFieldName)}>
-          {pLabel}
-        </VSCodeTextField>
-      </section>
-    );
-  }
 }
 
 export default App;
