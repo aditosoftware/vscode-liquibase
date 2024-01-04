@@ -9,3 +9,9 @@ export interface InputValues {
   driver: string;
   classpath: string;
 }
+
+export interface MessageData {
+  command: string;
+  inputValues: InputValues;
+  databaseType: string;
+}

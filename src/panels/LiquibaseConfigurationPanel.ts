@@ -2,7 +2,7 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
-import { InputValues } from "../interfaces";
+import { InputValues, MessageData } from "../interfaces";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -137,15 +137,15 @@ export class LiquibaseConfigurationPanel {
   private _setWebviewMessageListener(webview: Webview) {
     webview.onDidReceiveMessage(
       (message: any) => {
-        const command = message.command;
-        const data = message.data as InputValues;
+        const messageData: MessageData = message as MessageData;
 
+        const command: string = messageData.command;
         switch (command) {
           case "saveConfiguration":
-            createLiquibaseProperties(data);
+            createLiquibaseProperties(messageData);
             break;
           case "testConfiguration":
-            testLiquibaseConnection(data);
+            testLiquibaseConnection(messageData);
             break;
           default:
             // TODO better handling

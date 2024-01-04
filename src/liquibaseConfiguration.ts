@@ -3,7 +3,8 @@ import { StepResults } from "./multiStepInput";
 import { PropertiesEditor } from "properties-file/editor";
 import * as fs from "fs";
 import path from "path";
-import { InputValues } from "./interfaces";
+import { InputValues, MessageData } from "./interfaces";
+import { NO_PRE_CONFIGURED_DRIVER } from "./drivers";
 
 /**
  * How the liquibase path will be queried in the inputs.
@@ -53,9 +54,9 @@ export function addToLiquibaseConfiguration(pName: string, pPath: string) {
 
 /**
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
- * @param pConfiguration the inputted values from the user
+ * @param pMessageData the inputted values from the user
  */
-export async function createLiquibaseProperties(pConfiguration: InputValues) {
+export async function createLiquibaseProperties(pMessageData: MessageData) {
   // TODO check if file exists
   // TODO check if directory, then create file
 
@@ -81,18 +82,25 @@ export async function createLiquibaseProperties(pConfiguration: InputValues) {
   // Map the Uri objects to their file paths
   // const folderPaths = selectedFolder.map((uri) => uri.fsPath);
   const absolutePath: string = path.join(...selectedFolder.map((uri) => uri.fsPath));
-  console.log(absolutePath);
 
   // build file name and path
-  const name: string = pConfiguration.name;
+  const name: string = pMessageData.inputValues.name;
   let fileName: string = name;
   if (!fileName.endsWith(fileEnding)) {
     fileName = fileName + fileEnding;
   }
 
+  // FIXME Driver
+  const databaseType: string = pMessageData.databaseType;
+
+  if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
+    // TODO download
+    vscode.window.showErrorMessage(`Need to download ${databaseType}`);
+  }
+
   // Build the properties
   let properties: PropertiesEditor = new PropertiesEditor("");
-  Object.entries(pConfiguration).forEach(([key, value]) => {
+  Object.entries(pMessageData.inputValues).forEach(([key, value]) => {
     if (key && value && key !== "name" && typeof value === "string") {
       properties.insert(key, value);
     }
@@ -110,7 +118,7 @@ export async function createLiquibaseProperties(pConfiguration: InputValues) {
  * Tests a existing liquibase configuration.
  * @param pConfiguration the name of the configuration or the whole configuration that should be tested
  */
-export function testLiquibaseConnection(pConfiguration: string | InputValues) {
+export function testLiquibaseConnection(pConfiguration: string | MessageData) {
   if (typeof pConfiguration === "string") {
     let configuration = vscode.workspace.getConfiguration(configurationName);
     let liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
