@@ -2,6 +2,7 @@
   "name": "liquibase-webview",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "start": "vite",
     "build": "tsc && vite build",
