@@ -8,39 +8,71 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 
+/**
+ * The properties for the additional element tag.
+ */
 interface AdditionalElementProps {
+  /**
+   * Event for listening on any value change of the additional elements.
+   * @param pValues all the new additional values
+   * @returns {void}
+   */
   onValueChange: (pValues: Map<string, string>) => void;
 }
 
+/**
+ * Creates an editable grid component for adding the additional elements to the configuration.
+ * @param pProperties the properties that are needed for the additional elements
+ * @returns the created component
+ */
 export function AdditionalElements(pProperties: AdditionalElementProps) {
   const [additionalElementValues, setAdditionalElementValues] = useState<Map<string, string>>(new Map());
 
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
 
-  function makeRowEditable() {
-    return (e: { target: unknown }) => {
-      const target = e.target;
+  /**
+   * Makes the row editable when clicked on it.
+   * @param pEvent the click event
+   */
+  function makeRowEditable(pEvent: { target: unknown }) {
+    const target = pEvent.target;
+
+    if (target instanceof DataGridCell) {
+      const cell: DataGridCell = target as DataGridCell;
+
+      // Do not continue if `cell` is undefined/null or is not a grid cell
+      if (!cell || cell.role !== "gridcell") {
+        return;
+      }
+
+      // set editable
+      cell.setAttribute("contenteditable", "true");
+
+      // add keydown listener
+      cell.addEventListener("keydown", handleKeydown);
+    }
+  }
+
+  /**
+   * Exists the editing when Enter or Escape where pressed.
+   * @param pEvent the keyboard event
+   */
+  function handleKeydown(pEvent: KeyboardEvent) {
+    if (pEvent.key === "Enter" || pEvent.key === "Escape") {
+      const target = pEvent.target;
 
       if (target instanceof DataGridCell) {
         const cell: DataGridCell = target as DataGridCell;
 
-        // FIXME bei anderen events auch verwenden!
-
-        // Do not continue if `cell` is undefined/null or is not a grid cell
-        if (!cell || cell.role !== "gridcell") {
-          return;
-        }
-        // Do not allow data grid header cells to be editable
-        if (cell.className === "column-header") {
-          return;
-        }
-
-        cell.setAttribute("contenteditable", "true");
+        cell.setAttribute("contenteditable", "false");
       }
-    };
+    }
   }
 
+  /**
+   * Creates a new row, when the plus button was pressed and both key and value where given.
+   */
   function createNewRow(): void {
     if (key && value) {
       setAdditionalElementValues(additionalElementValues.set(key, value));
@@ -52,20 +84,25 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
     }
   }
 
+  /**
+   * Deletes a row based on the key.
+   * @param pKey the key of the row which should be deleted
+   */
   function handleDeleteRow(pKey: string): void {
-    console.log("delete :D");
-    console.log(pKey + " ");
+    // create new map for saving and deleting the row
+    const newElementValues: Map<string, string> = new Map(additionalElementValues);
+    newElementValues.delete(pKey);
 
-    additionalElementValues.delete(pKey);
-    setAdditionalElementValues(additionalElementValues);
+    setAdditionalElementValues(newElementValues);
 
-    pProperties.onValueChange(additionalElementValues);
+    pProperties.onValueChange(newElementValues);
   }
 
   return (
     <div>
       <fieldset>
         <legend>Additional elements</legend>
+        <p>To edit an row, click on it.</p>
 
         <VSCodeDataGrid aria-label="Default">
           <VSCodeDataGridRow row-type="header">
@@ -91,7 +128,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
               />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-              <VSCodeButton onClick={() => createNewRow()}>
+              <VSCodeButton onClick={() => createNewRow()} appearance="icon" formnovalidate={true}>
                 <span className="codicon codicon-add"></span>
               </VSCodeButton>
             </VSCodeDataGridCell>
@@ -106,7 +143,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
                 {value}
               </VSCodeDataGridCell>
               <VSCodeDataGridCell grid-column="3">
-                <VSCodeButton onClick={() => handleDeleteRow(key)} appearance="icon">
+                <VSCodeButton onClick={() => handleDeleteRow(key)} appearance="icon" formnovalidate={true}>
                   <span className="codicon codicon-trash"></span>
                 </VSCodeButton>
               </VSCodeDataGridCell>

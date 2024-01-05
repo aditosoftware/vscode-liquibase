@@ -1,3 +1,5 @@
+import { NO_PRE_CONFIGURED_DRIVER } from "./drivers";
+
 /**
  * The message data that can be transferred from the webview to the extension.
  */
@@ -34,8 +36,9 @@ export class LiquibaseConfigurationData {
 
   /**
    * Some additional configurations.
+   * NOTE: If you plan to refactor this, Maps are not really serializable and therefore not good for passing the values!
    */
-  additionalConfiguration?: Map<string, string>;
+  additionalConfiguration: { [key: string]: string } = {};
 }
 
 /**
@@ -59,7 +62,7 @@ export class DatabaseConnection {
     this.url = "";
     this.driver = "";
     this.classpath = "";
-    this.databaseType = "";
+    this.databaseType = NO_PRE_CONFIGURED_DRIVER;
   }
 
   /**

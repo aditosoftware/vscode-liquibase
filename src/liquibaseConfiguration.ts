@@ -115,10 +115,9 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
     });
   }
 
-  if (pMessageData.additionalConfiguration) {
-    pMessageData.additionalConfiguration.forEach((pValue, pKey) => {
-      properties.insert(pKey, pValue);
-    });
+  // add additional properties
+  for (const key in pMessageData.additionalConfiguration) {
+    properties.insert(key, pMessageData.additionalConfiguration[key]);
   }
 
   // TODO  error handling?
