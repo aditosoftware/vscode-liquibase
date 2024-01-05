@@ -37,8 +37,8 @@ export function readLiquibaseConfigurationNames(): string[] {
 
 /**
  * Adds an key-value pair to the configuration. If no configuration exists, one will be created.
- * @param pName the name of the configuration
- * @param pPath the path to the configuration file
+ * @param pName - the name of the configuration
+ * @param pPath - the path to the configuration file
  */
 export function addToLiquibaseConfiguration(pName: string, pPath: string) {
   const configuration = vscode.workspace.getConfiguration(configurationName);
@@ -53,7 +53,7 @@ export function addToLiquibaseConfiguration(pName: string, pPath: string) {
 
 /**
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
- * @param pMessageData the inputted values from the user
+ * @param pMessageData - the inputted values from the user
  */
 export async function createLiquibaseProperties(pMessageData: LiquibaseConfigurationData) {
   // TODO check if file exists
@@ -130,7 +130,7 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
 
 /**
  * Tests a existing liquibase configuration.
- * @param pConfiguration the name of the configuration or the whole configuration that should be tested
+ * @param pConfiguration - the name of the configuration or the whole configuration that should be tested
  */
 export function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
   if (typeof pConfiguration === "string") {

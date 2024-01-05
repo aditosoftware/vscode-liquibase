@@ -67,8 +67,8 @@ export class DatabaseConnection {
 
   /**
    * Sets a value to a dynamic key.
-   * @param pName the name of the element that should be set
-   * @param pValue the value that should be set
+   * @param pName - the name of the element that should be set
+   * @param pValue - the value that should be set
    */
   public setValue(pName: keyof DatabaseConnection, pValue: string): void {
     Object.defineProperty(this, pName, { value: pValue });

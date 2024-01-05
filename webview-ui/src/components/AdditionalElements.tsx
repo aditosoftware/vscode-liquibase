@@ -14,15 +14,14 @@ import { useState } from "react";
 interface AdditionalElementProps {
   /**
    * Event for listening on any value change of the additional elements.
-   * @param pValues all the new additional values
-   * @returns {void}
+   * @param pValues - all the new additional values
    */
   onValueChange: (pValues: Map<string, string>) => void;
 }
 
 /**
  * Creates an editable grid component for adding the additional elements to the configuration.
- * @param pProperties the properties that are needed for the additional elements
+ * @param pProperties - the properties that are needed for the additional elements
  * @returns the created component
  */
 export function AdditionalElements(pProperties: AdditionalElementProps) {
@@ -33,7 +32,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
 
   /**
    * Makes the row editable when clicked on it.
-   * @param pEvent the click event
+   * @param pEvent - the click event
    */
   function makeRowEditable(pEvent: { target: unknown }) {
     const target = pEvent.target;
@@ -56,7 +55,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
 
   /**
    * Exists the editing when Enter or Escape where pressed.
-   * @param pEvent the keyboard event
+   * @param pEvent - the keyboard event
    */
   function handleKeydown(pEvent: KeyboardEvent) {
     if (pEvent.key === "Enter" || pEvent.key === "Escape") {
@@ -86,7 +85,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
 
   /**
    * Deletes a row based on the key.
-   * @param pKey the key of the row which should be deleted
+   * @param pKey - the key of the row which should be deleted
    */
   function handleDeleteRow(pKey: string): void {
     // create new map for saving and deleting the row

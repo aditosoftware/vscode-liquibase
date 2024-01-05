@@ -21,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 /**
  * Registers all the commands that are needed by liquibase properties handling
- * @param context the Context for storing the commands
+ * @param context - the Context for storing the commands
  */
 function registerCommandsForLiquibasePropertiesHandling(context: vscode.ExtensionContext) {
   context.subscriptions.push(

@@ -34,7 +34,7 @@ function App() {
 
   /**
    * Creates and removes a dummy connection for the reference connection. This will also trigger the appearing or disappearing of the reference connection element.
-   * @param pAdded indicator weather the reference connection was added (`true`) or removed (`false`)
+   * @param pAdded - indicator weather the reference connection was added (`true`) or removed (`false`)
    */
   function handleAddRemoveReferenceConnection(pAdded: boolean): void {
     const newData = { ...data, referenceConnection: pAdded ? new DatabaseConnection() : undefined };
@@ -118,8 +118,8 @@ function App() {
   /**
    * Updates a specific value of the DatabaseConnection .
    *
-   * @param {keyof DatabaseConnection} pComponent - The key of the component to be updated.
-   * @param {string} pInputValue - The new value to set for the specified component.
+   * @param pComponent - The key of the component to be updated.
+   * @param pInputValue - The new value to set for the specified component.
    */
   function changeDatabaseConnection(pComponent: keyof DatabaseConnection, pInputValue: string): void {
     const newData = { ...data };
@@ -130,8 +130,8 @@ function App() {
   /**
    * Updates a specific value of the Reference DatabaseConnection .
    *
-   * @param {keyof DatabaseConnection} pComponent - The key of the component to be updated.
-   * @param {string} pInputValue - The new value to set for the specified component.
+   * @param pComponent - The key of the component to be updated.
+   * @param pInputValue - The new value to set for the specified component.
    */
   function changeReferenceConnection(pComponent: keyof DatabaseConnection, pInputValue: string): void {
     const newData = { ...data };
@@ -154,7 +154,7 @@ function App() {
 
   /**
    * Handles the changing of the additional elements.
-   * @param data the current data
+   * @param data - the current data
    * @returns a function for changing the data based on the new values
    */
   function handleChangeAdditionalElements(data: LiquibaseConfigurationData): (pValues: Map<string, string>) => void {

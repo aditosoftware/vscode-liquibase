@@ -22,8 +22,8 @@ export class LiquibaseConfigurationPanel {
   /**
    * The LiquibaseConfigurationPanel class private constructor (called only from the render method).
    *
-   * @param panel A reference to the webview panel
-   * @param extensionUri The URI of the directory containing the extension
+   * @param panel - A reference to the webview panel
+   * @param extensionUri - The URI of the directory containing the extension
    */
   private constructor(panel: WebviewPanel, extensionUri: Uri) {
     this._panel = panel;
@@ -43,7 +43,7 @@ export class LiquibaseConfigurationPanel {
    * Renders the current webview panel if it exists otherwise a new webview panel
    * will be created and displayed.
    *
-   * @param extensionUri The URI of the directory containing the extension.
+   * @param extensionUri - The URI of the directory containing the extension.
    */
   public static render(extensionUri: Uri) {
     if (LiquibaseConfigurationPanel.currentPanel) {
@@ -95,8 +95,8 @@ export class LiquibaseConfigurationPanel {
    * @remarks This is also the place where references to the React webview build files
    * are created and inserted into the webview HTML.
    *
-   * @param webview A reference to the extension webview
-   * @param extensionUri The URI of the directory containing the extension
+   * @param webview - A reference to the extension webview
+   * @param extensionUri - The URI of the directory containing the extension
    * @returns A template string literal containing the HTML that should be
    * rendered within the webview panel
    */
@@ -140,8 +140,8 @@ export class LiquibaseConfigurationPanel {
    * Sets up an event listener to listen for messages passed from the webview context and
    * executes code based on the message that is received.
    *
-   * @param webview A reference to the extension webview
-   * @param context A reference to the extension context
+   * @param webview - A reference to the extension webview
+   * @param context - A reference to the extension context
    */
   private _setWebviewMessageListener(webview: Webview) {
     webview.onDidReceiveMessage(

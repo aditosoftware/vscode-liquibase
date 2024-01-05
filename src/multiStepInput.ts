@@ -2,14 +2,11 @@ import * as vscode from "vscode";
 
 /**
  * Creates a multi step input. This has a title with the current step count.
- * @param pTitle the general title of input. This will be displayed above every input with a `currentCount/maxCount` information
- * @param pOptions the options for every input. Please note that the `title` will be overridden
+ * @param pTitle - the general title of input. This will be displayed above every input with a `currentCount/maxCount` information
+ * @param pOptions - the options for every input. Please note that the `title` will be overridden
  * @returns the results of this multiStep input
  */
-export async function multiStepInput(
-  pTitle: string,
-  pOptions: StepOption[]
-): Promise<StepResults | undefined> {
+export async function multiStepInput(pTitle: string, pOptions: StepOption[]): Promise<StepResults | undefined> {
   const totalSteps = pOptions.length;
   let currentStep = 1;
   const results: StepResults = {};
@@ -21,9 +18,7 @@ export async function multiStepInput(
     });
 
     if (!result) {
-      vscode.window.showInformationMessage(
-        "Input cancelled or empty. Exiting."
-      );
+      vscode.window.showInformationMessage("Input cancelled or empty. Exiting.");
       return undefined;
     }
 

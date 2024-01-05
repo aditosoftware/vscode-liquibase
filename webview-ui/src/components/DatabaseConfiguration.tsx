@@ -15,8 +15,8 @@ interface DatabaseConfigurationProps {
   /**
    * Method that will get a new value whenever the initial component was left (`onBlur`).
    * This is used to transfer the data the user has put into a element to the main app.
-   * @param pComponent the name of the component that was updated
-   * @param pInputValue the input value of the component
+   * @param pComponent - the name of the component that was updated
+   * @param pInputValue - the input value of the component
    * @returns void
    */
   onUpdate: (pComponent: keyof DatabaseConnection, pInputValue: string) => void;
@@ -24,7 +24,7 @@ interface DatabaseConfigurationProps {
 
 /**
  * Creates an DatabaseConfiguration input area. This can be used for the normal an the reference connection.
- * @param pProperties the properties for creating the element
+ * @param pProperties - the properties for creating the element
  * @returns the created element
  */
 export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
@@ -89,11 +89,10 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
 
   /**
    * Creates an input inside a section.
-   * @param pType the type of the text input field, e.g. text, password,...
-   * @param pFieldName the name of the field. This is used for setting the new value when the value has changed
-   *
-   * @param pLabel the label of the text field
-   * @param pRequired flag if this text field is required
+   * @param pType - the type of the text input field, e.g. text, password,...
+   * @param pFieldName -  the name of the field. This is used for setting the new value when the value has changed
+   * @param pLabel - the label of the text field
+   * @param pRequired - flag if this text field is required
    * @returns the created input
    */
   function createInput(
@@ -119,8 +118,8 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
   /**
    * Handles the change event for a text field.
    *
-   * @param {keyof InputValues} pFieldName  The name of the field to update.
-   * @returns {(e: React.ChangeEvent<HTMLInputElement>) => void} A function to handle the input change event.
+   * @param pFieldName - The name of the field to update.
+   * @returns A function to handle the input change event.
    */
   function handleTextFieldChange(
     pProperties: DatabaseConfigurationProps,
