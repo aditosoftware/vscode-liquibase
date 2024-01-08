@@ -5,11 +5,10 @@ import "./codicon.css";
 import { useState } from "react";
 import { LiquibaseConfigurationData, DatabaseConnection } from "../../src/transferData";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
-import React from "react";
 import { AdditionalElements } from "./components/AdditionalElements";
 
 function App() {
-  // let data: Data = new Data();
+  // TODO Persist values when changed view
 
   const [data, setData] = useState<LiquibaseConfigurationData>(new LiquibaseConfigurationData());
 
@@ -18,6 +17,7 @@ function App() {
    * Saving is only allowed when a name is present.
    */
   function handleSaveConfiguration(): void {
+    console.log(data);
     if (data.name) {
       vscode.postMessage({ command: "saveConfiguration", data });
     }
@@ -37,7 +37,7 @@ function App() {
    * @param pAdded - indicator weather the reference connection was added (`true`) or removed (`false`)
    */
   function handleAddRemoveReferenceConnection(pAdded: boolean): void {
-    const newData = { ...data, referenceConnection: pAdded ? new DatabaseConnection() : undefined };
+    const newData = { ...data, referenceDatabaseConnection: pAdded ? new DatabaseConnection() : undefined };
     setData(newData);
 
     setReferenceConnection(pAdded);

@@ -12,6 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 // FIXME Next Steps
+// TODO Duplicate name check
 // * edit existing -> file selection !
 // * Download the needed driver files
 // * Graphic dialog for creating the properties

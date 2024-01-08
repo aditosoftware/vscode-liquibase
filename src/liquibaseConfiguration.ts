@@ -2,8 +2,9 @@ import * as vscode from "vscode";
 import { PropertiesEditor } from "properties-file/editor";
 import * as fs from "fs";
 import path from "path";
-import { LiquibaseConfigurationData } from "./transferData";
-import { NO_PRE_CONFIGURED_DRIVER } from "./drivers";
+import { DatabaseConnection, LiquibaseConfigurationData } from "./transferData";
+import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "./drivers";
+import download from "download";
 
 /**
  * How the liquibase path will be queried in the inputs.
@@ -19,6 +20,9 @@ const configurationName: string = "liquibase";
  * The configuration for storing the liquibase configurations.
  */
 const liquibaseConfigurationName: string = "liquibaseConfigurationFiles";
+
+// TODO tsdoc
+const driverLocation: string = "driverLocation";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -89,24 +93,23 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
     fileName = fileName + fileEnding;
   }
 
-  // FIXME Driver
-  const databaseType: string = pMessageData.databaseConnection.databaseType;
-
-  if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
-    // TODO download
-    vscode.window.showErrorMessage(`Need to download ${databaseType}`);
-  }
-
   // Build the properties
   const properties: PropertiesEditor = new PropertiesEditor("");
-  // TODO FIXME
+
+  // Adjust the connection for pre-configured databases ...
+  await adjustDatabaseConnection(pMessageData.databaseConnection);
+
+  // .. and put in the properties for the database connection
   Object.entries(pMessageData.databaseConnection).forEach(([key, value]) => {
-    if (key && value) {
+    if (key && value && key !== "databaseType") {
       properties.insert(key, value);
     }
   });
 
   if (pMessageData.referenceDatabaseConnection) {
+    // Adjust the connection for a reference connection ...
+    await adjustDatabaseConnection(pMessageData.referenceDatabaseConnection);
+    // ... and put in these values prefixed by reference as well
     Object.entries(pMessageData.referenceDatabaseConnection).forEach(([key, value]) => {
       if (key && value) {
         const referenceKey = "reference" + key.charAt(0).toUpperCase() + key.substring(1);
@@ -146,9 +149,83 @@ export function testLiquibaseConnection(pConfiguration: string | LiquibaseConfig
     }
   } else {
     // TODO create properties for testing
-    // todo do real test
+    // TODO do real test
     vscode.window.showInformationMessage(`Testing connection for ${JSON.stringify(pConfiguration)}`);
   }
+}
+
+/**
+ * Adjusts a database connection by possible downloading the drivers and setting those values in the connection.
+ * @param pDatabaseConnection - the database connection whose driver should be adjusted
+ */
+async function adjustDatabaseConnection(pDatabaseConnection: DatabaseConnection): Promise<void> {
+  const databaseType: string = pDatabaseConnection.databaseType;
+
+  if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
+    const databaseDriver: Driver | undefined = ALL_DRIVERS.get(databaseType);
+    if (databaseDriver) {
+      // download the driver ...
+      const driverLocation = await downloadDriver(databaseDriver);
+      // ... and save it in the database connection
+      pDatabaseConnection.driver = databaseDriver.driverClass;
+      pDatabaseConnection.classpath = driverLocation;
+    }
+  }
+}
+
+/**
+ * Downloads a driver, if no driver was downloaded previously.
+ * @param pDriver - the driver that need to be downloaded by the extensions
+ */
+async function downloadDriver(pDriver: Driver): Promise<string> {
+  // find out location for driver
+  const locationForDriver = getDriverLocation();
+
+  const uriFile = vscode.Uri.file(locationForDriver);
+  // create the missing directories
+  await vscode.workspace.fs.createDirectory(uriFile);
+
+  // Gets the filename of the driver
+  const fileName = pDriver.getFileName();
+
+  const driverLocationWithFileName = path.join(locationForDriver, fileName);
+  // if file does not exist, download the driver
+  if (!fs.existsSync(driverLocationWithFileName)) {
+    try {
+      await download(pDriver.urlForDownload, locationForDriver);
+    } catch (error) {
+      console.error(`error downloading the file: ${error}`);
+    }
+  }
+
+  return driverLocationWithFileName;
+}
+
+/**
+ * Loads the setting where the drivers should be downloaded.
+ * If no value was found, then a default location will be used. This default location is the workspace folder and a subdirectory named `.drivers`.
+ * @returns the configured location for the driver or a default location
+ */
+function getDriverLocation(): string {
+  // TODO tsdoc
+  // TODO better default setting of parameter
+  const configuration = vscode.workspace.getConfiguration(configurationName);
+  const locationForDriver = configuration.get(driverLocation, "");
+
+  // TODO force user to configure
+  if (locationForDriver === "") {
+    // fallback - no driver configured
+    // find out the current users workspace and put in a .drivers directory
+    const workspaceFolders = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath);
+
+    if (workspaceFolders && workspaceFolders.length > 0) {
+      const dir = workspaceFolders[0];
+
+      return path.join(dir, ".drivers");
+    }
+  }
+
+  return locationForDriver;
 }
 
 /**

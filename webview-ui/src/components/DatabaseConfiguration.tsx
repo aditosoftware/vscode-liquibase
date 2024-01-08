@@ -45,10 +45,12 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
           <VSCodeRadioGroup
             orientation="vertical"
             value={selectedDatabaseType}
-            onChange={
+            onClick={(e) => {
               // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
-              (e) => setSelectedDatabaseType(e.target.value)
-            }>
+              const value = e.target.value;
+              setSelectedDatabaseType(value);
+              pProperties.onUpdate("databaseType", value);
+            }}>
             <label>Database type for the configuration</label>
             {createDatabaseSelections()}
           </VSCodeRadioGroup>

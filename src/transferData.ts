@@ -43,16 +43,39 @@ export class LiquibaseConfigurationData {
 
 /**
  * The Database connection configuration with all the input that is needed for connecting to the database.
+ * @see https://docs.liquibase.com/concepts/connections/creating-config-properties.html
  */
 export class DatabaseConnection {
+  /**
+   * Username to connect to the target database.
+   */
   username: string;
+
+  /**
+   *Password to connect to the target database.
+   */
   password: string;
+
+  /**
+   * Specifies the database to use when making comparisons to the source database. Also known as the target.
+   * This is usually a jdbc url.
+   */
   url: string;
+
+  /**
+   * Specifies the driver class name for the target database.
+   */
   driver: string;
+
+  /**
+   * Specifies the directories and JAR files to search for changelog files and custom extension classes.
+   *
+   * TODO To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
+   */
   classpath: string;
 
   /**
-   * The database type. This can be any type from the drivers.
+   * The database type. This can be any type from the drivers. This will be later adjusted into `driver` and `classpath`, if a pre-configured driver was selected.
    */
   databaseType: string;
 
@@ -70,7 +93,7 @@ export class DatabaseConnection {
    * @param pName - the name of the element that should be set
    * @param pValue - the value that should be set
    */
-  public setValue(pName: keyof DatabaseConnection, pValue: string): void {
+  setValue(pName: keyof DatabaseConnection, pValue: string): void {
     Object.defineProperty(this, pName, { value: pValue });
   }
 }
