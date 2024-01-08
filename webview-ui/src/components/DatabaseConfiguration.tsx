@@ -91,7 +91,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
 
   /**
    * Creates an input inside a section.
-   * @param pType - the type of the text input field, e.g. text, password,...
+   * @param pType - the type of the text input field, e.g. text, password
    * @param pFieldName -  the name of the field. This is used for setting the new value when the value has changed
    * @param pLabel - the label of the text field
    * @param pRequired - flag if this text field is required

@@ -3,14 +3,18 @@ import { VSCodeButton, VSCodeDivider, VSCodeLink, VSCodeTextField } from "@vscod
 import "./App.css";
 import "./codicon.css";
 import { useState } from "react";
-import { LiquibaseConfigurationData, DatabaseConnection } from "../../src/transferData";
+import { LiquibaseConfigurationData, DatabaseConnection, MessageData } from "../../src/transferData";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
+import { useImmer } from "use-immer";
+import { NO_PRE_CONFIGURED_DRIVER } from "../../src/drivers";
 
 function App() {
   // TODO Persist values when changed view
 
-  const [data, setData] = useState<LiquibaseConfigurationData>(new LiquibaseConfigurationData());
+  const [data, updateData] = useImmer<LiquibaseConfigurationData>(
+    new LiquibaseConfigurationData("", createEmptyDatabaseConnection(), {})
+  );
 
   /**
    * Handles the saving of the configuration.
@@ -19,7 +23,7 @@ function App() {
   function handleSaveConfiguration(): void {
     console.log(data);
     if (data.name) {
-      vscode.postMessage({ command: "saveConfiguration", data });
+      vscode.postMessage(new MessageData("saveConfiguration", data));
     }
   }
 
@@ -27,7 +31,7 @@ function App() {
    * Tests the given configuration
    */
   function handleTestConfiguration(): void {
-    vscode.postMessage({ command: "testConfiguration", data });
+    vscode.postMessage(new MessageData("testConfiguration", data));
   }
 
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
@@ -37,8 +41,9 @@ function App() {
    * @param pAdded - indicator weather the reference connection was added (`true`) or removed (`false`)
    */
   function handleAddRemoveReferenceConnection(pAdded: boolean): void {
-    const newData = { ...data, referenceDatabaseConnection: pAdded ? new DatabaseConnection() : undefined };
-    setData(newData);
+    updateData((draft) => {
+      draft.referenceDatabaseConnection = pAdded ? createEmptyDatabaseConnection() : undefined;
+    });
 
     setReferenceConnection(pAdded);
   }
@@ -95,7 +100,7 @@ function App() {
         )}
 
         <VSCodeDivider />
-        <AdditionalElements onValueChange={handleChangeAdditionalElements(data)} />
+        <AdditionalElements onValueChange={handleChangeAdditionalElements} />
         <VSCodeDivider />
 
         <VSCodeButton onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
@@ -122,9 +127,9 @@ function App() {
    * @param pInputValue - The new value to set for the specified component.
    */
   function changeDatabaseConnection(pComponent: keyof DatabaseConnection, pInputValue: string): void {
-    const newData = { ...data };
-    newData.databaseConnection.setValue(pComponent, pInputValue);
-    setData(newData);
+    updateData((draft) => {
+      draft.databaseConnection = draft.databaseConnection.setValue(pComponent, pInputValue);
+    });
   }
 
   /**
@@ -134,12 +139,11 @@ function App() {
    * @param pInputValue - The new value to set for the specified component.
    */
   function changeReferenceConnection(pComponent: keyof DatabaseConnection, pInputValue: string): void {
-    const newData = { ...data };
-
-    if (newData.referenceDatabaseConnection) {
-      newData.referenceDatabaseConnection.setValue(pComponent, pInputValue);
-    }
-    setData(newData);
+    updateData((draft) => {
+      if (draft.referenceDatabaseConnection) {
+        draft.referenceDatabaseConnection = draft.referenceDatabaseConnection.setValue(pComponent, pInputValue);
+      }
+    });
   }
 
   /**
@@ -148,26 +152,36 @@ function App() {
    */
   function handleChangeName(): React.FocusEventHandler<HTMLElement> | undefined {
     return (event: React.FocusEvent<HTMLInputElement>) => {
-      setData({ ...data, name: event.target.value });
+      // TODO change signature of method?
+      updateData((draft) => {
+        draft.name = event.target.value;
+      });
     };
   }
 
   /**
    * Handles the changing of the additional elements.
-   * @param data - the current data
    * @returns a function for changing the data based on the new values
    */
-  function handleChangeAdditionalElements(data: LiquibaseConfigurationData): (pValues: Map<string, string>) => void {
+  function handleChangeAdditionalElements(): (pValues: Map<string, string>) => void {
     return (pValues) => {
-      const newData = { ...data };
-
-      pValues.forEach((value, key) => {
-        newData.additionalConfiguration[key] = value;
+      updateData((draft) => {
+        draft.additionalConfiguration = {};
+        pValues.forEach((value, key) => {
+          draft.additionalConfiguration[key] = value;
+        });
       });
-
-      setData(newData);
     };
   }
 }
 
 export default App;
+
+/**
+ * Creates an empty database connection.
+ * @returns the empty database connection
+ */
+function createEmptyDatabaseConnection(): DatabaseConnection {
+  // TODO TSDOC
+  return new DatabaseConnection("", "", "", "", "", NO_PRE_CONFIGURED_DRIVER);
+}

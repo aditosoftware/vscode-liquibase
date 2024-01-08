@@ -146,7 +146,8 @@ export class LiquibaseConfigurationPanel {
   private _setWebviewMessageListener(webview: Webview) {
     webview.onDidReceiveMessage(
       (message: unknown) => {
-        const messageData: MessageData = message as MessageData;
+        // recreate a new object, because otherwise no methods will be there
+        const messageData: MessageData = MessageData.createFromSerializedData(message as MessageData);
 
         const command: string = messageData.command;
         const data: LiquibaseConfigurationData = messageData.data;
