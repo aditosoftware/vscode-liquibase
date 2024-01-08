@@ -1,4 +1,6 @@
 import { immerable } from "immer";
+import { PropertiesEditor } from "properties-file/editor";
+import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "./drivers";
 
 /**
  * The message data that can be transferred from the webview to the extension.
@@ -82,12 +84,12 @@ export class LiquibaseConfigurationData {
    * Some additional configurations.
    * NOTE: If you plan to refactor this, Maps are not really serializable and therefore not good for passing the values!
    */
-  additionalConfiguration: { [key: string]: string } = {};
+  additionalConfiguration: AdditionalConfiguration;
 
   constructor(
     name: string,
     databaseConnection: DatabaseConnection,
-    additionalConfiguration: { [key: string]: string },
+    additionalConfiguration: AdditionalConfiguration,
     referenceDatabaseConnection?: DatabaseConnection
   ) {
     this.name = name;
@@ -95,7 +97,73 @@ export class LiquibaseConfigurationData {
     this.referenceDatabaseConnection = referenceDatabaseConnection;
     this.additionalConfiguration = additionalConfiguration;
   }
+
+  generatePropertiesForDisplay(): string {
+    // TODO machen
+
+    // this.generateProperties().then((data) => {
+    //   console.log(data);
+    // });
+
+    // const properties = await this.generateProperties();
+    // return properties.format();
+
+    return this.generateProperties().format();
+  }
+
+  generateProperties(): PropertiesEditor {
+    // Build the properties
+    const properties: PropertiesEditor = new PropertiesEditor("");
+
+    // Adjust the connection for pre-configured databases ...
+    this.adjustDatabaseConnection(this.databaseConnection);
+    // .. and put in the properties for the database connection
+    Object.entries(this.databaseConnection).forEach(([key, value]) => {
+      if (key && value && key !== "databaseType") {
+        properties.insert(key, value);
+      }
+    });
+
+    if (this.referenceDatabaseConnection) {
+      // Adjust the connection for a reference connection ...
+      this.adjustDatabaseConnection(this.referenceDatabaseConnection);
+      // ... and put in these values prefixed by reference as well
+      Object.entries(this.referenceDatabaseConnection).forEach(([key, value]) => {
+        if (key && value && key !== "databaseType") {
+          const referenceKey = "reference" + key.charAt(0).toUpperCase() + key.substring(1);
+          properties.insert(referenceKey, value);
+        }
+      });
+    }
+
+    // add additional properties
+    for (const key in this.additionalConfiguration) {
+      properties.insert(key, this.additionalConfiguration[key]);
+    }
+
+    return properties;
+  }
+
+  /**
+   * Adjusts a database connection by possible downloading the drivers and setting those values in the connection.
+   * @param pDatabaseConnection - the database connection whose driver should be adjusted
+   */
+  private adjustDatabaseConnection(pDatabaseConnection: DatabaseConnection): void {
+    const databaseType: string = pDatabaseConnection.databaseType;
+
+    if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
+      const databaseDriver: Driver | undefined = ALL_DRIVERS.get(databaseType);
+      if (databaseDriver) {
+        // TODO Some error here
+        // pDatabaseConnection.driver = databaseDriver.driverClass;
+        // pDatabaseConnection.classpath = "<TBA>";
+        // TODO anpassen
+      }
+    }
+  }
 }
+
+type AdditionalConfiguration = { [key: string]: string };
 
 /**
  * The Database connection configuration with all the input that is needed for connecting to the database.

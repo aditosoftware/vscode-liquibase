@@ -6,7 +6,7 @@
 export const NO_PRE_CONFIGURED_DRIVER = "NO_PRE_CONFIGURED_DRIVER";
 
 /**
- * Class for predefining the drivers the users can preselect.
+ * Class for pre-defining the drivers the users can preselect.
  */
 export class Driver {
   readonly displayName: string;

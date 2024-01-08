@@ -21,7 +21,6 @@ function App() {
    * Saving is only allowed when a name is present.
    */
   function handleSaveConfiguration(): void {
-    console.log(data);
     if (data.name) {
       vscode.postMessage(new MessageData("saveConfiguration", data));
     }
@@ -59,48 +58,60 @@ function App() {
         </VSCodeLink>
         .
       </p>
-
       <form>
-        <fieldset>
-          <legend>General information</legend>
-          <VSCodeTextField size={75} required onBlur={handleChangeName()}>
-            The name under which the configuration should be stored
-          </VSCodeTextField>
-          <p>
-            For instance the name <code>dev</code> will result in a <code>dev.liquibase.properties</code> file.
-          </p>
-        </fieldset>
+        <section className="component-row">
+          <div>
+            <fieldset>
+              <legend>General information</legend>
+              <VSCodeTextField size={75} required onBlur={handleChangeName()}>
+                The name under which the configuration should be stored
+              </VSCodeTextField>
+              <p>
+                For instance the name <code>dev</code> will result in a <code>dev.liquibase.properties</code> file.
+              </p>
+            </fieldset>
 
-        <DatabaseConfiguration title="Database configuration" onUpdate={changeDatabaseConnection} />
+            <DatabaseConfiguration title="Database configuration" onUpdate={changeDatabaseConnection} />
 
-        <section>
-          <VSCodeButton
-            className="normalButton"
-            formnovalidate={true}
-            disabled={referenceConnection}
-            onClick={() => handleAddRemoveReferenceConnection(true)}
-            appearance="secondary">
-            Add reference connection
-            <span slot="start" className="codicon codicon-add"></span>
-          </VSCodeButton>
-          <VSCodeButton
-            className="normalButton"
-            formnovalidate={true}
-            disabled={!referenceConnection}
-            onClick={() => handleAddRemoveReferenceConnection(false)}
-            appearance="secondary">
-            <span slot="start" className="codicon codicon-remove"></span>
-            Remove reference connection
-          </VSCodeButton>
+            <section>
+              <VSCodeButton
+                className="normalButton"
+                formnovalidate={true}
+                disabled={referenceConnection}
+                onClick={() => handleAddRemoveReferenceConnection(true)}
+                appearance="secondary">
+                Add reference connection
+                <span slot="start" className="codicon codicon-add"></span>
+              </VSCodeButton>
+              <VSCodeButton
+                className="normalButton"
+                formnovalidate={true}
+                disabled={!referenceConnection}
+                onClick={() => handleAddRemoveReferenceConnection(false)}
+                appearance="secondary">
+                <span slot="start" className="codicon codicon-remove"></span>
+                Remove reference connection
+              </VSCodeButton>
+            </section>
+
+            {/* Show reference connection only when the button for creating such was selected */}
+            {referenceConnection && (
+              <DatabaseConfiguration title="Reference Database configuration" onUpdate={changeReferenceConnection} />
+            )}
+
+            <VSCodeDivider />
+            <AdditionalElements onValueChange={handleChangeAdditionalElements} />
+          </div>
+
+          <fieldset>
+            <legend>Preview</legend>
+            <p>
+              Configuration of <code>{data.name}.liquibase.properties</code>:
+            </p>
+            <pre>{data.generatePropertiesForDisplay()}</pre>
+          </fieldset>
         </section>
 
-        {/* Show reference connection only when the button for creating such was selected */}
-        {referenceConnection && (
-          <DatabaseConfiguration title="Reference Database configuration" onUpdate={changeReferenceConnection} />
-        )}
-
-        <VSCodeDivider />
-        <AdditionalElements onValueChange={handleChangeAdditionalElements} />
         <VSCodeDivider />
 
         <VSCodeButton onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
