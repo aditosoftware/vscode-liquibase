@@ -50,6 +50,11 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
               const value = e.target.value;
               setSelectedDatabaseType(value);
               pProperties.onUpdate("databaseType", value);
+              // remove classpath and driver values, when a pre-configured values was used
+if (value !== NO_PRE_CONFIGURED_DRIVER) {
+                pProperties.onUpdate("classpath", "");
+                pProperties.onUpdate("driver", "");
+              }
             }}>
             <label>Database type for the configuration</label>
             {createDatabaseSelections()}

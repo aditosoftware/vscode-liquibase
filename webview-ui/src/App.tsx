@@ -105,9 +105,12 @@ function App() {
 
           <fieldset>
             <legend>Preview</legend>
-            <p>
-              Configuration of <code>{data.name}.liquibase.properties</code>:
-            </p>
+            <p>Note: The preview will be updated after you leave an input field.</p>
+            {data.name && (
+              <p>
+                Configuration of <code>{data.name}.liquibase.properties</code>:
+              </p>
+            )}
             <pre>{data.generatePropertiesForDisplay()}</pre>
           </fieldset>
         </section>
@@ -174,16 +177,14 @@ function App() {
    * Handles the changing of the additional elements.
    * @returns a function for changing the data based on the new values
    */
-  function handleChangeAdditionalElements(): (pValues: Map<string, string>) => void {
-    return (pValues) => {
+  function handleChangeAdditionalElements(pValues: Map<string, string>): void {
       updateData((draft) => {
         draft.additionalConfiguration = {};
         pValues.forEach((value, key) => {
           draft.additionalConfiguration[key] = value;
         });
       });
-    };
-  }
+    }
 }
 
 export default App;
