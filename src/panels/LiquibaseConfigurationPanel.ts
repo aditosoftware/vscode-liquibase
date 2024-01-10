@@ -2,7 +2,8 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
-import { LiquibaseConfigurationData, MessageData } from "../transferData";
+import { DatabaseConnection, LiquibaseConfigurationData, MessageData } from "../transferData";
+import { NO_PRE_CONFIGURED_DRIVER } from "../drivers";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -64,6 +65,7 @@ export class LiquibaseConfigurationPanel {
           enableScripts: true,
           // Restrict the webview to only load resources from the `out` and `webview-ui/build` directories
           localResourceRoots: [Uri.joinPath(extensionUri, "out"), Uri.joinPath(extensionUri, "webview-ui/build")],
+          retainContextWhenHidden: true,
         }
       );
 
@@ -109,6 +111,25 @@ export class LiquibaseConfigurationPanel {
     const scriptUri = getUri(webview, extensionUri, ["webview-ui", "build", "assets", "index.js"]);
 
     const nonce = getNonce();
+
+    // TODO Transfer value
+    const isWindows = process.platform === "win32";
+    console.log(isWindows);
+
+    // TODO andere Stelle zum Übertragen!
+    webview.postMessage(
+      new MessageData(
+        "",
+        // TODO anders initialisieren
+        new LiquibaseConfigurationData(
+          "",
+          "",
+          isWindows ? ";" : ":",
+          new DatabaseConnection("", "", "", "", NO_PRE_CONFIGURED_DRIVER),
+          {}
+        )
+      )
+    );
 
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
     return /*html*/ `

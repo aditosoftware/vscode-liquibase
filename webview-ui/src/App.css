@@ -1,10 +1,20 @@
-
 .normalButton {
   margin: 5px;
 }
 
-
 .component-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
+}
+
+/* Let all text inputs take the full width */
+vscode-text-field,
+vscode-text-area {
+  width: 100%;
+}
+
+/* Wrapping words in pre, so it will be still readable when having a lot of entries */
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }

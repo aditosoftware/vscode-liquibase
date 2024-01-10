@@ -36,9 +36,9 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
         <legend>{pProperties.title}</legend>
         <fieldset>
           <legend>Connection configuration</legend>
-          {createInput(pProperties, "text", "username", "Username of the database")}
-          {createInput(pProperties, "password", "password", "Password of the database")}
-          {createInput(pProperties, "text", "url", "The JDBC url of the database")}
+          {createInput(pProperties, "text", "username", "Username of the database", "dbuser")}
+          {createInput(pProperties, "password", "password", "Password of the database", "letmein")}
+          {createInput(pProperties, "text", "url", "The url of the database", "jdbc:mariadb://localhost:9090/data")}
         </fieldset>
         <fieldset>
           <legend>Database type</legend>
@@ -46,25 +46,23 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
             orientation="vertical"
             value={selectedDatabaseType}
             onClick={(e) => {
-              // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
+              // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint. // TODO validate
               const value = e.target.value;
               setSelectedDatabaseType(value);
               pProperties.onUpdate("databaseType", value);
               // remove classpath and driver values, when a pre-configured values was used
-if (value !== NO_PRE_CONFIGURED_DRIVER) {
-                pProperties.onUpdate("classpath", "");
+              if (value !== NO_PRE_CONFIGURED_DRIVER) {
                 pProperties.onUpdate("driver", "");
               }
             }}>
-            <label>Database type for the configuration</label>
+            <label slot="label">Database type for the configuration</label>
             {createDatabaseSelections()}
           </VSCodeRadioGroup>
 
           {selectedDatabaseType === NO_PRE_CONFIGURED_DRIVER && (
             <>
               <VSCodeDivider />
-              {createInput(pProperties, "text", "driver", "The driver class of database")}
-              {createInput(pProperties, "text", "classpath", "The path to the driver")}
+              {createInput(pProperties, "text", "driver", "The driver class of database", "org.mariadb.jdbc.Driver")}
             </>
           )}
         </fieldset>
@@ -96,10 +94,14 @@ if (value !== NO_PRE_CONFIGURED_DRIVER) {
 
   /**
    * Creates an input inside a section.
+   *
+   * // TODO move logic to separate class?
+   *
+   * @param pProperties - the properties which are used to configure this component. This is needed for handling the changing of values. // TODO only give relevant element
    * @param pType - the type of the text input field, e.g. text, password
    * @param pFieldName -  the name of the field. This is used for setting the new value when the value has changed
    * @param pLabel - the label of the text field
-   * @param pRequired - flag if this text field is required
+   * @param pPlaceholder - a possible placeholder value for this input
    * @returns the created input
    */
   function createInput(
@@ -107,14 +109,13 @@ if (value !== NO_PRE_CONFIGURED_DRIVER) {
     pType: TextFieldType,
     pFieldName: keyof DatabaseConnection,
     pLabel: string,
-    pRequired?: boolean
+    pPlaceholder?: string
   ): JSX.Element {
     return (
       <section>
         <VSCodeTextField
-          size={75}
           type={pType}
-          required={pRequired}
+          placeholder={pPlaceholder}
           onBlur={handleTextFieldChange(pProperties, pFieldName)}>
           {pLabel}
         </VSCodeTextField>

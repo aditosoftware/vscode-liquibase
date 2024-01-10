@@ -32,13 +32,14 @@ export class MessageData {
       pSerializedData.command,
       new LiquibaseConfigurationData(
         pSerializedData.data.name,
+        pSerializedData.data.classpath,
+        pSerializedData.data.classpathSeparator,
 
         new DatabaseConnection(
           pSerializedData.data.databaseConnection.username,
           pSerializedData.data.databaseConnection.password,
           pSerializedData.data.databaseConnection.url,
           pSerializedData.data.databaseConnection.driver,
-          pSerializedData.data.databaseConnection.classpath,
           pSerializedData.data.databaseConnection.databaseType
         ),
 
@@ -50,7 +51,6 @@ export class MessageData {
               pSerializedData.data.referenceDatabaseConnection.password,
               pSerializedData.data.referenceDatabaseConnection.url,
               pSerializedData.data.referenceDatabaseConnection.driver,
-              pSerializedData.data.referenceDatabaseConnection.classpath,
               pSerializedData.data.referenceDatabaseConnection.databaseType
             )
           : undefined
@@ -71,6 +71,17 @@ export class LiquibaseConfigurationData {
   name: string;
 
   /**
+   * Specifies the directories and JAR files to search for changelog files and custom extension classes.
+   */
+  classpath: string; // TODO include in constructor, remove default, tsdoc
+
+  /**
+   * The separator for multiple classpath elements.
+   * To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
+   */
+  classpathSeparator: ";" | ":"; // TODO type auslagern!
+
+  /**
    * The normal database connection configuration.
    */
   databaseConnection: DatabaseConnection;
@@ -88,18 +99,26 @@ export class LiquibaseConfigurationData {
 
   constructor(
     name: string,
+    classpath: string,
+    classpathSeparator: ";" | ":",
     databaseConnection: DatabaseConnection,
     additionalConfiguration: AdditionalConfiguration,
     referenceDatabaseConnection?: DatabaseConnection
   ) {
     this.name = name;
+    this.classpath = classpath;
+    this.classpathSeparator = classpathSeparator;
     this.databaseConnection = databaseConnection;
     this.referenceDatabaseConnection = referenceDatabaseConnection;
     this.additionalConfiguration = additionalConfiguration;
   }
 
+  // FIXME Methode readFromProperties
+  // FIXME Speichern und das hier zusammenlegen!
+
   generatePropertiesForDisplay(): string {
-    return this.generateProperties().format();
+    // TODO das immer verwenden, damit classpath korrekt aussieht
+    return this.generateProperties().format().replaceAll("\\:", ":");
   }
 
   // TODO use generateProperties also when saving
@@ -107,6 +126,19 @@ export class LiquibaseConfigurationData {
   generateProperties(): PropertiesEditor {
     // Build the properties
     const properties: PropertiesEditor = new PropertiesEditor("");
+
+    // TODO anders lösen
+    // TODO Workspace-Folder auch hinzufügen?
+    const classpathElements: string[] = this.classpath.split("\n");
+    const allUniqueClasspath = Array.from(new Set(classpathElements))
+      .filter((pElement) => pElement.trim() !== "")
+      .map((pElement) => `"${pElement}"`);
+
+    if (allUniqueClasspath.length !== 0) {
+      const joinedClasspath = allUniqueClasspath.join(this.classpathSeparator);
+
+      properties.insert("classpath", joinedClasspath);
+    }
 
     if (this.databaseConnection.hasData()) {
       properties.insertComment("configuration for the database");
@@ -156,16 +188,16 @@ export class LiquibaseConfigurationData {
       const databaseDriver: Driver | undefined = ALL_DRIVERS.get(databaseType);
       if (databaseDriver) {
         const driverKey: string = "driver";
-        const classpathKey: string = "classpath";
 
         pProperties.insert(
           pIsReferenceConnection ? this.createReferenceKey(driverKey) : driverKey,
           databaseDriver.driverClass
         );
-        pProperties.insert(pIsReferenceConnection ? this.createReferenceKey(classpathKey) : classpathKey, "<TBA>", {
-          comment:
-            "The classpath value will be dynamically created.\nThis will happen after downloading the necessary driver",
-        });
+        // TODO Classpath anders lösen?
+        // pProperties.insert(pIsReferenceConnection ? this.createReferenceKey(classpathKey) : classpathKey, "<TBA>", {
+        //   comment:
+        //     "The classpath value will be dynamically created.\nThis will happen after downloading the necessary driver",
+        // });
       }
     }
   }
@@ -202,30 +234,15 @@ export class DatabaseConnection {
   driver: string;
 
   /**
-   * Specifies the directories and JAR files to search for changelog files and custom extension classes.
-   *
-   * TODO To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
-   */
-  classpath: string;
-
-  /**
    * The database type. This can be any type from the drivers. This will be later adjusted into `driver` and `classpath`, if a pre-configured driver was selected.
    */
   databaseType: string;
 
-  constructor(
-    username: string,
-    password: string,
-    url: string,
-    driver: string,
-    classpath: string,
-    databaseType: string
-  ) {
+  constructor(username: string, password: string, url: string, driver: string, databaseType: string) {
     this.username = username;
     this.password = password;
     this.url = url;
     this.driver = driver;
-    this.classpath = classpath;
     this.databaseType = databaseType;
   }
 
@@ -248,7 +265,6 @@ export class DatabaseConnection {
       this.password !== "" ||
       this.url !== "" ||
       this.driver !== "" ||
-      this.classpath !== "" ||
       (this.databaseType !== "" && this.databaseType !== NO_PRE_CONFIGURED_DRIVER)
     );
   }

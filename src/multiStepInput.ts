@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 
+// TODO mit Fadlers Logik zusammenführen?
+
 /**
  * Creates a multi step input. This has a title with the current step count.
  * @param pTitle - the general title of input. This will be displayed above every input with a `currentCount/maxCount` information

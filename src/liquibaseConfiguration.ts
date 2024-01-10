@@ -79,11 +79,6 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
     return;
   }
 
-  const selectedFolderUri: vscode.Uri = selectedFolder[0];
-  const relativePath: string = vscode.workspace.asRelativePath(selectedFolderUri);
-
-  // Map the Uri objects to their file paths
-  // const folderPaths = selectedFolder.map((uri) => uri.fsPath);
   const absolutePath: string = path.join(...selectedFolder.map((uri) => uri.fsPath));
 
   // build file name and path
@@ -128,7 +123,7 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
   fs.writeFileSync(path.join(absolutePath, fileName), properties.format());
 
   // save with the relative path in the settings
-  addToLiquibaseConfiguration(name, path.join(relativePath, fileName));
+  addToLiquibaseConfiguration(name, path.join(absolutePath, fileName));
 }
 
 /**
@@ -168,7 +163,8 @@ async function adjustDatabaseConnection(pDatabaseConnection: DatabaseConnection)
       const driverLocation = await downloadDriver(databaseDriver);
       // ... and save it in the database connection
       pDatabaseConnection.driver = databaseDriver.driverClass;
-      pDatabaseConnection.classpath = driverLocation;
+      // TODO driverLocation anders setzen !!!
+      console.log(driverLocation);
     }
   }
 }
