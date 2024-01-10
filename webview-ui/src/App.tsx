@@ -10,7 +10,7 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import "./App.css";
 import "./codicon.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LiquibaseConfigurationData, DatabaseConnection, MessageData } from "../../src/transferData";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
@@ -25,15 +25,13 @@ function App() {
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
 
+  const [previewData, setPreviewData] = useState<string | null>(null);
+
   window.addEventListener("message", (event) => {
     const message = event.data;
 
     if (message instanceof MessageData) {
       const deserializedMessage = MessageData.createFromSerializedData(message);
-      // TODO Transfer separator!
-      // if (typeof deserializedMessage.isWindows !== "undefined") {
-      //   isWindows = deserializedMessage.isWindows;
-      // }
 
       updateData((draft) => {
         const messageData = deserializedMessage.data;
@@ -46,8 +44,6 @@ function App() {
         // TODO anders lösen?
       });
     }
-
-    console.log(message);
   });
 
   /**
@@ -66,6 +62,20 @@ function App() {
   function handleTestConfiguration(): void {
     vscode.postMessage(new MessageData("testConfiguration", data));
   }
+
+  // Whenever the data changes, update the preview data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await data.generateProperties();
+        setPreviewData(result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, [data]);
 
   return (
     <main>
@@ -93,21 +103,18 @@ function App() {
               </section>
               <VSCodeDivider />
               <section>
-                {/* // TODO value change
-                // TODO label as p before?
-                // TODO better label
-                */}
                 <VSCodeTextArea
                   id="classpathInput"
                   value={data.classpath}
                   resize="vertical"
                   rows={3}
                   onBlur={handleChangeClasspath}>
-                  The classpaths used for executing liquibase.
+                  The classpath used for executing liquibase.
                 </VSCodeTextArea>
                 <label htmlFor="classpathInput" slot="label">
                   These should be absolute paths. Each line is treated as one entry. These are connected automatically
-                  by the selected systems separator.
+                  by the selected system separator. If you have a custom driver specified, then you need to put in the
+                  path to your driver here.
                 </label>
 
                 <VSCodeRadioGroup
@@ -125,10 +132,10 @@ function App() {
                   </label>
 
                   <VSCodeRadio value=";">
-                    <code>;</code> (Windows)
+                    semicolon (<code>;</code>) for Windows
                   </VSCodeRadio>
                   <VSCodeRadio value=":">
-                    <code>:</code> (Linux and MacOS)
+                    colon (<code>:</code>) for Linux and MacOS
                   </VSCodeRadio>
                 </VSCodeRadioGroup>
               </section>
@@ -174,7 +181,9 @@ function App() {
                 Configuration of <code>{data.name}.liquibase.properties</code>:
               </p>
             )}
-            <pre>{data.generatePropertiesForDisplay()}</pre>
+
+            <div>{previewData !== null ? <pre>{previewData}</pre> : <p>Lade Daten...</p>}</div>
+            {/* <pre>{data.generatePropertiesForDisplay()}</pre> */}
           </fieldset>
         </section>
 

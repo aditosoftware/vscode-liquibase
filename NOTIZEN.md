@@ -19,3 +19,11 @@ Standard:
 path to driver: anders machen evtl?
 
 radio-Buttons zu Dropdown
+
+
+------
+
+settings anpassen
+
+* in .vscode/settings.json nur relativer pfad in projekt angeben
+* an diesem Pfad dann die settings für die Projekte anzulegen

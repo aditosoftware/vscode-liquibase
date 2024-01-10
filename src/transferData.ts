@@ -60,6 +60,12 @@ export class MessageData {
 }
 
 /**
+ * The type for separating multiple classpath.
+ * It is depending on OS. Use a Semicolon (`;`) on Windows. Use a colon (`:`) on Linux or MacOS.
+ */
+type ClasspathSeparator = ";" | ":";
+
+/**
  * The liquibase configuration data.
  */
 export class LiquibaseConfigurationData {
@@ -73,13 +79,13 @@ export class LiquibaseConfigurationData {
   /**
    * Specifies the directories and JAR files to search for changelog files and custom extension classes.
    */
-  classpath: string; // TODO include in constructor, remove default, tsdoc
+  classpath: string;
 
   /**
    * The separator for multiple classpath elements.
    * To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
    */
-  classpathSeparator: ";" | ":"; // TODO type auslagern!
+  classpathSeparator: ClasspathSeparator;
 
   /**
    * The normal database connection configuration.
@@ -100,7 +106,7 @@ export class LiquibaseConfigurationData {
   constructor(
     name: string,
     classpath: string,
-    classpathSeparator: ";" | ":",
+    classpathSeparator: ClasspathSeparator,
     databaseConnection: DatabaseConnection,
     additionalConfiguration: AdditionalConfiguration,
     referenceDatabaseConnection?: DatabaseConnection
@@ -113,53 +119,58 @@ export class LiquibaseConfigurationData {
     this.additionalConfiguration = additionalConfiguration;
   }
 
-  // FIXME Methode readFromProperties
-  // FIXME Speichern und das hier zusammenlegen!
+  // TODO das ganze woanders hin auslagern?
 
-  generatePropertiesForDisplay(): string {
-    // TODO das immer verwenden, damit classpath korrekt aussieht
-    return this.generateProperties().format().replaceAll("\\:", ":");
+  /**
+   * Creates the properties text for saving in a file or previewing.
+   * @param pDownloadDriver - function to download the driver, if not there. This function will return the path where this driver was downloaded.
+   * There should be no function, when this function is only used to create a preview.
+   * @returns the created properties file as a string
+   */
+  async generateProperties(pDownloadDriver?: (pDriver: Driver) => Promise<string>): Promise<string> {
+    const propertiesEditor = await this.generatePropertiesEditor(pDownloadDriver);
+    // replace all escaped colons with unescaped.
+    // There is no way to automatically escape them during creation
+    return propertiesEditor.format().replaceAll("\\:", ":");
   }
 
-  // TODO use generateProperties also when saving
-
-  generateProperties(): PropertiesEditor {
+  /**
+   * Creates the properties editor for the given configuration.
+   * @param pDownloadDriver - function to download the driver, if not there. This function will return the path where this driver was downloaded.
+   * There should be no function, when this function is only used to create a preview.
+   * @returns the created properties
+   */
+  private async generatePropertiesEditor(
+    pDownloadDriver?: (pDriver: Driver) => Promise<string>
+  ): Promise<PropertiesEditor> {
     // Build the properties
     const properties: PropertiesEditor = new PropertiesEditor("");
 
-    // TODO anders lösen
-    // TODO Workspace-Folder auch hinzufügen?
     const classpathElements: string[] = this.classpath.split("\n");
-    const allUniqueClasspath = Array.from(new Set(classpathElements))
-      .filter((pElement) => pElement.trim() !== "")
-      .map((pElement) => `"${pElement}"`);
-
-    if (allUniqueClasspath.length !== 0) {
-      const joinedClasspath = allUniqueClasspath.join(this.classpathSeparator);
-
-      properties.insert("classpath", joinedClasspath);
-    }
 
     if (this.databaseConnection.hasData()) {
-      properties.insertComment("configuration for the database");
-      Object.entries(this.databaseConnection).forEach(([key, value]) => {
-        if (key && value && key !== "databaseType") {
-          properties.insert(key, value);
-        }
-      });
-      this.writeDatabaseConnection(this.databaseConnection, properties, false);
+      const result = await this.databaseConnection.writeDataForConnection(properties, false, pDownloadDriver);
+      result && classpathElements.push(result);
     }
 
     // and the reference properties
     if (this.referenceDatabaseConnection && this.referenceDatabaseConnection.hasData()) {
-      properties.insertComment("configuration for the reference database");
-      Object.entries(this.referenceDatabaseConnection).forEach(([key, value]) => {
-        if (key && value && key !== "databaseType") {
-          const referenceKey = this.createReferenceKey(key);
-          properties.insert(referenceKey, value);
-        }
-      });
-      this.writeDatabaseConnection(this.referenceDatabaseConnection, properties, true);
+      const result = await this.referenceDatabaseConnection.writeDataForConnection(properties, true, pDownloadDriver);
+      result && classpathElements.push(result);
+    }
+
+    // TODO Workspace-Folder auch hinzufügen?
+
+    const allUniqueClasspath = Array.from(new Set(classpathElements))
+      .filter((pElement) => pElement.trim() !== "")
+      .map((pElement) => `"${pElement}"`);
+    if (allUniqueClasspath.length !== 0) {
+      const joinedClasspath = allUniqueClasspath.join(this.classpathSeparator);
+
+      properties.insertComment(
+        "Specifies the directories and JAR files to search for changelog files and custom extension classes. To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS."
+      );
+      properties.insert("classpath", joinedClasspath);
     }
 
     // add additional properties
@@ -171,35 +182,6 @@ export class LiquibaseConfigurationData {
     }
 
     return properties;
-  }
-
-  private createReferenceKey(key: string): string {
-    return "reference" + key.charAt(0).toUpperCase() + key.substring(1);
-  }
-
-  private writeDatabaseConnection(
-    pDatabaseConnection: DatabaseConnection,
-    pProperties: PropertiesEditor,
-    pIsReferenceConnection: boolean
-  ): void {
-    const databaseType: string = pDatabaseConnection.databaseType;
-
-    if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
-      const databaseDriver: Driver | undefined = ALL_DRIVERS.get(databaseType);
-      if (databaseDriver) {
-        const driverKey: string = "driver";
-
-        pProperties.insert(
-          pIsReferenceConnection ? this.createReferenceKey(driverKey) : driverKey,
-          databaseDriver.driverClass
-        );
-        // TODO Classpath anders lösen?
-        // pProperties.insert(pIsReferenceConnection ? this.createReferenceKey(classpathKey) : classpathKey, "<TBA>", {
-        //   comment:
-        //     "The classpath value will be dynamically created.\nThis will happen after downloading the necessary driver",
-        // });
-      }
-    }
   }
 }
 
@@ -259,6 +241,10 @@ export class DatabaseConnection {
     return this;
   }
 
+  /**
+   * Checks if any data is given.
+   * @returns `true` if any data is there
+   */
   hasData(): boolean {
     return (
       this.username !== "" ||
@@ -267,5 +253,68 @@ export class DatabaseConnection {
       this.driver !== "" ||
       (this.databaseType !== "" && this.databaseType !== NO_PRE_CONFIGURED_DRIVER)
     );
+  }
+
+  /**
+   * Writes the data for the database connection.
+   *
+   * @param properties - the properties editor where the properties should be written
+   * @param pReferenceConnection - information if this is the reference connection or not
+   * @param pDownloadDriver - a function for downloading the drivers
+   * @returns the path from the downloaded driver, if downloaded
+   */
+  async writeDataForConnection(
+    properties: PropertiesEditor,
+    pReferenceConnection: boolean,
+    pDownloadDriver?: (pDriver: Driver) => Promise<string>
+  ): Promise<string | undefined> {
+    properties.insertComment(`configuration for the ${pReferenceConnection ? "reference" : ""} database`);
+    Object.entries(this).forEach(([key, value]) => {
+      if (key && value && key !== "databaseType") {
+        properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, value);
+      }
+    });
+    return this.writeDriverConfigurationAndDownload(properties, pReferenceConnection, pDownloadDriver);
+  }
+
+  /**
+   * Writes the driver configuration to the properties file. If `pDownloadDriver` is given, then will be also the driver downloaded, if not there.
+   * @param pProperties - the properties editor where the properties should be written
+   * @param pIsReferenceConnection - information if this is the reference connection or not
+   * @param pDownloadDriver - a function for downloading the drivers
+   * @returns the path from the downloaded driver, if downloaded
+   */
+  private async writeDriverConfigurationAndDownload(
+    pProperties: PropertiesEditor,
+    pIsReferenceConnection: boolean,
+    pDownloadDriver?: (pDriver: Driver) => Promise<string>
+  ): Promise<string | undefined> {
+    const databaseType: string = this.databaseType;
+
+    if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
+      const databaseDriver: Driver | undefined = ALL_DRIVERS.get(databaseType);
+      if (databaseDriver) {
+        const driverKey: string = "driver";
+
+        pProperties.insert(
+          pIsReferenceConnection ? this.createReferenceKey(driverKey) : driverKey,
+          databaseDriver.driverClass
+        );
+
+        // download driver when function is there
+        if (pDownloadDriver) {
+          return await pDownloadDriver(databaseDriver);
+        }
+      }
+    }
+  }
+
+  /**
+   * Transforms a key into a reference key. For instance `username` will be transformed to `referenceUsername`.
+   * @param key - the key which should be transformed into a reference key
+   * @returns the reference key
+   */
+  private createReferenceKey(key: string): string {
+    return "reference" + key.charAt(0).toUpperCase() + key.substring(1);
   }
 }

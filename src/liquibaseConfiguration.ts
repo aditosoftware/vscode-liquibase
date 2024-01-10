@@ -1,9 +1,8 @@
 import * as vscode from "vscode";
-import { PropertiesEditor } from "properties-file/editor";
 import * as fs from "fs";
 import path from "path";
-import { DatabaseConnection, LiquibaseConfigurationData } from "./transferData";
-import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "./drivers";
+import { LiquibaseConfigurationData } from "./transferData";
+import { Driver } from "./drivers";
 import download from "download";
 
 /**
@@ -88,42 +87,22 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
     fileName = fileName + fileEnding;
   }
 
-  // Build the properties
-  const properties: PropertiesEditor = new PropertiesEditor("");
+  const properties: string = await pMessageData.generateProperties(downloadDriver);
 
-  // Adjust the connection for pre-configured databases ...
-  await adjustDatabaseConnection(pMessageData.databaseConnection);
-
-  // .. and put in the properties for the database connection
-  Object.entries(pMessageData.databaseConnection).forEach(([key, value]) => {
-    if (key && value && key !== "databaseType") {
-      properties.insert(key, value);
-    }
-  });
-
-  if (pMessageData.referenceDatabaseConnection) {
-    // Adjust the connection for a reference connection ...
-    await adjustDatabaseConnection(pMessageData.referenceDatabaseConnection);
-    // ... and put in these values prefixed by reference as well
-    Object.entries(pMessageData.referenceDatabaseConnection).forEach(([key, value]) => {
-      if (key && value) {
-        const referenceKey = "reference" + key.charAt(0).toUpperCase() + key.substring(1);
-        properties.insert(referenceKey, value);
-      }
-    });
-  }
-
-  // add additional properties
-  for (const key in pMessageData.additionalConfiguration) {
-    properties.insert(key, pMessageData.additionalConfiguration[key]);
-  }
+  const propertiesFilePath = path.join(absolutePath, fileName);
 
   // TODO  error handling?
+
   // save file with absolute path
-  fs.writeFileSync(path.join(absolutePath, fileName), properties.format());
+  fs.writeFileSync(propertiesFilePath, properties);
 
   // save with the relative path in the settings
-  addToLiquibaseConfiguration(name, path.join(absolutePath, fileName));
+  addToLiquibaseConfiguration(name, propertiesFilePath);
+
+  // open the created file
+  const uri = vscode.Uri.file(propertiesFilePath);
+  const document = await vscode.workspace.openTextDocument(uri);
+  await vscode.window.showTextDocument(document);
 }
 
 /**
@@ -146,26 +125,6 @@ export function testLiquibaseConnection(pConfiguration: string | LiquibaseConfig
     // TODO create properties for testing
     // TODO do real test
     vscode.window.showInformationMessage(`Testing connection for ${JSON.stringify(pConfiguration)}`);
-  }
-}
-
-/**
- * Adjusts a database connection by possible downloading the drivers and setting those values in the connection.
- * @param pDatabaseConnection - the database connection whose driver should be adjusted
- */
-async function adjustDatabaseConnection(pDatabaseConnection: DatabaseConnection): Promise<void> {
-  const databaseType: string = pDatabaseConnection.databaseType;
-
-  if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
-    const databaseDriver: Driver | undefined = ALL_DRIVERS.get(databaseType);
-    if (databaseDriver) {
-      // download the driver ...
-      const driverLocation = await downloadDriver(databaseDriver);
-      // ... and save it in the database connection
-      pDatabaseConnection.driver = databaseDriver.driverClass;
-      // TODO driverLocation anders setzen !!!
-      console.log(driverLocation);
-    }
   }
 }
 

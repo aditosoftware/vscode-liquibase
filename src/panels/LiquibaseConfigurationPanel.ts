@@ -114,7 +114,6 @@ export class LiquibaseConfigurationPanel {
 
     // TODO Transfer value
     const isWindows = process.platform === "win32";
-    console.log(isWindows);
 
     // TODO andere Stelle zum Übertragen!
     webview.postMessage(
