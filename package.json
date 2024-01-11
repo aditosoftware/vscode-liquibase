@@ -32,13 +32,9 @@
     "configuration": {
       "title": "Liquibase",
       "properties": {
-        "liquibase.liquibaseConfigurationFiles": {
-          "type": "object",
-          "markdownDescription": "Configures the stored Liquibase configurations.\n\nThe **Item** contains a unique name for your configuration. This name will be used in any dialogs.\n\nThe **Value** contains the path to your `liquibase.properties` file.",
-          "default": {},
-          "additionalProperties": {
-            "type": "string"
-          }
+        "liquibase.configurationPath": {
+          "type": "string",
+          "markdownDescription": "Relative path inside the workspace where liquibase configuration should be stored.\nThis folder should not be included in your version control system."
         },
         "liquibase.driverLocation": {
           "type": "string",

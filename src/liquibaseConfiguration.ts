@@ -6,22 +6,14 @@ import { Driver } from "./drivers";
 import download from "download";
 
 /**
- * How the liquibase path will be queried in the inputs.
- */
-export const liquibasePath: string = "liquibasePath";
-
-/**
  * The general configuration name.
  */
 const configurationName: string = "liquibase";
 
-/**
- * The configuration for storing the liquibase configurations.
- */
-const liquibaseConfigurationName: string = "liquibaseConfigurationFiles";
-
 // TODO tsdoc
 const driverLocation: string = "driverLocation";
+
+//////////////////////
 
 /**
  * The file ending of all liquibase configuration files.
@@ -29,29 +21,88 @@ const driverLocation: string = "driverLocation";
 const fileEnding: string = ".liquibase.properties";
 
 /**
+ * The name of the settings file where all the configurations should be stored.
+ */
+const configurationSettingFile: string = "settings.json";
+
+/**
  * Reads the database configuration and return all names.
  */
-export function readLiquibaseConfigurationNames(): string[] {
-  const configuration = vscode.workspace.getConfiguration(configurationName);
-  const liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
-
-  return Object.keys(liquibaseConfiguration);
+export async function readLiquibaseConfigurationNames(): Promise<string[] | undefined> {
+  const configuration = await readConfiguration();
+  if (configuration) {
+    return Object.keys(configuration.jsonData);
+  }
 }
 
 /**
  * Adds an key-value pair to the configuration. If no configuration exists, one will be created.
+ * // TODO tsdoc
  * @param pName - the name of the configuration
  * @param pPath - the path to the configuration file
  */
-export function addToLiquibaseConfiguration(pName: string, pPath: string) {
+export async function addToLiquibaseConfiguration(pName: string, pPath: string) {
+  // add the element
+  const configuration = await readConfiguration();
+  if (configuration) {
+    configuration.jsonData[pName] = pPath;
+
+    // and write the data to the file
+    fs.writeFileSync(configuration.configPath, JSON.stringify(configuration.jsonData, undefined, 2));
+
+    vscode.window.showInformationMessage(`Configuration for ${pName} was successfully added to the settings.`);
+  }
+  // TODO error handling?
+}
+
+// TODO Tsdoc
+interface Configuration {
+  configPath: string;
+  jsonData: Record<string, string>;
+}
+
+async function readConfiguration(): Promise<Configuration | undefined> {
+  const configPath = await getLiquibaseSettingsPath();
+  if (!configPath) {
+    // TODO better message
+    vscode.window.showErrorMessage("No configuration path found");
+    return;
+  }
+
+  // read the jsonData from the file, if no file is there, just give an empty json object
+  const data = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf-8") : JSON.stringify({}); // TODO encoding at all file options
+  const jsonData: Record<string, string> = JSON.parse(data);
+  return { configPath, jsonData };
+}
+
+async function getLiquibaseSettingsPath(): Promise<string | undefined> {
+  // todo better name
+  // TODO tsdoc
+  const configurationFolder: string | undefined = await getLiquibaseConfigurationPath();
+
+  if (configurationFolder) {
+    return path.join(configurationFolder, configurationSettingFile);
+  }
+}
+
+// TODO TSDOC
+export async function getLiquibaseConfigurationPath(): Promise<string | undefined> {
   const configuration = vscode.workspace.getConfiguration(configurationName);
-  const liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
+  const configurationPath = configuration.get("configurationPath", "data/liquibase");
 
-  liquibaseConfiguration[pName] = pPath;
+  if (vscode.workspace.workspaceFolders) {
+    const workspaceFolder = vscode.workspace.workspaceFolders[0];
 
-  configuration.update(liquibaseConfigurationName, liquibaseConfiguration);
+    const absolutePath = path.join(workspaceFolder.uri.fsPath, configurationPath);
 
-  vscode.window.showInformationMessage(`Configuration for ${pName} was successfully added to the settings.`);
+    if (!fs.existsSync(absolutePath)) {
+      const uriFile = vscode.Uri.file(absolutePath);
+      // create the missing directories
+      await vscode.workspace.fs.createDirectory(uriFile);
+    }
+
+    return absolutePath;
+  }
 }
 
 /**
@@ -62,23 +113,13 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
   // TODO check if file exists
   // TODO check if directory, then create file
 
-  // Find out workspace and workspace root for opening the file chooser dialog
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  const defaultUri: vscode.Uri | undefined = workspaceFolders ? workspaceFolders[0].uri : undefined;
+  const configurationPath = await getLiquibaseConfigurationPath();
 
-  const selectedFolder: vscode.Uri[] | undefined = await vscode.window.showOpenDialog({
-    canSelectFiles: false,
-    canSelectFolders: true,
-    canSelectMany: false,
-    defaultUri: defaultUri, // Set the default directory to the workspace root
-  });
-
-  if (!selectedFolder || selectedFolder.length === 0) {
+  if (!configurationPath) {
+    // TODO better error message
     vscode.window.showErrorMessage("No folder given. No configuration was saved");
     return;
   }
-
-  const absolutePath: string = path.join(...selectedFolder.map((uri) => uri.fsPath));
 
   // build file name and path
   const name: string = pMessageData.name;
@@ -89,7 +130,7 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
 
   const properties: string = await pMessageData.generateProperties(downloadDriver);
 
-  const propertiesFilePath = path.join(absolutePath, fileName);
+  const propertiesFilePath = path.join(configurationPath, fileName);
 
   // TODO  error handling?
 
@@ -109,18 +150,18 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
  * Tests a existing liquibase configuration.
  * @param pConfiguration - the name of the configuration or the whole configuration that should be tested
  */
-export function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
+export async function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
   if (typeof pConfiguration === "string") {
-    const configuration = vscode.workspace.getConfiguration(configurationName);
-    const liquibaseConfiguration: LiquibaseConfiguration = configuration.get(liquibaseConfigurationName, {});
+    const configuration = await readConfiguration();
+    if (configuration) {
+      const path: string = configuration.jsonData[pConfiguration];
+      if (path) {
+        // TODO Read properties for path
+        // TODO create dummy changelog and call validate / status of liquibase, then handle the results
 
-    const path: string = liquibaseConfiguration[pConfiguration];
-    if (path) {
-      // TODO Read properties for path
-      // TODO create dummy changelog and call validate / status of liquibase, then handle the results
-
-      vscode.window.showInformationMessage(`Testing connection for ${pConfiguration} and ${path} in the future`);
-    }
+        vscode.window.showInformationMessage(`Testing connection for ${pConfiguration} and ${path} in the future`);
+      }
+    } // TODO error handling
   } else {
     // TODO create properties for testing
     // TODO do real test
@@ -181,11 +222,4 @@ function getDriverLocation(): string {
   }
 
   return locationForDriver;
-}
-
-/**
- * The Liquibase configuration.
- */
-interface LiquibaseConfiguration {
-  [key: string]: string;
 }

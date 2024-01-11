@@ -56,12 +56,13 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
 
   context.subscriptions.push(
     vscode.commands.registerCommand("liquibase.testConfiguration", async () => {
-      const configurationNames: string[] = readLiquibaseConfigurationNames();
+      const configurationNames: string[] | undefined = await readLiquibaseConfigurationNames();
+      if (configurationNames) {
+        const result: string | undefined = await vscode.window.showQuickPick(configurationNames);
 
-      const result: string | undefined = await vscode.window.showQuickPick(configurationNames);
-
-      if (result) {
-        testLiquibaseConnection(result);
+        if (result) {
+          testLiquibaseConnection(result);
+        }
       }
     })
   );
