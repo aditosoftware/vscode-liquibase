@@ -2,7 +2,7 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
-import {  MessageData } from "../transferData";
+import { MessageData, MessageType } from "../transferData";
 import { isWindows } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData } from "../configuration/LiquibaseConfigurationData";
 
@@ -73,9 +73,19 @@ export class LiquibaseConfigurationPanel {
       LiquibaseConfigurationPanel.currentPanel = new LiquibaseConfigurationPanel(panel, extensionUri);
     }
 
-    LiquibaseConfigurationPanel.currentPanel._panel.webview.postMessage(
-      new MessageData("", data ? data : LiquibaseConfigurationData.createDefaultData(true, isWindows()))
+    this.transferMessage(
+      MessageType.INIT,
+      data ? data : LiquibaseConfigurationData.createDefaultData(true, isWindows())
     );
+  }
+
+  /**
+   * Transfers a message to the webview.
+   * @param pMessageType - the type of the message
+   * @param data - the data of the message
+   */
+  static transferMessage(pMessageType: MessageType, data: LiquibaseConfigurationData) {
+    LiquibaseConfigurationPanel.currentPanel?._panel.webview.postMessage(new MessageData(pMessageType, data));
   }
 
   /**
@@ -156,19 +166,19 @@ export class LiquibaseConfigurationPanel {
         // recreate a new object, because otherwise no methods will be there
         const messageData: MessageData = MessageData.createFromSerializedData(message as MessageData);
 
-        const command: string = messageData.command;
-        const data: LiquibaseConfigurationData = messageData.data;
+        const messageType: string = messageData.messageType;
+        const data: LiquibaseConfigurationData = messageData.configurationData;
 
-        switch (command) {
-          case "saveConfiguration":
+        switch (messageType) {
+          case MessageType.SAVE_CONNECTION:
             createLiquibaseProperties(data);
             break;
-          case "testConfiguration":
+          case MessageType.TEST_CONNECTION:
             testLiquibaseConnection(data);
             break;
           default:
             // TODO better handling
-            window.showErrorMessage(`Command ${command} not found. Message was ${message}`);
+            console.error(`Handling for command ${messageType} not found. Message was ${JSON.stringify(message)}`);
             break;
         }
       },

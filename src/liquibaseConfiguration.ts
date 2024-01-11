@@ -10,6 +10,8 @@ import {
   updateConfiguration,
 } from "./handleLiquibaseSettings";
 import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
+import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
+import { MessageType } from "./transferData";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -43,9 +45,9 @@ export async function addToLiquibaseConfiguration(pName: string, pPath: string) 
 
 /**
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
- * @param pMessageData - the inputted values from the user
+ * @param pConfigurationData - the inputted values from the user
  */
-export async function createLiquibaseProperties(pMessageData: LiquibaseConfigurationData) {
+export async function createLiquibaseProperties(pConfigurationData: LiquibaseConfigurationData) {
   // TODO check if file exists
   // TODO check if directory, then create file
 
@@ -58,9 +60,9 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
   }
 
   // build file name and path
-  const name: string = pMessageData.name;
+  const name: string = pConfigurationData.name;
 
-  if (pMessageData.newConfig) {
+  if (pConfigurationData.newConfig) {
     // check only for existing configuration when there is a new configuration file
     const existingConfigurations = await readLiquibaseConfigurationNames();
     if (existingConfigurations) {
@@ -85,7 +87,7 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
     fileName = fileName + fileEnding;
   }
 
-  const properties: string = await pMessageData.generateProperties(downloadDriver);
+  const properties: string = await pConfigurationData.generateProperties(downloadDriver);
 
   const propertiesFilePath = path.join(configurationPath, fileName);
 
@@ -102,8 +104,8 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
   const document = await vscode.workspace.openTextDocument(uri);
   await vscode.window.showTextDocument(document);
 
-  // TODO Transfer successful saving back
-  // LiquibaseConfigurationPanel.transfer(name);
+  // Transfer successful saving back to webview
+  LiquibaseConfigurationPanel.transferMessage(MessageType.SAVING_SUCCESSFUL, pConfigurationData);
 }
 
 /**

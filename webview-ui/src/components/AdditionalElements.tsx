@@ -8,6 +8,7 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { getConfigurationDataFromMessage } from "../utilities/transfer";
+import { MessageType } from "../../../src/transferData";
 
 /**
  * The properties for the additional element tag.
@@ -33,15 +34,19 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
 
   window.addEventListener("message", (event) => {
     // TODO anders lösen?
-    const data = getConfigurationDataFromMessage(event);
+    const messageData = getConfigurationDataFromMessage(event);
 
-    // recreate the new values as a new map
-    const newValues = new Map();
-    const additionalConfiguration = data.additionalConfiguration;
-    for (const configKey in additionalConfiguration) {
-      newValues.set(configKey, additionalConfiguration[configKey]);
+    if (messageData.messageType === MessageType.INIT) {
+      // recreate the new values as a new map
+      const newValues = new Map();
+      const additionalConfiguration = messageData.configurationData.additionalConfiguration;
+      for (const configKey in additionalConfiguration) {
+        newValues.set(configKey, additionalConfiguration[configKey]);
+      }
+      setAdditionalElementValues(newValues);
+    } else {
+      console.error(`No handling for type ${messageData.messageType} found`);
     }
-    setAdditionalElementValues(newValues);
   });
 
   /**

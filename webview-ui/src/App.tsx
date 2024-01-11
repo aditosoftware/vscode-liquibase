@@ -11,7 +11,7 @@ import {
 import "./App.css";
 import "./codicon.css";
 import { useEffect, useState } from "react";
-import {  MessageData } from "../../src/transferData";
+import { MessageData, MessageType } from "../../src/transferData";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
 import { useImmer } from "use-immer";
@@ -28,20 +28,34 @@ function App() {
   const [previewData, setPreviewData] = useState<string | null>(null);
 
   window.addEventListener("message", (event) => {
-    const data = getConfigurationDataFromMessage(event);
+    const messageData = getConfigurationDataFromMessage(event);
 
-    setReferenceConnection(typeof data.referenceDatabaseConnection !== "undefined");
+    if (messageData.messageType === MessageType.INIT) {
+      // new data for display, change every value
+      const configurationData = messageData.configurationData;
 
-    updateData((draft) => {
-      draft.name = data.name;
-      draft.newConfig = data.newConfig;
-      draft.classpath = data.classpath;
-      draft.classpathSeparator = data.classpathSeparator;
-      draft.databaseConnection = data.databaseConnection;
-      draft.referenceDatabaseConnection = data.referenceDatabaseConnection;
-      draft.additionalConfiguration = data.additionalConfiguration;
-      // TODO anders lösen?
-    });
+      setReferenceConnection(typeof configurationData.referenceDatabaseConnection !== "undefined");
+
+      updateData((draft) => {
+        draft.name = configurationData.name;
+        draft.newConfig = configurationData.newConfig;
+        draft.classpath = configurationData.classpath;
+        draft.classpathSeparator = configurationData.classpathSeparator;
+        draft.databaseConnection = configurationData.databaseConnection;
+        draft.referenceDatabaseConnection = configurationData.referenceDatabaseConnection;
+        draft.additionalConfiguration = configurationData.additionalConfiguration;
+        // TODO anders lösen?
+      });
+    } else if (messageData.messageType === MessageType.SAVING_SUCCESSFUL) {
+      // saving successful, just check name and set newConfig flag to false
+      if (data.name === messageData.configurationData.name) {
+        updateData((draft) => {
+          draft.newConfig = false;
+        });
+      }
+    } else {
+      console.error(`No handling for type ${messageData.messageType} found`);
+    }
   });
 
   /**
@@ -50,7 +64,7 @@ function App() {
    */
   function handleSaveConfiguration(): void {
     if (data.name) {
-      vscode.postMessage(new MessageData("saveConfiguration", data));
+      vscode.postMessage(new MessageData(MessageType.SAVE_CONNECTION, data));
     }
   }
 
@@ -58,7 +72,7 @@ function App() {
    * Tests the given configuration
    */
   function handleTestConfiguration(): void {
-    vscode.postMessage(new MessageData("testConfiguration", data));
+    vscode.postMessage(new MessageData(MessageType.TEST_CONNECTION, data));
   }
 
   // Whenever the data changes, update the preview data
@@ -259,6 +273,9 @@ function App() {
   function handleChangeName(event: React.FocusEvent<HTMLInputElement>) {
     updateData((draft) => {
       draft.name = event.target.value;
+
+      // whenever the name changes, assume new config
+      draft.newConfig = true;
     });
   }
 

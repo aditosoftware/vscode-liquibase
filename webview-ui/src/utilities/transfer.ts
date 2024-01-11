@@ -1,16 +1,7 @@
-import { LiquibaseConfigurationData } from "../../../src/configuration/LiquibaseConfigurationData";
-import {  MessageData } from "../../../src/transferData";
+import { MessageData } from "../../../src/transferData";
 
 // TODO TSdoc, nach vscode?
-export function getConfigurationDataFromMessage(event: MessageEvent<MessageData>): LiquibaseConfigurationData {
-  console.log(event);
-  console.log(event.data);
-
-  console.log(typeof event.data);
-  console.log(event.data instanceof MessageData);
-  console.log(typeof event.data === "string");
-
+export function getConfigurationDataFromMessage(event: MessageEvent<MessageData>): MessageData {
   const message = event.data;
-
-  return MessageData.createFromSerializedData(message).data;
+  return MessageData.createFromSerializedData(message);
 }

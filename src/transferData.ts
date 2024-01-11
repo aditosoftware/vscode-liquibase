@@ -1,7 +1,13 @@
 import { DatabaseConnection } from "./configuration/DatabaseConnection";
 import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
 
+export enum MessageType {
+  INIT = "INIT",
+  SAVING_SUCCESSFUL = "SAVING_SUCCESSFUL",
 
+  SAVE_CONNECTION = "SAVE_CONNECTION",
+  TEST_CONNECTION = "TEST_CONNECTION",
+}
 
 /**
  * The message data that can be transferred from the webview to the extension.
@@ -10,16 +16,17 @@ export class MessageData {
   /**
    * The command that should be executed. This command is any string that is referenced in the panel of the webview.
    */
-  command: string; // TODO undefined?
+
+  messageType: MessageType;
 
   /**
    * The real data of the message.
    */
-  data: LiquibaseConfigurationData;
+  configurationData: LiquibaseConfigurationData;
 
-  constructor(command: string, data: LiquibaseConfigurationData) {
-    this.command = command;
-    this.data = data;
+  constructor(messageType: MessageType, configurationData: LiquibaseConfigurationData) {
+    this.messageType = messageType;
+    this.configurationData = configurationData;
   }
 
   /**
@@ -30,35 +37,33 @@ export class MessageData {
    */
   static createFromSerializedData(pSerializedData: MessageData): MessageData {
     return new MessageData(
-      pSerializedData.command,
+      pSerializedData.messageType,
       new LiquibaseConfigurationData(
-        pSerializedData.data.newConfig,
-        pSerializedData.data.name,
-        pSerializedData.data.classpath,
-        pSerializedData.data.classpathSeparator,
+        pSerializedData.configurationData.newConfig,
+        pSerializedData.configurationData.name,
+        pSerializedData.configurationData.classpath,
+        pSerializedData.configurationData.classpathSeparator,
 
         new DatabaseConnection(
-          pSerializedData.data.databaseConnection.username,
-          pSerializedData.data.databaseConnection.password,
-          pSerializedData.data.databaseConnection.url,
-          pSerializedData.data.databaseConnection.driver,
-          pSerializedData.data.databaseConnection.databaseType
+          pSerializedData.configurationData.databaseConnection.username,
+          pSerializedData.configurationData.databaseConnection.password,
+          pSerializedData.configurationData.databaseConnection.url,
+          pSerializedData.configurationData.databaseConnection.driver,
+          pSerializedData.configurationData.databaseConnection.databaseType
         ),
 
-        pSerializedData.data.additionalConfiguration,
+        pSerializedData.configurationData.additionalConfiguration,
 
-        pSerializedData.data.referenceDatabaseConnection
+        pSerializedData.configurationData.referenceDatabaseConnection
           ? new DatabaseConnection(
-              pSerializedData.data.referenceDatabaseConnection.username,
-              pSerializedData.data.referenceDatabaseConnection.password,
-              pSerializedData.data.referenceDatabaseConnection.url,
-              pSerializedData.data.referenceDatabaseConnection.driver,
-              pSerializedData.data.referenceDatabaseConnection.databaseType
+              pSerializedData.configurationData.referenceDatabaseConnection.username,
+              pSerializedData.configurationData.referenceDatabaseConnection.password,
+              pSerializedData.configurationData.referenceDatabaseConnection.url,
+              pSerializedData.configurationData.referenceDatabaseConnection.driver,
+              pSerializedData.configurationData.referenceDatabaseConnection.databaseType
             )
           : undefined
       )
     );
   }
 }
-
-
