@@ -2,7 +2,6 @@ import { TextFieldType } from "@vscode/webview-ui-toolkit";
 import { VSCodeRadioGroup, VSCodeDivider, VSCodeTextField, VSCodeRadio } from "@vscode/webview-ui-toolkit/react";
 import { ALL_DRIVERS, NO_PRE_CONFIGURED_DRIVER } from "../../../src/drivers";
 import { DatabaseConnection } from "../../../src/transferData";
-import { useState } from "react";
 
 /**
  * Properties for creating a database configuration
@@ -12,6 +11,12 @@ interface DatabaseConfigurationProps {
    * The title for the configuration.
    */
   title: string;
+
+  /**
+   * The configured database connection. This will be used to display the values inside the element.
+   */
+  databaseConnection?: DatabaseConnection; // TODO handle setting of the values different? or rethink this option
+
   /**
    * Method that will get a new value whenever the initial component was left (`onBlur`).
    * This is used to transfer the data the user has put into a element to the main app.
@@ -28,8 +33,6 @@ interface DatabaseConfigurationProps {
  * @returns the created element
  */
 export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
-  const [selectedDatabaseType, setSelectedDatabaseType] = useState<string>(NO_PRE_CONFIGURED_DRIVER);
-
   return (
     <div>
       <fieldset>
@@ -44,11 +47,10 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
           <legend>Database type</legend>
           <VSCodeRadioGroup
             orientation="vertical"
-            value={selectedDatabaseType}
+            value={pProperties.databaseConnection?.databaseType}
             onClick={(e) => {
               // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint. // TODO validate
               const value = e.target.value;
-              setSelectedDatabaseType(value);
               pProperties.onUpdate("databaseType", value);
               // remove classpath and driver values, when a pre-configured values was used
               if (value !== NO_PRE_CONFIGURED_DRIVER) {
@@ -59,7 +61,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
             {createDatabaseSelections()}
           </VSCodeRadioGroup>
 
-          {selectedDatabaseType === NO_PRE_CONFIGURED_DRIVER && (
+          {pProperties.databaseConnection?.databaseType === NO_PRE_CONFIGURED_DRIVER && (
             <>
               <VSCodeDivider />
               {createInput(pProperties, "text", "driver", "The driver class of database", "org.mariadb.jdbc.Driver")}
@@ -116,6 +118,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
         <VSCodeTextField
           type={pType}
           placeholder={pPlaceholder}
+          value={pProperties.databaseConnection?.getValue(pFieldName)}
           onBlur={handleTextFieldChange(pProperties, pFieldName)}>
           {pLabel}
         </VSCodeTextField>

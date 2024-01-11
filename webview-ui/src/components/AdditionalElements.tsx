@@ -7,6 +7,7 @@ import {
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
+import { getConfigurationDataFromMessage } from "../utilities/transfer";
 
 /**
  * The properties for the additional element tag.
@@ -29,6 +30,19 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
 
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
+
+  window.addEventListener("message", (event) => {
+    // TODO anders lösen?
+    const data = getConfigurationDataFromMessage(event);
+
+    // recreate the new values as a new map
+    const newValues = new Map();
+    const additionalConfiguration = data.additionalConfiguration;
+    for (const configKey in additionalConfiguration) {
+      newValues.set(configKey, additionalConfiguration[configKey]);
+    }
+    setAdditionalElementValues(newValues);
+  });
 
   /**
    * Makes the row editable when clicked on it.

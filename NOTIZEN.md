@@ -20,10 +20,22 @@ path to driver: anders machen evtl?
 
 radio-Buttons zu Dropdown
 
-
-------
+---
 
 settings anpassen
 
-* in .vscode/settings.json nur relativer pfad in projekt angeben
-* an diesem Pfad dann die settings für die Projekte anzulegen
+- in .vscode/settings.json nur relativer pfad in projekt angeben
+- an diesem Pfad dann die settings für die Projekte anzulegen
+
+---
+
+- escapen von werten verhindern? Wie? zb ! . \ werden escapt und bestimmt noch mehr
+- tab-reihenfolge bei additional elements anpassen
+
+---
+
+# zu edit
+
+- in files ermöglichen
+- erfolgreiches speichern zurück übertragen
+- message data umarbeiten

@@ -15,35 +15,31 @@ import { LiquibaseConfigurationData, DatabaseConnection, MessageData } from "../
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
 import { useImmer } from "use-immer";
-import { NO_PRE_CONFIGURED_DRIVER } from "../../src/drivers";
+import { getConfigurationDataFromMessage } from "./utilities/transfer";
 
 function App() {
-  // TODO Persist values when changed view
-
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
-    new LiquibaseConfigurationData("", "", ";", createEmptyDatabaseConnection(), {}) // TODO anders lösen?
+    LiquibaseConfigurationData.createDefaultData(true, true) // TODO anders lösen?
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
 
   const [previewData, setPreviewData] = useState<string | null>(null);
 
   window.addEventListener("message", (event) => {
-    const message = event.data;
+    const data = getConfigurationDataFromMessage(event);
 
-    if (message instanceof MessageData) {
-      const deserializedMessage = MessageData.createFromSerializedData(message);
+    setReferenceConnection(typeof data.referenceDatabaseConnection !== "undefined");
 
-      updateData((draft) => {
-        const messageData = deserializedMessage.data;
-        draft.name = messageData.name;
-        draft.classpath = messageData.classpath;
-        draft.classpathSeparator = messageData.classpathSeparator;
-        draft.databaseConnection = messageData.databaseConnection;
-        draft.referenceDatabaseConnection = messageData.referenceDatabaseConnection;
-        draft.additionalConfiguration = messageData.additionalConfiguration;
-        // TODO anders lösen?
-      });
-    }
+    updateData((draft) => {
+      draft.name = data.name;
+      draft.newConfig = data.newConfig;
+      draft.classpath = data.classpath;
+      draft.classpathSeparator = data.classpathSeparator;
+      draft.databaseConnection = data.databaseConnection;
+      draft.referenceDatabaseConnection = data.referenceDatabaseConnection;
+      draft.additionalConfiguration = data.additionalConfiguration;
+      // TODO anders lösen?
+    });
   });
 
   /**
@@ -141,7 +137,11 @@ function App() {
               </section>
             </fieldset>
 
-            <DatabaseConfiguration title="Database configuration" onUpdate={changeDatabaseConnection} />
+            <DatabaseConfiguration
+              title="Database configuration"
+              databaseConnection={data.databaseConnection}
+              onUpdate={changeDatabaseConnection}
+            />
 
             <section>
               <VSCodeButton
@@ -166,25 +166,31 @@ function App() {
 
             {/* Show reference connection only when the button for creating such was selected */}
             {referenceConnection && (
-              <DatabaseConfiguration title="Reference Database configuration" onUpdate={changeReferenceConnection} />
+              <DatabaseConfiguration
+                title="Reference Database configuration"
+                databaseConnection={data.referenceDatabaseConnection}
+                onUpdate={changeReferenceConnection}
+              />
             )}
 
             <VSCodeDivider />
             <AdditionalElements onValueChange={handleChangeAdditionalElements} />
           </div>
 
-          <fieldset>
-            <legend>Preview</legend>
-            <p>Note: The preview will be updated after you leave an input field.</p>
-            {data.name && (
-              <p>
-                Configuration of <code>{data.name}.liquibase.properties</code>:
-              </p>
-            )}
+          <div>
+            <fieldset>
+              <legend>Preview</legend>
+              <p>Note: The preview will be updated after you leave an input field.</p>
+              {data.name && (
+                <p>
+                  Configuration of <code>{data.name}.liquibase.properties</code>:
+                </p>
+              )}
 
-            <div>{previewData !== null ? <pre>{previewData}</pre> : <p>Lade Daten...</p>}</div>
-            {/* <pre>{data.generatePropertiesForDisplay()}</pre> */}
-          </fieldset>
+              <div>{previewData !== null ? <pre>{previewData}</pre> : <p>Load Data...</p>}</div>
+              {/* <pre>{data.generatePropertiesForDisplay()}</pre> */}
+            </fieldset>
+          </div>
         </section>
 
         <VSCodeDivider />
@@ -238,7 +244,7 @@ function App() {
    */
   function handleAddRemoveReferenceConnection(pAdded: boolean): void {
     updateData((draft) => {
-      draft.referenceDatabaseConnection = pAdded ? createEmptyDatabaseConnection() : undefined;
+      draft.referenceDatabaseConnection = pAdded ? DatabaseConnection.createDefaultDatabaseConnection() : undefined;
     });
 
     setReferenceConnection(pAdded);
@@ -275,15 +281,6 @@ function App() {
         draft.additionalConfiguration[key] = value;
       });
     });
-  }
-
-  /**
-   * Creates an empty database connection.
-   * @returns the empty database connection
-   */
-  function createEmptyDatabaseConnection(): DatabaseConnection {
-    // TODO TSDOC
-    return new DatabaseConnection("", "", "", "", NO_PRE_CONFIGURED_DRIVER);
   }
 }
 

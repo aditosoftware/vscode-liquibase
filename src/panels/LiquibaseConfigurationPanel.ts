@@ -2,8 +2,8 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
-import { DatabaseConnection, LiquibaseConfigurationData, MessageData } from "../transferData";
-import { NO_PRE_CONFIGURED_DRIVER } from "../drivers";
+import { LiquibaseConfigurationData, MessageData } from "../transferData";
+import { isWindows } from "../utilities/osUtilities";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -46,7 +46,7 @@ export class LiquibaseConfigurationPanel {
    *
    * @param extensionUri - The URI of the directory containing the extension.
    */
-  public static render(extensionUri: Uri) {
+  public static render(extensionUri: Uri, data?: LiquibaseConfigurationData) {
     if (LiquibaseConfigurationPanel.currentPanel) {
       // If the webview panel already exists reveal it
       LiquibaseConfigurationPanel.currentPanel._panel.reveal(ViewColumn.One);
@@ -71,6 +71,10 @@ export class LiquibaseConfigurationPanel {
 
       LiquibaseConfigurationPanel.currentPanel = new LiquibaseConfigurationPanel(panel, extensionUri);
     }
+
+    LiquibaseConfigurationPanel.currentPanel._panel.webview.postMessage(
+      new MessageData("", data ? data : LiquibaseConfigurationData.createDefaultData(true, isWindows()))
+    );
   }
 
   /**
@@ -111,24 +115,6 @@ export class LiquibaseConfigurationPanel {
     const scriptUri = getUri(webview, extensionUri, ["webview-ui", "build", "assets", "index.js"]);
 
     const nonce = getNonce();
-
-    // TODO Transfer value
-    const isWindows = process.platform === "win32";
-
-    // TODO andere Stelle zum Übertragen!
-    webview.postMessage(
-      new MessageData(
-        "",
-        // TODO anders initialisieren
-        new LiquibaseConfigurationData(
-          "",
-          "",
-          isWindows ? ";" : ":",
-          new DatabaseConnection("", "", "", "", NO_PRE_CONFIGURED_DRIVER),
-          {}
-        )
-      )
-    );
 
     // Tip: Install the es6-string-html VS Code extension to enable code highlighting below
     return /*html*/ `

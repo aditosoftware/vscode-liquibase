@@ -22,7 +22,7 @@ const fileEnding: string = ".liquibase.properties";
 export async function readLiquibaseConfigurationNames(): Promise<string[] | undefined> {
   const configuration = await readConfiguration();
   if (configuration) {
-    return Object.keys(configuration);
+    return Object.keys(configuration).sort((a, b) => a.localeCompare(b));
   }
 }
 
@@ -37,7 +37,7 @@ export async function addToLiquibaseConfiguration(pName: string, pPath: string) 
     pJsonData[pName] = pPath;
   });
 
-  vscode.window.showInformationMessage(`Configuration for ${pName} was successfully added to the settings.`);
+  vscode.window.showInformationMessage(`Configuration for ${pName} was successfully saved.`);
   // TODO error handling?
 }
 
@@ -60,22 +60,22 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
   // build file name and path
   const name: string = pMessageData.name;
 
-  // TODO check only for existing configuration when there is a new configuration file
-  const existingConfigurations = await readLiquibaseConfigurationNames();
-  if (existingConfigurations) {
-    if (existingConfigurations.indexOf(name) !== -1) {
-      const yes = "Yes";
-      const answer = await vscode.window.showWarningMessage(
-        `There is already a configuration named ${name}. Do you want to replace it?`,
-        yes,
-        "No"
-      );
+  if (pMessageData.newConfig) {
+    // check only for existing configuration when there is a new configuration file
+    const existingConfigurations = await readLiquibaseConfigurationNames();
+    if (existingConfigurations) {
+      if (existingConfigurations.indexOf(name) !== -1) {
+        const yes = "Yes";
+        const answer = await vscode.window.showWarningMessage(
+          `There is already a configuration named ${name}. Do you want to replace it?`,
+          yes,
+          "No"
+        );
 
-      console.log(answer);
-
-      if (answer !== yes) {
-        vscode.window.showInformationMessage("Saving cancelled");
-        return;
+        if (answer !== yes) {
+          vscode.window.showInformationMessage("Saving cancelled");
+          return;
+        }
       }
     }
   }
@@ -101,6 +101,9 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
   const uri = vscode.Uri.file(propertiesFilePath);
   const document = await vscode.workspace.openTextDocument(uri);
   await vscode.window.showTextDocument(document);
+
+  // TODO Transfer successful saving back
+  // LiquibaseConfigurationPanel.transfer(name);
 }
 
 /**
@@ -109,20 +112,31 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
  */
 export async function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
   if (typeof pConfiguration === "string") {
-    const configuration = await readConfiguration();
+    const configuration = await getPathOfConfiguration(pConfiguration);
     if (configuration) {
-      const path: string = configuration[pConfiguration];
-      if (path) {
-        // TODO Read properties for path
-        // TODO create dummy changelog and call validate / status of liquibase, then handle the results
+      // TODO Read properties for path
+      // TODO create dummy changelog and call validate / status of liquibase, then handle the results
 
-        vscode.window.showInformationMessage(`Testing connection for ${pConfiguration} and ${path} in the future`);
-      }
+      vscode.window.showInformationMessage(
+        `Testing connection for ${pConfiguration} and ${configuration} in the future`
+      );
     } // TODO error handling
   } else {
     // TODO create properties for testing
     // TODO do real test
     vscode.window.showInformationMessage(`Testing connection for ${JSON.stringify(pConfiguration)}`);
+  }
+}
+
+/**
+ * Reads the path from an configuration name.
+ * @param pConfigurationName - the name of the configuration
+ * @returns the path for this configuration
+ */
+export async function getPathOfConfiguration(pConfigurationName: string) {
+  const configuration = await readConfiguration();
+  if (configuration) {
+    return configuration[pConfigurationName];
   }
 }
 

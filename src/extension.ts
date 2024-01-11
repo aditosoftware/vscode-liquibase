@@ -1,6 +1,10 @@
 import * as vscode from "vscode";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { testLiquibaseConfiguration, addExistingLiquibaseConfiguration } from "./configurationCommands";
+import {
+  testLiquibaseConfiguration,
+  addExistingLiquibaseConfiguration,
+  editExistingLiquibaseConfiguration,
+} from "./configurationCommands";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommandsForLiquibasePropertiesHandling(context);
@@ -24,6 +28,12 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
     vscode.commands.registerCommand("liquibase.createLiquibaseConfiguration", () => {
       LiquibaseConfigurationPanel.render(context.extensionUri);
     })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.editExistingLiquibaseConfiguration", () =>
+      editExistingLiquibaseConfiguration(context)
+    )
   );
 
   context.subscriptions.push(

@@ -19,6 +19,11 @@
         "category": "Liquibase"
       },
       {
+        "command": "liquibase.editExistingLiquibaseConfiguration",
+        "title": "Edit existing Liquibase Configuration",
+        "category": "Liquibase"
+      },
+      {
         "command": "liquibase.addExistingConfiguration",
         "title": "Add existing liquibase.properties to the configuration",
         "category": "Liquibase"

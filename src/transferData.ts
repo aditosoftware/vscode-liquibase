@@ -1,6 +1,10 @@
 import { immerable } from "immer";
 import { PropertiesEditor } from "properties-file/editor";
 import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "./drivers";
+import * as fs from "fs";
+import { getProperties } from "properties-file";
+
+const REFERENCE = "reference";
 
 /**
  * The message data that can be transferred from the webview to the extension.
@@ -9,7 +13,7 @@ export class MessageData {
   /**
    * The command that should be executed. This command is any string that is referenced in the panel of the webview.
    */
-  command: string;
+  command: string; // TODO undefined?
 
   /**
    * The real data of the message.
@@ -31,6 +35,7 @@ export class MessageData {
     return new MessageData(
       pSerializedData.command,
       new LiquibaseConfigurationData(
+        pSerializedData.data.newConfig,
         pSerializedData.data.name,
         pSerializedData.data.classpath,
         pSerializedData.data.classpathSeparator,
@@ -71,6 +76,8 @@ type ClasspathSeparator = ";" | ":";
 export class LiquibaseConfigurationData {
   [immerable] = true;
 
+  newConfig: boolean;
+
   /**
    * The name of the configuration.
    */
@@ -104,6 +111,7 @@ export class LiquibaseConfigurationData {
   additionalConfiguration: AdditionalConfiguration;
 
   constructor(
+    newConfig: boolean,
     name: string,
     classpath: string,
     classpathSeparator: ClasspathSeparator,
@@ -111,12 +119,94 @@ export class LiquibaseConfigurationData {
     additionalConfiguration: AdditionalConfiguration,
     referenceDatabaseConnection?: DatabaseConnection
   ) {
+    this.newConfig = newConfig;
     this.name = name;
     this.classpath = classpath;
     this.classpathSeparator = classpathSeparator;
     this.databaseConnection = databaseConnection;
     this.referenceDatabaseConnection = referenceDatabaseConnection;
     this.additionalConfiguration = additionalConfiguration;
+  }
+
+  /**
+   * Creates a default object.
+   * @param newValue - if this default is used as a new value or to save an existing value
+   * @param isWindows - if windows or linux/MacOs separators are used
+   * @returns the created default object
+   */
+  static createDefaultData(newValue: boolean, isWindows: boolean): LiquibaseConfigurationData {
+    return new LiquibaseConfigurationData(
+      newValue,
+      "",
+      "",
+      isWindows ? ";" : ":",
+      DatabaseConnection.createDefaultDatabaseConnection(),
+      {}
+    );
+  }
+
+  // TODO verbessern
+  /**
+   * Loads the content from a file and transform it into an object.
+   * @param pName the name of the configuration
+   * @param pPath the path of the file
+   * @param isWindows if the current os is windows. Needed for the separator
+   * @returns the loaded content
+   */
+  static createFromFile(pName: string, pPath: string, isWindows: boolean): LiquibaseConfigurationData {
+    const properties = getProperties(fs.readFileSync(pPath, "utf8"));
+
+    const data = LiquibaseConfigurationData.createDefaultData(false, isWindows);
+
+    data.name = pName;
+
+    for (const [key, value] of Object.entries(properties)) {
+      let normalizedKey = key;
+      let reference: boolean = false;
+      if (key.startsWith(REFERENCE)) {
+        reference = true;
+        normalizedKey = DatabaseConnection.createDeReferencedKey(key);
+      }
+
+      if (normalizedKey === "classpath") {
+        // TODO special case, when file from different os was copied?
+        data.classpath = value.replaceAll(data.classpathSeparator, "\n");
+      } else if (
+        normalizedKey === "username" ||
+        normalizedKey === "password" ||
+        normalizedKey === "url" ||
+        normalizedKey === "driver"
+      ) {
+        let connection: DatabaseConnection;
+        if (reference) {
+          if (!data.referenceDatabaseConnection) {
+            data.referenceDatabaseConnection = DatabaseConnection.createDefaultDatabaseConnection();
+          }
+          connection = data.referenceDatabaseConnection;
+        } else {
+          connection = data.databaseConnection;
+        }
+
+        // set the value for the connection
+        connection.setValue(normalizedKey, value);
+
+        if (normalizedKey === "driver") {
+          // adjust database type when driver was given
+          // TODO multiple drivers suitable (e.g. MYSQL and MariaDB)
+          for (const [driverKey, driverValue] of ALL_DRIVERS.entries()) {
+            if (driverValue.driverClass === value) {
+              connection.databaseType = driverKey;
+              connection.driver = "";
+            }
+          }
+        }
+      } else {
+        // set the normal key, not the adjusted one
+        data.additionalConfiguration[key] = value;
+      }
+    }
+
+    return data;
   }
 
   // TODO das ganze woanders hin auslagern?
@@ -131,6 +221,7 @@ export class LiquibaseConfigurationData {
     const propertiesEditor = await this.generatePropertiesEditor(pDownloadDriver);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
+    // TODO maybe more escapes are needed with unescapeContent
     return propertiesEditor.format().replaceAll("\\:", ":");
   }
 
@@ -163,12 +254,19 @@ export class LiquibaseConfigurationData {
 
     const allUniqueClasspath = Array.from(new Set(classpathElements))
       .filter((pElement) => pElement.trim() !== "")
-      .map((pElement) => `"${pElement}"`);
+      // add quotation marks when no given
+      .map((pElement) => {
+        if (pElement.startsWith('"') && pElement.endsWith('"')) {
+          return pElement;
+        } else {
+          return `"${pElement}"`;
+        }
+      });
     if (allUniqueClasspath.length !== 0) {
       const joinedClasspath = allUniqueClasspath.join(this.classpathSeparator);
 
       properties.insertComment(
-        "Specifies the directories and JAR files to search for changelog files and custom extension classes. To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS."
+        "Specifies the directories and JAR files to search for changelog files and custom extension classes.\nTo separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS."
       );
       properties.insert("classpath", joinedClasspath);
     }
@@ -226,6 +324,25 @@ export class DatabaseConnection {
     this.url = url;
     this.driver = driver;
     this.databaseType = databaseType;
+  }
+
+  /**
+   * Creates a default database connection.
+   * @returns the default DatabaseConnection
+   */
+  static createDefaultDatabaseConnection(): DatabaseConnection {
+    return new DatabaseConnection("", "", "", "", NO_PRE_CONFIGURED_DRIVER);
+  }
+
+  /**
+   * Returns a value of an element.
+   * @param pName - the name of the element that should be get
+   * @returns the value of the element
+   */
+  getValue(pName: keyof DatabaseConnection): string | undefined {
+    if (typeof this[pName] === "string") {
+      return this[pName] as string;
+    }
   }
 
   /**
@@ -315,6 +432,16 @@ export class DatabaseConnection {
    * @returns the reference key
    */
   private createReferenceKey(key: string): string {
-    return "reference" + key.charAt(0).toUpperCase() + key.substring(1);
+    return REFERENCE + key.charAt(0).toUpperCase() + key.substring(1);
+  }
+
+  /**
+   * Transforms a key, which was previously referenced, back into its normal state.
+   * @param key - the referenced key
+   * @returns the normal key
+   */
+  static createDeReferencedKey(key: string): string {
+    const keyWithoutReference = key.replace(REFERENCE, "");
+    return keyWithoutReference.charAt(0).toLowerCase() + keyWithoutReference.substring(1);
   }
 }
