@@ -59,6 +59,27 @@ export async function createLiquibaseProperties(pMessageData: LiquibaseConfigura
 
   // build file name and path
   const name: string = pMessageData.name;
+
+  // TODO check only for existing configuration when there is a new configuration file
+  const existingConfigurations = await readLiquibaseConfigurationNames();
+  if (existingConfigurations) {
+    if (existingConfigurations.indexOf(name) !== -1) {
+      const yes = "Yes";
+      const answer = await vscode.window.showWarningMessage(
+        `There is already a configuration named ${name}. Do you want to replace it?`,
+        yes,
+        "No"
+      );
+
+      console.log(answer);
+
+      if (answer !== yes) {
+        vscode.window.showInformationMessage("Saving cancelled");
+        return;
+      }
+    }
+  }
+
   let fileName: string = name;
   if (!fileName.endsWith(fileEnding)) {
     fileName = fileName + fileEnding;
