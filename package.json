@@ -34,6 +34,7 @@
       "properties": {
         "liquibase.configurationPath": {
           "type": "string",
+          "default": "data/liquibase",
           "markdownDescription": "Relative path inside the workspace where liquibase configuration should be stored.\nThis folder should not be included in your version control system."
         },
         "liquibase.driverLocation": {

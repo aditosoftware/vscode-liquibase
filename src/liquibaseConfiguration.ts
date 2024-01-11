@@ -4,16 +4,12 @@ import path from "path";
 import { LiquibaseConfigurationData } from "./transferData";
 import { Driver } from "./drivers";
 import download from "download";
-
-/**
- * The general configuration name.
- */
-const configurationName: string = "liquibase";
-
-// TODO tsdoc
-const driverLocation: string = "driverLocation";
-
-//////////////////////
+import {
+  getDriverLocation,
+  getLiquibaseConfigurationPath,
+  readConfiguration,
+  updateConfiguration,
+} from "./handleLiquibaseSettings";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -21,17 +17,12 @@ const driverLocation: string = "driverLocation";
 const fileEnding: string = ".liquibase.properties";
 
 /**
- * The name of the settings file where all the configurations should be stored.
- */
-const configurationSettingFile: string = "settings.json";
-
-/**
  * Reads the database configuration and return all names.
  */
 export async function readLiquibaseConfigurationNames(): Promise<string[] | undefined> {
   const configuration = await readConfiguration();
   if (configuration) {
-    return Object.keys(configuration.jsonData);
+    return Object.keys(configuration);
   }
 }
 
@@ -42,67 +33,12 @@ export async function readLiquibaseConfigurationNames(): Promise<string[] | unde
  * @param pPath - the path to the configuration file
  */
 export async function addToLiquibaseConfiguration(pName: string, pPath: string) {
-  // add the element
-  const configuration = await readConfiguration();
-  if (configuration) {
-    configuration.jsonData[pName] = pPath;
+  updateConfiguration((pJsonData) => {
+    pJsonData[pName] = pPath;
+  });
 
-    // and write the data to the file
-    fs.writeFileSync(configuration.configPath, JSON.stringify(configuration.jsonData, undefined, 2));
-
-    vscode.window.showInformationMessage(`Configuration for ${pName} was successfully added to the settings.`);
-  }
+  vscode.window.showInformationMessage(`Configuration for ${pName} was successfully added to the settings.`);
   // TODO error handling?
-}
-
-// TODO Tsdoc
-interface Configuration {
-  configPath: string;
-  jsonData: Record<string, string>;
-}
-
-async function readConfiguration(): Promise<Configuration | undefined> {
-  const configPath = await getLiquibaseSettingsPath();
-  if (!configPath) {
-    // TODO better message
-    vscode.window.showErrorMessage("No configuration path found");
-    return;
-  }
-
-  // read the jsonData from the file, if no file is there, just give an empty json object
-  const data = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf-8") : JSON.stringify({}); // TODO encoding at all file options
-  const jsonData: Record<string, string> = JSON.parse(data);
-  return { configPath, jsonData };
-}
-
-async function getLiquibaseSettingsPath(): Promise<string | undefined> {
-  // todo better name
-  // TODO tsdoc
-  const configurationFolder: string | undefined = await getLiquibaseConfigurationPath();
-
-  if (configurationFolder) {
-    return path.join(configurationFolder, configurationSettingFile);
-  }
-}
-
-// TODO TSDOC
-export async function getLiquibaseConfigurationPath(): Promise<string | undefined> {
-  const configuration = vscode.workspace.getConfiguration(configurationName);
-  const configurationPath = configuration.get("configurationPath", "data/liquibase");
-
-  if (vscode.workspace.workspaceFolders) {
-    const workspaceFolder = vscode.workspace.workspaceFolders[0];
-
-    const absolutePath = path.join(workspaceFolder.uri.fsPath, configurationPath);
-
-    if (!fs.existsSync(absolutePath)) {
-      const uriFile = vscode.Uri.file(absolutePath);
-      // create the missing directories
-      await vscode.workspace.fs.createDirectory(uriFile);
-    }
-
-    return absolutePath;
-  }
 }
 
 /**
@@ -154,7 +90,7 @@ export async function testLiquibaseConnection(pConfiguration: string | Liquibase
   if (typeof pConfiguration === "string") {
     const configuration = await readConfiguration();
     if (configuration) {
-      const path: string = configuration.jsonData[pConfiguration];
+      const path: string = configuration[pConfiguration];
       if (path) {
         // TODO Read properties for path
         // TODO create dummy changelog and call validate / status of liquibase, then handle the results
@@ -173,9 +109,13 @@ export async function testLiquibaseConnection(pConfiguration: string | Liquibase
  * Downloads a driver, if no driver was downloaded previously.
  * @param pDriver - the driver that need to be downloaded by the extensions
  */
-async function downloadDriver(pDriver: Driver): Promise<string> {
+async function downloadDriver(pDriver: Driver): Promise<string | undefined> {
   // find out location for driver
-  const locationForDriver = getDriverLocation();
+  const locationForDriver = await getDriverLocation();
+  if (!locationForDriver) {
+    // TODO error
+    return;
+  }
 
   const uriFile = vscode.Uri.file(locationForDriver);
   // create the missing directories
@@ -195,31 +135,4 @@ async function downloadDriver(pDriver: Driver): Promise<string> {
   }
 
   return driverLocationWithFileName;
-}
-
-/**
- * Loads the setting where the drivers should be downloaded.
- * If no value was found, then a default location will be used. This default location is the workspace folder and a subdirectory named `.drivers`.
- * @returns the configured location for the driver or a default location
- */
-function getDriverLocation(): string {
-  // TODO tsdoc
-  // TODO better default setting of parameter
-  const configuration = vscode.workspace.getConfiguration(configurationName);
-  const locationForDriver = configuration.get(driverLocation, "");
-
-  // TODO force user to configure
-  if (locationForDriver === "") {
-    // fallback - no driver configured
-    // find out the current users workspace and put in a .drivers directory
-    const workspaceFolders = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath);
-
-    if (workspaceFolders && workspaceFolders.length > 0) {
-      const dir = workspaceFolders[0];
-
-      return path.join(dir, ".drivers");
-    }
-  }
-
-  return locationForDriver;
 }

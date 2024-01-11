@@ -1,11 +1,6 @@
 import * as vscode from "vscode";
-import {
-  addToLiquibaseConfiguration,
-  readLiquibaseConfigurationNames,
-  testLiquibaseConnection,
-} from "./liquibaseConfiguration";
-import { StepOption, StepResults, multiStepInput } from "./multiStepInput";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
+import { testLiquibaseConfiguration, addExistingLiquibaseConfiguration } from "./configurationCommands";
 
 export function activate(context: vscode.ExtensionContext) {
   registerCommandsForLiquibasePropertiesHandling(context);
@@ -32,39 +27,11 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.addExistingConfiguration", async () => {
-      const name = "name";
-      const path = "path";
-
-      const options: StepOption[] = [
-        {
-          key: name,
-          inputBoxOption: { prompt: "The name of the configuration" },
-        },
-        {
-          key: path,
-          inputBoxOption: { prompt: "The path of the configuration" },
-        },
-      ];
-      multiStepInput("Add existing liquibase configuration", options).then((results: StepResults | undefined) => {
-        if (results) {
-          addToLiquibaseConfiguration(results[name], results[path]);
-        }
-      });
-    })
+    vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration)
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.testConfiguration", async () => {
-      const configurationNames: string[] | undefined = await readLiquibaseConfigurationNames();
-      if (configurationNames) {
-        const result: string | undefined = await vscode.window.showQuickPick(configurationNames);
-
-        if (result) {
-          testLiquibaseConnection(result);
-        }
-      }
-    })
+    vscode.commands.registerCommand("liquibase.testConfiguration", testLiquibaseConfiguration)
   );
 }
 

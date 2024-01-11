@@ -127,7 +127,7 @@ export class LiquibaseConfigurationData {
    * There should be no function, when this function is only used to create a preview.
    * @returns the created properties file as a string
    */
-  async generateProperties(pDownloadDriver?: (pDriver: Driver) => Promise<string>): Promise<string> {
+  async generateProperties(pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>): Promise<string> {
     const propertiesEditor = await this.generatePropertiesEditor(pDownloadDriver);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
@@ -141,7 +141,7 @@ export class LiquibaseConfigurationData {
    * @returns the created properties
    */
   private async generatePropertiesEditor(
-    pDownloadDriver?: (pDriver: Driver) => Promise<string>
+    pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>
   ): Promise<PropertiesEditor> {
     // Build the properties
     const properties: PropertiesEditor = new PropertiesEditor("");
@@ -266,7 +266,7 @@ export class DatabaseConnection {
   async writeDataForConnection(
     properties: PropertiesEditor,
     pReferenceConnection: boolean,
-    pDownloadDriver?: (pDriver: Driver) => Promise<string>
+    pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>
   ): Promise<string | undefined> {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference" : ""} database`);
     Object.entries(this).forEach(([key, value]) => {
@@ -287,7 +287,7 @@ export class DatabaseConnection {
   private async writeDriverConfigurationAndDownload(
     pProperties: PropertiesEditor,
     pIsReferenceConnection: boolean,
-    pDownloadDriver?: (pDriver: Driver) => Promise<string>
+    pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>
   ): Promise<string | undefined> {
     const databaseType: string = this.databaseType;
 
