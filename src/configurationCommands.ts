@@ -6,8 +6,8 @@ import {
   testLiquibaseConnection,
 } from "./liquibaseConfiguration";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { LiquibaseConfigurationData } from "./transferData";
 import { isWindows } from "./utilities/osUtilities";
+import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
 
 /**
  * Tests an liquibase configuration.

@@ -1,4 +1,5 @@
-import { LiquibaseConfigurationData, MessageData } from "../../../src/transferData";
+import { LiquibaseConfigurationData } from "../../../src/configuration/LiquibaseConfigurationData";
+import {  MessageData } from "../../../src/transferData";
 
 // TODO TSdoc, nach vscode?
 export function getConfigurationDataFromMessage(event: MessageEvent<MessageData>): LiquibaseConfigurationData {

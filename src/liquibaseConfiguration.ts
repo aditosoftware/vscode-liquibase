@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
-import { LiquibaseConfigurationData } from "./transferData";
 import { Driver } from "./drivers";
 import download from "download";
 import {
@@ -10,6 +9,7 @@ import {
   readConfiguration,
   updateConfiguration,
 } from "./handleLiquibaseSettings";
+import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
 
 /**
  * The file ending of all liquibase configuration files.

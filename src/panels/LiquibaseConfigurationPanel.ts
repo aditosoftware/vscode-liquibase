@@ -2,8 +2,9 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
-import { LiquibaseConfigurationData, MessageData } from "../transferData";
+import {  MessageData } from "../transferData";
 import { isWindows } from "../utilities/osUtilities";
+import { LiquibaseConfigurationData } from "../configuration/LiquibaseConfigurationData";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.

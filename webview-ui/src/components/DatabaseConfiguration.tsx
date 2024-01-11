@@ -1,7 +1,8 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
 import { VSCodeRadioGroup, VSCodeDivider, VSCodeTextField, VSCodeRadio } from "@vscode/webview-ui-toolkit/react";
 import { ALL_DRIVERS, NO_PRE_CONFIGURED_DRIVER } from "../../../src/drivers";
-import { DatabaseConnection } from "../../../src/transferData";
+import { DatabaseConnection } from "../../../src/configuration/DatabaseConnection";
+
 
 /**
  * Properties for creating a database configuration
