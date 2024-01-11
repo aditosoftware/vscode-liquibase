@@ -47,6 +47,20 @@
           "markdownDescription": "The location where this extension should download all the drivers and necessary jar files.\n\nOn Windows, backslashes must be escaped, e.g. `C:\\\\dev\\\\myDrivers`."
         }
       }
+    },
+    "menus": {
+      "explorer/context": [
+        {
+          "when": "resourceLangId == properties",
+          "command": "liquibase.editExistingLiquibaseConfiguration"
+        }
+      ],
+      "editor/context": [
+        {
+          "when": "resourceLangId == properties",
+          "command": "liquibase.editExistingLiquibaseConfiguration"
+        }
+      ]
     }
   },
   "scripts": {

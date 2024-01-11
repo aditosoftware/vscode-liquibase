@@ -31,8 +31,8 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.editExistingLiquibaseConfiguration", () =>
-      editExistingLiquibaseConfiguration(context)
+    vscode.commands.registerCommand("liquibase.editExistingLiquibaseConfiguration", (uri: vscode.Uri) =>
+      editExistingLiquibaseConfiguration(uri, context)
     )
   );
 

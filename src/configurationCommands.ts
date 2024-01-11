@@ -8,6 +8,7 @@ import {
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { isWindows } from "./utilities/osUtilities";
 import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
+import * as path from "path";
 
 /**
  * Tests an liquibase configuration.
@@ -26,19 +27,48 @@ export async function testLiquibaseConfiguration(): Promise<void> {
  * Edits an existing configuration.
  * @param context - the ExtensionContext. This is needed for opening the webview for editing the context
  */
-export async function editExistingLiquibaseConfiguration(context: vscode.ExtensionContext) {
-  // let the user select configuration
-  const name = await selectFromExistingConfigurations();
+export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, context: vscode.ExtensionContext) {
+  vscode.window.showInformationMessage(uri.fsPath);
 
-  if (name) {
-    // finds the path to the name
-    const path = await getPathOfConfiguration(name);
-    if (path) {
-      // transferring the data from .properties into an object
-      const data = LiquibaseConfigurationData.createFromFile(name, path, isWindows());
-      // and renders the panel with the data
-      LiquibaseConfigurationPanel.render(context.extensionUri, data);
+  let existingConfiguration:
+    | {
+        fsPath: string;
+        name: string;
+      }
+    | undefined;
+
+  if (uri) {
+    // called by context menu - find out name based on the path
+    const fsPath = uri.fsPath;
+    // file name with extension
+    const fileName = path.basename(fsPath);
+    // first part of name, if the name has at least 2 dots, otherwise full name
+    const name =
+      fileName.indexOf(".") !== fileName.lastIndexOf(".") ? fileName.substring(0, fileName.indexOf(".")) : fileName;
+    existingConfiguration = { fsPath, name };
+  } else {
+    // invoked via command palette - show inputs for user
+    // let the user select configuration
+    const name = await selectFromExistingConfigurations();
+
+    if (name) {
+      // finds the path to the name
+      const fsPath = await getPathOfConfiguration(name);
+      if (fsPath) {
+        existingConfiguration = { fsPath, name };
+      }
     }
+  }
+
+  if (existingConfiguration) {
+    // transferring the data from .properties into an object
+    const data = LiquibaseConfigurationData.createFromFile(
+      existingConfiguration.name,
+      existingConfiguration.fsPath,
+      isWindows()
+    );
+    // and renders the panel with the data
+    LiquibaseConfigurationPanel.render(context.extensionUri, data);
   }
 }
 
