@@ -91,9 +91,7 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
-    "install:all": "npm install && cd webview-ui && npm install",
-    "start:webview": "cd webview-ui && npm run start",
-    "build:webview": "cd webview-ui && npm run build"
+    "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
