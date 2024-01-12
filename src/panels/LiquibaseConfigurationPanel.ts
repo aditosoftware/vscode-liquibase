@@ -5,6 +5,7 @@ import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibase
 import { MessageData, MessageType } from "../transferData";
 import { isWindows } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData } from "../configuration/LiquibaseConfigurationData";
+import { getDefaultDatabaseForConfiguration } from "../handleLiquibaseSettings";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -73,9 +74,12 @@ export class LiquibaseConfigurationPanel {
       LiquibaseConfigurationPanel.currentPanel = new LiquibaseConfigurationPanel(panel, extensionUri);
     }
 
+    // In all cases, transfer a message with the current data
     this.transferMessage(
       MessageType.INIT,
-      data ? data : LiquibaseConfigurationData.createDefaultData(true, isWindows())
+      data
+        ? data
+        : LiquibaseConfigurationData.createDefaultData(getDefaultDatabaseForConfiguration(), true, isWindows())
     );
   }
 

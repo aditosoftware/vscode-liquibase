@@ -34,6 +34,8 @@ export class Driver {
   }
 }
 
+// TODO all the driver names / Keys and NO_PRE_CONFIGURED_DRIVER are duplicated in the settings
+
 /**
  * All the pre-configured drivers.
  */

@@ -39,3 +39,7 @@ settings anpassen
 - in files ermöglichen
 - erfolgreiches speichern zurück übertragen
 - message data umarbeiten
+
+#
+
+- besseres required in der webview

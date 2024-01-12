@@ -50,10 +50,11 @@ export class DatabaseConnection {
 
   /**
    * Creates a default database connection.
+   * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
    * @returns the default DatabaseConnection
    */
-  static createDefaultDatabaseConnection(): DatabaseConnection {
-    return new DatabaseConnection("", "", "", "", NO_PRE_CONFIGURED_DRIVER);
+  static createDefaultDatabaseConnection(defaultDatabaseForConfiguration: string): DatabaseConnection {
+    return new DatabaseConnection("", "", "", "", defaultDatabaseForConfiguration);
   }
 
   /**

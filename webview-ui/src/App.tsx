@@ -18,10 +18,11 @@ import { useImmer } from "use-immer";
 import { getConfigurationDataFromMessage } from "./utilities/transfer";
 import { LiquibaseConfigurationData } from "../../src/configuration/LiquibaseConfigurationData";
 import { DatabaseConnection } from "../../src/configuration/DatabaseConnection";
+import { NO_PRE_CONFIGURED_DRIVER } from "../../src/drivers";
 
 function App() {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
-    LiquibaseConfigurationData.createDefaultData(true, true) // TODO anders lösen?
+    LiquibaseConfigurationData.createDefaultData(NO_PRE_CONFIGURED_DRIVER, true, true) // TODO anders lösen?
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
 
@@ -38,6 +39,7 @@ function App() {
 
       updateData((draft) => {
         draft.name = configurationData.name;
+        draft.defaultDatabaseForConfiguration = configurationData.defaultDatabaseForConfiguration;
         draft.newConfig = configurationData.newConfig;
         draft.classpath = configurationData.classpath;
         draft.classpathSeparator = configurationData.classpathSeparator;
@@ -260,7 +262,9 @@ function App() {
    */
   function handleAddRemoveReferenceConnection(pAdded: boolean): void {
     updateData((draft) => {
-      draft.referenceDatabaseConnection = pAdded ? DatabaseConnection.createDefaultDatabaseConnection() : undefined;
+      draft.referenceDatabaseConnection = pAdded
+        ? DatabaseConnection.createDefaultDatabaseConnection(data.defaultDatabaseForConfiguration)
+        : undefined;
     });
 
     setReferenceConnection(pAdded);

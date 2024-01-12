@@ -9,6 +9,7 @@ import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPane
 import { isWindows } from "./utilities/osUtilities";
 import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
 import * as path from "path";
+import { getDefaultDatabaseForConfiguration } from "./handleLiquibaseSettings";
 
 /**
  * Tests an liquibase configuration.
@@ -28,8 +29,6 @@ export async function testLiquibaseConfiguration(): Promise<void> {
  * @param context - the ExtensionContext. This is needed for opening the webview for editing the context
  */
 export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, context: vscode.ExtensionContext) {
-  vscode.window.showInformationMessage(uri.fsPath);
-
   let existingConfiguration:
     | {
         fsPath: string;
@@ -65,6 +64,7 @@ export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, contex
     const data = LiquibaseConfigurationData.createFromFile(
       existingConfiguration.name,
       existingConfiguration.fsPath,
+      getDefaultDatabaseForConfiguration(),
       isWindows()
     );
     // and renders the panel with the data

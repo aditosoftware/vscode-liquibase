@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
+import { NO_PRE_CONFIGURED_DRIVER } from "./drivers";
 
 /**
  * The general configuration name.
@@ -156,4 +157,19 @@ export async function getDriverLocation(): Promise<string | undefined> {
       return path.join(liquibaseConfigurationPath, ".drivers");
     }
   }
+}
+
+/**
+ * Loads from the configuration the default database type.
+ * This type should always be selected in new configurations.
+ * @returns the setting of the default database type from the configuration
+ */
+export function getDefaultDatabaseForConfiguration(): string {
+  const configuration = vscode.workspace.getConfiguration(configurationName);
+  const defaultDatabaseForConfiguration = configuration.get(
+    "defaultDatabaseForConfiguration",
+    NO_PRE_CONFIGURED_DRIVER
+  );
+
+  return defaultDatabaseForConfiguration ? defaultDatabaseForConfiguration : NO_PRE_CONFIGURED_DRIVER;
 }

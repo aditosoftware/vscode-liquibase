@@ -36,10 +36,13 @@ export class MessageData {
    * @returns the new message data
    */
   static createFromSerializedData(pSerializedData: MessageData): MessageData {
+    // TODO schöner?
+
     return new MessageData(
       pSerializedData.messageType,
       new LiquibaseConfigurationData(
         pSerializedData.configurationData.newConfig,
+        pSerializedData.configurationData.defaultDatabaseForConfiguration,
         pSerializedData.configurationData.name,
         pSerializedData.configurationData.classpath,
         pSerializedData.configurationData.classpathSeparator,

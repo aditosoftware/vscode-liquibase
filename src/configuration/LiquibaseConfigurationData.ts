@@ -2,7 +2,7 @@ import { immerable } from "immer";
 import { DatabaseConnection } from "./DatabaseConnection";
 import * as fs from "fs";
 import { getProperties } from "properties-file";
-import { ALL_DRIVERS, Driver } from "../drivers";
+import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
 
 /**
@@ -22,7 +22,15 @@ type AdditionalConfiguration = { [key: string]: string };
 export class LiquibaseConfigurationData {
   [immerable] = true;
 
+  /**
+   * Indicator, if this is a new config or and edited config.
+   */
   newConfig: boolean;
+
+  /**
+   * The default database configuration that should be selected in any dropdown.
+   */
+  defaultDatabaseForConfiguration: string;
 
   /**
    * The name of the configuration.
@@ -58,6 +66,7 @@ export class LiquibaseConfigurationData {
 
   constructor(
     newConfig: boolean,
+    defaultDatabaseForConfiguration: string,
     name: string,
     classpath: string,
     classpathSeparator: ClasspathSeparator,
@@ -66,6 +75,7 @@ export class LiquibaseConfigurationData {
     referenceDatabaseConnection?: DatabaseConnection
   ) {
     this.newConfig = newConfig;
+    this.defaultDatabaseForConfiguration = defaultDatabaseForConfiguration;
     this.name = name;
     this.classpath = classpath;
     this.classpathSeparator = classpathSeparator;
@@ -76,17 +86,23 @@ export class LiquibaseConfigurationData {
 
   /**
    * Creates a default object.
+   * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
    * @param newValue - if this default is used as a new value or to save an existing value
    * @param isWindows - if windows or linux/MacOs separators are used
    * @returns the created default object
    */
-  static createDefaultData(newValue: boolean, isWindows: boolean): LiquibaseConfigurationData {
+  static createDefaultData(
+    defaultDatabaseForConfiguration: string,
+    newValue: boolean,
+    isWindows: boolean
+  ): LiquibaseConfigurationData {
     return new LiquibaseConfigurationData(
       newValue,
+      defaultDatabaseForConfiguration,
       "",
       "",
       isWindows ? ";" : ":",
-      DatabaseConnection.createDefaultDatabaseConnection(),
+      DatabaseConnection.createDefaultDatabaseConnection(defaultDatabaseForConfiguration),
       {}
     );
   }
@@ -94,15 +110,21 @@ export class LiquibaseConfigurationData {
   // TODO verbessern
   /**
    * Loads the content from a file and transform it into an object.
-   * @param pName the name of the configuration
-   * @param pPath the path of the file
-   * @param isWindows if the current os is windows. Needed for the separator
+   * @param pName - the name of the configuration
+   * @param pPath - the path of the file
+   * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
+   * @param isWindows - if the current os is windows. Needed for the separator
    * @returns the loaded content
    */
-  static createFromFile(pName: string, pPath: string, isWindows: boolean): LiquibaseConfigurationData {
+  static createFromFile(
+    pName: string,
+    pPath: string,
+    pDefaultDatabaseForConfiguration: string,
+    isWindows: boolean
+  ): LiquibaseConfigurationData {
     const properties = getProperties(fs.readFileSync(pPath, "utf8"));
 
-    const data = LiquibaseConfigurationData.createDefaultData(false, isWindows);
+    const data = LiquibaseConfigurationData.createDefaultData(pDefaultDatabaseForConfiguration, false, isWindows);
 
     data.name = pName;
 
@@ -126,7 +148,9 @@ export class LiquibaseConfigurationData {
         let connection: DatabaseConnection;
         if (reference) {
           if (!data.referenceDatabaseConnection) {
-            data.referenceDatabaseConnection = DatabaseConnection.createDefaultDatabaseConnection();
+            data.referenceDatabaseConnection = DatabaseConnection.createDefaultDatabaseConnection(
+              pDefaultDatabaseForConfiguration
+            );
           }
           connection = data.referenceDatabaseConnection;
         } else {
@@ -137,13 +161,21 @@ export class LiquibaseConfigurationData {
         connection.setValue(normalizedKey, value);
 
         if (normalizedKey === "driver") {
+          let preConfiguredDriver = false;
           // adjust database type when driver was given
           // TODO multiple drivers suitable (e.g. MYSQL and MariaDB)
           for (const [driverKey, driverValue] of ALL_DRIVERS.entries()) {
             if (driverValue.driverClass === value) {
               connection.databaseType = driverKey;
               connection.driver = "";
+              preConfiguredDriver = true;
+              break;
             }
+          }
+
+          if (!preConfiguredDriver) {
+            // set the database type to no-pre-configured, because it can be any driver based on the users setting
+            connection.databaseType = NO_PRE_CONFIGURED_DRIVER;
           }
         }
       } else {
