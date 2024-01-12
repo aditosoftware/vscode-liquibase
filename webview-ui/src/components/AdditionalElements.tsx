@@ -8,7 +8,7 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { getConfigurationDataFromMessage } from "../utilities/transfer";
-import { MessageType } from "../../../src/transferData";
+import { MessageType } from "../../../src/configuration/transfer/transferData";
 
 /**
  * The properties for the additional element tag.

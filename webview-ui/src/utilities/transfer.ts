@@ -1,4 +1,4 @@
-import { MessageData } from "../../../src/transferData";
+import { MessageData } from "../../../src/configuration/transfer/transferData";
 
 // TODO TSdoc, nach vscode?
 export function getConfigurationDataFromMessage(event: MessageEvent<MessageData>): MessageData {

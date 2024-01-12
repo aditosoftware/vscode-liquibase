@@ -10,5 +10,7 @@
 - mehr Error handling !
 - Tests
 - caching von settings
+- delete von configurations
+- Ordner, in dem Liquibase-Dateien liegen, auch zum Classpath hinzufügen? Konfigurierbar? Default workspace?
 
 # Sonstige Notizen

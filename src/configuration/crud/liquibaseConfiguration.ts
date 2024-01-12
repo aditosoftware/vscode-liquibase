@@ -1,17 +1,17 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
-import { Driver } from "./drivers";
+import { Driver } from "../drivers";
 import download from "download";
 import {
   getDriverLocation,
   getLiquibaseConfigurationPath,
   readConfiguration,
   updateConfiguration,
-} from "./handleLiquibaseSettings";
-import { LiquibaseConfigurationData, ConfigurationStatus } from "./configuration/LiquibaseConfigurationData";
-import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { MessageType } from "./transferData";
+} from "../../handleLiquibaseSettings";
+import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
+import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
+import { MessageType } from "../transfer/transferData";
 
 /**
  * The file ending of all liquibase configuration files.

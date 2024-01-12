@@ -1,7 +1,8 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
 import { VSCodeDivider, VSCodeTextField, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react";
-import { ALL_DRIVERS, NO_PRE_CONFIGURED_DRIVER } from "../../../src/drivers";
-import { DatabaseConnection } from "../../../src/configuration/DatabaseConnection";
+import { DatabaseConnection } from '../../../src/configuration/data/DatabaseConnection';
+import { NO_PRE_CONFIGURED_DRIVER, ALL_DRIVERS } from "../../../src/configuration/drivers";
+
 
 /**
  * Properties for creating a database configuration

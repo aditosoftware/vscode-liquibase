@@ -4,10 +4,10 @@ import {
   getPathOfConfiguration,
   readLiquibaseConfigurationNames,
   testLiquibaseConnection,
-} from "./liquibaseConfiguration";
+} from "./configuration/crud/liquibaseConfiguration";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { isWindows } from "./utilities/osUtilities";
-import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
+import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration } from "./handleLiquibaseSettings";
 

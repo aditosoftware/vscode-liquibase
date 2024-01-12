@@ -11,14 +11,14 @@ import {
 import "./App.css";
 import "./codicon.css";
 import { useEffect, useState } from "react";
-import { MessageData, MessageType } from "../../src/transferData";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
 import { useImmer } from "use-immer";
 import { getConfigurationDataFromMessage } from "./utilities/transfer";
-import { LiquibaseConfigurationData, ConfigurationStatus } from "../../src/configuration/LiquibaseConfigurationData";
-import { DatabaseConnection } from "../../src/configuration/DatabaseConnection";
-import { NO_PRE_CONFIGURED_DRIVER } from "../../src/drivers";
+import { ConfigurationStatus, LiquibaseConfigurationData } from '../../src/configuration/data/LiquibaseConfigurationData';
+import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnection";
+import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
+import { MessageData, MessageType } from '../../src/configuration/transfer/transferData';
 
 function App() {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(

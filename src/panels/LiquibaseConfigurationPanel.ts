@@ -1,10 +1,10 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
-import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
-import { MessageData, MessageType } from "../transferData";
+import { createLiquibaseProperties, testLiquibaseConnection } from "../configuration/crud/liquibaseConfiguration";
+import { MessageData, MessageType } from "../configuration/transfer/transferData";
 import { isWindows } from "../utilities/osUtilities";
-import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/LiquibaseConfigurationData";
+import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration } from "../handleLiquibaseSettings";
 
 /**

@@ -1,5 +1,5 @@
-import { DatabaseConnection } from "./configuration/DatabaseConnection";
-import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
+import { DatabaseConnection } from "../data/DatabaseConnection";
+import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
 
 export enum MessageType {
   INIT = "INIT",

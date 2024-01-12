@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
-import { NO_PRE_CONFIGURED_DRIVER } from "./drivers";
+import { NO_PRE_CONFIGURED_DRIVER } from "./configuration/drivers";
 
 /**
  * The general configuration name.
