@@ -107,7 +107,7 @@ export class DatabaseConnection {
     pReferenceConnection: boolean,
     pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>
   ): Promise<string | undefined> {
-    properties.insertComment(`configuration for the ${pReferenceConnection ? "reference" : ""} database`);
+    properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
     Object.entries(this).forEach(([key, value]) => {
       if (key && value && key !== "databaseType") {
         properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, value);

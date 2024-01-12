@@ -1,8 +1,7 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
-import { VSCodeRadioGroup, VSCodeDivider, VSCodeTextField, VSCodeRadio } from "@vscode/webview-ui-toolkit/react";
+import { VSCodeDivider, VSCodeTextField, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react";
 import { ALL_DRIVERS, NO_PRE_CONFIGURED_DRIVER } from "../../../src/drivers";
 import { DatabaseConnection } from "../../../src/configuration/DatabaseConnection";
-
 
 /**
  * Properties for creating a database configuration
@@ -46,21 +45,23 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
         </fieldset>
         <fieldset>
           <legend>Database type</legend>
-          <VSCodeRadioGroup
-            orientation="vertical"
-            value={pProperties.databaseConnection?.databaseType}
-            onClick={(e) => {
-              // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint. // TODO validate
-              const value = e.target.value;
-              pProperties.onUpdate("databaseType", value);
-              // remove classpath and driver values, when a pre-configured values was used
-              if (value !== NO_PRE_CONFIGURED_DRIVER) {
-                pProperties.onUpdate("driver", "");
-              }
-            }}>
-            <label slot="label">Database type for the configuration</label>
-            {createDatabaseSelections()}
-          </VSCodeRadioGroup>
+          <div className="dropdown-container">
+            <label htmlFor="databaseTypeSelection">Database type for the configuration</label>
+            <VSCodeDropdown
+              id="databaseTypeSelection"
+              value={pProperties.databaseConnection?.databaseType}
+              onInput={(e) => {
+                // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint. // TODO validate
+                const value = e.target.value;
+                pProperties.onUpdate("databaseType", value);
+                // remove classpath and driver values, when a pre-configured values was used
+                if (value !== NO_PRE_CONFIGURED_DRIVER) {
+                  pProperties.onUpdate("driver", "");
+                }
+              }}>
+              {createDatabaseSelections()}
+            </VSCodeDropdown>
+          </div>
 
           {pProperties.databaseConnection?.databaseType === NO_PRE_CONFIGURED_DRIVER && (
             <>
@@ -82,14 +83,14 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
 
     // add all drivers
     ALL_DRIVERS.forEach((pDriver, pKey) =>
-      radioElements.push(<VSCodeRadio value={pKey}>{pDriver.displayName}</VSCodeRadio>)
+      radioElements.push(<VSCodeOption value={pKey}>{pDriver.displayName}</VSCodeOption>)
     );
 
     // and add a none element
     radioElements.push(
-      <VSCodeRadio value={NO_PRE_CONFIGURED_DRIVER} checked>
-        none of the above
-      </VSCodeRadio>
+      <VSCodeOption value={NO_PRE_CONFIGURED_DRIVER} selected>
+        No pre-configured driver
+      </VSCodeOption>
     );
 
     return radioElements;

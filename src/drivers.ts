@@ -39,6 +39,7 @@ export class Driver {
  */
 export const ALL_DRIVERS = new Map<string, Driver>([
   [
+    // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
     "MARIADB",
     new Driver(
       "MariaDB",
@@ -47,12 +48,42 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     ),
   ],
   [
+    // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     "MYSQL",
     new Driver(
-      // TODO correct?
       "MySQL",
-      "org.mariadb.jdbc.Driver",
-      "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.3.2/mariadb-java-client-3.3.2.jar"
+      "com.mysql.cj.jdbc.Driver",
+      "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar"
+    ),
+  ],
+
+  [
+    // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
+    // TODO jre8 oder jre11?
+    "MSSQL",
+    new Driver(
+      "MS SQL",
+      "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+      "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.2.jre11/mssql-jdbc-12.4.2.jre11.jar"
+    ),
+  ],
+  [
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    "POSTGRESQL",
+    new Driver(
+      "PostgreSQL",
+      "org.postgresql.Driver",
+      "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar"
+    ),
+  ],
+  [
+    // https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8
+    // TODO Version?
+    "ORACLE",
+    new Driver(
+      "Oracle",
+      "oracle.jdbc.driver.OracleDriver",
+      "https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc8/23.3.0.23.09/ojdbc8-23.3.0.23.09.jar"
     ),
   ],
 ]);

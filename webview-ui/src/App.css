@@ -7,9 +7,10 @@
   grid-template-columns: 1fr 1fr;
 }
 
-/* Let all text inputs take the full width */
+/* Let all inputs take the full width */
 vscode-text-field,
-vscode-text-area {
+vscode-text-area,
+vscode-dropdown {
   width: 100%;
 }
 
@@ -17,4 +18,22 @@ vscode-text-area {
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
+}
+
+/* adjusting style for dropdowns */
+.dropdown-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.dropdown-container label {
+  display: block;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  font-size: var(--vscode-font-size);
+  line-height: normal;
+  margin-bottom: 2px;
 }
