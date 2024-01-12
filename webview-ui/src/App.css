@@ -29,7 +29,7 @@ pre {
   justify-content: flex-start;
 }
 
-.dropdown-container label {
+label {
   display: block;
   color: var(--vscode-foreground);
   cursor: pointer;

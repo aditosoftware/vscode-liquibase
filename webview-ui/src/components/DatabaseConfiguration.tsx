@@ -39,9 +39,15 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
         <legend>{pProperties.title}</legend>
         <fieldset>
           <legend>Connection configuration</legend>
-          {createInput(pProperties, "text", "username", "Username of the database", "dbuser")}
-          {createInput(pProperties, "password", "password", "Password of the database", "letmein")}
-          {createInput(pProperties, "text", "url", "The url of the database", "jdbc:mariadb://localhost:9090/data")}
+          {createInput(pProperties, "text", "username", "Username of the database")}
+          {createInput(pProperties, "password", "password", "Password of the database")}
+          {createInput(
+            pProperties,
+            "text",
+            "url",
+            "The url of the database",
+            "For example: jdbc:mariadb://localhost:9090/data"
+          )}
         </fieldset>
         <fieldset>
           <legend>Database type</legend>
@@ -66,7 +72,13 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
           {pProperties.databaseConnection?.databaseType === NO_PRE_CONFIGURED_DRIVER && (
             <>
               <VSCodeDivider />
-              {createInput(pProperties, "text", "driver", "The driver class of database", "org.mariadb.jdbc.Driver")}
+              {createInput(
+                pProperties,
+                "text",
+                "driver",
+                "The driver class of database",
+                "For example: org.mariadb.jdbc.Driver"
+              )}
             </>
           )}
         </fieldset>

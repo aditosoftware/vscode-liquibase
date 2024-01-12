@@ -10,15 +10,6 @@ export function activate(context: vscode.ExtensionContext) {
   registerCommandsForLiquibasePropertiesHandling(context);
 }
 
-// FIXME Next Steps
-// TODO Duplicate name check
-// * edit existing -> file selection !
-// * Download the needed driver files
-// * Graphic dialog for creating the properties
-// * error handling
-// * validating uniqueness of keys of properties files
-// * Tests
-
 /**
  * Registers all the commands that are needed by liquibase properties handling
  * @param context - the Context for storing the commands

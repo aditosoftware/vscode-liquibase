@@ -9,7 +9,7 @@ import {
   readConfiguration,
   updateConfiguration,
 } from "./handleLiquibaseSettings";
-import { LiquibaseConfigurationData } from "./configuration/LiquibaseConfigurationData";
+import { LiquibaseConfigurationData, ConfigurationStatus } from "./configuration/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { MessageType } from "./transferData";
 
@@ -89,7 +89,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   // build file name and path
   const name: string = pConfigurationData.name;
 
-  if (pConfigurationData.newConfig) {
+  if (pConfigurationData.status === ConfigurationStatus.NEW) {
     // check only for existing configuration when there is a new configuration file
     const existingConfigurations = await readLiquibaseConfigurationNames();
     if (existingConfigurations && existingConfigurations.indexOf(name) !== -1) {

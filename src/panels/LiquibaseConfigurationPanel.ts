@@ -4,7 +4,7 @@ import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties, testLiquibaseConnection } from "../liquibaseConfiguration";
 import { MessageData, MessageType } from "../transferData";
 import { isWindows } from "../utilities/osUtilities";
-import { LiquibaseConfigurationData } from "../configuration/LiquibaseConfigurationData";
+import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration } from "../handleLiquibaseSettings";
 
 /**
@@ -79,7 +79,11 @@ export class LiquibaseConfigurationPanel {
       MessageType.INIT,
       data
         ? data
-        : LiquibaseConfigurationData.createDefaultData(getDefaultDatabaseForConfiguration(), true, isWindows())
+        : LiquibaseConfigurationData.createDefaultData(
+            getDefaultDatabaseForConfiguration(),
+            ConfigurationStatus.NEW,
+            isWindows()
+          )
     );
   }
 
@@ -181,9 +185,7 @@ export class LiquibaseConfigurationPanel {
             testLiquibaseConnection(data);
             break;
           default:
-            // TODO better handling
-            console.error(`Handling for command ${messageType} not found. Message was ${JSON.stringify(message)}`);
-            break;
+            throw new Error(`Handling for command ${messageType} not found.`);
         }
       },
       undefined,

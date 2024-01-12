@@ -41,7 +41,7 @@ export class MessageData {
     return new MessageData(
       pSerializedData.messageType,
       new LiquibaseConfigurationData(
-        pSerializedData.configurationData.newConfig,
+        pSerializedData.configurationData.status,
         pSerializedData.configurationData.defaultDatabaseForConfiguration,
         pSerializedData.configurationData.name,
         pSerializedData.configurationData.classpath,

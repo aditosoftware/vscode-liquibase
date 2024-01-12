@@ -16,49 +16,62 @@ import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
 import { useImmer } from "use-immer";
 import { getConfigurationDataFromMessage } from "./utilities/transfer";
-import { LiquibaseConfigurationData } from "../../src/configuration/LiquibaseConfigurationData";
+import { LiquibaseConfigurationData, ConfigurationStatus } from "../../src/configuration/LiquibaseConfigurationData";
 import { DatabaseConnection } from "../../src/configuration/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER } from "../../src/drivers";
 
 function App() {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
-    LiquibaseConfigurationData.createDefaultData(NO_PRE_CONFIGURED_DRIVER, true, true) // TODO anders lösen?
+    // dummy data to create the element.
+    // The data will be updated shortly after the view is created.
+    LiquibaseConfigurationData.createDefaultData(NO_PRE_CONFIGURED_DRIVER, ConfigurationStatus.NEW, true)
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
-
   const [previewData, setPreviewData] = useState<string | null>(null);
 
   window.addEventListener("message", (event) => {
     const messageData = getConfigurationDataFromMessage(event);
 
-    if (messageData.messageType === MessageType.INIT) {
-      // new data for display, change every value
-      const configurationData = messageData.configurationData;
-
-      setReferenceConnection(typeof configurationData.referenceDatabaseConnection !== "undefined");
-
-      updateData((draft) => {
-        draft.name = configurationData.name;
-        draft.defaultDatabaseForConfiguration = configurationData.defaultDatabaseForConfiguration;
-        draft.newConfig = configurationData.newConfig;
-        draft.classpath = configurationData.classpath;
-        draft.classpathSeparator = configurationData.classpathSeparator;
-        draft.databaseConnection = configurationData.databaseConnection;
-        draft.referenceDatabaseConnection = configurationData.referenceDatabaseConnection;
-        draft.additionalConfiguration = configurationData.additionalConfiguration;
-        // TODO anders lösen?
-      });
-    } else if (messageData.messageType === MessageType.SAVING_SUCCESSFUL) {
-      // saving successful, just check name and set newConfig flag to false
-      if (data.name === messageData.configurationData.name) {
-        updateData((draft) => {
-          draft.newConfig = false;
-        });
-      }
-    } else {
-      console.error(`No handling for type ${messageData.messageType} found`);
+    switch (messageData.messageType) {
+      case MessageType.INIT:
+        handleInitData(messageData);
+        break;
+      case MessageType.SAVING_SUCCESSFUL:
+        handleSavingSuccessful(messageData);
+        break;
+      default:
+        console.error(`No handling for type ${messageData.messageType} found`);
+        break;
     }
   });
+
+  /**
+   * Handles the initialization of the web view with the given data.
+   * All the required components will be set.
+   * @param messageData - the message data given
+   */
+  function handleInitData(messageData: MessageData) {
+    const configurationData = messageData.configurationData;
+
+    setReferenceConnection(typeof configurationData.referenceDatabaseConnection !== "undefined");
+
+    updateData((draft) => {
+      Object.assign(draft, configurationData);
+    });
+  }
+
+  /**
+   *Handles the changing of the state after the saving was successful.
+   * @param messageData-  the message data given
+   */
+  function handleSavingSuccessful(messageData: MessageData) {
+    if (data.name === messageData.configurationData.name) {
+      //just check the name if the loaded config is the same
+      updateData((draft) => {
+        draft.status = ConfigurationStatus.EDIT;
+      });
+    }
+  }
 
   /**
    * Handles the saving of the configuration.
@@ -108,7 +121,7 @@ function App() {
             <fieldset>
               <legend>General information</legend>
               <section>
-                <VSCodeTextField required value={data.name} onBlur={handleChangeName} id="nameInput">
+                <VSCodeTextField autoFocus required value={data.name} onBlur={handleChangeName} id="nameInput">
                   The name under which the configuration should be stored
                 </VSCodeTextField>
                 <label htmlFor="nameInput">
@@ -279,7 +292,7 @@ function App() {
       draft.name = event.target.value;
 
       // whenever the name changes, assume new config
-      draft.newConfig = true;
+      draft.status = ConfigurationStatus.NEW;
     });
   }
 

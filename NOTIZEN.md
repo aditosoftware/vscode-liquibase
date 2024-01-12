@@ -1,45 +1,14 @@
-Liquibase - Configuration --> Absoluter Pfad wird benötigt. Relativen Pfad erst später.
+# TODO / Ideen
 
-Es gibt keinen ReferenceClasspath. Das muss in den normalen?
-
-The JDBC url of the database --> JDBC raus
-
-example/placeholdern
-
-pre-requisties: User X Driver geben.
-
-Standard:
-
-- MS SQL
-- MARIADB
-- MySQL
-- Postgres
-- Oracle
-
-path to driver: anders machen evtl?
-
-radio-Buttons zu Dropdown
-
----
-
-settings anpassen
-
-- in .vscode/settings.json nur relativer pfad in projekt angeben
-- an diesem Pfad dann die settings für die Projekte anzulegen
-
----
-
-- escapen von werten verhindern? Wie? zb ! . \ werden escapt und bestimmt noch mehr
-- tab-reihenfolge bei additional elements anpassen
-
----
-
-# zu edit
-
-- in files ermöglichen
-- erfolgreiches speichern zurück übertragen
-- message data umarbeiten
-
-#
-
+- pre-requisties: User X Driver geben und nicht mehr manuell downloaden
 - besseres required in der webview
+- Escapen von Werten: Im Property-File werden Werte wie `!`, `.` oder `\` automatisch escapt. Bei `:` wurde das schon manuell von mir ausgebaut. Wie kann Liquibase damit umgehen?
+- tab-reihenfolge bei additional elements anpassen, damit man in die Inputs auch tabben kann: -> RH: Ich habe nur keine Ahnung wie
+- webview-ui Ordner anders einbinden? Funktioniert das überhaupt?
+- build mit webviews?
+- walktrough?
+- mehr Error handling !
+- Tests
+- caching von settings
+
+# Sonstige Notizen

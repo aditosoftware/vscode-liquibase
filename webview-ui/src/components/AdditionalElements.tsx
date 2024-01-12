@@ -44,8 +44,6 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
         newValues.set(configKey, additionalConfiguration[configKey]);
       }
       setAdditionalElementValues(newValues);
-    } else {
-      console.error(`No handling for type ${messageData.messageType} found`);
     }
   });
 

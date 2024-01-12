@@ -17,6 +17,14 @@ type ClasspathSeparator = ";" | ":";
 type AdditionalConfiguration = { [key: string]: string };
 
 /**
+ *The status of the current configuration.
+ */
+export enum ConfigurationStatus {
+  NEW = "NEW",
+  EDIT = "EDIT",
+}
+
+/**
  * The liquibase configuration data.
  */
 export class LiquibaseConfigurationData {
@@ -25,7 +33,7 @@ export class LiquibaseConfigurationData {
   /**
    * Indicator, if this is a new config or and edited config.
    */
-  newConfig: boolean;
+  status: ConfigurationStatus;
 
   /**
    * The default database configuration that should be selected in any dropdown.
@@ -65,7 +73,7 @@ export class LiquibaseConfigurationData {
   additionalConfiguration: AdditionalConfiguration;
 
   constructor(
-    newConfig: boolean,
+    status: ConfigurationStatus,
     defaultDatabaseForConfiguration: string,
     name: string,
     classpath: string,
@@ -74,7 +82,7 @@ export class LiquibaseConfigurationData {
     additionalConfiguration: AdditionalConfiguration,
     referenceDatabaseConnection?: DatabaseConnection
   ) {
-    this.newConfig = newConfig;
+    this.status = status;
     this.defaultDatabaseForConfiguration = defaultDatabaseForConfiguration;
     this.name = name;
     this.classpath = classpath;
@@ -87,17 +95,17 @@ export class LiquibaseConfigurationData {
   /**
    * Creates a default object.
    * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
-   * @param newValue - if this default is used as a new value or to save an existing value
+   * @param state - if this configuration is used as a new one or to edit an existing one
    * @param isWindows - if windows or linux/MacOs separators are used
    * @returns the created default object
    */
   static createDefaultData(
     defaultDatabaseForConfiguration: string,
-    newValue: boolean,
+    status: ConfigurationStatus,
     isWindows: boolean
   ): LiquibaseConfigurationData {
     return new LiquibaseConfigurationData(
-      newValue,
+      status,
       defaultDatabaseForConfiguration,
       "",
       "",
@@ -124,7 +132,11 @@ export class LiquibaseConfigurationData {
   ): LiquibaseConfigurationData {
     const properties = getProperties(fs.readFileSync(pPath, "utf8"));
 
-    const data = LiquibaseConfigurationData.createDefaultData(pDefaultDatabaseForConfiguration, false, isWindows);
+    const data = LiquibaseConfigurationData.createDefaultData(
+      pDefaultDatabaseForConfiguration,
+      ConfigurationStatus.EDIT,
+      isWindows
+    );
 
     data.name = pName;
 
