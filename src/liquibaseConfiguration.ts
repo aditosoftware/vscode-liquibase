@@ -30,17 +30,48 @@ export async function readLiquibaseConfigurationNames(): Promise<string[] | unde
 
 /**
  * Adds an key-value pair to the configuration. If no configuration exists, one will be created.
- * // TODO tsdoc
  * @param pName - the name of the configuration
  * @param pPath - the path to the configuration file
+ * @param pCheckForExisting - if there should be a check for existing configurations. This is by default always true.
+ * You should only disable this check, if you have done one before
  */
-export async function addToLiquibaseConfiguration(pName: string, pPath: string) {
-  updateConfiguration((pJsonData) => {
+export async function addToLiquibaseConfiguration(pName: string, pPath: string, pCheckForExisting: boolean = true) {
+  const success = await updateConfiguration(async (pJsonData) => {
+    // if there is a configuration with this name, check for override
+    if (pJsonData[pName] && pCheckForExisting) {
+      if (!(await checkForOverridingExistingConfiguration(pName))) {
+        return;
+      }
+    }
+
     pJsonData[pName] = pPath;
   });
 
-  vscode.window.showInformationMessage(`Configuration for ${pName} was successfully saved.`);
+  if (success) {
+    vscode.window.showInformationMessage(`Configuration for ${pName} was successfully saved.`);
+  }
   // TODO error handling?
+}
+
+/**
+ * Creates a dialog for the user, to ask if an existing configuration with the same name should be overwritten.
+ * @param name - the name of the current configuration
+ * @returns `true`, when the current configuration should be overwritten, `false`, when it should not be overwritten
+ */
+async function checkForOverridingExistingConfiguration(name: string): Promise<boolean> {
+  const yes = "Yes";
+  const answer = await vscode.window.showWarningMessage(
+    `There is already a configuration named ${name}. Do you want to replace it?`,
+    yes,
+    "No"
+  );
+
+  if (answer === yes) {
+    return true;
+  }
+
+  vscode.window.showInformationMessage("Saving cancelled");
+  return false;
 }
 
 /**
@@ -48,14 +79,10 @@ export async function addToLiquibaseConfiguration(pName: string, pPath: string) 
  * @param pConfigurationData - the inputted values from the user
  */
 export async function createLiquibaseProperties(pConfigurationData: LiquibaseConfigurationData) {
-  // TODO check if file exists
-  // TODO check if directory, then create file
-
   const configurationPath = await getLiquibaseConfigurationPath();
 
   if (!configurationPath) {
-    // TODO better error message
-    vscode.window.showErrorMessage("No folder given. No configuration was saved");
+    vscode.window.showErrorMessage("No configuration path was given. No configuration was saved");
     return;
   }
 
@@ -65,19 +92,10 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   if (pConfigurationData.newConfig) {
     // check only for existing configuration when there is a new configuration file
     const existingConfigurations = await readLiquibaseConfigurationNames();
-    if (existingConfigurations) {
-      if (existingConfigurations.indexOf(name) !== -1) {
-        const yes = "Yes";
-        const answer = await vscode.window.showWarningMessage(
-          `There is already a configuration named ${name}. Do you want to replace it?`,
-          yes,
-          "No"
-        );
-
-        if (answer !== yes) {
-          vscode.window.showInformationMessage("Saving cancelled");
-          return;
-        }
+    if (existingConfigurations && existingConfigurations.indexOf(name) !== -1) {
+      const shouldOverride = await checkForOverridingExistingConfiguration(name);
+      if (!shouldOverride) {
+        return;
       }
     }
   }
@@ -97,7 +115,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   fs.writeFileSync(propertiesFilePath, properties);
 
   // save with the relative path in the settings
-  addToLiquibaseConfiguration(name, propertiesFilePath);
+  addToLiquibaseConfiguration(name, propertiesFilePath, false);
 
   // open the created file
   const uri = vscode.Uri.file(propertiesFilePath);

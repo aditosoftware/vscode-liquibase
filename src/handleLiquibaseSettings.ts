@@ -30,22 +30,29 @@ interface Configuration {
   jsonData: Record<string, string>;
 }
 
+// TODO caching of configurations
+
 /**
  * Updates the values of the configuration.
  * @param pUpdate - the function used for updating the json data. This data is given as key / value pairs
+ * @returns `true` when the updating was successful
  */
-export async function updateConfiguration(pUpdate: (pJsonData: Record<string, string>) => void) {
+export async function updateConfiguration(
+  pUpdate: (pJsonData: Record<string, string>) => Promise<void>
+): Promise<boolean> {
   // read the configuration
   const configuration = await readConfigurationInternal();
   if (configuration) {
     // update it
-    pUpdate(configuration.jsonData);
+    await pUpdate(configuration.jsonData);
 
     // and write the data to the file
     fs.writeFileSync(configuration.configPath, JSON.stringify(configuration.jsonData, undefined, 2));
 
-    // TODO success return
+    return true;
   }
+
+  return false;
 }
 
 /**
