@@ -48,7 +48,9 @@ export async function updateConfiguration(
     await pUpdate(configuration.jsonData);
 
     // and write the data to the file
-    fs.writeFileSync(configuration.configPath, JSON.stringify(configuration.jsonData, undefined, 2));
+    fs.writeFileSync(configuration.configPath, JSON.stringify(configuration.jsonData, undefined, 2), {
+      encoding: "utf8",
+    });
 
     return true;
   }
@@ -81,7 +83,7 @@ async function readConfigurationInternal(): Promise<Configuration | undefined> {
   }
 
   // read the jsonData from the file, if no file is there, just give an empty json object
-  const data = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf-8") : JSON.stringify({}); // TODO encoding at all file options
+  const data = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf-8") : JSON.stringify({});
   const jsonData: Record<string, string> = JSON.parse(data);
   return { configPath, jsonData };
 }

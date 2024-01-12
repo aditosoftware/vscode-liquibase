@@ -112,7 +112,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   // TODO  error handling?
 
   // save file with absolute path
-  fs.writeFileSync(propertiesFilePath, properties);
+  fs.writeFileSync(propertiesFilePath, properties, { encoding: "utf8" });
 
   // save with the relative path in the settings
   addToLiquibaseConfiguration(name, propertiesFilePath, false);
