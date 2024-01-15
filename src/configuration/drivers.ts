@@ -1,4 +1,3 @@
-// TODO dynamic links
 
 /**
  * Indicates that the selected driver was not pre-configured.

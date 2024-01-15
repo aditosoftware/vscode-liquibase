@@ -75,10 +75,11 @@ export async function readConfiguration(): Promise<Record<string, string> | unde
  * @returns the found configuration. This includes also the stored location for further updating
  */
 async function readConfigurationInternal(): Promise<Configuration | undefined> {
-  const configPath = await getLiquibaseSettingsPath();
+  const configPath = await getLiquibaseSpecificSettingsPath();
   if (!configPath) {
-    // TODO better message
-    vscode.window.showErrorMessage("No configuration path found");
+    vscode.window.showErrorMessage(
+      "No configuration path found for the liquibase specific configuration. Please configure it in the settings"
+    );
     return;
   }
 
@@ -92,8 +93,7 @@ async function readConfigurationInternal(): Promise<Configuration | undefined> {
  * Finds the file where the liquibase specific settings are stored.
  * @returns the full path to the file with liquibase specific settings
  */
-async function getLiquibaseSettingsPath(): Promise<string | undefined> {
-  // TODO better name
+async function getLiquibaseSpecificSettingsPath(): Promise<string | undefined> {
   const configurationFolder: string | undefined = await getLiquibaseConfigurationPath();
 
   if (configurationFolder) {
@@ -110,9 +110,10 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
 
   const configurationPathSetting = "configurationPath";
 
+  // get default value from setting, so it is not duplicated
   const defaultValue: unknown = configuration.inspect(configurationPathSetting)?.defaultValue;
   if (typeof defaultValue !== "string") {
-    // TODO other handling?
+    console.error(`default value ${defaultValue} was not an string. Please report this error`);
     return;
   }
 
@@ -120,6 +121,7 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
 
   // double check the configuration path, because it can also be empty string
   if (!configurationPath) {
+    // if this is the case, simple use the default value.
     configurationPath = defaultValue;
   }
 

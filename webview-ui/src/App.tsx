@@ -14,7 +14,6 @@ import { useEffect, useState } from "react";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
 import { useImmer } from "use-immer";
-import { getConfigurationDataFromMessage } from "./utilities/transfer";
 import { ConfigurationStatus, LiquibaseConfigurationData } from '../../src/configuration/data/LiquibaseConfigurationData';
 import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
@@ -30,7 +29,7 @@ function App() {
   const [previewData, setPreviewData] = useState<string | null>(null);
 
   window.addEventListener("message", (event) => {
-    const messageData = getConfigurationDataFromMessage(event);
+    const messageData = MessageData.createFromSerializedData(event.data);
 
     switch (messageData.messageType) {
       case MessageType.INIT:

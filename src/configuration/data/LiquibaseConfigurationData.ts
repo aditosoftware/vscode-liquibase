@@ -264,7 +264,7 @@ export class LiquibaseConfigurationData {
       result && classpathElements.push(result);
     }
 
-    // TODO Workspace-Folder auch hinzufügen?
+    // TODO add Workspace-Folder or liquibase folder as well?
 
     const allUniqueClasspath = Array.from(new Set(classpathElements))
       .filter((pElement) => pElement.trim() !== "")

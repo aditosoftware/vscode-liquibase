@@ -7,8 +7,7 @@ import {
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
-import { getConfigurationDataFromMessage } from "../utilities/transfer";
-import { MessageType } from "../../../src/configuration/transfer/transferData";
+import { MessageData, MessageType } from "../../../src/configuration/transfer/transferData";
 
 /**
  * The properties for the additional element tag.
@@ -34,7 +33,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
 
   window.addEventListener("message", (event) => {
     // TODO anders lösen?
-    const messageData = getConfigurationDataFromMessage(event);
+    const messageData = MessageData.createFromSerializedData(event.data);
 
     if (messageData.messageType === MessageType.INIT) {
       // recreate the new values as a new map
@@ -55,7 +54,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
     const target = pEvent.target;
 
     if (target instanceof DataGridCell) {
-      const cell: DataGridCell = target as DataGridCell;
+      const cell: DataGridCell = target;
 
       // Do not continue if `cell` is undefined/null or is not a grid cell
       if (!cell || cell.role !== "gridcell") {
@@ -79,7 +78,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
       const target = pEvent.target;
 
       if (target instanceof DataGridCell) {
-        const cell: DataGridCell = target as DataGridCell;
+        const cell: DataGridCell = target;
 
         cell.setAttribute("contenteditable", "false");
       }
