@@ -2,7 +2,7 @@ import { immerable } from "immer";
 import { DatabaseConnection } from "./DatabaseConnection";
 import * as fs from "fs";
 import { getProperties } from "properties-file";
-import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "../drivers";
+import { Driver } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
 
 /**
@@ -72,6 +72,7 @@ export class LiquibaseConfigurationData {
    */
   additionalConfiguration: AdditionalConfiguration;
 
+
   constructor(
     status: ConfigurationStatus,
     defaultDatabaseForConfiguration: string,
@@ -115,13 +116,12 @@ export class LiquibaseConfigurationData {
     );
   }
 
-  // TODO verbessern
   /**
    * Loads the content from a file and transform it into an object.
    * @param pName - the name of the configuration
    * @param pPath - the path of the file
    * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
-   * @param isWindows - if the current os is windows. Needed for the separator
+   * @param isWindows - if the current os is windows. Needed for the separator in the classpath
    * @returns the loaded content
    */
   static createFromFile(
@@ -130,73 +130,68 @@ export class LiquibaseConfigurationData {
     pDefaultDatabaseForConfiguration: string,
     isWindows: boolean
   ): LiquibaseConfigurationData {
-    const properties = getProperties(fs.readFileSync(pPath, "utf8"));
+    // read the liquibase properties from a file
+    const liquibaseProperties = getProperties(fs.readFileSync(pPath, "utf8"));
 
     const data = LiquibaseConfigurationData.createDefaultData(
       pDefaultDatabaseForConfiguration,
       ConfigurationStatus.EDIT,
       isWindows
     );
-
     data.name = pName;
 
-    for (const [key, value] of Object.entries(properties)) {
-      let normalizedKey = key;
-      let reference: boolean = false;
-      if (key.startsWith(DatabaseConnection.REFERENCE)) {
-        reference = true;
-        normalizedKey = DatabaseConnection.createDeReferencedKey(key);
-      }
-
-      if (normalizedKey === "classpath") {
-        // TODO special case, when file from different os was copied?
-        data.classpath = value.replaceAll(data.classpathSeparator, "\n");
-      } else if (
-        normalizedKey === "username" ||
-        normalizedKey === "password" ||
-        normalizedKey === "url" ||
-        normalizedKey === "driver"
-      ) {
-        let connection: DatabaseConnection;
-        if (reference) {
-          if (!data.referenceDatabaseConnection) {
-            data.referenceDatabaseConnection = DatabaseConnection.createDefaultDatabaseConnection(
-              pDefaultDatabaseForConfiguration
-            );
-          }
-          connection = data.referenceDatabaseConnection;
-        } else {
-          connection = data.databaseConnection;
-        }
-
-        // set the value for the connection
-        connection.setValue(normalizedKey, value);
-
-        if (normalizedKey === "driver") {
-          let preConfiguredDriver = false;
-          // adjust database type when driver was given
-          // TODO multiple drivers suitable (e.g. MYSQL and MariaDB)
-          for (const [driverKey, driverValue] of ALL_DRIVERS.entries()) {
-            if (driverValue.driverClass === value) {
-              connection.databaseType = driverKey;
-              connection.driver = "";
-              preConfiguredDriver = true;
-              break;
-            }
-          }
-
-          if (!preConfiguredDriver) {
-            // set the database type to no-pre-configured, because it can be any driver based on the users setting
-            connection.databaseType = NO_PRE_CONFIGURED_DRIVER;
-          }
-        }
-      } else {
-        // set the normal key, not the adjusted one
-        data.additionalConfiguration[key] = value;
-      }
+    // handle all key-value-pairs from the file
+    for (const [key, value] of Object.entries(liquibaseProperties)) {
+      data.handleValueFromLiquibaseConfiguration(key, value);
     }
 
     return data;
+  }
+
+  /**
+   * Adds a new key-value-pair to the current data. These key-value-pairs come directly from a liquibase.properties file.
+   * @param key - the the of the liquibase properties file
+   * @param value - the value of the liquibase properties file
+   */
+  private handleValueFromLiquibaseConfiguration(key: string, value: string) {
+    let normalizedKey = key;
+    let reference: boolean = false;
+    if (key.startsWith(DatabaseConnection.REFERENCE)) {
+      reference = true;
+      normalizedKey = DatabaseConnection.createDeReferencedKey(key);
+    }
+
+    if (normalizedKey === "classpath") {
+      // TODO handle special case, when file from different os was copied?
+      this.classpath = value.replaceAll(this.classpathSeparator, "\n");
+    } else if (
+      normalizedKey === "username" ||
+      normalizedKey === "password" ||
+      normalizedKey === "url" ||
+      normalizedKey === "driver"
+    ) {
+      let connection: DatabaseConnection;
+      if (reference) {
+        if (!this.referenceDatabaseConnection) {
+          this.referenceDatabaseConnection = DatabaseConnection.createDefaultDatabaseConnection(
+            this.defaultDatabaseForConfiguration
+          );
+        }
+        connection = this.referenceDatabaseConnection;
+      } else {
+        connection = this.databaseConnection;
+      }
+
+      // set the value for the connection
+      connection.setValue(normalizedKey, value);
+
+      if (normalizedKey === "driver") {
+        connection.adjustDriver(value);
+      }
+    } else {
+      // set the normal key, not the adjusted one for the additional configuration
+      this.additionalConfiguration[key] = value;
+    }
   }
 
   // TODO das ganze woanders hin auslagern?

@@ -167,4 +167,30 @@ export class DatabaseConnection {
     const keyWithoutReference = key.replace(DatabaseConnection.REFERENCE, "");
     return keyWithoutReference.charAt(0).toLowerCase() + keyWithoutReference.substring(1);
   }
+
+  /**
+   * Adjusts the driver after loading it from a properties file.
+   * If the driver is from a pre-configured driver class, then the databaseType will be set to this pre-configured element,
+   * in order to have it easier displayed in the webview.
+   * @param value - the value of the current driver configuration
+   * @param connection - the database connection that should be changed
+   */
+  adjustDriver(value: string) {
+    let preConfiguredDriver = false;
+
+    for (const [driverKey, driverValue] of ALL_DRIVERS.entries()) {
+      if (driverValue.driverClass === value) {
+        // adjust database type when driver was given
+        this.databaseType = driverKey;
+        this.driver = "";
+        preConfiguredDriver = true;
+        break;
+      }
+    }
+
+    if (!preConfiguredDriver) {
+      // set the database type to no-pre-configured, because it can be any driver based on the users setting
+      this.databaseType = NO_PRE_CONFIGURED_DRIVER;
+    }
+  }
 }
