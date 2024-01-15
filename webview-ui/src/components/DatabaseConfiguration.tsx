@@ -1,8 +1,7 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
 import { VSCodeDivider, VSCodeTextField, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react";
-import { DatabaseConnection } from '../../../src/configuration/data/DatabaseConnection';
+import { DatabaseConnection } from "../../../src/configuration/data/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER, ALL_DRIVERS } from "../../../src/configuration/drivers";
-
 
 /**
  * Properties for creating a database configuration
@@ -16,7 +15,7 @@ interface DatabaseConfigurationProps {
   /**
    * The configured database connection. This will be used to display the values inside the element.
    */
-  databaseConnection?: DatabaseConnection; // TODO handle setting of the values different? or rethink this option
+  databaseConnection?: DatabaseConnection;
 
   /**
    * Method that will get a new value whenever the initial component was left (`onBlur`).
@@ -58,7 +57,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
               id="databaseTypeSelection"
               value={pProperties.databaseConnection?.databaseType}
               onInput={(e) => {
-                // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint. // TODO validate
+                // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
                 const value = e.target.value;
                 pProperties.onUpdate("databaseType", value);
                 // remove classpath and driver values, when a pre-configured values was used
@@ -94,12 +93,18 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
   function createDatabaseSelections(): JSX.Element[] {
     const radioElements: JSX.Element[] = [];
 
-    // add all drivers
-    ALL_DRIVERS.forEach((pDriver, pKey) =>
-      radioElements.push(<VSCodeOption value={pKey}>{pDriver.displayName}</VSCodeOption>)
-    );
+    // add all the pre-configured drivers drivers
+    [...ALL_DRIVERS.keys()]
+      .sort((a, b) => a.localeCompare(b))
+      .forEach((pKey: string) => {
+        const driver = ALL_DRIVERS.get(pKey);
+        if (driver) {
+          radioElements.push(<VSCodeOption value={pKey}>{driver.displayName}</VSCodeOption>);
+        }
+      });
 
-    // and add a none element
+    // and add one element for no pre-configured driver at the end
+    radioElements.push(<VSCodeDivider />);
     radioElements.push(
       <VSCodeOption value={NO_PRE_CONFIGURED_DRIVER} selected>
         No pre-configured driver
@@ -112,9 +117,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
   /**
    * Creates an input inside a section.
    *
-   * // TODO move logic to separate class?
-   *
-   * @param pProperties - the properties which are used to configure this component. This is needed for handling the changing of values. // TODO only give relevant element
+   * @param pProperties - the properties which are used to configure this component. This is needed for handling the changing of values.
    * @param pType - the type of the text input field, e.g. text, password
    * @param pFieldName -  the name of the field. This is used for setting the new value when the value has changed
    * @param pLabel - the label of the text field
@@ -129,30 +132,13 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
     pPlaceholder?: string
   ): JSX.Element {
     return (
-      <section>
-        <VSCodeTextField
-          type={pType}
-          placeholder={pPlaceholder}
-          value={pProperties.databaseConnection?.getValue(pFieldName)}
-          onBlur={handleTextFieldChange(pProperties, pFieldName)}>
-          {pLabel}
-        </VSCodeTextField>
-      </section>
+      <VSCodeTextField
+        type={pType}
+        placeholder={pPlaceholder}
+        value={pProperties.databaseConnection?.getValue(pFieldName)}
+        onBlur={(e: React.FocusEvent<HTMLInputElement>) => pProperties.onUpdate(pFieldName, e.target.value)}>
+        {pLabel}
+      </VSCodeTextField>
     );
-  }
-
-  /**
-   * Handles the change event for a text field.
-   *
-   * @param pFieldName - The name of the field to update.
-   * @returns A function to handle the input change event.
-   */
-  function handleTextFieldChange(
-    pProperties: DatabaseConfigurationProps,
-    pFieldName: keyof DatabaseConnection
-  ): (e: React.FocusEvent<HTMLInputElement>) => void {
-    return (e: React.FocusEvent<HTMLInputElement>): void => {
-      pProperties.onUpdate(pFieldName, e.target.value);
-    };
   }
 }

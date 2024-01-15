@@ -8,7 +8,7 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { vscode } from "../utilities/vscode";
-import {  MessageType } from "../../../src/configuration/transfer/transferData";
+import { MessageType } from "../../../src/configuration/transfer/transferData";
 
 /**
  * The properties for the additional element tag.
@@ -33,7 +33,6 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
   const [value, setValue] = useState<string>("");
 
   vscode.addMessageListener((pMessage) => {
-    // TODO anders lösen?
     if (pMessage.messageType === MessageType.INIT) {
       // recreate the new values as a new map
       const newValues = new Map();

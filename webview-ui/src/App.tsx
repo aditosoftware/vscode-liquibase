@@ -148,7 +148,7 @@ function App() {
                   orientation="horizontal"
                   value={data.classpathSeparator}
                   onClick={(e) => {
-                    // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint. // TODO validate
+                    // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
                     const value = e.target.value;
                     updateData((draft) => {
                       draft.classpathSeparator = value;
