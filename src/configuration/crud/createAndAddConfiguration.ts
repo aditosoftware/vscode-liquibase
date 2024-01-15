@@ -3,11 +3,7 @@ import * as fs from "fs";
 import path from "path";
 import { Driver } from "../drivers";
 import download from "download";
-import {
-  getDriverLocation,
-  getLiquibaseConfigurationPath,
-  updateConfiguration,
-} from "../../handleLiquibaseSettings";
+import { getDriverLocation, getLiquibaseConfigurationPath, updateConfiguration } from "../../handleLiquibaseSettings";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../transfer/transferData";
@@ -17,7 +13,6 @@ import { readLiquibaseConfigurationNames } from "./readConfiguration";
  * The file ending of all liquibase configuration files.
  */
 const fileEnding: string = ".liquibase.properties";
-
 
 /**
  * Adds an key-value pair to the configuration. If no configuration exists, one will be created.
@@ -40,10 +35,10 @@ export async function addToLiquibaseConfiguration(pName: string, pPath: string, 
 
   if (success) {
     vscode.window.showInformationMessage(`Configuration for ${pName} was successfully saved.`);
+  } else {
+    vscode.window.showErrorMessage(`Configuration for ${pName} could not be saved`);
   }
-  // TODO error handling?
 }
-
 
 /**
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
@@ -80,10 +75,13 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
 
   const propertiesFilePath = path.join(configurationPath, fileName);
 
-  // TODO  error handling?
-
-  // save file with absolute path
-  fs.writeFileSync(propertiesFilePath, properties, { encoding: "utf8" });
+  try {
+    // save file with absolute path
+    fs.writeFileSync(propertiesFilePath, properties, { encoding: "utf8" });
+  } catch (error) {
+    console.error(error);
+    return;
+  }
 
   // save with the relative path in the settings
   addToLiquibaseConfiguration(name, propertiesFilePath, false);
@@ -105,7 +103,7 @@ async function downloadDriver(pDriver: Driver): Promise<string | undefined> {
   // find out location for driver
   const locationForDriver = await getDriverLocation();
   if (!locationForDriver) {
-    // TODO error
+    console.error("No location for downloading the drivers was found");
     return;
   }
 
@@ -123,6 +121,7 @@ async function downloadDriver(pDriver: Driver): Promise<string | undefined> {
       await download(pDriver.urlForDownload, locationForDriver);
     } catch (error) {
       console.error(`error downloading the file: ${error}`);
+      return;
     }
   }
 
