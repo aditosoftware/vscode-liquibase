@@ -32,6 +32,11 @@
         "command": "liquibase.testConfiguration",
         "title": "Tests an existing liquibase configuration",
         "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.removeExistingConfiguration",
+        "title": "Remove existing liquibase.properties from the configuration",
+        "category": "Liquibase"
       }
     ],
     "configuration": {
@@ -73,17 +78,29 @@
         }
       }
     },
+    "submenus": [
+      {
+        "id": "liquibase.configurationMenu",
+        "label": "Liquibase"
+      }
+    ],
     "menus": {
       "explorer/context": [
         {
-          "when": "resourceLangId == properties",
-          "command": "liquibase.editExistingLiquibaseConfiguration"
+          "submenu": "liquibase.configurationMenu",
+          "when": "resourceLangId == properties"
         }
       ],
       "editor/context": [
         {
-          "when": "resourceLangId == properties",
-          "command": "liquibase.editExistingLiquibaseConfiguration"
+          "submenu": "liquibase.configurationMenu",
+          "when": "resourceLangId == properties"
+        }
+      ],
+      "liquibase.configurationMenu": [
+        {
+          "command": "liquibase.editExistingLiquibaseConfiguration",
+          "when": "resourceLangId == properties"
         }
       ]
     }

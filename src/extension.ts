@@ -4,6 +4,7 @@ import {
   testLiquibaseConfiguration,
   addExistingLiquibaseConfiguration,
   editExistingLiquibaseConfiguration,
+  removeExistingLiquibaseConfiguration,
 } from "./configurationCommands";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -25,6 +26,10 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
     vscode.commands.registerCommand("liquibase.editExistingLiquibaseConfiguration", (uri: vscode.Uri) =>
       editExistingLiquibaseConfiguration(uri, context)
     )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", removeExistingLiquibaseConfiguration)
   );
 
   context.subscriptions.push(

@@ -4,9 +4,10 @@ import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPane
 import { isWindows } from "./utilities/osUtilities";
 import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 import * as path from "path";
-import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "./handleLiquibaseSettings";
+import { getDefaultDatabaseForConfiguration, getLiquibaseFolder, updateConfiguration } from "./handleLiquibaseSettings";
 import { testLiquibaseConnection } from "./configuration/crud/testConfiguration";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/crud/readConfiguration";
+import * as fs from "fs";
 
 /**
  * Tests an liquibase configuration.
@@ -14,7 +15,7 @@ import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./confi
  * The user need to select any existing configuration.
  */
 export async function testLiquibaseConfiguration(): Promise<void> {
-  const result = await selectFromExistingConfigurations();
+  const result = await selectFromExistingConfigurations("Select any configuration you want to test");
 
   if (result) {
     testLiquibaseConnection(result);
@@ -45,7 +46,7 @@ export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, contex
   } else {
     // invoked via command palette - show inputs for user
     // let the user select configuration
-    const name = await selectFromExistingConfigurations();
+    const name = await selectFromExistingConfigurations("Select the configuration you want to edit");
 
     if (name) {
       // finds the path to the name
@@ -74,13 +75,14 @@ export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, contex
 
 /**
  * Shows an input that lets the user select any of the configured configurations.
+ * @param pTitle - the title of the quick pick dialog
  * @returns the selected configuration
  */
-async function selectFromExistingConfigurations() {
+async function selectFromExistingConfigurations(pTitle: string): Promise<string | undefined> {
   const configurationNames: string[] | undefined = await readLiquibaseConfigurationNames();
   if (configurationNames && configurationNames.length !== 0) {
     const result: string | undefined = await vscode.window.showQuickPick(configurationNames, {
-      title: "Select any configuration you wish to be tested",
+      title: pTitle,
       placeHolder: "Pick your desired connection",
     });
 
@@ -116,6 +118,48 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
 
     if (location && location[0]) {
       addToLiquibaseConfiguration(name, location[0].fsPath);
+    }
+  }
+}
+
+/**
+ * Removes an existing configuration from the configuration file. 
+ */
+export async function removeExistingLiquibaseConfiguration() {
+  // TODO connect with fadler logic
+
+  const configuration = await selectFromExistingConfigurations("Select the configuration you want delete (1/2)");
+
+  if (configuration) {
+    const setting = "Remove the configuration from the settings";
+    const both = `${setting} and delete the corresponding file`;
+
+    const deletionMode = await vscode.window.showQuickPick([setting, both], {
+      title: `Select what you want delete (2/2)`,
+    });
+
+    if (deletionMode) {
+      const deleteConfirm = await vscode.window.showWarningMessage(
+        `Are you sure you want to delete ${configuration}? This will remove it from the following: ${deletionMode}`,
+        "Yes",
+        "No"
+      );
+
+      if (deleteConfirm === "Yes") {
+        const success = await updateConfiguration(async (pJsonData) => {
+          const path = pJsonData[configuration];
+          if (path && deletionMode === both) {
+            fs.rmSync(path);
+          }
+          delete pJsonData[configuration];
+        });
+
+        if (success) {
+          vscode.window.showInformationMessage(`Configuration ${configuration} was successfully removed`);
+        } else {
+          vscode.window.showErrorMessage(`Error while removing ${configuration}`);
+        }
+      }
     }
   }
 }
