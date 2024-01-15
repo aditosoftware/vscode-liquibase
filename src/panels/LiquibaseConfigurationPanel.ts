@@ -5,7 +5,7 @@ import { createLiquibaseProperties } from "../configuration/crud/createAndAddCon
 import { MessageData, MessageType } from "../configuration/transfer/transferData";
 import { isWindows } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
-import { getDefaultDatabaseForConfiguration } from "../handleLiquibaseSettings";
+import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
 
 /**
@@ -81,7 +81,10 @@ export class LiquibaseConfigurationPanel {
       data
         ? data
         : LiquibaseConfigurationData.createDefaultData(
-            getDefaultDatabaseForConfiguration(),
+            {
+              defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
+              liquibaseDirectoryForClasspath: getLiquibaseFolder(),
+            },
             ConfigurationStatus.NEW,
             isWindows()
           )

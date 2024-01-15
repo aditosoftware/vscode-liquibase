@@ -42,6 +42,10 @@
           "default": "data/liquibase",
           "markdownDescription": "Relative path inside the workspace where liquibase configuration should be stored.\nThis folder should not be included in your version control system."
         },
+        "liquibase.liquibaseFolder": {
+          "type": "string",
+          "markdownDescription": "Relative path inside the workspace, where your liquibase changelog files are located.This location will be added the the classpath of newly generated files.\n\nIf there is no path given, then the project itself will be added to classpath."
+        },
         "liquibase.driverLocation": {
           "type": "string",
           "markdownDescription": "The location where this extension should download all the drivers and necessary jar files.\n\nOn Windows, backslashes must be escaped, e.g. `C:\\\\dev\\\\myDrivers`."

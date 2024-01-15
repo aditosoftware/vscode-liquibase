@@ -4,6 +4,7 @@ import * as fs from "fs";
 import { getProperties } from "properties-file";
 import { Driver } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
+import { LiquibaseSettings } from "./TransferSettings";
 
 /**
  * The type for separating multiple classpath.
@@ -37,9 +38,9 @@ export class LiquibaseConfigurationData {
   status: ConfigurationStatus;
 
   /**
-   * The default database configuration that should be selected in any dropdown.
+   * The settings that are relevant for creating / updating a configuration.
    */
-  readonly defaultDatabaseForConfiguration: string;
+  liquibaseSettings: LiquibaseSettings;
 
   /**
    * The name of the configuration.
@@ -81,7 +82,7 @@ export class LiquibaseConfigurationData {
    */
   private constructor(
     status: ConfigurationStatus,
-    defaultDatabaseForConfiguration: string,
+    liquibaseSettings: LiquibaseSettings,
     name: string,
     classpath: string,
     classpathSeparator: ClasspathSeparator,
@@ -90,7 +91,7 @@ export class LiquibaseConfigurationData {
     referenceDatabaseConnection?: DatabaseConnection
   ) {
     this.status = status;
-    this.defaultDatabaseForConfiguration = defaultDatabaseForConfiguration;
+    this.liquibaseSettings = liquibaseSettings;
     this.name = name;
     this.classpath = classpath;
     this.classpathSeparator = classpathSeparator;
@@ -112,7 +113,10 @@ export class LiquibaseConfigurationData {
   static clone(dataToClone: LiquibaseConfigurationData): LiquibaseConfigurationData {
     return new LiquibaseConfigurationData(
       dataToClone.status,
-      dataToClone.defaultDatabaseForConfiguration,
+      {
+        defaultDatabaseForConfiguration: dataToClone.liquibaseSettings.defaultDatabaseForConfiguration,
+        liquibaseDirectoryForClasspath: dataToClone.liquibaseSettings.liquibaseDirectoryForClasspath,
+      },
       dataToClone.name,
       dataToClone.classpath,
       dataToClone.classpathSeparator,
@@ -126,23 +130,23 @@ export class LiquibaseConfigurationData {
 
   /**
    * Creates a default object.
-   * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
+   * @param liquibaseSettings  - the settings relevant for creating a new configuration
    * @param state - if this configuration is used as a new one or to edit an existing one
    * @param isWindows - if windows or linux/MacOs separators are used
    * @returns the created default object
    */
   static createDefaultData(
-    defaultDatabaseForConfiguration: string,
+    liquibaseSettings: LiquibaseSettings,
     status: ConfigurationStatus,
     isWindows: boolean
   ): LiquibaseConfigurationData {
     return new LiquibaseConfigurationData(
       status,
-      defaultDatabaseForConfiguration,
+      liquibaseSettings,
       "",
       "",
       isWindows ? ";" : ":",
-      DatabaseConnection.createDefaultDatabaseConnection(defaultDatabaseForConfiguration),
+      DatabaseConnection.createDefaultDatabaseConnection(liquibaseSettings.defaultDatabaseForConfiguration),
       {}
     );
   }
@@ -151,24 +155,20 @@ export class LiquibaseConfigurationData {
    * Loads the content from a file and transform it into an object.
    * @param pName - the name of the configuration
    * @param pPath - the path of the file
-   * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
+   * @param pLiquibaseSettings - the settings used for creating and updating the configuration
    * @param isWindows - if the current os is windows. Needed for the separator in the classpath
    * @returns the loaded content
    */
   static createFromFile(
     pName: string,
     pPath: string,
-    pDefaultDatabaseForConfiguration: string,
+    pLiquibaseSettings: LiquibaseSettings,
     isWindows: boolean
   ): LiquibaseConfigurationData {
     // read the liquibase properties from a file
     const liquibaseProperties = getProperties(fs.readFileSync(pPath, "utf8"));
 
-    const data = LiquibaseConfigurationData.createDefaultData(
-      pDefaultDatabaseForConfiguration,
-      ConfigurationStatus.EDIT,
-      isWindows
-    );
+    const data = LiquibaseConfigurationData.createDefaultData(pLiquibaseSettings, ConfigurationStatus.EDIT, isWindows);
     data.name = pName;
 
     // handle all key-value-pairs from the file
@@ -205,7 +205,7 @@ export class LiquibaseConfigurationData {
       if (reference) {
         if (!this.referenceDatabaseConnection) {
           this.referenceDatabaseConnection = DatabaseConnection.createDefaultDatabaseConnection(
-            this.defaultDatabaseForConfiguration
+            this.liquibaseSettings.defaultDatabaseForConfiguration
           );
         }
         connection = this.referenceDatabaseConnection;
@@ -252,6 +252,8 @@ export class LiquibaseConfigurationData {
     const properties: PropertiesEditor = new PropertiesEditor("");
 
     const classpathElements: string[] = this.classpath.split("\n");
+    // add the liquibase directory to the classpath
+    classpathElements.push(this.liquibaseSettings.liquibaseDirectoryForClasspath);
 
     if (this.databaseConnection.hasData()) {
       const result = await this.databaseConnection.writeDataForConnection(properties, false, pDownloadDriver);
@@ -264,21 +266,22 @@ export class LiquibaseConfigurationData {
       result && classpathElements.push(result);
     }
 
-    // TODO add Workspace-Folder or liquibase folder as well?
+    const joinedClasspath =
+      // make all elements in the classpath unique
+      Array.from(new Set(classpathElements))
+        // remove empty elements
+        .filter((pElement) => pElement.trim() !== "")
+        // add quotation marks when no given
+        .map((pElement) => {
+          if (pElement.startsWith('"') && pElement.endsWith('"')) {
+            return pElement;
+          } else {
+            return `"${pElement}"`;
+          }
+        })
+        .join(this.classpathSeparator);
 
-    const allUniqueClasspath = Array.from(new Set(classpathElements))
-      .filter((pElement) => pElement.trim() !== "")
-      // add quotation marks when no given
-      .map((pElement) => {
-        if (pElement.startsWith('"') && pElement.endsWith('"')) {
-          return pElement;
-        } else {
-          return `"${pElement}"`;
-        }
-      });
-    if (allUniqueClasspath.length !== 0) {
-      const joinedClasspath = allUniqueClasspath.join(this.classpathSeparator);
-
+    if (joinedClasspath) {
       properties.insertComment(
         "Specifies the directories and JAR files to search for changelog files and custom extension classes.\nTo separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS."
       );

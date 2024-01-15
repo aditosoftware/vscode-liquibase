@@ -141,6 +141,30 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
 }
 
 /**
+ * Returns the user setting where the liquibase folder is located inside the workspace.
+ * @returns the liquibase folder in the workspace or the workspace folder
+ */
+export function getLiquibaseFolder(): string {
+  const configuration = vscode.workspace.getConfiguration(configurationName);
+  const liquibaseFolder: string | undefined = configuration.get("liquibaseFolder", "");
+
+  if (vscode.workspace.workspaceFolders) {
+    const workspaceFolder = vscode.workspace.workspaceFolders[0];
+
+    const fsPathToWorkspace = workspaceFolder.uri.fsPath;
+
+    if (liquibaseFolder) {
+      return path.join(fsPathToWorkspace, liquibaseFolder);
+    } else {
+      return fsPathToWorkspace;
+    }
+  }
+
+  // Fallback: no workspace there, just return empty string.
+  return "";
+}
+
+/**
  * Loads the setting where the drivers should be downloaded.
  * If no value was found, then a default location will be used. This default location is inside the liquibase default folder and will be named `.drivers`.
  * @returns the configured location for the driver or a default location

@@ -26,7 +26,11 @@ function App() {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
     // dummy data to create the element.
     // The data will be updated shortly after the view is created.
-    LiquibaseConfigurationData.createDefaultData(NO_PRE_CONFIGURED_DRIVER, ConfigurationStatus.NEW, true)
+    LiquibaseConfigurationData.createDefaultData(
+      { defaultDatabaseForConfiguration: NO_PRE_CONFIGURED_DRIVER, liquibaseDirectoryForClasspath: "" },
+      ConfigurationStatus.NEW,
+      true
+    )
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
   const [previewData, setPreviewData] = useState<string | null>(null);
@@ -276,7 +280,7 @@ function App() {
   function handleAddRemoveReferenceConnection(pAdded: boolean): void {
     updateData((draft) => {
       draft.referenceDatabaseConnection = pAdded
-        ? DatabaseConnection.createDefaultDatabaseConnection(data.defaultDatabaseForConfiguration)
+        ? DatabaseConnection.createDefaultDatabaseConnection(data.liquibaseSettings.defaultDatabaseForConfiguration)
         : undefined;
     });
 

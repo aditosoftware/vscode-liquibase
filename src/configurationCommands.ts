@@ -1,12 +1,10 @@
 import * as vscode from "vscode";
-import {
-  addToLiquibaseConfiguration
-} from "./configuration/crud/createAndAddConfiguration";
+import { addToLiquibaseConfiguration } from "./configuration/crud/createAndAddConfiguration";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { isWindows } from "./utilities/osUtilities";
 import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 import * as path from "path";
-import { getDefaultDatabaseForConfiguration } from "./handleLiquibaseSettings";
+import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "./handleLiquibaseSettings";
 import { testLiquibaseConnection } from "./configuration/crud/testConfiguration";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/crud/readConfiguration";
 
@@ -63,7 +61,10 @@ export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, contex
     const data = LiquibaseConfigurationData.createFromFile(
       existingConfiguration.name,
       existingConfiguration.fsPath,
-      getDefaultDatabaseForConfiguration(),
+      {
+        defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
+        liquibaseDirectoryForClasspath: getLiquibaseFolder(),
+      },
       isWindows()
     );
     // and renders the panel with the data
