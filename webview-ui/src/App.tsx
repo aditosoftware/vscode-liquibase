@@ -14,10 +14,13 @@ import { useEffect, useState } from "react";
 import { DatabaseConfiguration } from "./components/DatabaseConfiguration";
 import { AdditionalElements } from "./components/AdditionalElements";
 import { useImmer } from "use-immer";
-import { ConfigurationStatus, LiquibaseConfigurationData } from '../../src/configuration/data/LiquibaseConfigurationData';
+import {
+  ConfigurationStatus,
+  LiquibaseConfigurationData,
+} from "../../src/configuration/data/LiquibaseConfigurationData";
 import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
-import { MessageData, MessageType } from '../../src/configuration/transfer/transferData';
+import { MessageData, MessageType } from "../../src/configuration/transfer/transferData";
 
 function App() {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
@@ -28,18 +31,16 @@ function App() {
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
   const [previewData, setPreviewData] = useState<string | null>(null);
 
-  window.addEventListener("message", (event) => {
-    const messageData = MessageData.createFromSerializedData(event.data);
-
-    switch (messageData.messageType) {
+  vscode.addMessageListener((pMessage) => {
+    switch (pMessage.messageType) {
       case MessageType.INIT:
-        handleInitData(messageData);
+        handleInitData(pMessage);
         break;
       case MessageType.SAVING_SUCCESSFUL:
-        handleSavingSuccessful(messageData);
+        handleSavingSuccessful(pMessage);
         break;
       default:
-        console.error(`No handling for type ${messageData.messageType} found`);
+        console.error(`No handling for type ${pMessage.messageType} found`);
         break;
     }
   });

@@ -94,7 +94,13 @@ export class LiquibaseConfigurationPanel {
    * @param data - the data of the message
    */
   static transferMessage(pMessageType: MessageType, data: LiquibaseConfigurationData) {
-    LiquibaseConfigurationPanel.currentPanel?._panel.webview.postMessage(new MessageData(pMessageType, data));
+    LiquibaseConfigurationPanel.currentPanel?._panel.webview
+      .postMessage(new MessageData(pMessageType, data))
+      .then((success) => {
+        if (!success) {
+          console.error("error transferring the message to the webview");
+        }
+      });
   }
 
   /**

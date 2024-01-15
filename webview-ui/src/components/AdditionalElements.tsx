@@ -7,7 +7,8 @@ import {
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
-import { MessageData, MessageType } from "../../../src/configuration/transfer/transferData";
+import { vscode } from "../utilities/vscode";
+import {  MessageType } from "../../../src/configuration/transfer/transferData";
 
 /**
  * The properties for the additional element tag.
@@ -31,14 +32,12 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
 
-  window.addEventListener("message", (event) => {
+  vscode.addMessageListener((pMessage) => {
     // TODO anders lösen?
-    const messageData = MessageData.createFromSerializedData(event.data);
-
-    if (messageData.messageType === MessageType.INIT) {
+    if (pMessage.messageType === MessageType.INIT) {
       // recreate the new values as a new map
       const newValues = new Map();
-      const additionalConfiguration = messageData.configurationData.additionalConfiguration;
+      const additionalConfiguration = pMessage.configurationData.additionalConfiguration;
       for (const configKey in additionalConfiguration) {
         newValues.set(configKey, additionalConfiguration[configKey]);
       }

@@ -38,6 +38,24 @@ class VSCodeAPIWrapper {
   }
 
   /**
+   * Adds an listener to the incoming message. When a correct message comes, 
+   * it will be parsed to MessageData and be handled by the given function.
+   * 
+   * @param handleMessageData - the function to handle the message data
+   */
+  public addMessageListener(handleMessageData: (pMessageData: MessageData) => void): void {
+    window.addEventListener("message", (event) => {
+      if (event.origin.startsWith("vscode-webview://")) {
+        const messageData = MessageData.createFromSerializedData(event.data);
+
+        handleMessageData(messageData);
+      } else {
+        console.error(`unknown message origin ${event.origin}: message will not be parsed`);
+      }
+    });
+  }
+
+  /**
    * Get the persistent state stored for this webview.
    *
    * @remarks When running webview source code inside a web browser, getState will retrieve state
