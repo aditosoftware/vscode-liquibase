@@ -6,27 +6,18 @@ import download from "download";
 import {
   getDriverLocation,
   getLiquibaseConfigurationPath,
-  readConfiguration,
   updateConfiguration,
 } from "../../handleLiquibaseSettings";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../transfer/transferData";
+import { readLiquibaseConfigurationNames } from "./readConfiguration";
 
 /**
  * The file ending of all liquibase configuration files.
  */
 const fileEnding: string = ".liquibase.properties";
 
-/**
- * Reads the database configuration and return all names.
- */
-export async function readLiquibaseConfigurationNames(): Promise<string[] | undefined> {
-  const configuration = await readConfiguration();
-  if (configuration) {
-    return Object.keys(configuration).sort((a, b) => a.localeCompare(b));
-  }
-}
 
 /**
  * Adds an key-value pair to the configuration. If no configuration exists, one will be created.
@@ -53,26 +44,6 @@ export async function addToLiquibaseConfiguration(pName: string, pPath: string, 
   // TODO error handling?
 }
 
-/**
- * Creates a dialog for the user, to ask if an existing configuration with the same name should be overwritten.
- * @param name - the name of the current configuration
- * @returns `true`, when the current configuration should be overwritten, `false`, when it should not be overwritten
- */
-async function checkForOverridingExistingConfiguration(name: string): Promise<boolean> {
-  const yes = "Yes";
-  const answer = await vscode.window.showWarningMessage(
-    `There is already a configuration named ${name}. Do you want to replace it?`,
-    yes,
-    "No"
-  );
-
-  if (answer === yes) {
-    return true;
-  }
-
-  vscode.window.showInformationMessage("Saving cancelled");
-  return false;
-}
 
 /**
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
@@ -127,40 +98,6 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
 }
 
 /**
- * Tests a existing liquibase configuration.
- * @param pConfiguration - the name of the configuration or the whole configuration that should be tested
- */
-export async function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
-  if (typeof pConfiguration === "string") {
-    const configuration = await getPathOfConfiguration(pConfiguration);
-    if (configuration) {
-      // TODO Read properties for path
-      // TODO create dummy changelog and call validate / status of liquibase, then handle the results
-
-      vscode.window.showInformationMessage(
-        `Testing connection for ${pConfiguration} and ${configuration} in the future`
-      );
-    } // TODO error handling
-  } else {
-    // TODO create properties for testing
-    // TODO do real test
-    vscode.window.showInformationMessage(`Testing connection for ${JSON.stringify(pConfiguration)}`);
-  }
-}
-
-/**
- * Reads the path from an configuration name.
- * @param pConfigurationName - the name of the configuration
- * @returns the path for this configuration
- */
-export async function getPathOfConfiguration(pConfigurationName: string) {
-  const configuration = await readConfiguration();
-  if (configuration) {
-    return configuration[pConfigurationName];
-  }
-}
-
-/**
  * Downloads a driver, if no driver was downloaded previously.
  * @param pDriver - the driver that need to be downloaded by the extensions
  */
@@ -190,4 +127,25 @@ async function downloadDriver(pDriver: Driver): Promise<string | undefined> {
   }
 
   return driverLocationWithFileName;
+}
+
+/**
+ * Creates a dialog for the user, to ask if an existing configuration with the same name should be overwritten.
+ * @param name - the name of the current configuration
+ * @returns `true`, when the current configuration should be overwritten, `false`, when it should not be overwritten
+ */
+async function checkForOverridingExistingConfiguration(name: string): Promise<boolean> {
+  const yes = "Yes";
+  const answer = await vscode.window.showWarningMessage(
+    `There is already a configuration named ${name}. Do you want to replace it?`,
+    yes,
+    "No"
+  );
+
+  if (answer === yes) {
+    return true;
+  }
+
+  vscode.window.showInformationMessage("Saving cancelled");
+  return false;
 }

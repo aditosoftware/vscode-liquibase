@@ -31,5 +31,6 @@
     "titleBar.inactiveBackground": "#6fb32c99",
     "titleBar.inactiveForeground": "#15202b99"
   },
-"peacock.color": "#6fb32c"
+  "peacock.color": "#6fb32c",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }

@@ -1,15 +1,14 @@
 import * as vscode from "vscode";
 import {
-  addToLiquibaseConfiguration,
-  getPathOfConfiguration,
-  readLiquibaseConfigurationNames,
-  testLiquibaseConnection,
-} from "./configuration/crud/liquibaseConfiguration";
+  addToLiquibaseConfiguration
+} from "./configuration/crud/createAndAddConfiguration";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { isWindows } from "./utilities/osUtilities";
 import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration } from "./handleLiquibaseSettings";
+import { testLiquibaseConnection } from "./configuration/crud/testConfiguration";
+import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/crud/readConfiguration";
 
 /**
  * Tests an liquibase configuration.

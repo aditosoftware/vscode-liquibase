@@ -1,11 +1,12 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
-import { createLiquibaseProperties, testLiquibaseConnection } from "../configuration/crud/liquibaseConfiguration";
+import { createLiquibaseProperties } from "../configuration/crud/createAndAddConfiguration";
 import { MessageData, MessageType } from "../configuration/transfer/transferData";
 import { isWindows } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration } from "../handleLiquibaseSettings";
+import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
