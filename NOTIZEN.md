@@ -12,5 +12,6 @@
 - caching von settings
 - delete von configurations
 - Ordner, in dem Liquibase-Dateien liegen, auch zum Classpath hinzufügen? Konfigurierbar? Default workspace?
+- In Web-IDE funktionsfähig? Wenn nein, dann Extension einschränken!
 
 # Sonstige Notizen
