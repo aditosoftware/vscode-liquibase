@@ -7,12 +7,12 @@ import { PropertiesEditor } from "properties-file/editor";
  * @see https://docs.liquibase.com/concepts/connections/creating-config-properties.html
  */
 export class DatabaseConnection {
+  [immerable] = true;
+
   /**
    * Prefix for all reference key.
    */
   static readonly REFERENCE: string = "reference";
-
-  [immerable] = true;
 
   /**
    * Username to connect to the target database.
@@ -40,12 +40,30 @@ export class DatabaseConnection {
    */
   databaseType: string;
 
-  constructor(username: string, password: string, url: string, driver: string, databaseType: string) {
+  private constructor(username: string, password: string, url: string, driver: string, databaseType: string) {
     this.username = username;
     this.password = password;
     this.url = url;
     this.driver = driver;
     this.databaseType = databaseType;
+  }
+
+  /**
+   * Clones an existing object to create a new one. This is needed after serialization and deserialization, because otherwise the methods will not be there.
+   *
+   * This method needs to be static, because after serialization and deserialization no methods of the class will be available,
+   * and so this method would not be callable, when it is an class method.
+   * @param dataToClone - the data that needs to be cloned.
+   * @returns the new instance
+   */
+  static clone(dataToClone: DatabaseConnection): DatabaseConnection {
+    return new DatabaseConnection(
+      dataToClone.username,
+      dataToClone.password,
+      dataToClone.url,
+      dataToClone.driver,
+      dataToClone.databaseType
+    );
   }
 
   /**

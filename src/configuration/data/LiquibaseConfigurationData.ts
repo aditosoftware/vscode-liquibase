@@ -13,11 +13,12 @@ type ClasspathSeparator = ";" | ":";
 
 /**
  * The type for additional configurations.
+ *  NOTE: If you plan to refactor this, Maps are not really serializable and therefore not good for passing the values from the webview to the extension!
  */
 type AdditionalConfiguration = { [key: string]: string };
 
 /**
- *The status of the current configuration.
+ * The status of the current configuration.
  */
 export enum ConfigurationStatus {
   NEW = "NEW",
@@ -38,7 +39,7 @@ export class LiquibaseConfigurationData {
   /**
    * The default database configuration that should be selected in any dropdown.
    */
-  defaultDatabaseForConfiguration: string;
+  readonly defaultDatabaseForConfiguration: string;
 
   /**
    * The name of the configuration.
@@ -72,8 +73,13 @@ export class LiquibaseConfigurationData {
    */
   additionalConfiguration: AdditionalConfiguration;
 
-
-  constructor(
+  /**
+   * Constructor. If you want to create a new instance of this outside of the class, you might want to use any of the following methods:
+   * - `createDefaultData` - for empty data
+   * - `createFromFile` - for loading from a liquibase.properties file.
+   * - `clone` - for copying the whole object
+   */
+  private constructor(
     status: ConfigurationStatus,
     defaultDatabaseForConfiguration: string,
     name: string,
@@ -91,6 +97,31 @@ export class LiquibaseConfigurationData {
     this.databaseConnection = databaseConnection;
     this.referenceDatabaseConnection = referenceDatabaseConnection;
     this.additionalConfiguration = additionalConfiguration;
+  }
+
+  /**
+   * Clones an existing object to create a new one. This is needed after serialization and deserialization, because otherwise the methods will not be there.
+   * This will also clone the sub-objects.
+   *
+   * This method needs to be static, because after serialization and deserialization no methods of the class will be available,
+   * and so this method would not be callable, when it is an class method.
+   *
+   * @param dataToClone - the data that needs to be cloned.
+   * @returns the new instance
+   */
+  static clone(dataToClone: LiquibaseConfigurationData): LiquibaseConfigurationData {
+    return new LiquibaseConfigurationData(
+      dataToClone.status,
+      dataToClone.defaultDatabaseForConfiguration,
+      dataToClone.name,
+      dataToClone.classpath,
+      dataToClone.classpathSeparator,
+      DatabaseConnection.clone(dataToClone.databaseConnection),
+      dataToClone.additionalConfiguration,
+      dataToClone.referenceDatabaseConnection
+        ? DatabaseConnection.clone(dataToClone.referenceDatabaseConnection)
+        : undefined
+    );
   }
 
   /**
@@ -193,8 +224,6 @@ export class LiquibaseConfigurationData {
       this.additionalConfiguration[key] = value;
     }
   }
-
-  // TODO das ganze woanders hin auslagern?
 
   /**
    * Creates the properties text for saving in a file or previewing.
