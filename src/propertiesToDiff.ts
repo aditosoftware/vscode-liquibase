@@ -1,6 +1,18 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 
+const possibleReferenceKeys = ["default-catalog-name", 
+"default-schema-name", 
+"driver", 
+"driver-properties-file", 
+"liquibase-catalog-name",
+"liquibase-schema-name",
+"password",
+"schemas",
+"username",
+"url"
+];
+
 /**
  * Retrieves reference keys and values from a Liquibase properties file.
  *
@@ -24,7 +36,6 @@ export function getReferenceKeysFromPropertyFile(propertyFilePath: string): stri
         const lines = fileContent.split('\n');
         const values: string[] = [];
 
-        //TODO: seperate Method to read the file -> also needed for readChangelogFile!
         // Iterate through each line in the file
         for (const line of lines) {
             const keyValue = line.split(': ');
@@ -34,9 +45,9 @@ export function getReferenceKeysFromPropertyFile(propertyFilePath: string): stri
                 const key = keyValue[0].trim();
                 const value = keyValue[1].trim();
 
-                // Format the key and exclude "classpath" key
+                // Format the key and exclude all unneccessary keys
                 const formattedKey = `--reference-${key}`;
-                if (key !== "classpath") { //TODO: filter for only neccessary values -> don't exclude just include what is needed
+                if (possibleReferenceKeys.includes(key)) {
                     values.push(`${formattedKey}=${value}`);
                 }
             }

@@ -82,6 +82,16 @@
         "command": "Liquibase.rollback",
         "title": "Rollback",
         "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.update-sql",
+        "title": "Update SQL",
+        "category": "Liquibase"
+      },
+      {
+        "command": "Liquibase.updateRCM",
+        "title": "Update",
+        "category": "Liquibase"
       }
     ],
     "submenus": [
@@ -100,7 +110,7 @@
       ],
       "liquibase.submenu": [
         {
-          "command": "Liquibase.update"
+          "command": "Liquibase.updateRCM"
         },
         {
           "command": "Liquibase.validate"
@@ -117,7 +127,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "testscript": "node ./src/resources/testscript.js"
   },
   "dependencies": {
     "download": "^8.0.0"
@@ -136,6 +147,7 @@
     "download": "^8.0.0",
     "eslint": "^8.54.0",
     "typescript": "^5.3.2",
-    "xml2js": "0.6.2"
+    "xml2js": "0.6.2",
+    "xml-js": "1.6.11"
   }
 }

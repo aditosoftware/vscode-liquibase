@@ -1,18 +1,21 @@
 import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
-import { getWorkFolder } from "./readChangelogFile";
-import path from "path";
+import { getWorkFolder, readContextValues } from "./readChangelogFile";
+import * as path from "path";
+import { METHODS } from "http";
 
 /**
  * Enum defining different input types for user interaction panels.
  */
 export enum InputType {
+  ConnectionType,
   InputBox,
   OpenDialog,
   QuickPick,
   SaveDialog,
   TextDocument,
   WorkspaceFolderPick,
+  ConfirmationDialog,
 }
 
 /**
@@ -20,48 +23,62 @@ export enum InputType {
  */
 export interface PickPanelConfig {
   panelType: InputType;
-  currentStep: number;
   items: any;
   allowMultiple?: boolean;
   cmdArgs?: string;
   resultShouldBeExposed?: boolean;
 }
 
+let propertyFilePath: string;
+
 /**
  * Registers a Liquibase command with VSCode, prompting the user with a series of pick panels
  * based on the provided configurations and then executes Liquibase update with the selected values.
  *
- * @param commandId - Unique identifier for the command.
  * @param action - Liquibase action to perform (e.g., "update").
  * @param pickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
- * @param context - VSCode extension context.
  * @param resourcePath - Path to the Liquibase JAR file.
  * @param args - Additional command-line arguments for Liquibase.
  * @param message - Replaces the "success"-message when command was successfully executed
+ * @param searchPathRequired - Adds the "searchPath"-parameter to the command (e.g., "update").
  * @returns The registered command.
  */
 export function registerLiquibaseCommand(
-  commandId: string,
   action: string,
   pickPanelConfigs: PickPanelConfig[],
-  context: vscode.ExtensionContext,
   resourcePath: string,
-  args?: string[], //auslagern weil sonst überschreibbar
-  message?: string
+  args?: string[],
+  message?: string,
+  searchPathRequired?: boolean,
+  isRightClickMenuAction?: boolean,
 ) {
-  return vscode.commands.registerCommand(commandId, async () => {
+  return vscode.commands.registerCommand("Liquibase." + action, async (...commandArgs) => {
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
-    //TODO: write why
-    if (!args) {
+
+    let currentStep = 1;
+
+    //execute dependant methods to get up-to-date-data
+    if (!args && searchPathRequired && !isRightClickMenuAction) {
       args = [searchPath];
-    } else {
+    } else if (args && searchPathRequired && !isRightClickMenuAction) {
       args.push(searchPath);
+    } else if (!args) {
+      args = [];
     }
 
     try {
+      
       // Use for...of to iterate over async functions sequentially
       for (const config of pickPanelConfigs) {
-        let result = await getInputByType(config, pickPanelConfigs.length);
+        if(commandArgs && config.items instanceof Function)
+        {
+          config.items = () => readContextValues(commandArgs[0].fsPath);
+        }
+        let result = await getInputByType(
+          config,
+          currentStep,
+          pickPanelConfigs.length
+        );
 
         if (!result) {
           // User canceled the selection
@@ -70,34 +87,50 @@ export function registerLiquibaseCommand(
         }
 
         // Handle the selected result as needed
-        if (config.cmdArgs) {
-          let test = Object.values(result).map((pEe: Object) => {
-            return Object.values(pEe).join(",");
-          });
-          console.log(test.join(","));
-          args.push(config.cmdArgs + "=" + result);
+        if (config.cmdArgs && result.length > 0) {
+          if (Array.isArray(result)) {
+            let x = [];
+            for (const item of result) {
+              x.push(item.label);
+            }
+            args.push(config.cmdArgs + "=" + x.join(","));
+          } else {
+            args.push(config.cmdArgs + "=" + result);
+          }
         }
 
+        //TODO: Beschreibung
         if (config.resultShouldBeExposed) {
           setResultValue(result);
         }
+
+        currentStep++;
       }
 
+      //TODO Beschreibung
+      if(isRightClickMenuAction) {
+        if(commandArgs)
+        {
+          args.push("--changelogFile=" + path.basename(commandArgs[0].fsPath));
+          args.push("-Dliquibase.searchPath=" + path.join(commandArgs[0].fsPath, ".."));
+        }
+        action = action.replace("RCM", ""); //only change it from here, due to registering unique actions, sorry to anyone who sees this and ask themself why?!?
+      }
+      
+
       // Execute Liquibase update with the final selections
-      executeJar(resourcePath, action, args, "") //TODO: replace empty String with liquibase.property-File-Path
-        .then(() => {
-          if (message) {
-            vscode.window.showInformationMessage(
-              message //TODO: erkennen was man reinschreiben will (notwendig?) s.u.
-            );
-          } else {
-            vscode.window.showInformationMessage(
-              `Liquibase ${action} was successful` //TODO: Entweder mit Info, was war oder garnicht und ins Log schauen
-            );
-          }
-          args = []; //empty the args array for continues usage
-        })
-        .catch((error) => console.error("Error:", error.message));
+      executeJar(resourcePath, action, args, propertyFilePath).then(() => {
+        if (message) {
+          vscode.window.showInformationMessage(
+            message //TODO: erkennen was man reinschreiben will (notwendig?) s.u.
+          );
+        } else {
+          vscode.window.showInformationMessage(
+            `Liquibase ${action} was successful` //TODO: Entweder mit Info, was war oder garnicht und ins Log schauen
+          );
+        }
+        args = []; //empty the args array for continues usage
+      });
     } catch (error) {
       console.error("Error: " + error);
     }
@@ -111,13 +144,34 @@ export function registerLiquibaseCommand(
  * @param maximumSteps - Total number of steps in the user interaction process.
  * @returns Resolved user input.
  */
-async function getInputByType(config: PickPanelConfig, maximumSteps: number) {
+async function getInputByType(
+  config: PickPanelConfig,
+  currentStep: number,
+  maximumSteps: number
+): Promise<any> {
   switch (config.panelType) {
+    case InputType.ConnectionType:
+      const x: vscode.QuickPickOptions = {
+        placeHolder: `Select one System - (Step ${currentStep} of ${maximumSteps})`,
+        canPickMany: false,
+      };
+
+      return await vscode.window
+        .showQuickPick(config.items, x)
+        .then((selectedSystem) => {
+          if (selectedSystem) {
+            //@ts-ignore - selectedSystem is an object which contains the "path"-key but is interpreted as a string
+            propertyFilePath = selectedSystem.path;
+          }
+
+          return selectedSystem;
+        });
+
     case InputType.QuickPick:
       const options: vscode.QuickPickOptions = {
         placeHolder: `Select one item${
           config.allowMultiple ? " or more items" : ""
-        } - (Step ${config.currentStep} of ${maximumSteps})`,
+        } - (Step ${currentStep} of ${maximumSteps})`,
         canPickMany: config.allowMultiple,
       };
 
@@ -133,40 +187,53 @@ async function getInputByType(config: PickPanelConfig, maximumSteps: number) {
           return selectedItems;
         });
     case InputType.OpenDialog:
-      config.items.openLabel = `Select Directory - (Step ${config.currentStep} of ${maximumSteps})`;
+      config.items.openLabel = `Select Directory - (Step ${currentStep} of ${maximumSteps})`; //TODO: accept Naming from extention.ts
       return await vscode.window.showOpenDialog(config.items).then((uri) => {
         if (uri && uri[0]) {
           return uri[0].fsPath;
         }
       });
     case InputType.InputBox:
-      config.items.placeHolder = `Choose a name - (Step ${config.currentStep} of ${maximumSteps})`;
+      config.items.placeHolder = `Choose a name - (Step ${currentStep} of ${maximumSteps})`;
       return await vscode.window.showInputBox(config.items).then((name) => {
         return name;
       });
     case InputType.SaveDialog:
-      // TODO: implement this, if needed
+      // implement this, if needed
       break;
     case InputType.TextDocument:
-      // TODO: implement this, if needed
+      // implement this, if needed
       break;
     case InputType.WorkspaceFolderPick:
-      // TODO: implement this, if needed
+      // implement this, if needed
       break;
+    case InputType.ConfirmationDialog:
+      return await vscode.window
+        .showInformationMessage(config.items, "Yes", "No")
+        .then((answer) => {
+          if (answer === "No") {
+            return undefined;
+          } else {
+            return true;
+          }
+        });
     default:
       console.log("InputType not defined");
       return;
   }
 }
 
-// TODO: replace it, with a more "stable" approach, when needed
+// I feel like a criminal for this
 let sharedValue: any;
 
 export function setResultValue(value: any) {
-  console.log(value.path);
-  sharedValue = value.path;
+  sharedValue = value;
 }
 
-export function getResultValue() {
-  return sharedValue;
+export function getResultValue(key?: string) {
+  if (key) {
+    return sharedValue[key];
+  } else {
+    return sharedValue;
+  }
 }

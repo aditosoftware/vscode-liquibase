@@ -23,7 +23,6 @@ export async function readContextValues(
   );
   const lines = liquibaseFile.split("\n");
 
-  // TODO: find a more robost way to get the infos
   // Find the line containing 'changelogFile:'
   const changelogFileLine = lines.find((line) =>
     line.trim().startsWith("changelogFile:")
@@ -49,8 +48,6 @@ export async function readContextValues(
     // Extract context values from parsed XML
     const includes = parsedData.databaseChangeLog.include;
     const contextValues: QuickPickItem[] = [];
-
-    contextValues.push({ label: "default" });
 
     if (Array.isArray(includes)) {
       for (const include of includes) {

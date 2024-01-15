@@ -24,7 +24,7 @@ export async function prerequisites(
 
   // Check beforehand if action is ready to be used
   // Check if JAVA_HOME is set
-  const javaHome = process.env["JAVA_HOME"]; //TODO: maybe let the user set the executable path
+  const javaHome = process.env["JAVA_HOME"];
   if (!javaHome) {
     vscode.window.showErrorMessage(
       "JAVA_HOME environment variable is not set. Please set JAVA_HOME accordingly and restart VSCode."

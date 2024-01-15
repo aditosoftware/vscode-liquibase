@@ -8,7 +8,9 @@ import {
   getResultValue,
   registerLiquibaseCommand,
 } from "./registerLiquibaseCommand";
-import { getWorkFolder, readContextValues } from "./readChangelogFile";
+import { readContextValues } from "./readChangelogFile";
+
+export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
 /**
  * Main-Function that will execute all the code within
@@ -21,7 +23,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const resourcePath = path.join(context.extensionPath, "src", "resources");
 
   // Paths to JSON files and Liquibase changelog directory
-  const jsonFileSystem = path.join(resourcePath, "dropdownSystems.json"); //TODO: read the system in real world use-case (pending on Ramonas impl) and maybe fallback?
+  const jsonFileSystem = path.join(resourcePath, "dropdownSystems.json"); //TODO: read the system in real world use-case (pending on Ramona's impl) and maybe fallback?
 
   // Load items from JSON files
   const systems: vscode.QuickPickItem[] = loadItemsFromJson(jsonFileSystem);
@@ -32,86 +34,121 @@ export async function activate(context: vscode.ExtensionContext) {
     { label: "YAML", description: "yaml" },
     { label: "YML", description: "yml" },
   ];
-  //const file: vscode.QuickInput[] =
+
+  //all possible diffTypes for the diff dialog
+  //TODO: maybe all descriptions should say something useful?
+  const diffTypes: vscode.QuickPickItem[] = [
+    { label: "catalogs", description: "" },
+    { label: "tables", description: "default", picked: true },
+    { label: "functions", description: "" },
+    { label: "views", description: "default", picked: true },
+    { label: "columns", description: "default", picked: true },
+    { label: "indexes", description: "default", picked: true },
+    { label: "foreignkeys", description: "default", picked: true },
+    { label: "primarykeys", description: "default", picked: true },
+    { label: "uniqueconstraints", description: "default", picked: true },
+    { label: "data", description: "" },
+    { label: "storedprocedures", description: "" },
+    { label: "triggers", description: "" },
+    { label: "sequences", description: "" },
+    { label: "databasepackage", description: "" },
+    { label: "databasepackagebody", description: "" },
+  ];
 
   // Perform any necessary prerequisites setup before executing the extension logic
   prerequisites(context, resourcePath).then(() => {
     // Command that will be executed when the extension command is triggered
-    let disposable1 = registerLiquibaseCommand(
-      //TODO: rename disposable
-      "Liquibase.update",
+    let updateDisposable = registerLiquibaseCommand(
       "update",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
           resultShouldBeExposed: true,
         }, //systems
         {
           panelType: InputType.QuickPick,
-          items: () => readContextValues(getResultValue()),
-          currentStep: 2,
+          items: () => readContextValues(getResultValue("path")),
           allowMultiple: true,
           cmdArgs: "--contexts",
         }, //context
       ],
-      context,
       resourcePath
     );
 
-    let disposable2 = registerLiquibaseCommand(
-      "Liquibase.drop-all",
+    //TODO: fertig implementieren
+    let updateRCMDisposable = registerLiquibaseCommand(
+      "updateRCM",
+      [
+        {
+          panelType: InputType.ConnectionType,
+          items: systems,
+        }, //systems
+        {
+          panelType: InputType.QuickPick,
+          items: () => readContextValues(""), //TODO: finde den richtigen Path zur selektierten Datei in der "Preview"
+          allowMultiple: true,
+          cmdArgs: "--contexts",
+        }, //context
+      ],
+      resourcePath,
+      [],
+      undefined,
+      true,
+      true
+    );
+
+    let dropAllDisposable = registerLiquibaseCommand(
       "drop-all",
-      [{ panelType: InputType.QuickPick, items: systems, currentStep: 1 }],
-      context,
+      [
+        { 
+          panelType: InputType.ConnectionType, 
+          items: systems 
+        },
+        {
+          panelType: InputType.ConfirmationDialog,
+          items: "Do you really want to execute 'drop-all'?",
+        },
+      ],
       resourcePath
     );
 
-    let disposable3 = registerLiquibaseCommand(
-      "Liquibase.validate",
+    let validateDisposable = registerLiquibaseCommand(
       "validate",
-      [{ panelType: InputType.QuickPick, items: systems, currentStep: 1 }],
-      context,
+      [{ panelType: InputType.ConnectionType, items: systems }],
       resourcePath
     );
 
-    let disposable4 = registerLiquibaseCommand(
-      "Liquibase.status",
+    let statusDisposable = registerLiquibaseCommand(
       "status",
-      [{ panelType: InputType.QuickPick, items: systems, currentStep: 1 }],
-      context,
+      [{ panelType: InputType.ConnectionType, items: systems }],
       resourcePath
     );
 
-    let disposable5 = registerLiquibaseCommand(
-      "Liquibase.diff",
+    let diffDisposable = registerLiquibaseCommand(
       "diff",
       [
-        { panelType: InputType.QuickPick, items: systems, currentStep: 1 },
-        { panelType: InputType.QuickPick, items: systems, currentStep: 2 },
+        { panelType: InputType.ConnectionType, items: systems },
+        { panelType: InputType.QuickPick, items: systems, resultShouldBeExposed: true},
+        { panelType: InputType.QuickPick, items: diffTypes, allowMultiple: true, cmdArgs: "--diff-types" }
       ],
-      context,
       resourcePath,
       getReferenceKeysFromPropertyFile(
-        path.join(resourcePath, ".liquibase", "liquibase2.properties")
+        path.join(resourcePath, ".liquibase", "liquibase2.properties") //TODO: change to dynamic
       )
     );
 
     //TODO: Generate-Changelog -> more steps and user-input
     // this may not work atm!
-    let disposable6 = registerLiquibaseCommand(
-      "Liquibase.generate-changelog",
+    let generateChangelogDisposable = registerLiquibaseCommand(
       "generate-changelog",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 2,
         },
         {
           panelType: InputType.OpenDialog,
-          currentStep: 2,
           items: {
             canSelectFiles: false,
             canSelectFolders: true,
@@ -125,32 +162,26 @@ export async function activate(context: vscode.ExtensionContext) {
             title: "File Name",
             value: "changelog",
           },
-          currentStep: 3,
           cmdArgs: "--data-output-directory",
         },
         {
           panelType: InputType.QuickPick,
           items: possibleFormats,
-          currentStep: 1,
         },
       ],
-      context,
       resourcePath,
       []
     );
 
-    let disposable7 = registerLiquibaseCommand(
-      "Liquibase.db-doc",
+    let dbdocDisposable = registerLiquibaseCommand(
       "db-doc",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
         {
           panelType: InputType.OpenDialog,
-          currentStep: 2,
           items: {
             canSelectFiles: false,
             canSelectFolders: true,
@@ -159,149 +190,146 @@ export async function activate(context: vscode.ExtensionContext) {
           cmdArgs: "--output-directory",
         },
       ],
-      context,
       resourcePath
     );
 
-    let disposable8 = registerLiquibaseCommand(
-      "Liquibase.unexpected-changesets",
+    let unexpectedChangesetsDisposable = registerLiquibaseCommand(
       "unexpected-changesets",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
       ],
-      context,
       resourcePath,
       ["--verbose"]
     );
 
-    let disposable9 = registerLiquibaseCommand(
-      "Liquibase.changelog-sync",
+    let changelogSyncDisposable = registerLiquibaseCommand(
       "changelog-sync",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
       ],
-      context,
       resourcePath
     );
 
-    let disposable10 = registerLiquibaseCommand(
-      "Liquibase.clear-checksums",
+    let clearChecksumsDisposable = registerLiquibaseCommand(
       "clear-checksums",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
       ],
-      context,
       resourcePath
     );
 
-    let disposable11 = registerLiquibaseCommand(
-      "Liquibase.history",
+    let historyDisposable = registerLiquibaseCommand(
       "history",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
       ],
-      context,
       resourcePath
     );
 
-    let disposable12 = registerLiquibaseCommand(
-      "Liquibase.tag",
+    let tagDisposable = registerLiquibaseCommand(
       "tag",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
         {
           panelType: InputType.InputBox,
           items: {
             title: "Tag",
           },
-          currentStep: 2,
           cmdArgs: "--tag",
         },
       ],
-      context,
       resourcePath
     );
 
-    let disposable13 = registerLiquibaseCommand(
-      "Liquibase.tag-exists",
+    let tagExistsDisposable = registerLiquibaseCommand(
       "tag-exists",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
         {
           panelType: InputType.InputBox,
           items: {
             title: "Tag to check if it exists",
           },
-          currentStep: 2,
           cmdArgs: "--tag",
         },
       ],
-      context,
       resourcePath
     );
 
-    let disposable14 = registerLiquibaseCommand(
-      "Liquibase.rollback",
+    let rollbackDisposable = registerLiquibaseCommand(
       "rollback",
       [
         {
-          panelType: InputType.QuickPick,
+          panelType: InputType.ConnectionType,
           items: systems,
-          currentStep: 1,
         },
         {
           panelType: InputType.InputBox,
           items: {
             title: "Tag to rollback to",
           },
-          currentStep: 2,
           cmdArgs: "--tag",
         },
       ],
-      context,
+      resourcePath
+    );
+
+    let updateSQLDisposable = registerLiquibaseCommand(
+      "update-sql",
+      [
+        {
+          panelType: InputType.ConnectionType,
+          items: systems,
+        },
+        {
+          panelType: InputType.OpenDialog,
+          items: {
+            canSelectFiles: true,
+            canSelectFolders: false,
+            canSelectMany: false,
+          },
+          cmdArgs: "--output-file",
+        },
+      ],
       resourcePath
     );
 
     // Add the disposables to subscriptions for cleanup on extension deactivation
     context.subscriptions.push(
-      disposable1,
-      disposable2,
-      disposable3,
-      disposable4,
-      disposable5,
-      disposable6,
-      disposable7,
-      disposable8,
-      disposable9,
-      disposable10,
-      disposable11,
-      disposable12,
-      disposable13,
-      disposable14
+      updateDisposable,
+      dropAllDisposable,
+      validateDisposable,
+      statusDisposable,
+      diffDisposable,
+      generateChangelogDisposable,
+      dbdocDisposable,
+      unexpectedChangesetsDisposable,
+      changelogSyncDisposable,
+      clearChecksumsDisposable,
+      historyDisposable,
+      tagDisposable,
+      tagExistsDisposable,
+      rollbackDisposable,
+      updateSQLDisposable,
+      updateRCMDisposable
     );
   });
 }
