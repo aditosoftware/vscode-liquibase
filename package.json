@@ -9,6 +9,9 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git"
+  },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
@@ -121,7 +124,6 @@
     "@types/vscode": "^1.84.0",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
-    "download": "^8.0.0",
     "eslint": "^8.56.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "typescript": "^5.3.3"
