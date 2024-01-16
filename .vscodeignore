@@ -13,7 +13,7 @@ out/test/**
 src/**
 
 # Ignore node_modules overhead
-node_modules/**
+# node_modules/**
 
 # Ignore all webview-ui files except the build directory
 webview-ui/src/**

@@ -96,7 +96,8 @@
         "title": "Update",
         "category": "Liquibase"
       },
-      { "command": "liquibase.createLiquibaseConfiguration",
+      {
+        "command": "liquibase.createLiquibaseConfiguration",
         "title": "Create Liquibase Configuration",
         "category": "Liquibase"
       },
@@ -167,12 +168,10 @@
       },
       {
         "id": "liquibase.configurationMenu",
-		    "label": "Liquibase"
+        "label": "Liquibase"
       }
     ],
-    "menus": { 
-      
-      
+    "menus": {
       "explorer/context": [
         {
           "submenu": "liquibase.submenu",
@@ -210,23 +209,22 @@
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run -S esbuild-base -- --minify",
-    "esbuild-base": "rimraf out && esbuild ./src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:electron --format=cjs --platform=node",
+    "vscode:prepublish": "npm run compile",
     "test-compile": "tsc -p ./",
     "compile": "tsc -p ./",
-    "build": "npm run -S esbuild-base -- --sourcemap",
-    "watch": "npm run -S esbuild-base -- --sourcemap --watch",
+    "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
     "test": "vscode-test",
-    "testscript": "node ./src/resources/testscript.js",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
     "download": "^8.0.0",
     "immer": "^10.0.3",
     "properties-file": "^3.3.15",
-    "use-immer": "^0.9.0"
+    "use-immer": "^0.9.0",
+    "xml2js": "0.6.2",
+    "xml-js": "1.6.11"
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
@@ -239,11 +237,7 @@
     "@typescript-eslint/parser": "^6.13.1",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
-    "download": "^8.0.0",
     "eslint": "^8.54.0",
-    "typescript": "^5.3.2",
-    "xml2js": "0.6.2",
-    "xml-js": "1.6.11",
-    "esbuild": "^0.19.11"
+    "typescript": "^5.3.2"
   }
 }
