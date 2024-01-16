@@ -3,11 +3,7 @@ import * as path from "path";
 import { loadItemsFromJson } from "./loadItemsFromJson";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
-import {
-  InputType,
-  getResultValue,
-  registerLiquibaseCommand,
-} from "./registerLiquibaseCommand";
+import { InputType, getResultValue, registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import {
@@ -26,15 +22,12 @@ export const outputStream = vscode.window.createOutputChannel("Liquibase");
  *                  to store and retrieve global state.
  */
 export async function activate(context: vscode.ExtensionContext) {
-
   // Constructing the path to the resources folder within the extension
   const resourcePath = path.join(context.extensionPath, "src", "resources");
 
-  // Paths to JSON files and Liquibase changelog directory
-  const jsonFileSystem = path.join(resourcePath, "dropdownSystems.json"); //TODO: read the system in real world use-case (pending on Ramona's impl) and maybe fallback?
-
+  // FIXME dieses systeme sind immer fix, auch wenn welche hinzugefügt wurden
   // Load items from JSON files
-  const systems: vscode.QuickPickItem[] = loadItemsFromJson(jsonFileSystem);
+  const systems: vscode.QuickPickItem[] = await loadItemsFromJson();
 
   const possibleFormats: vscode.QuickPickItem[] = [
     { label: "XML", description: "xml" },
@@ -110,9 +103,9 @@ export async function activate(context: vscode.ExtensionContext) {
     let dropAllDisposable = registerLiquibaseCommand(
       "drop-all",
       [
-        { 
-          panelType: InputType.ConnectionType, 
-          items: systems 
+        {
+          panelType: InputType.ConnectionType,
+          items: systems,
         },
         {
           panelType: InputType.ConfirmationDialog,
@@ -138,8 +131,8 @@ export async function activate(context: vscode.ExtensionContext) {
       "diff",
       [
         { panelType: InputType.ConnectionType, items: systems },
-        { panelType: InputType.QuickPick, items: systems, resultShouldBeExposed: true},
-        { panelType: InputType.QuickPick, items: diffTypes, allowMultiple: true, cmdArgs: "--diff-types" }
+        { panelType: InputType.QuickPick, items: systems, resultShouldBeExposed: true },
+        { panelType: InputType.QuickPick, items: diffTypes, allowMultiple: true, cmdArgs: "--diff-types" },
       ],
       resourcePath,
       getReferenceKeysFromPropertyFile(

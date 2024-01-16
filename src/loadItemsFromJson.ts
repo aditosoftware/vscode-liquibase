@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
+import { readConfiguration } from "./handleLiquibaseSettings";
+import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 
 /**
  * Interface for the JSON-Settings-File
@@ -11,26 +13,26 @@ export interface DropdownItem {
 }
 
 /**
- * Load the Items from the JSON-File
- * @param jsonFilePath - The path to the JSON file containing dropdown items.
+ * Load the Items from the JSON-File. // TODO better name, move to other file?
  * @returns An array of QuickPickItem objects loaded from the JSON file.
  */
-export function loadItemsFromJson(jsonFilePath: string): vscode.QuickPickItem[] {
+export async function loadItemsFromJson(): Promise<vscode.QuickPickItem[]> {
   try {
-    // Read the content of the JSON file synchronously
-    const data = fs.readFileSync(jsonFilePath, "utf8");
+    const jsonContent = await readConfiguration();
 
-    // Parse the JSON content into an object
-    const jsonContent = JSON.parse(data);
-
-    // Convert the JSON object into an array of QuickPickItem objects
-    return Object.keys(jsonContent).map((key) => {
-      const item = jsonContent[key] as DropdownItem;
-      return { label: item.label, description: item.description, path: item.path };
-    });
+    if (jsonContent) {
+      return Object.keys(jsonContent).map((key) => {
+        const item = jsonContent[key];
+        return {
+          label: key,
+          description: "", // TODO description verwenden? vorher war das jdbc-url, aber will man das file parsen?
+          path: item,
+        };
+      });
+    }
   } catch (error) {
     // Handle errors, log them, and return an empty array
     console.error("Error reading JSON file:", error);
-    return [];
   }
+  return [];
 }

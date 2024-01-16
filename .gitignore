@@ -11,3 +11,6 @@ eslint-results.json
 
 # misc
 .DS_Store
+
+# locally downloaded jar files
+src/resources/*.jar
