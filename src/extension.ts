@@ -9,6 +9,13 @@ import {
   registerLiquibaseCommand,
 } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
+import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
+import {
+  testLiquibaseConfiguration,
+  addExistingLiquibaseConfiguration,
+  editExistingLiquibaseConfiguration,
+  removeExistingLiquibaseConfiguration,
+} from "./configurationCommands";
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
@@ -19,6 +26,7 @@ export const outputStream = vscode.window.createOutputChannel("Liquibase");
  *                  to store and retrieve global state.
  */
 export async function activate(context: vscode.ExtensionContext) {
+
   // Constructing the path to the resources folder within the extension
   const resourcePath = path.join(context.extensionPath, "src", "resources");
 
@@ -57,6 +65,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   // Perform any necessary prerequisites setup before executing the extension logic
   prerequisites(context, resourcePath).then(() => {
+    registerCommandsForLiquibasePropertiesHandling(context);
     // Command that will be executed when the extension command is triggered
     let updateDisposable = registerLiquibaseCommand(
       "update",
@@ -332,6 +341,36 @@ export async function activate(context: vscode.ExtensionContext) {
       updateRCMDisposable
     );
   });
+}
+
+/**
+ * Registers all the commands that are needed by liquibase properties handling
+ * @param context - the Context for storing the commands
+ */
+function registerCommandsForLiquibasePropertiesHandling(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.createLiquibaseConfiguration", () => {
+      LiquibaseConfigurationPanel.render(context.extensionUri);
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.editExistingLiquibaseConfiguration", (uri: vscode.Uri) =>
+      editExistingLiquibaseConfiguration(uri, context)
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", removeExistingLiquibaseConfiguration)
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration)
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.testConfiguration", testLiquibaseConfiguration)
+  );
 }
 
 /**
