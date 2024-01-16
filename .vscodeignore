@@ -7,9 +7,13 @@
 # Ignore test files
 .vscode-test/**
 out/test/**
+.vscode-test.mjs
 
 # Ignore source code
 src/**
+
+# Ignore node_modules overhead
+node_modules/**
 
 # Ignore all webview-ui files except the build directory
 webview-ui/src/**

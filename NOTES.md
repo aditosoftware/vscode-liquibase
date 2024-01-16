@@ -29,7 +29,10 @@
 
 ```shell
 npm install -g @vscode/vsce
- yes | vsce package
+vsce package --pre-release --skip-license
 ```
 
 https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+
+FIXME
+additional properties edit -> ändert nicht die Preview
