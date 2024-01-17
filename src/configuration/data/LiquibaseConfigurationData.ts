@@ -270,14 +270,9 @@ export class LiquibaseConfigurationData {
       Array.from(new Set(classpathElements))
         // remove empty elements
         .filter((pElement) => pElement.trim() !== "")
-        // add quotation marks when no given
-        .map((pElement) => {
-          if (pElement.startsWith('"') && pElement.endsWith('"')) {
-            return pElement;
-          } else {
-            return `"${pElement}"`;
-          }
-        })
+        // remove all quotation marks
+        .map((pElement) => pElement.replaceAll('"', ""))
+        // and join them via the separator
         .join(this.classpathSeparator);
 
     if (joinedClasspath) {
