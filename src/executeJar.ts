@@ -32,9 +32,7 @@ export function executeJar(
         const javaHome = process.env["JAVA_HOME"];
 
         if (!javaHome) {
-          const error = new CustomError(
-            "JAVA_HOME environment variable is not set."
-          );
+          const error = new CustomError("JAVA_HOME environment variable is not set.");
           reject(error);
           return;
         }
@@ -45,6 +43,8 @@ export function executeJar(
 
         const cp = `${liquibasePath};${picocliPath}`;
         const argsArray = [
+          // force liquibase to use english locale, because other I18N are not good
+          "-Duser.language=en",
           "-cp",
           cp,
           "liquibase.integration.commandline.LiquibaseCommandLine",
@@ -56,8 +56,8 @@ export function executeJar(
         const childProcess = spawn(javaExecutable, argsArray);
 
         outputStream.show(true);
-        outputStream.appendLine(`Liquibase command '${operation}' will be executed`); 
-        outputStream.appendLine(`${javaExecutable} ${argsArray.join(" ")}`);        
+        outputStream.appendLine(`Liquibase command '${operation}' will be executed`);
+        outputStream.appendLine(`${javaExecutable} ${argsArray.join(" ")}`);
         outputStream.appendLine("");
 
         let stdoutData = "";
@@ -77,9 +77,7 @@ export function executeJar(
           if (code === 0 || code === 1) {
             resolve();
           } else {
-            const error = new CustomError(
-              `Child process exited with code ${code}`
-            );
+            const error = new CustomError(`Child process exited with code ${code}`);
             error.stdout = stdoutData;
             error.stderr = stderrData;
             outputStream.appendLine(`${error}`);
@@ -94,8 +92,6 @@ export function executeJar(
 
         outputStream.appendLine("");
       });
-      
     }
-    
   );
 }
