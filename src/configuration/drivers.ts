@@ -44,7 +44,7 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     new Driver(
       "MariaDB",
       "org.mariadb.jdbc.Driver",
-      "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.3.2/mariadb-java-client-3.3.2.jar"
+      "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.5.3/mariadb-java-client-2.5.3.jar"
     ),
   ],
   [

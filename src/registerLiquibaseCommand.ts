@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
 import { getWorkFolder, readContextValues } from "./readChangelogFile";
 import * as path from "path";
-import { METHODS } from "http";
 
 /**
  * Enum defining different input types for user interaction panels.
@@ -50,7 +49,7 @@ export function registerLiquibaseCommand(
   args?: string[],
   message?: string,
   searchPathRequired?: boolean,
-  isRightClickMenuAction?: boolean,
+  isRightClickMenuAction?: boolean
 ) {
   return vscode.commands.registerCommand("Liquibase." + action, async (...commandArgs) => {
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
@@ -66,19 +65,33 @@ export function registerLiquibaseCommand(
       args = [];
     }
 
+    // TODO schöner / anders bauen
+    if (commandArgs && commandArgs[0]) {
+      // adds the property file path from the commandArgs as property file path
+      propertyFilePath = commandArgs[0];
+
+      // and removes the question for connection type
+      let indexToDelete = -1;
+      pickPanelConfigs.forEach((config, index) => {
+        if (config.panelType === InputType.ConnectionType) {
+          indexToDelete = index;
+        }
+      });
+      if (indexToDelete !== -1) {
+        currentStep++;
+        pickPanelConfigs.splice(indexToDelete);
+      }
+    }
+
     try {
-      
       // Use for...of to iterate over async functions sequentially
       for (const config of pickPanelConfigs) {
-        if(commandArgs && config.items instanceof Function)
-        {
-          config.items = () => readContextValues(commandArgs[0].fsPath);
+        if (config.items instanceof Function) {
+          if (commandArgs && commandArgs.length) {
+            config.items = () => readContextValues(commandArgs[0].fsPath); // TODO Fadler: was hattest du mit diesem Block vor? bei mir funktioniert das nicht
+          }
         }
-        let result = await getInputByType(
-          config,
-          currentStep,
-          pickPanelConfigs.length
-        );
+        let result = await getInputByType(config, currentStep, pickPanelConfigs.length);
 
         if (!result) {
           // User canceled the selection
@@ -108,15 +121,13 @@ export function registerLiquibaseCommand(
       }
 
       //TODO Beschreibung
-      if(isRightClickMenuAction) {
-        if(commandArgs)
-        {
+      if (isRightClickMenuAction) {
+        if (commandArgs) {
           args.push("--changelogFile=" + path.basename(commandArgs[0].fsPath));
           args.push("-Dliquibase.searchPath=" + path.join(commandArgs[0].fsPath, ".."));
         }
         action = action.replace("RCM", ""); //only change it from here, due to registering unique actions, sorry to anyone who sees this and ask themself why?!?
       }
-      
 
       // Execute Liquibase update with the final selections
       executeJar(resourcePath, action, args, propertyFilePath).then(() => {
@@ -144,11 +155,7 @@ export function registerLiquibaseCommand(
  * @param maximumSteps - Total number of steps in the user interaction process.
  * @returns Resolved user input.
  */
-async function getInputByType(
-  config: PickPanelConfig,
-  currentStep: number,
-  maximumSteps: number
-): Promise<any> {
+async function getInputByType(config: PickPanelConfig, currentStep: number, maximumSteps: number): Promise<any> {
   switch (config.panelType) {
     case InputType.ConnectionType:
       const x: vscode.QuickPickOptions = {
@@ -156,16 +163,14 @@ async function getInputByType(
         canPickMany: false,
       };
 
-      return await vscode.window
-        .showQuickPick(config.items, x)
-        .then((selectedSystem) => {
-          if (selectedSystem) {
-            //@ts-ignore - selectedSystem is an object which contains the "path"-key but is interpreted as a string
-            propertyFilePath = selectedSystem.path;
-          }
+      return await vscode.window.showQuickPick(config.items, x).then((selectedSystem) => {
+        if (selectedSystem) {
+          //@ts-ignore - selectedSystem is an object which contains the "path"-key but is interpreted as a string
+          propertyFilePath = selectedSystem.path;
+        }
 
-          return selectedSystem;
-        });
+        return selectedSystem;
+      });
 
     case InputType.QuickPick:
       const options: vscode.QuickPickOptions = {
@@ -181,11 +186,9 @@ async function getInputByType(
         config.items = config.items();
       }
 
-      return await vscode.window
-        .showQuickPick(config.items, options)
-        .then((selectedItems) => {
-          return selectedItems;
-        });
+      return await vscode.window.showQuickPick(config.items, options).then((selectedItems) => {
+        return selectedItems;
+      });
     case InputType.OpenDialog:
       config.items.openLabel = `Select Directory - (Step ${currentStep} of ${maximumSteps})`; //TODO: accept Naming from extention.ts
       return await vscode.window.showOpenDialog(config.items).then((uri) => {
@@ -208,15 +211,13 @@ async function getInputByType(
       // implement this, if needed
       break;
     case InputType.ConfirmationDialog:
-      return await vscode.window
-        .showInformationMessage(config.items, "Yes", "No")
-        .then((answer) => {
-          if (answer === "No") {
-            return undefined;
-          } else {
-            return true;
-          }
-        });
+      return await vscode.window.showInformationMessage(config.items, "Yes", "No").then((answer) => {
+        if (answer === "No") {
+          return undefined;
+        } else {
+          return true;
+        }
+      });
     default:
       console.log("InputType not defined");
       return;
