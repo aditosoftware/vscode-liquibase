@@ -45,6 +45,8 @@ export function executeJar(
         const argsArray = [
           // force liquibase to use english locale, because other I18N are not good
           "-Duser.language=en",
+          // set encoding to utf-8, because otherwise special characters will not be displayed correctly
+          "-Dfile.encoding=UTF-8",
           "-cp",
           cp,
           "liquibase.integration.commandline.LiquibaseCommandLine",
