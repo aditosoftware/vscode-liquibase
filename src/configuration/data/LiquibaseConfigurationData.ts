@@ -227,12 +227,13 @@ export class LiquibaseConfigurationData {
 
   /**
    * Creates the properties text for saving in a file or previewing.
-   * @param pDownloadDriver - function to download the driver, if not there. This function will return the path where this driver was downloaded.
+   * @param pBuildDriverPath - function to build the driver path.
+   * // TODO correct? or build also when Preview?
    * There should be no function, when this function is only used to create a preview.
    * @returns the created properties file as a string
    */
-  async generateProperties(pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>): Promise<string> {
-    const propertiesEditor = await this.generatePropertiesEditor(pDownloadDriver);
+  generateProperties(pBuildDriverPath?: (pDriver: Driver) => string | undefined): string {
+    const propertiesEditor = this.generatePropertiesEditor(pBuildDriverPath);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
     // TODO maybe more escapes are needed with unescapeContent
@@ -241,13 +242,11 @@ export class LiquibaseConfigurationData {
 
   /**
    * Creates the properties editor for the given configuration.
-   * @param pDownloadDriver - function to download the driver, if not there. This function will return the path where this driver was downloaded.
+   *  @param pBuildDriverPath - function to build the driver path.
    * There should be no function, when this function is only used to create a preview.
    * @returns the created properties
    */
-  private async generatePropertiesEditor(
-    pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>
-  ): Promise<PropertiesEditor> {
+  private generatePropertiesEditor(pBuildDriverPath?: (pDriver: Driver) => string | undefined): PropertiesEditor {
     // Build the properties
     const properties: PropertiesEditor = new PropertiesEditor("");
 
@@ -256,13 +255,13 @@ export class LiquibaseConfigurationData {
     classpathElements.push(this.liquibaseSettings.liquibaseDirectoryForClasspath);
 
     if (this.databaseConnection.hasData()) {
-      const result = await this.databaseConnection.writeDataForConnection(properties, false, pDownloadDriver);
+      const result = this.databaseConnection.writeDataForConnection(properties, false, pBuildDriverPath);
       result && classpathElements.push(result);
     }
 
     // and the reference properties
     if (this.referenceDatabaseConnection && this.referenceDatabaseConnection.hasData()) {
-      const result = await this.referenceDatabaseConnection.writeDataForConnection(properties, true, pDownloadDriver);
+      const result = this.referenceDatabaseConnection.writeDataForConnection(properties, true, pBuildDriverPath);
       result && classpathElements.push(result);
     }
 

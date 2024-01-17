@@ -1,4 +1,3 @@
-
 /**
  * Indicates that the selected driver was not pre-configured.
  */
@@ -29,7 +28,7 @@ export class Driver {
    * @returns the file name under which the driver would be saved
    */
   public getFileName(): string {
-    return this.urlForDownload.substring(this.urlForDownload.lastIndexOf("/"));
+    return this.urlForDownload.substring(this.urlForDownload.lastIndexOf("/") + 1);
   }
 }
 

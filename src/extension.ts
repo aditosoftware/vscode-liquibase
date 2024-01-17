@@ -15,6 +15,8 @@ import {
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
+export let otherResourcePath: string | undefined; // TODO bessere lösung!
+
 /**
  * Main-Function that will execute all the code within
  * @param context - The context object provided by VSCode to the extension.
@@ -23,7 +25,9 @@ export const outputStream = vscode.window.createOutputChannel("Liquibase");
  */
 export async function activate(context: vscode.ExtensionContext) {
   // Constructing the path to the resources folder within the extension
+
   const resourcePath = path.join(context.extensionPath, "src", "resources");
+  otherResourcePath = resourcePath;
 
   // FIXME dieses systeme sind immer fix, auch wenn welche hinzugefügt wurden
   // Load items from JSON files
@@ -58,7 +62,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
   // Perform any necessary prerequisites setup before executing the extension logic
   prerequisites(context, resourcePath).then(() => {
+    // Register all commands that are needed for handling liquibase properties
     registerCommandsForLiquibasePropertiesHandling(context);
+
     // Command that will be executed when the extension command is triggered
     let updateDisposable = registerLiquibaseCommand(
       "update",

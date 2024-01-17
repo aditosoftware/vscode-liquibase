@@ -165,29 +165,6 @@ export function getLiquibaseFolder(): string {
 }
 
 /**
- * Loads the setting where the drivers should be downloaded.
- * If no value was found, then a default location will be used. This default location is inside the liquibase default folder and will be named `.drivers`.
- * @returns the configured location for the driver or a default location
- */
-export async function getDriverLocation(): Promise<string | undefined> {
-  // load setting for driver location
-  const configuration = vscode.workspace.getConfiguration(configurationName);
-  const locationForDriver = configuration.get("driverLocation", "");
-
-  if (locationForDriver) {
-    // setting is there, just give it back
-    return locationForDriver;
-  } else {
-    // fallback - no driver configured
-    // find out the liquibase configuration path and put in a .drivers directory
-    const liquibaseConfigurationPath = await getLiquibaseConfigurationPath();
-    if (liquibaseConfigurationPath) {
-      return path.join(liquibaseConfigurationPath, ".drivers");
-    }
-  }
-}
-
-/**
  * Loads from the configuration the default database type.
  * This type should always be selected in new configurations.
  * @returns the setting of the default database type from the configuration

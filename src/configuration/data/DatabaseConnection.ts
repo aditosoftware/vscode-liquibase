@@ -118,35 +118,35 @@ export class DatabaseConnection {
    *
    * @param properties - the properties editor where the properties should be written
    * @param pReferenceConnection - information if this is the reference connection or not
-   * @param pDownloadDriver - a function for downloading the drivers
+   * @param pBuildDriverPath - a function for building the drivers path
    * @returns the path from the downloaded driver, if downloaded
    */
-  async writeDataForConnection(
+  writeDataForConnection(
     properties: PropertiesEditor,
     pReferenceConnection: boolean,
-    pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>
-  ): Promise<string | undefined> {
+    pBuildDriverPath?: (pDriver: Driver) => string | undefined
+  ): string | undefined {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
     Object.entries(this).forEach(([key, value]) => {
       if (key && value && key !== "databaseType") {
         properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, value);
       }
     });
-    return this.writeDriverConfigurationAndDownload(properties, pReferenceConnection, pDownloadDriver);
+    return this.writeDriverConfigurationAndDownload(properties, pReferenceConnection, pBuildDriverPath);
   }
 
   /**
    * Writes the driver configuration to the properties file. If `pDownloadDriver` is given, then will be also the driver downloaded, if not there.
    * @param pProperties - the properties editor where the properties should be written
    * @param pIsReferenceConnection - information if this is the reference connection or not
-   * @param pDownloadDriver - a function for downloading the drivers
+   * @param pBuildDriverPath - a function for building the driver path
    * @returns the path from the downloaded driver, if downloaded
    */
-  private async writeDriverConfigurationAndDownload(
+  private writeDriverConfigurationAndDownload(
     pProperties: PropertiesEditor,
     pIsReferenceConnection: boolean,
-    pDownloadDriver?: (pDriver: Driver) => Promise<string | undefined>
-  ): Promise<string | undefined> {
+    pBuildDriverPath?: (pDriver: Driver) => string | undefined
+  ): string | undefined {
     const databaseType: string = this.databaseType;
 
     if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
@@ -160,8 +160,8 @@ export class DatabaseConnection {
         );
 
         // download driver when function is there
-        if (pDownloadDriver) {
-          return await pDownloadDriver(databaseDriver);
+        if (pBuildDriverPath) {
+          return pBuildDriverPath(databaseDriver);
         }
       }
     }

@@ -2,12 +2,12 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
 import { Driver } from "../drivers";
-import download from "download";
-import { getDriverLocation, getLiquibaseConfigurationPath, updateConfiguration } from "../../handleLiquibaseSettings";
+import { getLiquibaseConfigurationPath, updateConfiguration } from "../../handleLiquibaseSettings";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../transfer/transferData";
 import { readLiquibaseConfigurationNames } from "./readConfiguration";
+import { otherResourcePath } from "../../extension";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -71,7 +71,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
     fileName = fileName + fileEnding;
   }
 
-  const properties: string = await pConfigurationData.generateProperties(downloadDriver);
+  const properties: string = pConfigurationData.generateProperties(buildDriverPath);
 
   const propertiesFilePath = path.join(configurationPath, fileName);
 
@@ -96,36 +96,15 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
 }
 
 /**
- * Downloads a driver, if no driver was downloaded previously.
- * @param pDriver - the driver that need to be downloaded by the extensions
+ * Builds the driver path for the classpath.
+ * @param pDriver - the driver that need to be included in the classpath.
+ * @returns the generated absolute path to the driver file
  */
-async function downloadDriver(pDriver: Driver): Promise<string | undefined> {
-  // find out location for driver
-  const locationForDriver = await getDriverLocation();
-  if (!locationForDriver) {
-    console.error("No location for downloading the drivers was found");
-    return;
+function buildDriverPath(pDriver: Driver): string | undefined {
+  // TODO correct?
+  if (otherResourcePath) {
+    return path.join(otherResourcePath, pDriver.getFileName());
   }
-
-  const uriFile = vscode.Uri.file(locationForDriver);
-  // create the missing directories
-  await vscode.workspace.fs.createDirectory(uriFile);
-
-  // Gets the filename of the driver
-  const fileName = pDriver.getFileName();
-
-  const driverLocationWithFileName = path.join(locationForDriver, fileName);
-  // if file does not exist, download the driver
-  if (!fs.existsSync(driverLocationWithFileName)) {
-    try {
-      await download(pDriver.urlForDownload, locationForDriver);
-    } catch (error) {
-      console.error(`error downloading the file: ${error}`);
-      return;
-    }
-  }
-
-  return driverLocationWithFileName;
 }
 
 /**
@@ -134,14 +113,13 @@ async function downloadDriver(pDriver: Driver): Promise<string | undefined> {
  * @returns `true`, when the current configuration should be overwritten, `false`, when it should not be overwritten
  */
 async function checkForOverridingExistingConfiguration(name: string): Promise<boolean> {
-  const yes = "Yes";
   const answer = await vscode.window.showWarningMessage(
     `There is already a configuration named ${name}. Do you want to replace it?`,
-    yes,
+    "Yes",
     "No"
   );
 
-  if (answer === yes) {
+  if (answer === "Yes") {
     return true;
   }
 
