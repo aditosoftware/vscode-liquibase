@@ -21,6 +21,11 @@ interface AdditionalElementProps {
   onValueChange: (pValues: Map<string, string>) => void;
 }
 
+// Some indicators for the ids in the DataGridCells
+const separator = ";;;";
+const keyIndicator = "key";
+const valueIndicator = "value";
+
 /**
  * Creates an editable grid component for adding the additional elements to the configuration.
  * @param pProperties - the properties that are needed for the additional elements
@@ -62,8 +67,9 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
       // set editable
       cell.setAttribute("contenteditable", "true");
 
-      // add keydown listener
+      // add listeners which end the edit
       cell.addEventListener("keydown", handleKeydown);
+      cell.addEventListener("blur", handleEditFinished);
     }
   }
 
@@ -73,13 +79,44 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
    */
   function handleKeydown(pEvent: KeyboardEvent) {
     if (pEvent.key === "Enter" || pEvent.key === "Escape") {
-      const target = pEvent.target;
+      handleEditFinished(pEvent);
+    }
+  }
 
-      if (target instanceof DataGridCell) {
-        const cell: DataGridCell = target;
+  /**
+   * Handles any event where the edit of a DataGridCell was finished.
+   * In this case the data will be updated.
+   * @param pEvent - the event when the cell was left
+   */
+  function handleEditFinished(pEvent: Event) {
+    const target = pEvent.target;
 
-        cell.setAttribute("contenteditable", "false");
+    if (target instanceof DataGridCell) {
+      const cell: DataGridCell = target;
+
+      const id = cell.id;
+
+      // the id contains all information about the old key and value and if it is an key or value
+      const [indicator, oldKey, oldValue] = id.split(separator);
+      const newCellValue = cell.innerText;
+
+      const newAdditionalValues = new Map(additionalElementValues);
+
+      if (indicator === keyIndicator) {
+        // if the key has changed delete the old entry and add one with the new key
+        newAdditionalValues.delete(oldKey);
+        newAdditionalValues.set(newCellValue, oldValue);
+      } else if (indicator === valueIndicator) {
+        // if the value has changed, then just replace the old value with the new one.
+        newAdditionalValues.set(oldKey, newCellValue);
       }
+
+      // set content no longer editable
+      cell.setAttribute("contenteditable", "false");
+
+      // set the new values to the webview and trigger the onValueChange
+      setAdditionalElementValues(newAdditionalValues);
+      pProperties.onValueChange(newAdditionalValues);
     }
   }
 
@@ -107,7 +144,6 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
     newElementValues.delete(pKey);
 
     setAdditionalElementValues(newElementValues);
-
     pProperties.onValueChange(newElementValues);
   }
 
@@ -149,10 +185,16 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
 
           {[...additionalElementValues].map(([key, value]) => (
             <VSCodeDataGridRow key={key}>
-              <VSCodeDataGridCell onClick={makeRowEditable} grid-column="1">
+              <VSCodeDataGridCell
+                id={keyIndicator + separator + key + separator + value}
+                onClick={makeRowEditable}
+                grid-column="1">
                 {key}
               </VSCodeDataGridCell>
-              <VSCodeDataGridCell onClick={makeRowEditable} grid-column="2">
+              <VSCodeDataGridCell
+                id={valueIndicator + separator + key + separator + value}
+                onClick={makeRowEditable}
+                grid-column="2">
                 {value}
               </VSCodeDataGridCell>
               <VSCodeDataGridCell grid-column="3">
