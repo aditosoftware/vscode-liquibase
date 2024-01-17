@@ -101,7 +101,6 @@ export async function activate(context: vscode.ExtensionContext) {
       ],
       resourcePath,
       [],
-      undefined,
       true,
       true
     );

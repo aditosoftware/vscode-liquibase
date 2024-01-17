@@ -33,3 +33,19 @@ vsce package --pre-release --skip-license
 ```
 
 https://code.visualstudio.com/api/working-with-extensions/publishing-extension
+
+# Ideen
+
+- dialoge modal machen, damit sind diese im Vordergrund
+
+```typescript
+vscode.window.showInformationMessage(
+            "message,
+            {
+              detail: "detail"
+              modal: true,
+            },
+            "a",
+            "b"
+          );
+```

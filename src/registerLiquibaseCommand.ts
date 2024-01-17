@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
 import { getWorkFolder, readContextValues } from "./readChangelogFile";
 import * as path from "path";
+import { outputStream } from "./extension";
 
 /**
  * Enum defining different input types for user interaction panels.
@@ -38,7 +39,6 @@ let propertyFilePath: string;
  * @param pickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
  * @param resourcePath - Path to the Liquibase JAR file.
  * @param args - Additional command-line arguments for Liquibase.
- * @param message - Replaces the "success"-message when command was successfully executed
  * @param searchPathRequired - Adds the "searchPath"-parameter to the command (e.g., "update").
  * @returns The registered command.
  */
@@ -47,7 +47,6 @@ export function registerLiquibaseCommand(
   pickPanelConfigs: PickPanelConfig[],
   resourcePath: string,
   args?: string[],
-  message?: string,
   searchPathRequired?: boolean,
   isRightClickMenuAction?: boolean
 ) {
@@ -131,15 +130,16 @@ export function registerLiquibaseCommand(
 
       // Execute Liquibase update with the final selections
       executeJar(resourcePath, action, args, propertyFilePath).then(() => {
-        if (message) {
-          vscode.window.showInformationMessage(
-            message //TODO: erkennen was man reinschreiben will (notwendig?) s.u.
-          );
-        } else {
-          vscode.window.showInformationMessage(
-            `Liquibase ${action} was successful` //TODO: Entweder mit Info, was war oder garnicht und ins Log schauen
-          );
-        }
+        vscode.window
+          .showInformationMessage(
+            `Liquibase command '${action}' was executed successfully.`, //TODO: Entweder mit Info, was war oder garnicht und ins Log schauen
+            "Show log"
+          )
+          .then((result) => {
+            if (result && result === "Show log") {
+              outputStream.show(true);
+            }
+          });
         args = []; //empty the args array for continues usage
       });
     } catch (error) {

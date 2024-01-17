@@ -26,6 +26,7 @@ export function executeJar(
       location: vscode.ProgressLocation.Window,
       cancellable: false,
       title: `Liquibase ${operation}`,
+      
     },
     async (progress) => {
       return new Promise<void>((resolve, reject) => {
@@ -57,7 +58,6 @@ export function executeJar(
 
         const childProcess = spawn(javaExecutable, argsArray);
 
-        outputStream.show(true);
         outputStream.appendLine(`Liquibase command '${operation}' will be executed`);
         outputStream.appendLine(`${javaExecutable} ${argsArray.join(" ")}`);
         outputStream.appendLine("");
