@@ -7,6 +7,8 @@ import { isWindows } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
+import * as vscode from "vscode";
+import path from "path";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -83,7 +85,7 @@ export class LiquibaseConfigurationPanel {
         : LiquibaseConfigurationData.createDefaultData(
             {
               defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
-              liquibaseDirectoryForClasspath: getLiquibaseFolder(),
+              liquibaseDirectoryInProject: getLiquibaseFolder(),
             },
             ConfigurationStatus.NEW,
             isWindows()
@@ -194,6 +196,11 @@ export class LiquibaseConfigurationPanel {
           case MessageType.TEST_CONNECTION:
             testLiquibaseConnection(data);
             break;
+          case MessageType.CHOOSE_CHANGELOG: {
+            this.chooseFileForChangelog(data);
+
+            break;
+          }
           default:
             throw new Error(`Handling for command ${messageType} not found.`);
         }
@@ -201,5 +208,43 @@ export class LiquibaseConfigurationPanel {
       undefined,
       this._disposables
     );
+  }
+
+  /**
+   * Chooses a file for a changelog. This result will be given back to the webview.
+   * // TODO in andere Klasse auslagern
+   * @param data - the data from the message from the webview
+   */
+  private chooseFileForChangelog(data: LiquibaseConfigurationData) {
+    vscode.window
+      .showOpenDialog({
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        defaultUri: vscode.Uri.file(data.liquibaseSettings.liquibaseDirectoryInProject),
+        filters: {
+          Changelog: ["json", "sql", "xml", "yml", "yaml"],
+          "All Files": ["*"],
+        },
+      })
+      .then((result) => {
+        if (result && result[0]) {
+          const chosenFile = result[0].fsPath;
+
+          // find out relative path
+          let relativePath = path.relative(data.liquibaseSettings.liquibaseDirectoryInProject, chosenFile);
+
+          if (relativePath === chosenFile) {
+            // if the path could not be transformed to a relative path, e.g. when on other drive, then add a new element to the classpath and
+            // make a relative path from the new classpathElement
+            const directoryOfChosenFile = path.dirname(chosenFile);
+            data.classpath = data.classpath + "\n" + directoryOfChosenFile;
+            relativePath = path.relative(directoryOfChosenFile, chosenFile);
+          }
+
+          data.changelogFile = relativePath;
+          LiquibaseConfigurationPanel.transferMessage(MessageType.CHOOSE_CHANGELOG_RESULT, data);
+        }
+      });
   }
 }

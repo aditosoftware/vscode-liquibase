@@ -64,7 +64,7 @@ export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, contex
       existingConfiguration.fsPath,
       {
         defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
-        liquibaseDirectoryForClasspath: getLiquibaseFolder(),
+        liquibaseDirectoryInProject: getLiquibaseFolder(),
       },
       isWindows()
     );
@@ -123,7 +123,7 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
 }
 
 /**
- * Removes an existing configuration from the configuration file. 
+ * Removes an existing configuration from the configuration file.
  */
 export async function removeExistingLiquibaseConfiguration() {
   // TODO connect with fadler logic

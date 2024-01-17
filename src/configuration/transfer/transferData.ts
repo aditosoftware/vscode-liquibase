@@ -5,10 +5,14 @@ import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
  */
 export enum MessageType {
   INIT = "INIT",
-  SAVING_SUCCESSFUL = "SAVING_SUCCESSFUL",
 
   SAVE_CONNECTION = "SAVE_CONNECTION",
+  SAVING_SUCCESSFUL = "SAVING_SUCCESSFUL",
+
   TEST_CONNECTION = "TEST_CONNECTION",
+
+  CHOOSE_CHANGELOG = "CHOOSE_CHANGELOG",
+  CHOOSE_CHANGELOG_RESULT = "CHOOSE_CHANGELOG_RESULT",
 }
 
 /**

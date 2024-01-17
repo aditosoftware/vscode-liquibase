@@ -132,7 +132,7 @@
         },
         "liquibase.liquibaseFolder": {
           "type": "string",
-          "markdownDescription": "Relative path inside the workspace, where your liquibase changelog files are located.This location will be added the the classpath of newly generated files.\n\nIf there is no path given, then the project itself will be added to classpath."
+          "markdownDescription": "Relative path inside the workspace, where your liquibase changelog files are located.This location will be added the the classpath of newly generated files.\n\nIf there is no path given, then the project itself will be added to classpath.\n\n**Important:** Changing this path after some configurations were created could possible invalidate those configurations. This is, because this folder will be included in classpath of the configuration and and the changelog-file gets a relative path depending on this file."
         },
         "liquibase.defaultDatabaseForConfiguration": {
           "type": "string",

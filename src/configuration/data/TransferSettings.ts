@@ -8,7 +8,7 @@ export interface LiquibaseSettings {
   readonly defaultDatabaseForConfiguration: string;
 
   /**
-   * The liquibase directory that should be added to the classpath
+   * The basic liquibase directory in the project that should be added to the classpath
    */
-  readonly liquibaseDirectoryForClasspath: string;
+  readonly liquibaseDirectoryInProject: string;
 }

@@ -59,6 +59,11 @@ export class LiquibaseConfigurationData {
   classpathSeparator: ClasspathSeparator;
 
   /**
+   * The file where the basic changelog.xml is located.
+   */
+  changelogFile: string;
+
+  /**
    * The normal database connection configuration.
    */
   databaseConnection: DatabaseConnection;
@@ -86,6 +91,7 @@ export class LiquibaseConfigurationData {
     name: string,
     classpath: string,
     classpathSeparator: ClasspathSeparator,
+    changelogFile: string,
     databaseConnection: DatabaseConnection,
     additionalConfiguration: AdditionalConfiguration,
     referenceDatabaseConnection?: DatabaseConnection
@@ -95,6 +101,7 @@ export class LiquibaseConfigurationData {
     this.name = name;
     this.classpath = classpath;
     this.classpathSeparator = classpathSeparator;
+    this.changelogFile = changelogFile;
     this.databaseConnection = databaseConnection;
     this.referenceDatabaseConnection = referenceDatabaseConnection;
     this.additionalConfiguration = additionalConfiguration;
@@ -115,11 +122,12 @@ export class LiquibaseConfigurationData {
       dataToClone.status,
       {
         defaultDatabaseForConfiguration: dataToClone.liquibaseSettings.defaultDatabaseForConfiguration,
-        liquibaseDirectoryForClasspath: dataToClone.liquibaseSettings.liquibaseDirectoryForClasspath,
+        liquibaseDirectoryInProject: dataToClone.liquibaseSettings.liquibaseDirectoryInProject,
       },
       dataToClone.name,
       dataToClone.classpath,
       dataToClone.classpathSeparator,
+      dataToClone.changelogFile,
       DatabaseConnection.clone(dataToClone.databaseConnection),
       dataToClone.additionalConfiguration,
       dataToClone.referenceDatabaseConnection
@@ -146,6 +154,7 @@ export class LiquibaseConfigurationData {
       "",
       "",
       isWindows ? ";" : ":",
+      "",
       DatabaseConnection.createDefaultDatabaseConnection(liquibaseSettings.defaultDatabaseForConfiguration),
       {}
     );
@@ -192,7 +201,9 @@ export class LiquibaseConfigurationData {
       normalizedKey = DatabaseConnection.createDeReferencedKey(key);
     }
 
-    if (normalizedKey === "classpath") {
+    if (normalizedKey === "changelogFile") {
+      this.changelogFile = value;
+    } else if (normalizedKey === "classpath") {
       // TODO handle special case, when file from different os was copied?
       this.classpath = value.replaceAll(this.classpathSeparator, "\n");
     } else if (
@@ -250,9 +261,13 @@ export class LiquibaseConfigurationData {
     // Build the properties
     const properties: PropertiesEditor = new PropertiesEditor("");
 
+    if (this.changelogFile) {
+      properties.insert("changelogFile", this.changelogFile);
+    }
+
     const classpathElements: string[] = this.classpath.split("\n");
     // add the liquibase directory to the classpath
-    classpathElements.push(this.liquibaseSettings.liquibaseDirectoryForClasspath);
+    classpathElements.push(this.liquibaseSettings.liquibaseDirectoryInProject);
 
     if (this.databaseConnection.hasData()) {
       const result = this.databaseConnection.writeDataForConnection(properties, false, pBuildDriverPath);

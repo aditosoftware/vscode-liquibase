@@ -37,4 +37,3 @@ https://code.visualstudio.com/api/working-with-extensions/publishing-extension
 # FIXME Gedanken machen / umsetzen vor Prototyping
 
 - additional properties edit -> ändert nicht die Preview
-- changelog voraussetzen oder angeben lassen?

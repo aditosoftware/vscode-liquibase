@@ -27,7 +27,7 @@ function App() {
     // dummy data to create the element.
     // The data will be updated shortly after the view is created.
     LiquibaseConfigurationData.createDefaultData(
-      { defaultDatabaseForConfiguration: NO_PRE_CONFIGURED_DRIVER, liquibaseDirectoryForClasspath: "" },
+      { defaultDatabaseForConfiguration: NO_PRE_CONFIGURED_DRIVER, liquibaseDirectoryInProject: "" },
       ConfigurationStatus.NEW,
       true
     )
@@ -42,6 +42,9 @@ function App() {
         break;
       case MessageType.SAVING_SUCCESSFUL:
         handleSavingSuccessful(pMessage);
+        break;
+      case MessageType.CHOOSE_CHANGELOG_RESULT:
+        handleChooseChangelogResult(pMessage);
         break;
       default:
         console.error(`No handling for type ${pMessage.messageType} found`);
@@ -65,8 +68,8 @@ function App() {
   }
 
   /**
-   *Handles the changing of the state after the saving was successful.
-   * @param messageData-  the message data given
+   * Handles the changing of the state after the saving was successful.
+   * @param messageData - the message data given
    */
   function handleSavingSuccessful(messageData: MessageData) {
     if (data.name === messageData.configurationData.name) {
@@ -75,6 +78,19 @@ function App() {
         draft.status = ConfigurationStatus.EDIT;
       });
     }
+  }
+
+  /**
+   * Handles the result after the user choose a changelog file.
+   * This will update the classpath (when relative path was not possible from existing classpath)
+   * and changelog file.
+   * @param pMessage - the message data given
+   */
+  function handleChooseChangelogResult(pMessage: MessageData) {
+    updateData((draft) => {
+      draft.classpath = pMessage.configurationData.classpath;
+      draft.changelogFile = pMessage.configurationData.changelogFile;
+    });
   }
 
   /**
@@ -96,9 +112,9 @@ function App() {
 
   // Whenever the data changes, update the preview data
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       try {
-        const result = await data.generateProperties();
+        const result = data.generateProperties();
         setPreviewData(result);
       } catch (error) {
         console.error(error);
@@ -147,7 +163,6 @@ function App() {
                   by the selected system separator. If you have a custom driver specified, then you need to put in the
                   path to your driver here.
                 </label>
-
                 <VSCodeRadioGroup
                   orientation="horizontal"
                   value={data.classpathSeparator}
@@ -169,6 +184,16 @@ function App() {
                     colon (<code>:</code>) for Linux and MacOS
                   </VSCodeRadio>
                 </VSCodeRadioGroup>
+              </section>
+
+              <section>
+                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange}>
+                  The basic changelog file for any command
+                </VSCodeTextField>
+                <VSCodeButton appearance="secondary" onClick={handleChooseChangelog}>
+                  Choose changelog
+                  <span slot="start" className="codicon codicon-file-code"></span>
+                </VSCodeButton>
               </section>
             </fieldset>
 
@@ -298,6 +323,18 @@ function App() {
       // whenever the name changes, assume new config
       draft.status = ConfigurationStatus.NEW;
     });
+  }
+
+  // TODO TSdoc
+  function handleChangelogFileChange(event: React.FocusEvent<HTMLInputElement>) {
+    updateData((draft) => {
+      draft.changelogFile = event.target.value;
+    });
+  }
+
+  // TODO Tsdoc
+  function handleChooseChangelog() {
+    vscode.postMessage({ messageType: MessageType.CHOOSE_CHANGELOG, configurationData: data });
   }
 
   /**

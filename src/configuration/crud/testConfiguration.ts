@@ -23,13 +23,15 @@ export async function testLiquibaseConnection(pConfiguration: string | Liquibase
 
     await doTestLiquibaseConnection(tempFilePath);
 
-    fs.rmSync(tempFolder);
+    // TODO only delete when really finished. This need to be detected
+    // fs.rmSync(tempFilePath);
+    // fs.rmdirSync(tempFolder);
   }
 }
 
 async function doTestLiquibaseConnection(file: string) {
   let success = await vscode.commands.executeCommand("Liquibase.validate", file);
-  console.log(success);
+  console.log(`validate done ${success}`);
 
   // TODO: implement
   // vscode.window.showInformationMessage(`Testing connection for ${pConfiguration} and ${configuration} in the future`);
