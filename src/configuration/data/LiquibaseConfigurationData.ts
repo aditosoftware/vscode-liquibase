@@ -161,6 +161,23 @@ export class LiquibaseConfigurationData {
   }
 
   /**
+   * Reads just classpath and changelog from any configuration file.
+   *
+   * // TODO position ok? duplicate code?
+   *
+   * @param pPath - the path which should the read
+   * @param pIsWindows - if the current os is windows. Needed for the separator in the classpath
+   * @returns the classpath and changelog of the file
+   */
+  static readJustChangelogAndClasspathFile(pPath: string, pIsWindows: boolean) {
+    const liquibaseProperties = getProperties(fs.readFileSync(pPath, "utf8"));
+
+    const classpath = liquibaseProperties["classpath"].split(pIsWindows ? ";" : ":");
+    const changelog = liquibaseProperties["changelogFile"];
+    return { classpath, changelog };
+  }
+
+  /**
    * Loads the content from a file and transform it into an object.
    * @param pName - the name of the configuration
    * @param pPath - the path of the file

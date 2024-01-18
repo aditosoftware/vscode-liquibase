@@ -1,35 +1,21 @@
 import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
-import { getWorkFolder, readContextValues } from "./readChangelogFile";
+import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
 import { outputStream } from "./extension";
-
-/**
- * Enum defining different input types for user interaction panels.
- */
-export enum InputType {
-  ConnectionType,
-  InputBox,
-  OpenDialog,
-  QuickPick,
-  SaveDialog,
-  TextDocument,
-  WorkspaceFolderPick,
-  ConfirmationDialog,
-}
+import { ConnectionType, InputBase } from "./input";
 
 /**
  * Interface defining the configuration for pick panels.
  */
-export interface PickPanelConfig {
-  panelType: InputType;
-  items: any;
-  allowMultiple?: boolean;
+export interface PickPanelConfig<ResultType> {
+  input: InputBase<ResultType>;
   cmdArgs?: string;
   resultShouldBeExposed?: boolean;
 }
 
-let propertyFilePath: string;
+// FIXME das kann auch probleme bereiten, wenn mehrere Commands gleichzeitig ausgeführt werden, umbauen!
+export let propertyFilePath: string;
 
 /**
  * Registers a Liquibase command with VSCode, prompting the user with a series of pick panels
@@ -44,7 +30,7 @@ let propertyFilePath: string;
  */
 export function registerLiquibaseCommand(
   action: string,
-  pickPanelConfigs: PickPanelConfig[],
+  pickPanelConfigs: PickPanelConfig<unknown>[],
   resourcePath: string,
   args?: string[],
   searchPathRequired?: boolean,
@@ -52,6 +38,7 @@ export function registerLiquibaseCommand(
 ) {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
+    propertyFilePath = "";
 
     let currentStep = 1;
 
@@ -65,14 +52,14 @@ export function registerLiquibaseCommand(
     }
 
     // TODO schöner / anders bauen
-    if (commandArgs && commandArgs[0]) {
+    if (commandArgs && commandArgs[0] && action === "validate") {
       // adds the property file path from the commandArgs as property file path
       propertyFilePath = commandArgs[0];
 
       // and removes the question for connection type
       let indexToDelete = -1;
       pickPanelConfigs.forEach((config, index) => {
-        if (config.panelType === InputType.ConnectionType) {
+        if (config.input instanceof ConnectionType) {
           indexToDelete = index;
         }
       });
@@ -85,12 +72,12 @@ export function registerLiquibaseCommand(
     try {
       // Use for...of to iterate over async functions sequentially
       for (const config of pickPanelConfigs) {
-        if (config.items instanceof Function) {
-          if (commandArgs && commandArgs.length) {
-            config.items = () => readContextValues(commandArgs[0].fsPath); // TODO Fadler: was hattest du mit diesem Block vor? bei mir funktioniert das nicht
-          }
-        }
-        let result = await getInputByType(config, currentStep, pickPanelConfigs.length);
+        // if (config.items instanceof Function) {
+        //   if (commandArgs && commandArgs.length) {
+        //     config.items = () => readContextValues(commandArgs[0].fsPath); // TODO Fadler: was hattest du mit diesem Block vor? bei mir funktioniert das nicht
+        //   }
+        // }
+        let result = await getInputByType(config.input, currentStep, pickPanelConfigs.length);
 
         if (!result) {
           // User canceled the selection
@@ -98,23 +85,24 @@ export function registerLiquibaseCommand(
           return;
         }
 
+        // Save property file path for later
+        if (config.input instanceof ConnectionType && typeof result === "string" && propertyFilePath.trim() === "") {
+          propertyFilePath = result;
+        }
+
         // Handle the selected result as needed
-        if (config.cmdArgs && result.length > 0) {
+        if (config.cmdArgs) {
           if (Array.isArray(result)) {
-            let x = [];
-            for (const item of result) {
-              x.push(item.label);
-            }
-            args.push(config.cmdArgs + "=" + x.join(","));
+            args.push(config.cmdArgs + "=" + result.join(","));
           } else {
             args.push(config.cmdArgs + "=" + result);
           }
         }
 
-        //TODO: Beschreibung
-        if (config.resultShouldBeExposed) {
-          setResultValue(result);
-        }
+        //TODO: notwendig?
+        // if (config.resultShouldBeExposed) {
+        //   setResultValue(result);
+        // }
 
         currentStep++;
       }
@@ -155,90 +143,15 @@ export function registerLiquibaseCommand(
 /**
  * Asynchronously retrieves user input based on the specified panel type.
  *
- * @param config - Configuration for the pick panel.
+ * @param inputConfig - Configuration for the input.
  * @param maximumSteps - Total number of steps in the user interaction process.
  * @returns Resolved user input.
  */
-async function getInputByType(config: PickPanelConfig, currentStep: number, maximumSteps: number): Promise<any> {
-  switch (config.panelType) {
-    case InputType.ConnectionType:
-      const x: vscode.QuickPickOptions = {
-        placeHolder: `Select one System - (Step ${currentStep} of ${maximumSteps})`,
-        canPickMany: false,
-      };
-
-      return await vscode.window.showQuickPick(config.items, x).then((selectedSystem) => {
-        if (selectedSystem) {
-          //@ts-ignore - selectedSystem is an object which contains the "path"-key but is interpreted as a string
-          propertyFilePath = selectedSystem.path;
-        }
-
-        return selectedSystem;
-      });
-
-    case InputType.QuickPick:
-      const options: vscode.QuickPickOptions = {
-        placeHolder: `Select one item${
-          config.allowMultiple ? " or more items" : ""
-        } - (Step ${currentStep} of ${maximumSteps})`,
-        canPickMany: config.allowMultiple,
-      };
-
-      // Executing config.items to get possible values when defined.
-      // You might need this, if you want to listen to an input from an earlier prompt
-      if (typeof config.items === "function") {
-        config.items = config.items();
-      }
-
-      return await vscode.window.showQuickPick(config.items, options).then((selectedItems) => {
-        return selectedItems;
-      });
-    case InputType.OpenDialog:
-      config.items.openLabel = `Select Directory - (Step ${currentStep} of ${maximumSteps})`; //TODO: accept Naming from extention.ts
-      return await vscode.window.showOpenDialog(config.items).then((uri) => {
-        if (uri && uri[0]) {
-          return uri[0].fsPath;
-        }
-      });
-    case InputType.InputBox:
-      config.items.placeHolder = `Choose a name - (Step ${currentStep} of ${maximumSteps})`;
-      return await vscode.window.showInputBox(config.items).then((name) => {
-        return name;
-      });
-    case InputType.SaveDialog:
-      // implement this, if needed
-      break;
-    case InputType.TextDocument:
-      // implement this, if needed
-      break;
-    case InputType.WorkspaceFolderPick:
-      // implement this, if needed
-      break;
-    case InputType.ConfirmationDialog:
-      return await vscode.window.showInformationMessage(config.items, "Yes", "No").then((answer) => {
-        if (answer === "No") {
-          return undefined;
-        } else {
-          return true;
-        }
-      });
-    default:
-      console.log("InputType not defined");
-      return;
-  }
-}
-
-// I feel like a criminal for this
-let sharedValue: any;
-
-export function setResultValue(value: any) {
-  sharedValue = value;
-}
-
-export function getResultValue(key?: string) {
-  if (key) {
-    return sharedValue[key];
-  } else {
-    return sharedValue;
-  }
+async function getInputByType<ResultType>(
+  inputConfig: InputBase<ResultType>,
+  currentStep: number,
+  maximumSteps: number
+): Promise<ResultType | undefined> {
+  // TODO methode ausbauen?
+  return await inputConfig.showDialog(currentStep, maximumSteps);
 }

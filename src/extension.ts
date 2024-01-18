@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import * as path from "path";
-import { loadItemsFromJson } from "./loadItemsFromJson";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
-import { InputType, getResultValue, registerLiquibaseCommand } from "./registerLiquibaseCommand";
+import { propertyFilePath, registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
+import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick } from "./input";
 import {
   testLiquibaseConfiguration,
   addExistingLiquibaseConfiguration,
@@ -28,10 +28,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const resourcePath = path.join(context.extensionPath, "src", "resources");
   otherResourcePath = resourcePath;
-
-  // FIXME dieses systeme sind immer fix, auch wenn welche hinzugefügt wurden
-  // Load items from JSON files
-  const systems: vscode.QuickPickItem[] = await loadItemsFromJson();
 
   const possibleFormats: vscode.QuickPickItem[] = [
     { label: "XML", description: "xml" },
@@ -69,17 +65,16 @@ export async function activate(context: vscode.ExtensionContext) {
     let updateDisposable = registerLiquibaseCommand(
       "update",
       [
+        // system selection
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
           resultShouldBeExposed: true,
-        }, //systems
+        },
+        // contexts
         {
-          panelType: InputType.QuickPick,
-          items: () => readContextValues(getResultValue("path")),
-          allowMultiple: true,
+          input: new QuickPick(true, () => readContextValues(propertyFilePath)),
           cmdArgs: "--contexts",
-        }, //context
+        },
       ],
       resourcePath
     );
@@ -89,13 +84,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "updateRCM",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
-        }, //systems
+          input: new ConnectionType(),
+        },
         {
-          panelType: InputType.QuickPick,
-          items: () => readContextValues(""), //TODO: finde den richtigen Path zur selektierten Datei in der "Preview"
-          allowMultiple: true,
+          input: new QuickPick(true, () => readContextValues("")), //TODO: finde den richtigen Path zur selektierten Datei in der "Preview"
           cmdArgs: "--contexts",
         }, //context
       ],
@@ -109,12 +101,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "drop-all",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
         {
-          panelType: InputType.ConfirmationDialog,
-          items: "Do you really want to execute 'drop-all'?",
+          input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
         },
       ],
       resourcePath
@@ -122,22 +112,38 @@ export async function activate(context: vscode.ExtensionContext) {
 
     let validateDisposable = registerLiquibaseCommand(
       "validate",
-      [{ panelType: InputType.ConnectionType, items: systems }],
+      [
+        {
+          input: new ConnectionType(),
+        },
+      ],
       resourcePath
     );
 
     let statusDisposable = registerLiquibaseCommand(
       "status",
-      [{ panelType: InputType.ConnectionType, items: systems }],
+      [
+        {
+          input: new ConnectionType(),
+        },
+      ],
       resourcePath
     );
 
     let diffDisposable = registerLiquibaseCommand(
       "diff",
       [
-        { panelType: InputType.ConnectionType, items: systems },
-        { panelType: InputType.QuickPick, items: systems, resultShouldBeExposed: true },
-        { panelType: InputType.QuickPick, items: diffTypes, allowMultiple: true, cmdArgs: "--diff-types" },
+        {
+          input: new ConnectionType(),
+        },
+        {
+          input: new ConnectionType(), // TODO correct? hier war allowMultiple????
+          resultShouldBeExposed: true,
+        },
+        {
+          input: new QuickPick(true, () => diffTypes),
+          cmdArgs: "--diff-types",
+        },
       ],
       resourcePath,
       getReferenceKeysFromPropertyFile(
@@ -151,29 +157,25 @@ export async function activate(context: vscode.ExtensionContext) {
       "generate-changelog",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
         {
-          panelType: InputType.OpenDialog,
-          items: {
+          input: new OpenDialog({
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
-          },
+          }),
           resultShouldBeExposed: true,
         },
         {
-          panelType: InputType.InputBox,
-          items: {
-            title: "File Name",
+          input: new InputBox({
+            placeHolder: "File Name",
             value: "changelog",
-          },
+          }),
           cmdArgs: "--data-output-directory",
         },
         {
-          panelType: InputType.QuickPick,
-          items: possibleFormats,
+          input: new QuickPick(false, () => possibleFormats),
         },
       ],
       resourcePath,
@@ -184,16 +186,14 @@ export async function activate(context: vscode.ExtensionContext) {
       "db-doc",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
         {
-          panelType: InputType.OpenDialog,
-          items: {
+          input: new OpenDialog({
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
-          },
+          }),
           cmdArgs: "--output-directory",
         },
       ],
@@ -204,8 +204,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "unexpected-changesets",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
       ],
       resourcePath,
@@ -216,8 +215,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "changelog-sync",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
       ],
       resourcePath
@@ -227,8 +225,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "clear-checksums",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
       ],
       resourcePath
@@ -238,8 +235,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "history",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
       ],
       resourcePath
@@ -249,14 +245,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "tag",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
         {
-          panelType: InputType.InputBox,
-          items: {
-            title: "Tag",
-          },
+          input: new InputBox("Name of the Tag"),
           cmdArgs: "--tag",
         },
       ],
@@ -267,14 +259,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "tag-exists",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
         {
-          panelType: InputType.InputBox,
-          items: {
-            title: "Tag to check if it exists",
-          },
+          input: new InputBox("Tag to check if it exists"),
           cmdArgs: "--tag",
         },
       ],
@@ -285,14 +273,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "rollback",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
         {
-          panelType: InputType.InputBox,
-          items: {
-            title: "Tag to rollback to",
-          },
+          input: new InputBox("Tag to rollback to"),
           cmdArgs: "--tag",
         },
       ],
@@ -303,16 +287,14 @@ export async function activate(context: vscode.ExtensionContext) {
       "update-sql",
       [
         {
-          panelType: InputType.ConnectionType,
-          items: systems,
+          input: new ConnectionType(),
         },
         {
-          panelType: InputType.OpenDialog,
-          items: {
+          input: new OpenDialog({
             canSelectFiles: true,
             canSelectFolders: false,
             canSelectMany: false,
-          },
+          }),
           cmdArgs: "--output-file",
         },
       ],
