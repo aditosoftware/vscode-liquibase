@@ -325,21 +325,28 @@ function App() {
     });
   }
 
-  // TODO TSdoc
+  /**
+   * Handles the change of the changelog file.
+   * @param event - the event which was triggered
+   */
   function handleChangelogFileChange(event: React.FocusEvent<HTMLInputElement>) {
     updateData((draft) => {
       draft.changelogFile = event.target.value;
     });
   }
 
-  // TODO Tsdoc
+  /**
+   * Handles when the "Choose changelog" button was pressed.
+   * In this case, we need to trigger an choose dialog outside of the webview.
+   * The data will later return.
+   */
   function handleChooseChangelog() {
     vscode.postMessage({ messageType: MessageType.CHOOSE_CHANGELOG, configurationData: data });
   }
 
   /**
    * Handles the change of the classpath elements.
-   * @param event - the event with was triggered
+   * @param event - the event which was triggered
    */
   function handleChangeClasspath(event: React.FocusEvent<HTMLInputElement>) {
     updateData((draft) => {
