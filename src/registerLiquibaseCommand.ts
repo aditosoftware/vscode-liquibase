@@ -50,7 +50,7 @@ export function registerLiquibaseCommand(
   searchPathRequired?: boolean,
   isRightClickMenuAction?: boolean
 ) {
-  return vscode.commands.registerCommand("Liquibase." + action, async (...commandArgs) => {
+  return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
 
     let currentStep = 1;

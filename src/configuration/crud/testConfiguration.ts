@@ -33,11 +33,11 @@ export async function testLiquibaseConnection(pConfiguration: string | Liquibase
 
 /**
  * Tests the connection by executing the validate command.
- * 
+ *
  * The result of this command can not be taken back, because the validate is executed in a child_process.
- * 
+ *
  * @param file - the file url that need to be tested
  */
 async function doTestLiquibaseConnection(file: string) {
-  await vscode.commands.executeCommand("Liquibase.validate", file);
+  await vscode.commands.executeCommand("liquibase.validate", file);
 }

@@ -17,82 +17,82 @@
   "contributes": {
     "commands": [
       {
-        "command": "Liquibase.update",
+        "command": "liquibase.update",
         "title": "Update",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.drop-all",
+        "command": "liquibase.drop-all",
         "title": "Drop-all",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.validate",
+        "command": "liquibase.validate",
         "title": "Validate",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.status",
+        "command": "liquibase.status",
         "title": "Status",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.diff",
+        "command": "liquibase.diff",
         "title": "Diff",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.db-doc",
+        "command": "liquibase.db-doc",
         "title": "db-doc",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.generate-changelog",
+        "command": "liquibase.generate-changelog",
         "title": "Generate Changelog",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.unexpected-changesets",
+        "command": "liquibase.unexpected-changesets",
         "title": "Unexpected Changesets",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.changelog-sync",
+        "command": "liquibase.changelog-sync",
         "title": "Changelog Sync",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.clear-checksums",
+        "command": "liquibase.clear-checksums",
         "title": "Clear Checksums",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.history",
+        "command": "liquibase.history",
         "title": "History",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.tag",
+        "command": "liquibase.tag",
         "title": "Tag",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.tag-exists",
+        "command": "liquibase.tag-exists",
         "title": "Tag Exists",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.rollback",
+        "command": "liquibase.rollback",
         "title": "Rollback",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.update-sql",
+        "command": "liquibase.update-sql",
         "title": "Update SQL",
         "category": "Liquibase"
       },
       {
-        "command": "Liquibase.updateRCM",
+        "command": "liquibase.updateRCM",
         "title": "Update",
         "category": "Liquibase"
       },
@@ -181,13 +181,13 @@
       ],
       "liquibase.submenu": [
         {
-          "command": "Liquibase.updateRCM"
+          "command": "liquibase.updateRCM"
         },
         {
-          "command": "Liquibase.validate"
+          "command": "liquibase.validate"
         },
         {
-          "command": "Liquibase.drop-all"
+          "command": "liquibase.drop-all"
         }
       ],
       "editor/context": [
