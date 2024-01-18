@@ -49,3 +49,5 @@ vscode.window.showInformationMessage(
             "b"
           );
 ```
+
+- output per setting defaultmäßig anzeigen lassen?

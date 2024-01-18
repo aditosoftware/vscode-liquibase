@@ -11,11 +11,13 @@ import * as os from "os";
  */
 export async function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
   if (typeof pConfiguration === "string") {
+    // we have configuration name, just find out the file
     const configurationFile = await getPathOfConfiguration(pConfiguration);
     if (configurationFile) {
       await doTestLiquibaseConnection(configurationFile);
     }
   } else {
+    // we are testing from the webview. Build a temporary file and save the element there
     const tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), "liquibase"));
     const tempFilePath = path.join(tempFolder, "temporary.liquibase.properties");
 
@@ -29,10 +31,13 @@ export async function testLiquibaseConnection(pConfiguration: string | Liquibase
   }
 }
 
+/**
+ * Tests the connection by executing the validate command.
+ * 
+ * The result of this command can not be taken back, because the validate is executed in a child_process.
+ * 
+ * @param file - the file url that need to be tested
+ */
 async function doTestLiquibaseConnection(file: string) {
-  let success = await vscode.commands.executeCommand("Liquibase.validate", file);
-  console.log(`validate done ${success}`);
-
-  // TODO: implement
-  // vscode.window.showInformationMessage(`Testing connection for ${pConfiguration} and ${configuration} in the future`);
+  await vscode.commands.executeCommand("Liquibase.validate", file);
 }

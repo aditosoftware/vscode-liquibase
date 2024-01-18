@@ -14,22 +14,22 @@ class CustomError extends Error {
  * @param operation - The operation to perform using Liquibase.
  * @param args - Additional arguments for the Liquibase command.
  * @returns A Promise that resolves when the process completes successfully or rejects on error.
+ *  This promise has the code of the command. 0 = successful, 1 = not successful.
  */
 export function executeJar(
   rootPath: string,
   operation: string,
   args: string[] = [],
   propertyPath: string
-): Thenable<void> {
+): Thenable<number> {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Window,
       cancellable: false,
       title: `Liquibase ${operation}`,
-      
     },
     async (progress) => {
-      return new Promise<void>((resolve, reject) => {
+      return new Promise<number>((resolve, reject) => {
         const javaHome = process.env["JAVA_HOME"];
 
         if (!javaHome) {
@@ -77,7 +77,7 @@ export function executeJar(
 
         childProcess.on("close", (code) => {
           if (code === 0 || code === 1) {
-            resolve();
+            resolve(code);
           } else {
             const error = new CustomError(`Child process exited with code ${code}`);
             error.stdout = stdoutData;

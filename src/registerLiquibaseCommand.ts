@@ -129,17 +129,21 @@ export function registerLiquibaseCommand(
       }
 
       // Execute Liquibase update with the final selections
-      executeJar(resourcePath, action, args, propertyFilePath).then(() => {
-        vscode.window
-          .showInformationMessage(
-            `Liquibase command '${action}' was executed successfully.`, //TODO: Entweder mit Info, was war oder garnicht und ins Log schauen
-            "Show log"
-          )
-          .then((result) => {
-            if (result && result === "Show log") {
-              outputStream.show(true);
-            }
-          });
+      executeJar(resourcePath, action, args, propertyFilePath).then((code) => {
+        if (code === 0) {
+          vscode.window
+            .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
+            .then((result) => {
+              if (result && result === "Show log") {
+                outputStream.show(true);
+              }
+            });
+        } else {
+          vscode.window.showWarningMessage(
+            `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`
+          );
+          outputStream.show();
+        }
         args = []; //empty the args array for continues usage
       });
     } catch (error) {
