@@ -3,16 +3,42 @@ import { executeJar } from "./executeJar";
 import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
 import { outputStream } from "./extension";
-import { ConnectionType, InputBase, PROPERTY_FILE, REFERENCE_PROPERTY_FILE, handleMultiStepInput } from "./input";
+import {
+  ConnectionType,
+  DialogValues,
+  InputBase,
+  PROPERTY_FILE,
+  handleMultiStepInput,
+} from "./input";
 
 /**
  * Interface defining the configuration for pick panels.
  */
 export interface PickPanelConfig {
+  /**
+   * The input which should be used to get the values.
+   */
   input: InputBase;
+  /**
+   * Any fix command line arguments. There will be filled after all the values where given with
+   *
+   *
+   * @example
+   * cmdArgs is `--demo`.
+   *
+   * 1. User input is a single string `foo`. The created output will be `--demo=foo`.
+   * 2. User input is a array of the strings `foo` and `bar`. The created output will be `--demo=foo,bar`.
+   */
   cmdArgs?: string;
-}
 
+  /**
+   * If there is more logic needed while creating the command-line-arguments than provided by `cmdArgs`, then this should be used.
+   * You can give any function that will be given the whole dialog values after all the values where processed and can give an array of command line arguments.
+   * @param dialogValues - the dialog values after all dialogs where given to the user
+   * @returns an array of the command line arguments. Each element in the array is one argument.
+   */
+  createCmdArgs?: (dialogValues: DialogValues) => string[] | undefined;
+}
 
 /**
  * Registers a Liquibase command with VSCode, prompting the user with a series of pick panels
@@ -46,7 +72,6 @@ export function registerLiquibaseCommand(
     }
 
     let propertyFilePath;
-    let referencePropertyFilePath;
 
     // TODO schöner / anders bauen
     if (commandArgs && commandArgs[0] && action === "validate") {
@@ -77,20 +102,20 @@ export function registerLiquibaseCommand(
         pickPanelConfigs
           .filter((pConfig) => pConfig.input.name === input)
           .forEach((pConfig) => {
-            if (pConfig.cmdArgs && args) {
-              // if there were values that are needed to include into the args, then add them
-              args.push(pConfig.cmdArgs + "=" + value.join(","));
+            if (input === PROPERTY_FILE) {
+              // find out property file and save it in an extra variable
+              propertyFilePath = value[0];
             }
 
-            if (value.length === 1) {
-              // TODO das ok?
-              // find out property file and reference property file
-              const singleElement = value[0];
-              if (input === PROPERTY_FILE) {
-                propertyFilePath = singleElement;
-              } else if (input === REFERENCE_PROPERTY_FILE) {
-                referencePropertyFilePath = singleElement; // TODO reference verwerten!
-              }
+            if (pConfig.cmdArgs) {
+              // if there were values that are needed to include into the args, then add them
+              args?.push(pConfig.cmdArgs + "=" + value.join(","));
+            }
+
+            if (pConfig.createCmdArgs) {
+              // if we have a custom function for creating the cmd args, then call it and add them as well
+              const additionalArgs = pConfig.createCmdArgs(dialogValues);
+              additionalArgs?.forEach((pArg) => args?.push(pArg));
             }
           });
       });

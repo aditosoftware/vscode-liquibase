@@ -1,16 +1,17 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
+import * as vscode from "vscode";
+import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 
-const possibleReferenceKeys = ["default-catalog-name", 
-"default-schema-name", 
-"driver", 
-"driver-properties-file", 
-"liquibase-catalog-name",
-"liquibase-schema-name",
-"password",
-"schemas",
-"username",
-"url"
+const possibleReferenceKeys = [
+  "default-catalog-name",
+  "default-schema-name",
+  "driver",
+  "driver-properties-file",
+  "liquibase-catalog-name",
+  "liquibase-schema-name",
+  "password",
+  "schemas",
+  "username",
+  "url",
 ];
 
 /**
@@ -19,43 +20,17 @@ const possibleReferenceKeys = ["default-catalog-name",
  * @param propertyFilePath - The path to the Liquibase properties file.
  * @returns An array of strings representing reference keys and values, or undefined if an error occurs.
  */
-export function getReferenceKeysFromPropertyFile(propertyFilePath: string): string[] | undefined {
-    // Get the path to the Liquibase properties file
+export function getReferenceKeysFromPropertyFile(propertyFilePath: string | undefined): string[] | undefined {
+  // Check if propertyFilePath is provided
+  if (!propertyFilePath) {
+    vscode.window.showErrorMessage("No Reference File was found.");
+    return;
+  }
 
-    // Check if propertyFilePath is provided
-    if (!propertyFilePath) {
-        vscode.window.showErrorMessage('No Reference File was found.');
-        return;
-    }
-
-    try {
-        // Read the content of the file
-        const fileContent = fs.readFileSync(propertyFilePath, 'utf-8');
-
-        // Parse the content and extract values
-        const lines = fileContent.split('\n');
-        const values: string[] = [];
-
-        // Iterate through each line in the file
-        for (const line of lines) {
-            const keyValue = line.split(': ');
-
-            // Check if the line has key-value pair format
-            if (keyValue.length === 2) {
-                const key = keyValue[0].trim();
-                const value = keyValue[1].trim();
-
-                // Format the key and exclude all unneccessary keys
-                const formattedKey = `--reference-${key}`;
-                if (possibleReferenceKeys.includes(key)) {
-                    values.push(`${formattedKey}=${value}`);
-                }
-            }
-        }
-
-        return values;
-    } catch (error) {
-        // Show an error message if there is an issue reading the file
-        vscode.window.showErrorMessage(`Error reading liquibase.properties: ${error}`);
-    }
+  try {
+    return LiquibaseConfigurationData.readJustPossibleReferenceValues(propertyFilePath, possibleReferenceKeys);
+  } catch (error) {
+    // Show an error message if there is an issue reading the file
+    vscode.window.showErrorMessage(`Error reading liquibase.properties: ${error}`);
+  }
 }

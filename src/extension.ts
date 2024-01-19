@@ -5,7 +5,7 @@ import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import {  registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick } from "./input";
+import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
 import {
   testLiquibaseConfiguration,
   addExistingLiquibaseConfiguration,
@@ -134,17 +134,15 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new ConnectionType("referencePropertyFile"), // TODO correct? hier war allowMultiple????
+          input: new ConnectionType("referencePropertyFile"), 
+          createCmdArgs: (dialogValues) => getReferenceKeysFromPropertyFile(dialogValues.inputValues.get(REFERENCE_PROPERTY_FILE)?.[0])
         },
         {
           input: new QuickPick("diffTypes", true, () => diffTypes),
           cmdArgs: "--diff-types",
         },
       ],
-      resourcePath,
-      getReferenceKeysFromPropertyFile(
-        path.join(resourcePath, ".liquibase", "liquibase2.properties") //TODO: change to dynamic
-      )
+      resourcePath
     );
 
     //TODO: Generate-Changelog -> more steps and user-input

@@ -56,7 +56,6 @@ vscode.window.showInformationMessage(
 
 # TODO Commands verbessern
 
-- ⁠liquibase.diff -> Funktionalität
 - liquibase.db-doc -> nach dem Command Default-Broswer mit index.html öffnen
 - ⁠liquibase.generate-changelog -> schreibt nicht in den Ordner. Fileending anders/dynamischer auswählen. Schreibt unter App-Data
 - liquibase.history -> besser output möglich

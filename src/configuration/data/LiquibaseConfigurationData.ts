@@ -178,6 +178,30 @@ export class LiquibaseConfigurationData {
   }
 
   /**
+   * Finds out all normal configuration values which should be treated as reference values of another configuration.
+   *
+   * // TODO position ok?
+   *
+   * @param pPath - the path which should be read.
+   * @param possibleReferenceKeys - all the keys that can be possible reference keys
+   * @returns command line args for all the keys of the file, which are treated as reference keys
+   */
+  static readJustPossibleReferenceValues(pPath: string, possibleReferenceKeys: string[]): string[] {
+    const liquibaseProperties = getProperties(fs.readFileSync(pPath, "utf8"));
+
+    const referenceValues: string[] = [];
+
+    for (const [key, value] of Object.entries(liquibaseProperties)) {
+      const formattedKey = `--reference-${key}`;
+      if (possibleReferenceKeys.includes(key)) {
+        referenceValues.push(`${formattedKey}=${value}`);
+      }
+    }
+
+    return referenceValues;
+  }
+
+  /**
    * Loads the content from a file and transform it into an object.
    * @param pName - the name of the configuration
    * @param pPath - the path of the file
