@@ -12,7 +12,7 @@ import {
   editExistingLiquibaseConfiguration,
   removeExistingLiquibaseConfiguration,
 } from "./configurationCommands";
-import { generateCommandLineArgs, openFileAfterCommandExecution } from "./generateChangelog";
+import { fileName, folderSelection, generateCommandLineArgs, openFileAfterCommandExecution } from "./helperCommands";
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
@@ -157,7 +157,7 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog("folderSelection", {
+          input: new OpenDialog(folderSelection, {
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
@@ -165,11 +165,11 @@ export async function activate(context: vscode.ExtensionContext) {
           cmdArgs: "--data-output-directory",
         },
         {
-          input: new InputBox("fileName", {
+          input: new InputBox(fileName, {
             placeHolder: "File Name",
-            value: "changelog",
+            value: "changelog.xml",
           }),
-          createCmdArgs: generateCommandLineArgs,
+          createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
         },
         //  TODO other file endings don't work. Find out why
         // {
@@ -299,15 +299,25 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog("filSelection", {
-            canSelectFiles: true,
-            canSelectFolders: false,
+          input: new OpenDialog(folderSelection, {
+            canSelectFiles: false,
+            canSelectFolders: true,
             canSelectMany: false,
           }),
-          cmdArgs: "--output-file",
         },
+        {
+          input: new InputBox(fileName,
+            {
+              title: "The file name where your update sql should be written",
+              value: "update-sql.sql"
+            }
+          ),
+          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+        }
       ],
-      resourcePath
+      resourcePath,
+      [],
+      openFileAfterCommandExecution
     );
 
     // Add the disposables to subscriptions for cleanup on extension deactivation

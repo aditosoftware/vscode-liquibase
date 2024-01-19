@@ -56,5 +56,4 @@ vscode.window.showInformationMessage(
 
 # TODO Commands verbessern
 
-- liquibase.history -> besser output möglich
-- liquibase.update-sql -> Ordner auswählen, dann File automatisch anlegen
+- liquibase.history -> besser output möglich ?
