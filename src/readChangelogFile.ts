@@ -14,12 +14,7 @@ import { DialogValues, PROPERTY_FILE } from "./input";
  * @returns A Promise that resolves to an array of QuickPickItem objects representing the context values.
  */
 export async function readContextValues(currentResults: DialogValues): Promise<QuickPickItem[]> {
-  let liquibasePropertiesPath;
-  currentResults.inputValues.forEach((value, input) => {
-    if (input === PROPERTY_FILE && value.length === 1) {
-      liquibasePropertiesPath = value[0];
-    }
-  });
+  let liquibasePropertiesPath = currentResults.inputValues.get(PROPERTY_FILE)?.[0];
 
   if (!liquibasePropertiesPath) {
     return [];
