@@ -1,4 +1,4 @@
-import { vscode } from "./utilities/vscode";
+import { vscodeApiWrapper } from "./utilities/vscodeApiWrapper";
 import {
   VSCodeButton,
   VSCodeDivider,
@@ -35,7 +35,7 @@ function App() {
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
   const [previewData, setPreviewData] = useState<string | null>(null);
 
-  vscode.addMessageListener((pMessage) => {
+  vscodeApiWrapper.addMessageListener((pMessage) => {
     switch (pMessage.messageType) {
       case MessageType.INIT:
         handleInitData(pMessage);
@@ -99,7 +99,7 @@ function App() {
    */
   function handleSaveConfiguration(): void {
     if (data.name) {
-      vscode.postMessage(new MessageData(MessageType.SAVE_CONNECTION, data));
+      vscodeApiWrapper.postMessage(new MessageData(MessageType.SAVE_CONNECTION, data));
     }
   }
 
@@ -107,7 +107,7 @@ function App() {
    * Tests the given configuration
    */
   function handleTestConfiguration(): void {
-    vscode.postMessage(new MessageData(MessageType.TEST_CONNECTION, data));
+    vscodeApiWrapper.postMessage(new MessageData(MessageType.TEST_CONNECTION, data));
   }
 
   // Whenever the data changes, update the preview data
@@ -341,7 +341,7 @@ function App() {
    * The data will later return.
    */
   function handleChooseChangelog() {
-    vscode.postMessage({ messageType: MessageType.CHOOSE_CHANGELOG, configurationData: data });
+    vscodeApiWrapper.postMessage({ messageType: MessageType.CHOOSE_CHANGELOG, configurationData: data });
   }
 
   /**

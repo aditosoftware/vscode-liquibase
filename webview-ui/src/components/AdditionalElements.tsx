@@ -7,7 +7,7 @@ import {
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
-import { vscode } from "../utilities/vscode";
+import { vscodeApiWrapper } from "../utilities/vscodeApiWrapper";
 import { MessageType } from "../../../src/configuration/transfer/transferData";
 
 /**
@@ -37,7 +37,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
 
-  vscode.addMessageListener((pMessage) => {
+  vscodeApiWrapper.addMessageListener((pMessage) => {
     if (pMessage.messageType === MessageType.INIT) {
       // recreate the new values as a new map
       const newValues = new Map();
