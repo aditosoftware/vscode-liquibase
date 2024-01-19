@@ -5,7 +5,7 @@ import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
+import { ConfirmationDialog, ConnectionType, DialogValues, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
 import {
   testLiquibaseConfiguration,
   addExistingLiquibaseConfiguration,
@@ -196,7 +196,17 @@ export async function activate(context: vscode.ExtensionContext) {
           cmdArgs: "--output-directory",
         },
       ],
-      resourcePath
+      resourcePath, [],
+      async (dialogValues: DialogValues) => {
+        // open the index.html, when the command was finished
+        const folder = dialogValues.inputValues.get("folderSelection")?.[0];
+
+        if (folder) {
+          const fullPath = path.join(folder, "index.html");
+          const uri = vscode.Uri.file(fullPath);
+          await vscode.env.openExternal(uri)
+        }
+      }
     );
 
     let unexpectedChangesetsDisposable = registerLiquibaseCommand(

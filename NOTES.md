@@ -56,6 +56,5 @@ vscode.window.showInformationMessage(
 
 # TODO Commands verbessern
 
-- liquibase.db-doc -> nach dem Command Default-Broswer mit index.html öffnen
 - liquibase.history -> besser output möglich
 - liquibase.update-sql -> Ordner auswählen, dann File automatisch anlegen
