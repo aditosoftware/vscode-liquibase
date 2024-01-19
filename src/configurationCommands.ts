@@ -8,6 +8,15 @@ import { getDefaultDatabaseForConfiguration, getLiquibaseFolder, updateConfigura
 import { testLiquibaseConnection } from "./configuration/crud/testConfiguration";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/crud/readConfiguration";
 import * as fs from "fs";
+import {
+  ConfirmationDialog,
+  ConnectionType,
+  InputBox,
+  OpenDialog,
+  PROPERTY_FILE,
+  QuickPick,
+  handleMultiStepInput,
+} from "./input";
 
 /**
  * Tests an liquibase configuration.
@@ -100,13 +109,12 @@ async function selectFromExistingConfigurations(pTitle: string): Promise<string 
  * The user needs to input the name and select any `.properties` file.
  */
 export async function addExistingLiquibaseConfiguration(): Promise<void> {
-  // TODO include in fadlers logic
+  const nameKey = "name";
+  const locationKey = "location";
 
-  const name = await vscode.window.showInputBox({
-    title: "the unique name for your configuration",
-  });
-  if (name) {
-    const location = await vscode.window.showOpenDialog({
+  const inputs = [
+    new InputBox(nameKey, "the unique name for your configuration"),
+    new OpenDialog(locationKey, {
       title: "Location of your existing liquibase.properties file",
       canSelectFiles: true,
       canSelectFolders: false,
@@ -114,10 +122,17 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
       filters: {
         "Liquibase Properties": ["properties"],
       },
-    });
+    }),
+  ];
 
-    if (location && location[0]) {
-      addToLiquibaseConfiguration(name, location[0].fsPath);
+  const dialogValues = await handleMultiStepInput(inputs);
+
+  if (dialogValues) {
+    let name = dialogValues.inputValues.get(nameKey)?.[0];
+    let location = dialogValues.inputValues.get(locationKey)?.[0];
+
+    if (name && location) {
+      addToLiquibaseConfiguration(name, location);
     }
   }
 }
@@ -126,39 +141,53 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
  * Removes an existing configuration from the configuration file.
  */
 export async function removeExistingLiquibaseConfiguration() {
-  // TODO connect with fadler logic
+  const setting = "Remove the configuration from the settings";
+  const both = `${setting} and delete the corresponding file`;
 
-  const configuration = await selectFromExistingConfigurations("Select the configuration you want delete (1/2)");
+  const removeType = "removeType";
 
-  if (configuration) {
-    const setting = "Remove the configuration from the settings";
-    const both = `${setting} and delete the corresponding file`;
+  const inputs = [
+    new ConnectionType("propertyFile"),
+    new QuickPick(removeType, false, () => {
+      return [
+        {
+          label: setting,
+        },
+        {
+          label: both,
+        },
+      ];
+    }),
+    new ConfirmationDialog((dialogValues) => {
+      let deletionMode = dialogValues.inputValues.get(removeType)?.[0];
 
-    const deletionMode = await vscode.window.showQuickPick([setting, both], {
-      title: `Select what you want delete (2/2)`,
-    });
+      return `Are you sure you want to delete your configuration? This will remove it from the following: ${deletionMode}`;
+    }),
+  ];
 
-    if (deletionMode) {
-      const deleteConfirm = await vscode.window.showWarningMessage(
-        `Are you sure you want to delete ${configuration}? This will remove it from the following: ${deletionMode}`,
-        "Yes",
-        "No"
-      );
+  const dialogResult = await handleMultiStepInput(inputs);
+  if (dialogResult) {
+    const path = dialogResult.inputValues.get(PROPERTY_FILE)?.[0];
+    const deletionMode = dialogResult.inputValues.get(removeType);
 
-      if (deleteConfirm === "Yes") {
-        const success = await updateConfiguration(async (pJsonData) => {
-          const path = pJsonData[configuration];
-          if (path && deletionMode === both) {
-            fs.rmSync(path);
-          }
-          delete pJsonData[configuration];
+    if (path && deletionMode) {
+      const success = await updateConfiguration(async (pJsonData) => {
+        const foundKey = Object.keys(pJsonData).find((pKey) => {
+          return pJsonData[pKey] === path;
         });
 
-        if (success) {
-          vscode.window.showInformationMessage(`Configuration ${configuration} was successfully removed`);
-        } else {
-          vscode.window.showErrorMessage(`Error while removing ${configuration}`);
+        if (foundKey) {
+          if (deletionMode.indexOf(both) !== -1) {
+            fs.rmSync(path);
+          }
+          delete pJsonData[foundKey];
         }
+      });
+
+      if (success) {
+        vscode.window.showInformationMessage(`Configuration was successfully removed.`);
+      } else {
+        vscode.window.showErrorMessage(`Error while removing the configuration.`);
       }
     }
   }
