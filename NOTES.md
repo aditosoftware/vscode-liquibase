@@ -53,7 +53,3 @@ vscode.window.showInformationMessage(
 - output per setting defaultmäßig anzeigen lassen?
 
 ---
-
-# TODO Commands verbessern
-
-- liquibase.history -> besser output möglich ?

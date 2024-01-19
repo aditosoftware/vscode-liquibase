@@ -246,8 +246,33 @@ export async function activate(context: vscode.ExtensionContext) {
         {
           input: new ConnectionType("propertyFile"),
         },
+        {
+          input: new OpenDialog(folderSelection, {
+            canSelectFiles: false,
+            canSelectFolders: true,
+            canSelectMany: false,
+          }),
+        },
+        {
+          input: new InputBox(fileName,
+            {
+              title: "The file name where your history should be written",
+              value: "history.txt"
+            }
+          ),
+          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+        },
+        {
+          input: new QuickPick("historyFormat", false, () => [
+            { label: "TABULAR", picked: true, detail: "This groups changesets by deployment ID and displays other information in individual table cell." },
+            { label: "TEXT", detail: "This displays the output as plain text." },
+          ]),
+          cmdArgs: "--format",
+        }
       ],
-      resourcePath
+      resourcePath,
+      [],
+      openFileAfterCommandExecution
     );
 
     let tagDisposable = registerLiquibaseCommand(
