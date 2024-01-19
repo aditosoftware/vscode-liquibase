@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
-import {  registerLiquibaseCommand } from "./registerLiquibaseCommand";
+import { registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
@@ -12,6 +12,7 @@ import {
   editExistingLiquibaseConfiguration,
   removeExistingLiquibaseConfiguration,
 } from "./configurationCommands";
+import { generateCommandLineArgs, openFileAfterCommandExecution } from "./generateChangelog";
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
@@ -29,11 +30,12 @@ export async function activate(context: vscode.ExtensionContext) {
   const resourcePath = path.join(context.extensionPath, "src", "resources");
   otherResourcePath = resourcePath;
 
+  // TODO remove when no longer needed
   const possibleFormats: vscode.QuickPickItem[] = [
-    { label: "XML", description: "xml" },
-    { label: "JSON", description: "json" },
-    { label: "YAML", description: "yaml" },
-    { label: "YML", description: "yml" },
+    { label: "xml" },
+    { label: "json" },
+    { label: "yaml" },
+    { label: "yml" },
   ];
 
   //all possible diffTypes for the diff dialog
@@ -90,6 +92,7 @@ export async function activate(context: vscode.ExtensionContext) {
       ],
       resourcePath,
       [],
+      undefined,
       true,
       true
     );
@@ -134,8 +137,9 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new ConnectionType("referencePropertyFile"), 
-          createCmdArgs: (dialogValues) => getReferenceKeysFromPropertyFile(dialogValues.inputValues.get(REFERENCE_PROPERTY_FILE)?.[0])
+          input: new ConnectionType("referencePropertyFile"),
+          createCmdArgs: (dialogValues) =>
+            getReferenceKeysFromPropertyFile(dialogValues.inputValues.get(REFERENCE_PROPERTY_FILE)?.[0]),
         },
         {
           input: new QuickPick("diffTypes", true, () => diffTypes),
@@ -146,7 +150,6 @@ export async function activate(context: vscode.ExtensionContext) {
     );
 
     //TODO: Generate-Changelog -> more steps and user-input
-    // this may not work atm!
     let generateChangelogDisposable = registerLiquibaseCommand(
       "generate-changelog",
       [
@@ -159,20 +162,23 @@ export async function activate(context: vscode.ExtensionContext) {
             canSelectFolders: true,
             canSelectMany: false,
           }),
+          cmdArgs: "--data-output-directory",
         },
         {
           input: new InputBox("fileName", {
             placeHolder: "File Name",
             value: "changelog",
           }),
-          cmdArgs: "--data-output-directory",
+          createCmdArgs: generateCommandLineArgs,
         },
-        {
-          input: new QuickPick("possibleFormat", false, () => possibleFormats),
-        },
+        //  TODO other file endings don't work. Find out why
+        // {
+        //   input: new QuickPick("possibleFormat", false, () => possibleFormats),
+        // },
       ],
       resourcePath,
-      []
+      [],
+      openFileAfterCommandExecution
     );
 
     let dbdocDisposable = registerLiquibaseCommand(
@@ -283,7 +289,7 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog("filSelection",{
+          input: new OpenDialog("filSelection", {
             canSelectFiles: true,
             canSelectFolders: false,
             canSelectMany: false,

@@ -48,6 +48,7 @@ export interface PickPanelConfig {
  * @param pickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
  * @param resourcePath - Path to the Liquibase JAR file.
  * @param args - Additional command-line arguments for Liquibase.
+ * @param afterCommandAction - any action that should be executed after the command was run successful, e.g. opening created files
  * @param searchPathRequired - Adds the "searchPath"-parameter to the command (e.g., "update").
  * @returns The registered command.
  */
@@ -56,8 +57,9 @@ export function registerLiquibaseCommand(
   pickPanelConfigs: PickPanelConfig[],
   resourcePath: string,
   args?: string[],
+  afterCommandAction?: (dialogValues: DialogValues) => void,
   searchPathRequired?: boolean,
-  isRightClickMenuAction?: boolean
+  isRightClickMenuAction?: boolean,
 ) {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
@@ -145,6 +147,13 @@ export function registerLiquibaseCommand(
           );
           outputStream.show();
         }
+
+        // execute any action after the execution
+        if (afterCommandAction) {
+          afterCommandAction(dialogValues);
+        }
+
+
         args = []; //empty the args array for continues usage
       });
     } catch (error) {

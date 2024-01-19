@@ -8,6 +8,7 @@ import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfiguration
 import { MessageType } from "../transfer/transferData";
 import { readLiquibaseConfigurationNames } from "./readConfiguration";
 import { otherResourcePath } from "../../extension";
+import { openDocument } from "../../utilities/vscodeUtilities";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -87,9 +88,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   addToLiquibaseConfiguration(name, propertiesFilePath, false);
 
   // open the created file
-  const uri = vscode.Uri.file(propertiesFilePath);
-  const document = await vscode.workspace.openTextDocument(uri);
-  await vscode.window.showTextDocument(document);
+  await openDocument(propertiesFilePath);
 
   // Transfer successful saving back to webview
   LiquibaseConfigurationPanel.transferMessage(MessageType.SAVING_SUCCESSFUL, pConfigurationData);
