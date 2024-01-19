@@ -1,18 +1,22 @@
-import { InputBase } from ".";
+import { DialogValues, InputBase } from "..";
 import * as vscode from "vscode";
 
 /**
  * Input for any Open Dialog (files and directory).
  */
-export class OpenDialog extends InputBase<string[]> {
+export class OpenDialog extends InputBase {
   private openDialogOptions: vscode.OpenDialogOptions;
 
-  constructor(openDialogOptions: vscode.OpenDialogOptions) {
-    super();
+  constructor(name: string, openDialogOptions: vscode.OpenDialogOptions) {
+    super(name);
     this.openDialogOptions = openDialogOptions;
   }
 
-  async showDialog(currentStep: number, maximumStep: number): Promise<string[] | undefined> {
+  async showDialog(
+    _currentResults: DialogValues,
+    currentStep: number,
+    maximumStep: number
+  ): Promise<string[] | undefined> {
     const stepOutput = this.generateStepOutput(currentStep, maximumStep);
 
     if (this.openDialogOptions.title) {

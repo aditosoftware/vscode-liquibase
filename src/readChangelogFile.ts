@@ -5,6 +5,7 @@ import { QuickPickItem } from "vscode";
 import path from "path";
 import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 import { isWindows } from "./utilities/osUtilities";
+import { DialogValues, PROPERTY_FILE } from "./input";
 
 /**
  * Reads context values from a Liquibase XML file and returns them as an array of QuickPickItem objects.
@@ -12,7 +13,18 @@ import { isWindows } from "./utilities/osUtilities";
  * @param liquibasePropertiesPath - The path to the Liquibase properties file.
  * @returns A Promise that resolves to an array of QuickPickItem objects representing the context values.
  */
-export async function readContextValues(liquibasePropertiesPath: string): Promise<QuickPickItem[]> {
+export async function readContextValues(currentResults: DialogValues): Promise<QuickPickItem[]> {
+  let liquibasePropertiesPath;
+  currentResults.inputValues.forEach((value, input) => {
+    if (input === PROPERTY_FILE && value.length === 1) {
+      liquibasePropertiesPath = value[0];
+    }
+  });
+
+  if (!liquibasePropertiesPath) {
+    return [];
+  }
+
   // Read Liquibase changelog  and classpath lines from properties file content
   const classpathAndChangelogs = LiquibaseConfigurationData.readJustChangelogAndClasspathFile(
     liquibasePropertiesPath,

@@ -3,19 +3,16 @@ import { executeJar } from "./executeJar";
 import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
 import { outputStream } from "./extension";
-import { ConnectionType, InputBase } from "./input";
+import { ConnectionType, InputBase, PROPERTY_FILE, REFERENCE_PROPERTY_FILE, handleMultiStepInput } from "./input";
 
 /**
  * Interface defining the configuration for pick panels.
  */
-export interface PickPanelConfig<ResultType> {
-  input: InputBase<ResultType>;
+export interface PickPanelConfig {
+  input: InputBase;
   cmdArgs?: string;
-  resultShouldBeExposed?: boolean;
 }
 
-// FIXME das kann auch probleme bereiten, wenn mehrere Commands gleichzeitig ausgeführt werden, umbauen!
-export let propertyFilePath: string;
 
 /**
  * Registers a Liquibase command with VSCode, prompting the user with a series of pick panels
@@ -30,7 +27,7 @@ export let propertyFilePath: string;
  */
 export function registerLiquibaseCommand(
   action: string,
-  pickPanelConfigs: PickPanelConfig<unknown>[],
+  pickPanelConfigs: PickPanelConfig[],
   resourcePath: string,
   args?: string[],
   searchPathRequired?: boolean,
@@ -38,9 +35,6 @@ export function registerLiquibaseCommand(
 ) {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
-    propertyFilePath = "";
-
-    let currentStep = 1;
 
     //execute dependant methods to get up-to-date-data
     if (!args && searchPathRequired && !isRightClickMenuAction) {
@@ -50,6 +44,9 @@ export function registerLiquibaseCommand(
     } else if (!args) {
       args = [];
     }
+
+    let propertyFilePath;
+    let referencePropertyFilePath;
 
     // TODO schöner / anders bauen
     if (commandArgs && commandArgs[0] && action === "validate") {
@@ -64,48 +61,39 @@ export function registerLiquibaseCommand(
         }
       });
       if (indexToDelete !== -1) {
-        currentStep++;
         pickPanelConfigs.splice(indexToDelete);
       }
     }
 
     try {
-      // Use for...of to iterate over async functions sequentially
-      for (const config of pickPanelConfigs) {
-        // if (config.items instanceof Function) {
-        //   if (commandArgs && commandArgs.length) {
-        //     config.items = () => readContextValues(commandArgs[0].fsPath); // TODO Fadler: was hattest du mit diesem Block vor? bei mir funktioniert das nicht
-        //   }
-        // }
-        let result = await getInputByType(config.input, currentStep, pickPanelConfigs.length);
-
-        if (!result) {
-          // User canceled the selection
-          vscode.window.showInformationMessage("Command was cancelled");
-          return;
-        }
-
-        // Save property file path for later
-        if (config.input instanceof ConnectionType && typeof result === "string" && propertyFilePath.trim() === "") {
-          propertyFilePath = result;
-        }
-
-        // Handle the selected result as needed
-        if (config.cmdArgs) {
-          if (Array.isArray(result)) {
-            args.push(config.cmdArgs + "=" + result.join(","));
-          } else {
-            args.push(config.cmdArgs + "=" + result);
-          }
-        }
-
-        //TODO: notwendig?
-        // if (config.resultShouldBeExposed) {
-        //   setResultValue(result);
-        // }
-
-        currentStep++;
+      // Handle the multi-step-input
+      const dialogValues = await handleMultiStepInput(pickPanelConfigs.map((pConfig) => pConfig.input));
+      if (!dialogValues) {
+        return;
       }
+
+      // go over the dialog values
+      dialogValues.inputValues.forEach((value, input) => {
+        pickPanelConfigs
+          .filter((pConfig) => pConfig.input.name === input)
+          .forEach((pConfig) => {
+            if (pConfig.cmdArgs && args) {
+              // if there were values that are needed to include into the args, then add them
+              args.push(pConfig.cmdArgs + "=" + value.join(","));
+            }
+
+            if (value.length === 1) {
+              // TODO das ok?
+              // find out property file and reference property file
+              const singleElement = value[0];
+              if (input === PROPERTY_FILE) {
+                propertyFilePath = singleElement;
+              } else if (input === REFERENCE_PROPERTY_FILE) {
+                referencePropertyFilePath = singleElement; // TODO reference verwerten!
+              }
+            }
+          });
+      });
 
       //TODO Beschreibung
       if (isRightClickMenuAction) {
@@ -138,20 +126,4 @@ export function registerLiquibaseCommand(
       console.error("Error: " + error);
     }
   });
-}
-
-/**
- * Asynchronously retrieves user input based on the specified panel type.
- *
- * @param inputConfig - Configuration for the input.
- * @param maximumSteps - Total number of steps in the user interaction process.
- * @returns Resolved user input.
- */
-async function getInputByType<ResultType>(
-  inputConfig: InputBase<ResultType>,
-  currentStep: number,
-  maximumSteps: number
-): Promise<ResultType | undefined> {
-  // TODO methode ausbauen?
-  return await inputConfig.showDialog(currentStep, maximumSteps);
 }

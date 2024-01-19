@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
-import { propertyFilePath, registerLiquibaseCommand } from "./registerLiquibaseCommand";
+import {  registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick } from "./input";
@@ -65,14 +65,11 @@ export async function activate(context: vscode.ExtensionContext) {
     let updateDisposable = registerLiquibaseCommand(
       "update",
       [
-        // system selection
         {
-          input: new ConnectionType(),
-          resultShouldBeExposed: true,
+          input: new ConnectionType("propertyFile"),
         },
-        // contexts
         {
-          input: new QuickPick(true, () => readContextValues(propertyFilePath)),
+          input: new QuickPick("context", true, readContextValues),
           cmdArgs: "--contexts",
         },
       ],
@@ -84,12 +81,12 @@ export async function activate(context: vscode.ExtensionContext) {
       "updateRCM",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new QuickPick(true, () => readContextValues("")), //TODO: finde den richtigen Path zur selektierten Datei in der "Preview"
+          input: new QuickPick("context", true, readContextValues), //TODO: finde den richtigen Path zur selektierten Datei in der "Preview"
           cmdArgs: "--contexts",
-        }, //context
+        },
       ],
       resourcePath,
       [],
@@ -101,7 +98,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "drop-all",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
           input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
@@ -114,7 +111,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "validate",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
       ],
       resourcePath
@@ -124,7 +121,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "status",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
       ],
       resourcePath
@@ -134,14 +131,13 @@ export async function activate(context: vscode.ExtensionContext) {
       "diff",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new ConnectionType(), // TODO correct? hier war allowMultiple????
-          resultShouldBeExposed: true,
+          input: new ConnectionType("referencePropertyFile"), // TODO correct? hier war allowMultiple????
         },
         {
-          input: new QuickPick(true, () => diffTypes),
+          input: new QuickPick("diffTypes", true, () => diffTypes),
           cmdArgs: "--diff-types",
         },
       ],
@@ -157,25 +153,24 @@ export async function activate(context: vscode.ExtensionContext) {
       "generate-changelog",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog({
+          input: new OpenDialog("folderSelection", {
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
           }),
-          resultShouldBeExposed: true,
         },
         {
-          input: new InputBox({
+          input: new InputBox("fileName", {
             placeHolder: "File Name",
             value: "changelog",
           }),
           cmdArgs: "--data-output-directory",
         },
         {
-          input: new QuickPick(false, () => possibleFormats),
+          input: new QuickPick("possibleFormat", false, () => possibleFormats),
         },
       ],
       resourcePath,
@@ -186,10 +181,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "db-doc",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog({
+          input: new OpenDialog("folderSelection", {
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
@@ -204,7 +199,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "unexpected-changesets",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
       ],
       resourcePath,
@@ -215,7 +210,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "changelog-sync",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
       ],
       resourcePath
@@ -225,7 +220,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "clear-checksums",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
       ],
       resourcePath
@@ -235,7 +230,7 @@ export async function activate(context: vscode.ExtensionContext) {
       "history",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
       ],
       resourcePath
@@ -245,10 +240,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "tag",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new InputBox("Name of the Tag"),
+          input: new InputBox("tagName", "Name of the Tag"),
           cmdArgs: "--tag",
         },
       ],
@@ -259,10 +254,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "tag-exists",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new InputBox("Tag to check if it exists"),
+          input: new InputBox("tagName", "Tag to check if it exists"),
           cmdArgs: "--tag",
         },
       ],
@@ -273,10 +268,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "rollback",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new InputBox("Tag to rollback to"),
+          input: new InputBox("tagName", "Tag to rollback to"),
           cmdArgs: "--tag",
         },
       ],
@@ -287,10 +282,10 @@ export async function activate(context: vscode.ExtensionContext) {
       "update-sql",
       [
         {
-          input: new ConnectionType(),
+          input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog({
+          input: new OpenDialog("filSelection",{
             canSelectFiles: true,
             canSelectFolders: false,
             canSelectMany: false,
