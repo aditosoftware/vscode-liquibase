@@ -6,10 +6,11 @@ import * as vscode from "vscode";
  * If any input comes back as undefined, then an information message will be shown to the user 
  * and nothing will be returned.
  * @param inputs - the inputs that should be progressed
+ * @param uri - the uri if the multi-step input was called on any file
  * @returns the dialog values from the inputs
  */
-export async function handleMultiStepInput(inputs: InputBase[]): Promise<DialogValues | undefined> {
-  const dialogValues = new DialogValues();
+export async function handleMultiStepInput(inputs: InputBase[], uri?: vscode.Uri): Promise<DialogValues | undefined> {
+  const dialogValues = new DialogValues(uri);
 
   let currentStep: number = 1;
 

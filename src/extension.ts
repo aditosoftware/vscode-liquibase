@@ -78,25 +78,6 @@ export async function activate(context: vscode.ExtensionContext) {
       resourcePath
     );
 
-    //TODO: fertig implementieren
-    let updateRCMDisposable = registerLiquibaseCommand(
-      "updateRCM",
-      [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-        {
-          input: new QuickPick("context", true, readContextValues), //TODO: finde den richtigen Path zur selektierten Datei in der "Preview"
-          cmdArgs: "--contexts",
-        },
-      ],
-      resourcePath,
-      [],
-      undefined,
-      true,
-      true
-    );
-
     let dropAllDisposable = registerLiquibaseCommand(
       "drop-all",
       [
@@ -362,7 +343,6 @@ export async function activate(context: vscode.ExtensionContext) {
       tagExistsDisposable,
       rollbackDisposable,
       updateSQLDisposable,
-      updateRCMDisposable
     );
   });
 }

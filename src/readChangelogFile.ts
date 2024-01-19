@@ -20,6 +20,11 @@ export async function readContextValues(currentResults: DialogValues): Promise<Q
     return [];
   }
 
+  if (currentResults.uri) {
+    // we are in a right click menu, read the contexts from this file
+    return await readValuesFromFile(currentResults.uri.fsPath);
+  }
+
   // Read Liquibase changelog  and classpath lines from properties file content
   const classpathAndChangelogs = LiquibaseConfigurationData.readJustChangelogAndClasspathFile(
     liquibasePropertiesPath,
@@ -35,28 +40,42 @@ export async function readContextValues(currentResults: DialogValues): Promise<Q
     for (const classpath of classpathAndChangelogs.classpath) {
       // Read and parse the specified XML file
       const possibleFile = path.join(classpath, path.normalize(changelogFileLine.trim()));
-      if (fs.existsSync(possibleFile)) {
-        const xmlData: string = fs.readFileSync(possibleFile, "utf-8");
-        const parser = new xml2js.Parser({ explicitArray: false });
-        const parsedData = await parser.parseStringPromise(xmlData);
-
-        // Extract context values from parsed XML
-        const includes = parsedData.databaseChangeLog.include;
-
-        if (Array.isArray(includes)) {
-          for (const include of includes) {
-            if (include.$.context) {
-              contextValues.push({ label: include.$.context });
-            }
-          }
-        } else if (includes && includes.$.context) {
-          contextValues.push({ label: includes.$.context });
-        }
-      }
+      const contexts = await readValuesFromFile(possibleFile);
+      contexts.forEach(pContext => contextValues.push(pContext));
     }
   }
 
   // Return an empty array if 'changelogFile:' line is not found
+  return contextValues;
+}
+
+/**
+ * Reads the values from a file
+ * @param possibleFile - the possible file which should be read
+ * @returns all the quick pick items that contains contexts of the changelog file 
+ */
+async function readValuesFromFile(possibleFile: string): Promise<vscode.QuickPickItem[]> {
+  const contextValues: QuickPickItem[] = [];
+
+  if (fs.existsSync(possibleFile)) {
+    const xmlData: string = fs.readFileSync(possibleFile, "utf-8");
+    const parser = new xml2js.Parser({ explicitArray: false });
+    const parsedData = await parser.parseStringPromise(xmlData);
+
+    // Extract context values from parsed XML
+    const includes = parsedData.databaseChangeLog.include;
+
+    if (Array.isArray(includes)) {
+      for (const include of includes) {
+        if (include.$.context) {
+          contextValues.push({ label: include.$.context });
+        }
+      }
+    } else if (includes && includes.$.context) {
+      contextValues.push({ label: includes.$.context });
+    }
+  }
+
   return contextValues;
 }
 

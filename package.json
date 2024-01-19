@@ -92,11 +92,6 @@
         "category": "Liquibase"
       },
       {
-        "command": "liquibase.updateRCM",
-        "title": "Update",
-        "category": "Liquibase"
-      },
-      {
         "command": "liquibase.createLiquibaseConfiguration",
         "title": "Create Liquibase Configuration",
         "category": "Liquibase"
@@ -181,7 +176,7 @@
       ],
       "liquibase.submenu": [
         {
-          "command": "liquibase.updateRCM"
+          "command": "liquibase.update"
         },
         {
           "command": "liquibase.validate"

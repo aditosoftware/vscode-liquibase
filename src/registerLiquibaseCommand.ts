@@ -59,10 +59,20 @@ export function registerLiquibaseCommand(
   args?: string[],
   afterCommandAction?: (dialogValues: DialogValues) => void,
   searchPathRequired?: boolean,
-  isRightClickMenuAction?: boolean,
 ) {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
+
+
+    // detecht if we are coming from a context menu. if this is the case, the first command argument is a URI
+    let isRightClickMenuAction = false;
+    let uri;
+    if (commandArgs && commandArgs[0]) {
+      if (commandArgs[0] instanceof vscode.Uri) {
+        uri = commandArgs[0];
+        isRightClickMenuAction = true;
+      }
+    }
 
     //execute dependant methods to get up-to-date-data
     if (!args && searchPathRequired && !isRightClickMenuAction) {
@@ -94,7 +104,7 @@ export function registerLiquibaseCommand(
 
     try {
       // Handle the multi-step-input
-      const dialogValues = await handleMultiStepInput(pickPanelConfigs.map((pConfig) => pConfig.input));
+      const dialogValues = await handleMultiStepInput(pickPanelConfigs.map((pConfig) => pConfig.input), uri);
       if (!dialogValues) {
         return;
       }
@@ -123,12 +133,9 @@ export function registerLiquibaseCommand(
       });
 
       //TODO Beschreibung
-      if (isRightClickMenuAction) {
-        if (commandArgs) {
-          args.push("--changelogFile=" + path.basename(commandArgs[0].fsPath));
-          args.push("-Dliquibase.searchPath=" + path.join(commandArgs[0].fsPath, ".."));
-        }
-        action = action.replace("RCM", ""); //only change it from here, due to registering unique actions, sorry to anyone who sees this and ask themself why?!?
+      if (uri) {
+        args.push("--changelogFile=" + path.basename(uri.fsPath));
+        args.push("-Dliquibase.searchPath=" + path.join(uri.fsPath, ".."));
       }
 
       // Execute Liquibase update with the final selections

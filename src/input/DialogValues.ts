@@ -1,9 +1,16 @@
 import { InputBase } from ".";
+import * as vscode from 'vscode';
 
 /**
  * The values of the dialog.
  */
 export class DialogValues {
+
+  /**
+   * The uri, if the dialog was called on any file.
+   */
+  readonly uri?: vscode.Uri;
+
   /**
    * If there was a confirmation, then the result will be saved here.
    */
@@ -15,6 +22,10 @@ export class DialogValues {
    * The value is always stored as a string[], even if it is only a string.
    */
   inputValues: Map<string, string[]> = new Map();
+
+  constructor(uri?: vscode.Uri) {
+    this.uri = uri;
+  }
 
   /**
    * Adds a value to the inputValues.
