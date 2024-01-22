@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
 import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
-import { outputStream } from "./extension";
+import { outputStream, resourcePath } from "./extension";
 import { DialogValues, InputBase, PROPERTY_FILE, handleMultiStepInput } from "./input";
 import { TransferDataForCommand } from "./configuration/crud/testConfiguration";
 
@@ -68,14 +68,12 @@ export interface AdditionalCommandAction {
  *
  * @param action - Liquibase action to perform (e.g., "update").
  * @param pOriginPickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
- * @param resourcePath - Path to the Liquibase JAR file.
  * @param additionalCommandAction - any optional additional elements for registering any command
  * @returns The registered command.
  */
 export function registerLiquibaseCommand(
   action: string,
   pOriginPickPanelConfigs: ReadonlyArray<PickPanelConfig>,
-  resourcePath: string,
   additionalCommandAction?: AdditionalCommandAction
 ) {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {

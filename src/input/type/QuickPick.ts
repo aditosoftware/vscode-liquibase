@@ -28,7 +28,7 @@ export class QuickPick extends InputBase {
     const result: vscode.QuickPickItem | vscode.QuickPickItem[] | undefined = await vscode.window.showQuickPick(items, {
       canPickMany: this.allowMultiple,
       title: `${this.title} -  ${this.generateStepOutput(currentStep, maximumStep)}`,
-      placeHolder: `Select one ${this.allowMultiple ? "or more items" : "item"}`,
+      placeHolder: `Select ${this.allowMultiple ? "any number of items" : "one item"}`,
     });
 
     if (result) {

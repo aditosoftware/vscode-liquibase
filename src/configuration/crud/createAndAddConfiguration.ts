@@ -7,7 +7,7 @@ import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/Liquiba
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../transfer/transferData";
 import { readLiquibaseConfigurationNames } from "./readConfiguration";
-import { otherResourcePath } from "../../extension";
+import { resourcePath } from "../../extension";
 import { openDocument } from "../../utilities/vscodeUtilities";
 
 /**
@@ -100,9 +100,8 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
  * @returns the generated absolute path to the driver file
  */
 function buildDriverPath(pDriver: Driver): string | undefined {
-  // TODO correct?
-  if (otherResourcePath) {
-    return path.join(otherResourcePath, pDriver.getFileName());
+  if (resourcePath) {
+    return path.join(resourcePath, pDriver.getFileName());
   }
 }
 

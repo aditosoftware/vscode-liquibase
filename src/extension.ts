@@ -21,7 +21,10 @@ import {
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
-export let otherResourcePath: string | undefined; // TODO bessere lösung!
+/**
+ * The path where all resources (jars) are located from the extension.
+ */
+export let resourcePath: string;
 
 /**
  * Main-Function that will execute all the code within
@@ -32,8 +35,7 @@ export let otherResourcePath: string | undefined; // TODO bessere lösung!
 export async function activate(context: vscode.ExtensionContext) {
   // Constructing the path to the resources folder within the extension
 
-  const resourcePath = path.join(context.extensionPath, "src", "resources");
-  otherResourcePath = resourcePath;
+  resourcePath = path.join(context.extensionPath, "src", "resources");
 
   // TODO remove when no longer needed
   const possibleFormats: vscode.QuickPickItem[] = [
@@ -69,9 +71,8 @@ export async function activate(context: vscode.ExtensionContext) {
     registerCommandsForLiquibasePropertiesHandling(context);
 
     // Command that will be executed when the extension command is triggered
-    let updateDisposable = registerLiquibaseCommand(
-      "update",
-      [
+    context.subscriptions.push(
+      registerLiquibaseCommand("update", [
         {
           input: new ConnectionType("propertyFile"),
         },
@@ -79,49 +80,36 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new QuickPick("context", "Choose any context", true, readContextValues),
           cmdArgs: "--contexts",
         },
-      ],
-      resourcePath
-    );
+      ]),
 
-    let dropAllDisposable = registerLiquibaseCommand(
-      "drop-all",
-      [
+      registerLiquibaseCommand(
+        "drop-all",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+          {
+            input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
+          },
+        ],
+        {
+          changelogPathIgnored: true,
+        }
+      ),
+
+      registerLiquibaseCommand("validate", [
         {
           input: new ConnectionType("propertyFile"),
         },
-        {
-          input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
-        },
-      ],
-      resourcePath,
-      {
-        changelogPathIgnored: true,
-      }
-    );
+      ]),
 
-    let validateDisposable = registerLiquibaseCommand(
-      "validate",
-      [
+      registerLiquibaseCommand("status", [
         {
           input: new ConnectionType("propertyFile"),
         },
-      ],
-      resourcePath
-    );
+      ]),
 
-    let statusDisposable = registerLiquibaseCommand(
-      "status",
-      [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-      ],
-      resourcePath
-    );
-
-    let diffDisposable = registerLiquibaseCommand(
-      "diff",
-      [
+      registerLiquibaseCommand("diff", [
         {
           input: new ConnectionType("propertyFile"),
         },
@@ -134,141 +122,125 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new QuickPick("diffTypes", "Choose any diff types", true, () => diffTypes),
           cmdArgs: "--diff-types",
         },
-      ],
-      resourcePath
-    );
+      ]),
 
-    //TODO: Generate-Changelog -> more steps and user-input
-    let generateChangelogDisposable = registerLiquibaseCommand(
-      "generate-changelog",
-      [
+      //TODO: Generate-Changelog -> more steps and user-input
+      registerLiquibaseCommand(
+        "generate-changelog",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+          {
+            input: new OpenDialog({
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            }),
+            cmdArgs: "--data-output-directory",
+          },
+          {
+            input: new InputBox(fileName, {
+              title: "Choose a File Name",
+              placeHolder: "any file name with an extension",
+              value: "changelog.xml",
+            }),
+            createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
+          },
+          //  TODO other file endings except xml don't work. Find out why
+          // {
+          //   input: new QuickPick("possibleFormat", false, () => possibleFormats),
+          // },
+        ],
+        {
+          afterCommandAction: openFileAfterCommandExecution,
+        }
+      ),
+
+      registerLiquibaseCommand(
+        "db-doc",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+          {
+            input: new OpenDialog({
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            }),
+            cmdArgs: "--output-directory",
+          },
+        ],
+        {
+          afterCommandAction: openIndexHtmlAfterCommandExecution,
+        }
+      ),
+
+      registerLiquibaseCommand(
+        "unexpected-changesets",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+        ],
+        {
+          commandLineArgs: ["--verbose"],
+        }
+      ),
+
+      registerLiquibaseCommand("changelog-sync", [
         {
           input: new ConnectionType("propertyFile"),
         },
-        {
-          input: new OpenDialog({
-            canSelectFiles: false,
-            canSelectFolders: true,
-            canSelectMany: false,
-          }),
-          cmdArgs: "--data-output-directory",
-        },
-        {
-          input: new InputBox(fileName, {
-            title: "Choose a File Name",
-            placeHolder: "any file name with an extension",
-            value: "changelog.xml",
-          }),
-          createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
-        },
-        //  TODO other file endings except xml don't work. Find out why
-        // {
-        //   input: new QuickPick("possibleFormat", false, () => possibleFormats),
-        // },
-      ],
-      resourcePath,
-      {
-        afterCommandAction: openFileAfterCommandExecution,
-      }
-    );
+      ]),
 
-    let dbdocDisposable = registerLiquibaseCommand(
-      "db-doc",
-      [
+      registerLiquibaseCommand("clear-checksums", [
         {
           input: new ConnectionType("propertyFile"),
         },
-        {
-          input: new OpenDialog({
-            canSelectFiles: false,
-            canSelectFolders: true,
-            canSelectMany: false,
-          }),
-          cmdArgs: "--output-directory",
-        },
-      ],
-      resourcePath,
-      {
-        afterCommandAction: openIndexHtmlAfterCommandExecution,
-      }
-    );
+      ]),
 
-    let unexpectedChangesetsDisposable = registerLiquibaseCommand(
-      "unexpected-changesets",
-      [
+      registerLiquibaseCommand(
+        "history",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+          {
+            input: new OpenDialog({
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            }),
+          },
+          {
+            input: new InputBox(fileName, {
+              title: "The file name where your history should be written",
+              placeHolder: "any file name with extension",
+              value: "history.txt",
+            }),
+            createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+          },
+          {
+            input: new QuickPick("historyFormat", "Choose the desired history format", false, () => [
+              {
+                label: "TABULAR",
+                picked: true,
+                detail:
+                  "This groups changesets by deployment ID and displays other information in individual table cell.",
+              },
+              { label: "TEXT", detail: "This displays the output as plain text." },
+            ]),
+            cmdArgs: "--format",
+          },
+        ],
         {
-          input: new ConnectionType("propertyFile"),
-        },
-      ],
-      resourcePath,
-      {
-        commandLineArgs: ["--verbose"],
-      }
-    );
+          afterCommandAction: openFileAfterCommandExecution,
+        }
+      ),
 
-    let changelogSyncDisposable = registerLiquibaseCommand(
-      "changelog-sync",
-      [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-      ],
-      resourcePath
-    );
-
-    let clearChecksumsDisposable = registerLiquibaseCommand(
-      "clear-checksums",
-      [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-      ],
-      resourcePath
-    );
-
-    let historyDisposable = registerLiquibaseCommand(
-      "history",
-      [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-        {
-          input: new OpenDialog({
-            canSelectFiles: false,
-            canSelectFolders: true,
-            canSelectMany: false,
-          }),
-        },
-        {
-          input: new InputBox(fileName, {
-            title: "The file name where your history should be written",
-            placeHolder: "any file name with extension",
-            value: "history.txt",
-          }),
-          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
-        },
-        {
-          input: new QuickPick("historyFormat", "Choose the desired history format", false, () => [
-            {
-              label: "TABULAR",
-              picked: true,
-              detail:
-                "This groups changesets by deployment ID and displays other information in individual table cell.",
-            },
-            { label: "TEXT", detail: "This displays the output as plain text." },
-          ]),
-          cmdArgs: "--format",
-        },
-      ],
-      resourcePath,
-      {
-        afterCommandAction: openFileAfterCommandExecution,
-      }
-    );
-
-    let tagDisposable = registerLiquibaseCommand(
-      "tag",
-      [
+      registerLiquibaseCommand("tag", [
         {
           input: new ConnectionType("propertyFile"),
         },
@@ -278,13 +250,9 @@ export async function activate(context: vscode.ExtensionContext) {
           }),
           cmdArgs: "--tag",
         },
-      ],
-      resourcePath
-    );
+      ]),
 
-    let tagExistsDisposable = registerLiquibaseCommand(
-      "tag-exists",
-      [
+      registerLiquibaseCommand("tag-exists", [
         {
           input: new ConnectionType("propertyFile"),
         },
@@ -294,13 +262,9 @@ export async function activate(context: vscode.ExtensionContext) {
           }),
           cmdArgs: "--tag",
         },
-      ],
-      resourcePath
-    );
+      ]),
 
-    let rollbackDisposable = registerLiquibaseCommand(
-      "rollback",
-      [
+      registerLiquibaseCommand("rollback", [
         {
           input: new ConnectionType("propertyFile"),
         },
@@ -310,55 +274,34 @@ export async function activate(context: vscode.ExtensionContext) {
           }),
           cmdArgs: "--tag",
         },
-      ],
-      resourcePath
-    );
+      ]),
 
-    let updateSQLDisposable = registerLiquibaseCommand(
-      "update-sql",
-      [
+      registerLiquibaseCommand(
+        "update-sql",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+          {
+            input: new OpenDialog({
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            }),
+          },
+          {
+            input: new InputBox(fileName, {
+              title: "The file name where your update sql should be written",
+              placeHolder: "any filename with extension",
+              value: "update-sql.sql",
+            }),
+            createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+          },
+        ],
         {
-          input: new ConnectionType("propertyFile"),
-        },
-        {
-          input: new OpenDialog({
-            canSelectFiles: false,
-            canSelectFolders: true,
-            canSelectMany: false,
-          }),
-        },
-        {
-          input: new InputBox(fileName, {
-            title: "The file name where your update sql should be written",
-            placeHolder: "any filename with extension",
-            value: "update-sql.sql",
-          }),
-          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
-        },
-      ],
-      resourcePath,
-      {
-        afterCommandAction: openFileAfterCommandExecution,
-      }
-    );
-
-    // Add the disposables to subscriptions for cleanup on extension deactivation
-    context.subscriptions.push(
-      updateDisposable,
-      dropAllDisposable,
-      validateDisposable,
-      statusDisposable,
-      diffDisposable,
-      generateChangelogDisposable,
-      dbdocDisposable,
-      unexpectedChangesetsDisposable,
-      changelogSyncDisposable,
-      clearChecksumsDisposable,
-      historyDisposable,
-      tagDisposable,
-      tagExistsDisposable,
-      rollbackDisposable,
-      updateSQLDisposable
+          afterCommandAction: openFileAfterCommandExecution,
+        }
+      )
     );
   });
 }
