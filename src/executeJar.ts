@@ -19,14 +19,14 @@ class CustomError extends Error {
 export function executeJar(
   rootPath: string,
   operation: string,
-  args: string[] = [],
-  propertyPath: string
+  propertyPath: string,
+  args: string[] = []
 ): Thenable<number> {
   return vscode.window.withProgress(
     {
-      location: vscode.ProgressLocation.Window,
+      location: vscode.ProgressLocation.Notification,
       cancellable: false,
-      title: `Liquibase ${operation}`,
+      title: `Executing Liquibase '${operation}'`,
     },
     async (progress) => {
       return new Promise<number>((resolve, reject) => {
@@ -68,11 +68,13 @@ export function executeJar(
         childProcess.stdout.on("data", (data) => {
           stdoutData += data;
           outputStream.appendLine(`${data}`);
+          progress.report({ message: `${data}` });
         });
 
         childProcess.stderr.on("data", (data) => {
           stderrData += data;
           outputStream.appendLine(`${data}`);
+          progress.report({ message: `${data}` });
         });
 
         childProcess.on("close", (code) => {

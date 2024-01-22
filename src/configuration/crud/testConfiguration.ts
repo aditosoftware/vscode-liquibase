@@ -1,46 +1,54 @@
 import * as vscode from "vscode";
 import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
-import { getPathOfConfiguration } from "./readConfiguration";
 import * as fs from "fs";
 import path from "path";
 import * as os from "os";
 import { PROPERTY_FILE } from "../../input";
-import { TransferDataForCommand } from "../../registerLiquibaseCommand";
+import { TransferActionForCommand, TransferDataForCommand } from "../../registerLiquibaseCommand";
 import { buildDriverPath } from "./createAndAddConfiguration";
 
 /**
- * Tests a existing liquibase configuration.
- * @param pConfiguration - the name of the configuration or the whole configuration that should be tested
+ * Tests a existing liquibase configuration from a webview.
+ * @param pConfiguration - the whole configuration that should be tested
  */
-export async function testLiquibaseConnection(pConfiguration: string | LiquibaseConfigurationData) {
-  if (typeof pConfiguration === "string") {
-    // we have configuration name, just find out the file
-    const configurationFile = await getPathOfConfiguration(pConfiguration);
-    if (configurationFile) {
-      await doTestLiquibaseConnection(configurationFile);
-    }
-  } else {
-    // we are testing from the webview. Build a temporary file and save the element there
-    const tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), "liquibase"));
-    const tempFilePath = path.join(tempFolder, "temporary.liquibase.properties");
+export async function testLiquibaseConnection(pConfiguration: LiquibaseConfigurationData) {
+  // we need to build a temporary file for testing the configuration
+  const tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), "liquibase"));
+  const tempFilePath = path.join(tempFolder, "temporary.liquibase.properties");
 
-    fs.writeFileSync(tempFilePath, pConfiguration.generateProperties(buildDriverPath), "utf-8");
+  // create a temporary configuration
+  fs.writeFileSync(tempFilePath, pConfiguration.generateProperties(buildDriverPath), "utf-8");
 
-    await doTestLiquibaseConnection(tempFilePath);
-
-    // TODO only delete when really finished. This need to be detected
-    // fs.rmSync(tempFilePath);
-    // fs.rmdirSync(tempFolder);
-  }
+  // execute the validate command
+  await vscode.commands.executeCommand(
+    "liquibase.validate",
+    new TransferDataForCommand(PROPERTY_FILE, tempFilePath),
+    new DeleteTemporaryFiles(tempFolder, tempFilePath)
+  );
 }
 
 /**
- * Tests the connection by executing the validate command.
- *
- * The result of this command can not be taken back, because the validate is executed in a child_process.
- *
- * @param file - the file url that need to be tested
+ * After command action that will delete the temporary file and folder where a temporary liquibase file was saved.
  */
-async function doTestLiquibaseConnection(file: string) {
-  await vscode.commands.executeCommand("liquibase.validate", new TransferDataForCommand(PROPERTY_FILE, file));
+class DeleteTemporaryFiles extends TransferActionForCommand {
+  /**
+   * The temporary folder.
+   */
+  tempFolder: string;
+
+  /**
+   * The temporary file which is inside the temporary folder.
+   */
+  tempFilePath: string;
+
+  constructor(tempFolder: string, tempFilePath: string) {
+    super();
+    this.tempFolder = tempFolder;
+    this.tempFilePath = tempFilePath;
+  }
+
+  executeAfterCommandAction(): void {
+    fs.rmSync(this.tempFilePath);
+    fs.rmdirSync(this.tempFolder);
+  }
 }

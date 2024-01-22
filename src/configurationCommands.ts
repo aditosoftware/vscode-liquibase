@@ -4,7 +4,6 @@ import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPane
 import { isWindows } from "./utilities/osUtilities";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder, updateConfiguration } from "./handleLiquibaseSettings";
-import { testLiquibaseConnection } from "./configuration/crud/testConfiguration";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/crud/readConfiguration";
 import * as fs from "fs";
 import {
@@ -17,19 +16,6 @@ import {
   handleMultiStepInput,
 } from "./input";
 import { readFullValues } from "./configuration/data/readFromProperties";
-
-/**
- * Tests an liquibase configuration.
- *
- * The user need to select any existing configuration.
- */
-export async function testLiquibaseConfiguration(): Promise<void> {
-  const result = await selectFromExistingConfigurations("Select any configuration you want to test");
-
-  if (result) {
-    testLiquibaseConnection(result);
-  }
-}
 
 /**
  * Edits an existing configuration.

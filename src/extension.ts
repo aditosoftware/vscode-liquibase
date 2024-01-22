@@ -7,7 +7,6 @@ import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
 import {
-  testLiquibaseConfiguration,
   addExistingLiquibaseConfiguration,
   editExistingLiquibaseConfiguration,
   removeExistingLiquibaseConfiguration,
@@ -329,10 +328,6 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
 
   context.subscriptions.push(
     vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration)
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.testConfiguration", testLiquibaseConfiguration)
   );
 }
 

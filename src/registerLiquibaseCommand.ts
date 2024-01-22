@@ -62,33 +62,6 @@ export interface AdditionalCommandAction {
 }
 
 /**
- * Any transfer data that should be given when calling a liquibase command.
- *
- * This should be used when you call any liquibase command from another command.
- *
- * Example call:
- * @example
- * await vscode.commands.executeCommand("liquibase.validate", new TransferDataForCommand(PROPERTY_FILE, file));
- */
-export class TransferDataForCommand {
-  /**
-   * The name of the data. This should be identical to `InputBase.name`.
-   * This will be used to set the data and prevent the dialog element with data name.
-   */
-  name: string;
-
-  /**
-   * The data which should be set for the given name.
-   */
-  data: string | boolean | string[];
-
-  constructor(name: string, data: string | boolean | string[]) {
-    this.name = name;
-    this.data = data;
-  }
-}
-
-/**
  * Registers a Liquibase command with VSCode, prompting the user with a series of pick panels
  * based on the provided configurations and then executes Liquibase update with the selected values.
  *
@@ -106,6 +79,7 @@ export function registerLiquibaseCommand(
     // copy the origin pickPanelConfigs, because we might delete an element from them
     const pickPanelConfigs = Array.from(pOriginPickPanelConfigs);
 
+    const transferActions: TransferActionForCommand[] = [];
     // detect if we are coming from a context menu.
     let isRightClickMenuAction = false;
     // and build any dialog values that we have given from the command args
@@ -134,7 +108,9 @@ export function registerLiquibaseCommand(
         if (indexToDelete !== -1) {
           pickPanelConfigs.splice(indexToDelete);
         }
-      } else {
+      } else if (commandArg instanceof TransferActionForCommand) {
+        transferActions.push(commandArg);
+      } else if (typeof commandArg !== "undefined") {
         // XXX: this message will also appear, if everything was alright.
         console.log(`Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`);
       }
@@ -204,7 +180,7 @@ export function registerLiquibaseCommand(
 
       if (propertyFilePath) {
         // Execute Liquibase update with the final selections
-        executeJar(resourcePath, action, args, propertyFilePath).then((code) => {
+        executeJar(resourcePath, action, propertyFilePath, args).then((code) => {
           if (code === 0) {
             vscode.window
               .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
@@ -224,6 +200,9 @@ export function registerLiquibaseCommand(
           if (additionalCommandAction && additionalCommandAction.afterCommandAction) {
             additionalCommandAction.afterCommandAction(dialogValues);
           }
+
+          // Execute all Transfer Actions from any command calls
+          transferActions.forEach((pTransferAction) => pTransferAction.executeAfterCommandAction());
         });
       } else {
         console.log("No property file path given. Command could not be executed");
@@ -232,4 +211,36 @@ export function registerLiquibaseCommand(
       console.error("Error: " + error);
     }
   });
+}
+
+/**
+ * Any transfer data that should be given when calling a liquibase command.
+ *
+ * This should be used when you call any liquibase command from another command.
+ *
+ * Example call:
+ * @example
+ * await vscode.commands.executeCommand("liquibase.validate", new TransferDataForCommand(PROPERTY_FILE, file));
+ */
+export class TransferDataForCommand {
+  /**
+   * The name of the data. This should be identical to `InputBase.name`.
+   * This will be used to set the data and prevent the dialog element with data name.
+   */
+  name: string;
+
+  /**
+   * The data which should be set for the given name.
+   */
+  data: string | boolean | string[];
+
+  constructor(name: string, data: string | boolean | string[]) {
+    this.name = name;
+    this.data = data;
+  }
+}
+
+// TODO tsdoc
+export abstract class TransferActionForCommand {
+  abstract executeAfterCommandAction(): void;
 }
