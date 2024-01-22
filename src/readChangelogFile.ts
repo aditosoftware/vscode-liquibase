@@ -3,9 +3,9 @@ import * as xml2js from "xml2js";
 import * as vscode from "vscode";
 import { QuickPickItem } from "vscode";
 import path from "path";
-import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 import { isWindows } from "./utilities/osUtilities";
 import { DialogValues, PROPERTY_FILE } from "./input";
+import { readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
 
 /**
  * Reads context values from a Liquibase XML file and returns them as an array of QuickPickItem objects.
@@ -26,10 +26,7 @@ export async function readContextValues(currentResults: DialogValues): Promise<Q
   }
 
   // Read Liquibase changelog  and classpath lines from properties file content
-  const classpathAndChangelogs = LiquibaseConfigurationData.readJustChangelogAndClasspathFile(
-    liquibasePropertiesPath,
-    isWindows()
-  );
+  const classpathAndChangelogs = readChangelogAndClasspathFile(liquibasePropertiesPath, isWindows());
 
   const contextValues: QuickPickItem[] = [];
 
@@ -41,7 +38,7 @@ export async function readContextValues(currentResults: DialogValues): Promise<Q
       // Read and parse the specified XML file
       const possibleFile = path.join(classpath, path.normalize(changelogFileLine.trim()));
       const contexts = await readValuesFromFile(possibleFile);
-      contexts.forEach(pContext => contextValues.push(pContext));
+      contexts.forEach((pContext) => contextValues.push(pContext));
     }
   }
 
@@ -52,7 +49,7 @@ export async function readContextValues(currentResults: DialogValues): Promise<Q
 /**
  * Reads the values from a file
  * @param possibleFile - the possible file which should be read
- * @returns all the quick pick items that contains contexts of the changelog file 
+ * @returns all the quick pick items that contains contexts of the changelog file
  */
 async function readValuesFromFile(possibleFile: string): Promise<vscode.QuickPickItem[]> {
   const contextValues: QuickPickItem[] = [];

@@ -2,7 +2,6 @@ import * as vscode from "vscode";
 import { addToLiquibaseConfiguration } from "./configuration/crud/createAndAddConfiguration";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { isWindows } from "./utilities/osUtilities";
-import { LiquibaseConfigurationData } from "./configuration/data/LiquibaseConfigurationData";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder, updateConfiguration } from "./handleLiquibaseSettings";
 import { testLiquibaseConnection } from "./configuration/crud/testConfiguration";
@@ -17,6 +16,7 @@ import {
   QuickPick,
   handleMultiStepInput,
 } from "./input";
+import { readFullValues } from "./configuration/data/readFromProperties";
 
 /**
  * Tests an liquibase configuration.
@@ -68,7 +68,7 @@ export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, contex
 
   if (existingConfiguration) {
     // transferring the data from .properties into an object
-    const data = LiquibaseConfigurationData.createFromFile(
+    const data = readFullValues(
       existingConfiguration.name,
       existingConfiguration.fsPath,
       {
