@@ -154,7 +154,7 @@
     },
     "submenus": [
       {
-        "id": "liquibase.submenu",
+        "id": "liquibase.commandsMenu",
         "label": "Liquibase"
       },
       {
@@ -165,7 +165,7 @@
     "menus": {
       "explorer/context": [
         {
-          "submenu": "liquibase.submenu",
+          "submenu": "liquibase.commandsMenu",
           "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml",
           "group": "Liquibase"
         },
@@ -174,7 +174,7 @@
           "when": "resourceLangId == properties"
         }
       ],
-      "liquibase.submenu": [
+      "liquibase.commandsMenu": [
         {
           "command": "liquibase.update"
         },
