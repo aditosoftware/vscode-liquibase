@@ -4,7 +4,6 @@ import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
 import { outputStream, resourcePath } from "./extension";
 import { DialogValues, InputBase, PROPERTY_FILE, handleMultiStepInput } from "./input";
-import { TransferDataForCommand } from "./configuration/crud/testConfiguration";
 
 /**
  * Interface defining the configuration for pick panels.
@@ -60,6 +59,33 @@ export interface AdditionalCommandAction {
    * * If this property is `false`, not there, or the interface is not there, then the `--changelogFile` will be added.
    */
   changelogPathIgnored?: boolean;
+}
+
+/**
+ * Any transfer data that should be given when calling a liquibase command.
+ *
+ * This should be used when you call any liquibase command from another command.
+ *
+ * Example call:
+ * @example
+ * await vscode.commands.executeCommand("liquibase.validate", new TransferDataForCommand(PROPERTY_FILE, file));
+ */
+export class TransferDataForCommand {
+  /**
+   * The name of the data. This should be identical to `InputBase.name`.
+   * This will be used to set the data and prevent the dialog element with data name.
+   */
+  name: string;
+
+  /**
+   * The data which should be set for the given name.
+   */
+  data: string | boolean | string[];
+
+  constructor(name: string, data: string | boolean | string[]) {
+    this.name = name;
+    this.data = data;
+  }
 }
 
 /**

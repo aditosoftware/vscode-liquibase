@@ -5,6 +5,7 @@ import * as fs from "fs";
 import path from "path";
 import * as os from "os";
 import { PROPERTY_FILE } from "../../input";
+import { TransferDataForCommand } from "../../registerLiquibaseCommand";
 
 /**
  * Tests a existing liquibase configuration.
@@ -41,26 +42,4 @@ export async function testLiquibaseConnection(pConfiguration: string | Liquibase
  */
 async function doTestLiquibaseConnection(file: string) {
   await vscode.commands.executeCommand("liquibase.validate", new TransferDataForCommand(PROPERTY_FILE, file));
-}
-
-/**
- * Any transfer data that should be given when calling a liquibase command.
- * // XXX other location when needed otherwise.
- */
-export class TransferDataForCommand {
-  /**
-   * The name of the data. This should be identical to `InputBase.name`.
-   * This will be used to set the data and prevent the dialog element with data name.
-   */
-  name: string;
-
-  /**
-   * The data which should be set for the given name.
-   */
-  data: string | boolean | string[];
-
-  constructor(name: string, data: string | boolean | string[]) {
-    this.name = name;
-    this.data = data;
-  }
 }
