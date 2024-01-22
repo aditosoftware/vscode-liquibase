@@ -93,7 +93,10 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
         },
       ],
-      resourcePath
+      resourcePath,
+      {
+        changelogPathIgnored: true,
+      }
     );
 
     let validateDisposable = registerLiquibaseCommand(
@@ -164,8 +167,9 @@ export async function activate(context: vscode.ExtensionContext) {
         // },
       ],
       resourcePath,
-      [],
-      openFileAfterCommandExecution
+      {
+        afterCommandAction: openFileAfterCommandExecution,
+      }
     );
 
     let dbdocDisposable = registerLiquibaseCommand(
@@ -184,8 +188,9 @@ export async function activate(context: vscode.ExtensionContext) {
         },
       ],
       resourcePath,
-      [],
-      openIndexHtmlAfterCommandExecution
+      {
+        afterCommandAction: openIndexHtmlAfterCommandExecution,
+      }
     );
 
     let unexpectedChangesetsDisposable = registerLiquibaseCommand(
@@ -196,7 +201,9 @@ export async function activate(context: vscode.ExtensionContext) {
         },
       ],
       resourcePath,
-      ["--verbose"]
+      {
+        commandLineArgs: ["--verbose"],
+      }
     );
 
     let changelogSyncDisposable = registerLiquibaseCommand(
@@ -254,8 +261,9 @@ export async function activate(context: vscode.ExtensionContext) {
         },
       ],
       resourcePath,
-      [],
-      openFileAfterCommandExecution
+      {
+        afterCommandAction: openFileAfterCommandExecution,
+      }
     );
 
     let tagDisposable = registerLiquibaseCommand(
@@ -329,8 +337,9 @@ export async function activate(context: vscode.ExtensionContext) {
         },
       ],
       resourcePath,
-      [],
-      openFileAfterCommandExecution
+      {
+        afterCommandAction: openFileAfterCommandExecution,
+      }
     );
 
     // Add the disposables to subscriptions for cleanup on extension deactivation

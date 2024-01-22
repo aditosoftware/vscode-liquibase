@@ -3,13 +3,8 @@ import { executeJar } from "./executeJar";
 import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
 import { outputStream } from "./extension";
-import {
-  ConnectionType,
-  DialogValues,
-  InputBase,
-  PROPERTY_FILE,
-  handleMultiStepInput,
-} from "./input";
+import { DialogValues, InputBase, PROPERTY_FILE, handleMultiStepInput } from "./input";
+import { TransferDataForCommand } from "./configuration/crud/testConfiguration";
 
 /**
  * Interface defining the configuration for pick panels.
@@ -21,7 +16,6 @@ export interface PickPanelConfig {
   input: InputBase;
   /**
    * Any fix command line arguments. There will be filled after all the values where given with
-   *
    *
    * @example
    * cmdArgs is `--demo`.
@@ -41,77 +35,113 @@ export interface PickPanelConfig {
 }
 
 /**
+ * Any optional additional elements for any liquibase command.
+ */
+export interface AdditionalCommandAction {
+  /**
+   * Additional command-line arguments for Liquibase, which don't need any input from any `PickPanelConfig`.
+   */
+  commandLineArgs?: ReadonlyArray<string>;
+
+  /**
+   * Any action that should be executed after the command was run successful, e.g. opening created files.
+   * @param dialogValues - the dialog values which contains all the user input from the dialog
+   */
+  afterCommandAction?: (dialogValues: DialogValues) => void;
+
+  /**
+   * Adds the "searchPath"-parameter to the command when needed.
+   */
+  searchPathRequired?: boolean;
+
+  /**
+   * Information, if the changelog path should not be built when coming from a right click menu.
+   * * If this property is there and `true`, then `--changelogFile` will not be added.
+   * * If this property is `false`, not there, or the interface is not there, then the `--changelogFile` will be added.
+   */
+  changelogPathIgnored?: boolean;
+}
+
+/**
  * Registers a Liquibase command with VSCode, prompting the user with a series of pick panels
  * based on the provided configurations and then executes Liquibase update with the selected values.
  *
  * @param action - Liquibase action to perform (e.g., "update").
- * @param pickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
+ * @param pOriginPickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
  * @param resourcePath - Path to the Liquibase JAR file.
- * @param args - Additional command-line arguments for Liquibase.
- * @param afterCommandAction - any action that should be executed after the command was run successful, e.g. opening created files
- * @param searchPathRequired - Adds the "searchPath"-parameter to the command (e.g., "update").
+ * @param additionalCommandAction - any optional additional elements for registering any command
  * @returns The registered command.
  */
 export function registerLiquibaseCommand(
   action: string,
-  pickPanelConfigs: PickPanelConfig[],
+  pOriginPickPanelConfigs: ReadonlyArray<PickPanelConfig>,
   resourcePath: string,
-  args?: string[],
-  afterCommandAction?: (dialogValues: DialogValues) => void,
-  searchPathRequired?: boolean,
+  additionalCommandAction?: AdditionalCommandAction
 ) {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
-    const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
+    // copy the origin pickPanelConfigs, because we might delete an element from them
+    const pickPanelConfigs = Array.from(pOriginPickPanelConfigs);
 
-
-    // detecht if we are coming from a context menu. if this is the case, the first command argument is a URI
+    // detect if we are coming from a context menu.
     let isRightClickMenuAction = false;
-    let uri;
-    if (commandArgs && commandArgs[0]) {
-      if (commandArgs[0] instanceof vscode.Uri) {
-        uri = commandArgs[0];
+    // and build any dialog values that we have given from the command args
+    const preBuiltDialogValues = new DialogValues();
+    // detect any command args. These can be values from the right click menu or from any other command calls during the extension.
+    for (const commandArg of commandArgs) {
+      if (commandArg instanceof vscode.Uri) {
+        // Right click menus has Uri
+        preBuiltDialogValues.uri = commandArg;
         isRightClickMenuAction = true;
-      }
-    }
+      } else if (commandArg instanceof TransferDataForCommand) {
+        // external data from any other command call
 
-    //execute dependant methods to get up-to-date-data
-    if (!args && searchPathRequired && !isRightClickMenuAction) {
-      args = [searchPath];
-    } else if (args && searchPathRequired && !isRightClickMenuAction) {
-      args.push(searchPath);
-    } else if (!args) {
-      args = [];
-    }
+        // find out the config we can delete
+        let indexToDelete = -1;
+        pickPanelConfigs.forEach((config, index) => {
+          if (config.input.name === commandArg.name) {
+            indexToDelete = index;
 
-    let propertyFilePath;
+            // if a config was found, set the new value
+            preBuiltDialogValues.addValue(config.input, commandArg.data);
+          }
+        });
 
-    // TODO schöner / anders bauen
-    if (commandArgs && commandArgs[0] && action === "validate") {
-      // adds the property file path from the commandArgs as property file path
-      propertyFilePath = commandArgs[0];
-
-      // and removes the question for connection type
-      let indexToDelete = -1;
-      pickPanelConfigs.forEach((config, index) => {
-        if (config.input instanceof ConnectionType) {
-          indexToDelete = index;
+        // delete the config, if it was found
+        if (indexToDelete !== -1) {
+          pickPanelConfigs.splice(indexToDelete);
         }
-      });
-      if (indexToDelete !== -1) {
-        pickPanelConfigs.splice(indexToDelete);
+      } else {
+        // XXX: this message will also appear, if everything was alright.
+        console.log(`Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`);
       }
+    }
+
+    // build the additional arguments
+    let args: string[] = [];
+    if (additionalCommandAction && additionalCommandAction.commandLineArgs) {
+      // add any given command line arguments
+      additionalCommandAction.commandLineArgs.forEach((pArg) => args.push(pArg));
+    }
+    if (additionalCommandAction && additionalCommandAction.searchPathRequired && !isRightClickMenuAction) {
+      // add the search path to the arguments
+      const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
+      args.push(searchPath);
     }
 
     try {
       // Handle the multi-step-input
-      const dialogValues = await handleMultiStepInput(pickPanelConfigs.map((pConfig) => pConfig.input), uri);
+      const dialogValues = await handleMultiStepInput(
+        pickPanelConfigs.map((pConfig) => pConfig.input),
+        preBuiltDialogValues
+      );
       if (!dialogValues) {
         return;
       }
 
+      let propertyFilePath: string | undefined;
       // go over the dialog values
       dialogValues.inputValues.forEach((value, input) => {
-        pickPanelConfigs
+        pOriginPickPanelConfigs
           .filter((pConfig) => pConfig.input.name === input)
           .forEach((pConfig) => {
             if (input === PROPERTY_FILE) {
@@ -132,37 +162,48 @@ export function registerLiquibaseCommand(
           });
       });
 
-      //TODO Beschreibung
-      if (uri) {
-        args.push("--changelogFile=" + path.basename(uri.fsPath));
-        args.push("-Dliquibase.searchPath=" + path.join(uri.fsPath, ".."));
+      if (dialogValues.uri) {
+        // if this was called from an right click menu, then handle some parameters differently
+
+        let ignoreChangelogPath: boolean = false;
+        if (additionalCommandAction && additionalCommandAction.changelogPathIgnored) {
+          ignoreChangelogPath = true;
+        }
+
+        if (!ignoreChangelogPath) {
+          args.push("--changelogFile=" + path.basename(dialogValues.uri.fsPath));
+        }
+        if (additionalCommandAction && additionalCommandAction.searchPathRequired) {
+          args.push("-Dliquibase.searchPath=" + path.join(dialogValues.uri.fsPath, ".."));
+        }
       }
 
-      // Execute Liquibase update with the final selections
-      executeJar(resourcePath, action, args, propertyFilePath).then((code) => {
-        if (code === 0) {
-          vscode.window
-            .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
-            .then((result) => {
-              if (result && result === "Show log") {
-                outputStream.show(true);
-              }
-            });
-        } else {
-          vscode.window.showWarningMessage(
-            `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`
-          );
-          outputStream.show();
-        }
+      if (propertyFilePath) {
+        // Execute Liquibase update with the final selections
+        executeJar(resourcePath, action, args, propertyFilePath).then((code) => {
+          if (code === 0) {
+            vscode.window
+              .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
+              .then((result) => {
+                if (result && result === "Show log") {
+                  outputStream.show(true);
+                }
+              });
+          } else {
+            vscode.window.showWarningMessage(
+              `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`
+            );
+            outputStream.show();
+          }
 
-        // execute any action after the execution
-        if (afterCommandAction) {
-          afterCommandAction(dialogValues);
-        }
-
-
-        args = []; //empty the args array for continues usage
-      });
+          // execute any action after the execution
+          if (additionalCommandAction && additionalCommandAction.afterCommandAction) {
+            additionalCommandAction.afterCommandAction(dialogValues);
+          }
+        });
+      } else {
+        console.log("No property file path given. Command could not be executed");
+      }
     } catch (error) {
       console.error("Error: " + error);
     }
