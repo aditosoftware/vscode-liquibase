@@ -1,6 +1,6 @@
 import { DialogValues, InputBase } from "..";
 import * as vscode from "vscode";
-import { readConfiguration } from "../../handleLiquibaseSettings";
+import { readConfiguration } from "../../configuration/crud/readConfiguration";
 
 /**
  * Name used for the normal property file.

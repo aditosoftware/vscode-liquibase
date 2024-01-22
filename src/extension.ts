@@ -16,7 +16,7 @@ import {
   generateCommandLineArgs,
   openFileAfterCommandExecution,
   openIndexHtmlAfterCommandExecution,
-} from "./helperCommands";
+} from "./liquibaseCommandsUtilities";
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 

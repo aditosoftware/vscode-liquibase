@@ -3,8 +3,8 @@ import { addToLiquibaseConfiguration } from "./configuration/crud/createAndAddCo
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { isWindows } from "./utilities/osUtilities";
 import * as path from "path";
-import { getDefaultDatabaseForConfiguration, getLiquibaseFolder, updateConfiguration } from "./handleLiquibaseSettings";
-import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/crud/readConfiguration";
+import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "./handleLiquibaseSettings";
+import { getPathOfConfiguration, readLiquibaseConfigurationNames, updateConfiguration } from "./configuration/crud/readConfiguration";
 import * as fs from "fs";
 import {
   ConfirmationDialog,

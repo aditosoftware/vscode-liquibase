@@ -2,7 +2,6 @@ import path from "path";
 import { DialogValues, folderSelectionName } from "./input";
 import { openDocument } from "./utilities/vscodeUtilities";
 import * as vscode from "vscode";
-// TODO filename
 
 /**
  * The name that should be used for any file name input.

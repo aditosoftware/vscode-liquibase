@@ -2,11 +2,11 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
 import { Driver } from "../drivers";
-import { getLiquibaseConfigurationPath, updateConfiguration } from "../../handleLiquibaseSettings";
+import { getLiquibaseConfigurationPath } from "../../handleLiquibaseSettings";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../transfer/transferData";
-import { readLiquibaseConfigurationNames } from "./readConfiguration";
+import { readLiquibaseConfigurationNames, updateConfiguration } from "./readConfiguration";
 import { resourcePath } from "../../extension";
 import { openDocument } from "../../utilities/vscodeUtilities";
 
