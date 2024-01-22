@@ -99,7 +99,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
  * @param pDriver - the driver that need to be included in the classpath.
  * @returns the generated absolute path to the driver file
  */
-function buildDriverPath(pDriver: Driver): string | undefined {
+export function buildDriverPath(pDriver: Driver): string | undefined {
   if (resourcePath) {
     return path.join(resourcePath, pDriver.getFileName());
   }

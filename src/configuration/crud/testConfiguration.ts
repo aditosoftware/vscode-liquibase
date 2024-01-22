@@ -6,6 +6,7 @@ import path from "path";
 import * as os from "os";
 import { PROPERTY_FILE } from "../../input";
 import { TransferDataForCommand } from "../../registerLiquibaseCommand";
+import { buildDriverPath } from "./createAndAddConfiguration";
 
 /**
  * Tests a existing liquibase configuration.
@@ -23,7 +24,7 @@ export async function testLiquibaseConnection(pConfiguration: string | Liquibase
     const tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), "liquibase"));
     const tempFilePath = path.join(tempFolder, "temporary.liquibase.properties");
 
-    fs.writeFileSync(tempFilePath, pConfiguration.generateProperties(), "utf-8");
+    fs.writeFileSync(tempFilePath, pConfiguration.generateProperties(buildDriverPath), "utf-8");
 
     await doTestLiquibaseConnection(tempFilePath);
 

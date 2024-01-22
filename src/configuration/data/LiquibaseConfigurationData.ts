@@ -209,11 +209,11 @@ export class LiquibaseConfigurationData {
   /**
    * Creates the properties text for saving in a file or previewing.
    * @param pBuildDriverPath - function to build the driver path.
-   * // TODO correct? or build also when Preview?
-   * There should be no function, when this function is only used to create a preview.
+   * This function can not be implemented in the data classes,
+   * because building the path requires the `path` module and this is not allowed in classes that are used in a webview.
    * @returns the created properties file as a string
    */
-  generateProperties(pBuildDriverPath?: (pDriver: Driver) => string | undefined): string {
+  generateProperties(pBuildDriverPath: (pDriver: Driver) => string | undefined): string {
     const propertiesEditor = this.generatePropertiesEditor(pBuildDriverPath);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
@@ -224,10 +224,11 @@ export class LiquibaseConfigurationData {
   /**
    * Creates the properties editor for the given configuration.
    *  @param pBuildDriverPath - function to build the driver path.
-   * There should be no function, when this function is only used to create a preview.
+   * This function can not be implemented in the data classes,
+   * because building the path requires the `path` module and this is not allowed in classes that are used in a webview.
    * @returns the created properties
    */
-  private generatePropertiesEditor(pBuildDriverPath?: (pDriver: Driver) => string | undefined): PropertiesEditor {
+  private generatePropertiesEditor(pBuildDriverPath: (pDriver: Driver) => string | undefined): PropertiesEditor {
     // Build the properties
     const properties: PropertiesEditor = new PropertiesEditor("");
 

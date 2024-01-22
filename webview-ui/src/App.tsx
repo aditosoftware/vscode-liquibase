@@ -21,6 +21,7 @@ import {
 import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
 import { MessageData, MessageType } from "../../src/configuration/transfer/transferData";
+import path from "path";
 
 function App() {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
@@ -114,8 +115,9 @@ function App() {
   useEffect(() => {
     const fetchData = () => {
       try {
-        const result = data.generateProperties();
-        setPreviewData(result);
+        // do not add any values for the driver, because we can not build them here (path is not allowed!)
+        // XXX Improve by? Send Message to Extension for generation and get back generated elements?
+        setPreviewData(data.generateProperties(() => undefined));
       } catch (error) {
         console.error(error);
       }

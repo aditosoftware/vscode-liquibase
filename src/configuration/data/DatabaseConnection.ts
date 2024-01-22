@@ -124,7 +124,7 @@ export class DatabaseConnection {
   writeDataForConnection(
     properties: PropertiesEditor,
     pReferenceConnection: boolean,
-    pBuildDriverPath?: (pDriver: Driver) => string | undefined
+    pBuildDriverPath: (pDriver: Driver) => string | undefined
   ): string | undefined {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
     Object.entries(this).forEach(([key, value]) => {
@@ -145,7 +145,7 @@ export class DatabaseConnection {
   private writeDriverConfigurationAndDownload(
     pProperties: PropertiesEditor,
     pIsReferenceConnection: boolean,
-    pBuildDriverPath?: (pDriver: Driver) => string | undefined
+    pBuildDriverPath: (pDriver: Driver) => string | undefined
   ): string | undefined {
     const databaseType: string = this.databaseType;
 
@@ -159,10 +159,8 @@ export class DatabaseConnection {
           databaseDriver.driverClass
         );
 
-        // download driver when function is there
-        if (pBuildDriverPath) {
-          return pBuildDriverPath(databaseDriver);
-        }
+        // build the path for the driver
+        return pBuildDriverPath(databaseDriver);
       }
     }
   }
