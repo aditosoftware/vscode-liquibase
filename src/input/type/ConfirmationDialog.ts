@@ -13,7 +13,7 @@ export class ConfirmationDialog extends InputBase {
   private fixedMessage?: string;
 
   /**
-   * A message that is dynamically created based on the dialog values.
+   * A message that is dynamically created based on other dialog values.
    */
   private generateMessage?: GenerateMessage;
 
@@ -35,6 +35,7 @@ export class ConfirmationDialog extends InputBase {
     _currentStep: number,
     _maximumStep: number
   ): Promise<boolean | undefined> {
+    // generate the message for the dialog
     let message;
     if (this.fixedMessage) {
       message = this.fixedMessage;
@@ -45,6 +46,7 @@ export class ConfirmationDialog extends InputBase {
       message = "Are you sure?";
     }
 
+    // show the dialog and only return true, if Yes was selected
     const answer = await vscode.window.showInformationMessage(message, "Yes", "No");
     if (answer === "Yes") {
       return true;

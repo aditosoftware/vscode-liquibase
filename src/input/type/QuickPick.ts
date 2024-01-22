@@ -1,17 +1,19 @@
 import { DialogValues, InputBase } from "..";
 import * as vscode from "vscode";
 
-type QuickPickItems = (currentResults: DialogValues) => Promise<vscode.QuickPickItem[]> | vscode.QuickPickItem[];
+type QuickPickItemFunction = (currentResults: DialogValues) => Promise<vscode.QuickPickItem[]> | vscode.QuickPickItem[];
 
 /**
  * Any quick pick that is not an selection of an connection.
  */
 export class QuickPick extends InputBase {
   private allowMultiple: boolean;
-  private generateItems: QuickPickItems;
+  private generateItems: QuickPickItemFunction;
+  private title: string;
 
-  constructor(name: string, allowMultiple: boolean, generateItems: QuickPickItems) {
+  constructor(name: string, title: string, allowMultiple: boolean, generateItems: QuickPickItemFunction) {
     super(name);
+    this.title = title;
     this.allowMultiple = allowMultiple;
     this.generateItems = generateItems;
   }
@@ -25,10 +27,8 @@ export class QuickPick extends InputBase {
 
     const result: vscode.QuickPickItem | vscode.QuickPickItem[] | undefined = await vscode.window.showQuickPick(items, {
       canPickMany: this.allowMultiple,
-      title: `Select one item${this.allowMultiple ? " or more items" : ""} - ${this.generateStepOutput(
-        currentStep,
-        maximumStep
-      )}`,
+      title: `${this.title} -  ${this.generateStepOutput(currentStep, maximumStep)}`,
+      placeHolder: `Select one ${this.allowMultiple ? "or more items" : "item"}`,
     });
 
     if (result) {

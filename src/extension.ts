@@ -5,14 +5,19 @@ import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { ConfirmationDialog, ConnectionType, DialogValues, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
+import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
 import {
   testLiquibaseConfiguration,
   addExistingLiquibaseConfiguration,
   editExistingLiquibaseConfiguration,
   removeExistingLiquibaseConfiguration,
 } from "./configurationCommands";
-import { fileName, folderSelection, generateCommandLineArgs, openFileAfterCommandExecution } from "./helperCommands";
+import {
+  fileName,
+  generateCommandLineArgs,
+  openFileAfterCommandExecution,
+  openIndexHtmlAfterCommandExecution,
+} from "./helperCommands";
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
@@ -71,7 +76,7 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new QuickPick("context", true, readContextValues),
+          input: new QuickPick("context", "Choose any context", true, readContextValues),
           cmdArgs: "--contexts",
         },
       ],
@@ -123,7 +128,7 @@ export async function activate(context: vscode.ExtensionContext) {
             getReferenceKeysFromPropertyFile(dialogValues.inputValues.get(REFERENCE_PROPERTY_FILE)?.[0]),
         },
         {
-          input: new QuickPick("diffTypes", true, () => diffTypes),
+          input: new QuickPick("diffTypes", "Choose any diff types", true, () => diffTypes),
           cmdArgs: "--diff-types",
         },
       ],
@@ -138,7 +143,7 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog(folderSelection, {
+          input: new OpenDialog({
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
@@ -147,12 +152,13 @@ export async function activate(context: vscode.ExtensionContext) {
         },
         {
           input: new InputBox(fileName, {
-            placeHolder: "File Name",
+            title: "Choose a File Name",
+            placeHolder: "any file name with an extension",
             value: "changelog.xml",
           }),
           createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
         },
-        //  TODO other file endings don't work. Find out why
+        //  TODO other file endings except xml don't work. Find out why
         // {
         //   input: new QuickPick("possibleFormat", false, () => possibleFormats),
         // },
@@ -169,7 +175,7 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog("folderSelection", {
+          input: new OpenDialog({
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
@@ -177,17 +183,9 @@ export async function activate(context: vscode.ExtensionContext) {
           cmdArgs: "--output-directory",
         },
       ],
-      resourcePath, [],
-      async (dialogValues: DialogValues) => {
-        // open the index.html, when the command was finished
-        const folder = dialogValues.inputValues.get("folderSelection")?.[0];
-
-        if (folder) {
-          const fullPath = path.join(folder, "index.html");
-          const uri = vscode.Uri.file(fullPath);
-          await vscode.env.openExternal(uri)
-        }
-      }
+      resourcePath,
+      [],
+      openIndexHtmlAfterCommandExecution
     );
 
     let unexpectedChangesetsDisposable = registerLiquibaseCommand(
@@ -228,28 +226,32 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog(folderSelection, {
+          input: new OpenDialog({
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
           }),
         },
         {
-          input: new InputBox(fileName,
-            {
-              title: "The file name where your history should be written",
-              value: "history.txt"
-            }
-          ),
+          input: new InputBox(fileName, {
+            title: "The file name where your history should be written",
+            placeHolder: "any file name with extension",
+            value: "history.txt",
+          }),
           createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
         },
         {
-          input: new QuickPick("historyFormat", false, () => [
-            { label: "TABULAR", picked: true, detail: "This groups changesets by deployment ID and displays other information in individual table cell." },
+          input: new QuickPick("historyFormat", "Choose the desired history format", false, () => [
+            {
+              label: "TABULAR",
+              picked: true,
+              detail:
+                "This groups changesets by deployment ID and displays other information in individual table cell.",
+            },
             { label: "TEXT", detail: "This displays the output as plain text." },
           ]),
           cmdArgs: "--format",
-        }
+        },
       ],
       resourcePath,
       [],
@@ -263,7 +265,9 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new InputBox("tagName", "Name of the Tag"),
+          input: new InputBox("tagName", {
+            title: "Choose a name of new Tag",
+          }),
           cmdArgs: "--tag",
         },
       ],
@@ -277,7 +281,9 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new InputBox("tagName", "Tag to check if it exists"),
+          input: new InputBox("tagName", {
+            title: "Tag to check if it exists",
+          }),
           cmdArgs: "--tag",
         },
       ],
@@ -291,7 +297,9 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new InputBox("tagName", "Tag to rollback to"),
+          input: new InputBox("tagName", {
+            title: "Tag to rollback to",
+          }),
           cmdArgs: "--tag",
         },
       ],
@@ -305,21 +313,20 @@ export async function activate(context: vscode.ExtensionContext) {
           input: new ConnectionType("propertyFile"),
         },
         {
-          input: new OpenDialog(folderSelection, {
+          input: new OpenDialog({
             canSelectFiles: false,
             canSelectFolders: true,
             canSelectMany: false,
           }),
         },
         {
-          input: new InputBox(fileName,
-            {
-              title: "The file name where your update sql should be written",
-              value: "update-sql.sql"
-            }
-          ),
+          input: new InputBox(fileName, {
+            title: "The file name where your update sql should be written",
+            placeHolder: "any filename with extension",
+            value: "update-sql.sql",
+          }),
           createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
-        }
+        },
       ],
       resourcePath,
       [],
@@ -342,7 +349,7 @@ export async function activate(context: vscode.ExtensionContext) {
       tagDisposable,
       tagExistsDisposable,
       rollbackDisposable,
-      updateSQLDisposable,
+      updateSQLDisposable
     );
   });
 }

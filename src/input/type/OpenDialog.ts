@@ -2,12 +2,17 @@ import { DialogValues, InputBase } from "..";
 import * as vscode from "vscode";
 
 /**
+ * The name that should be used for any folder selection.
+ */
+export const folderSelectionName = "folderSelection";
+
+/**
  * Input for any Open Dialog (files and directory).
  */
 export class OpenDialog extends InputBase {
   private openDialogOptions: vscode.OpenDialogOptions;
 
-  constructor(name: string, openDialogOptions: vscode.OpenDialogOptions) {
+  constructor(openDialogOptions: vscode.OpenDialogOptions, name: string = folderSelectionName) {
     super(name);
     this.openDialogOptions = openDialogOptions;
   }

@@ -7,15 +7,9 @@ import * as vscode from "vscode";
 export class InputBox extends InputBase {
   private inputBoxOptions: vscode.InputBoxOptions;
 
-  constructor(name: string, placeholder: string);
-  constructor(name: string, inputBoxOptions: vscode.InputBoxOptions);
-  constructor(name: string, option: vscode.InputBoxOptions | string) {
+  constructor(name: string, inputBoxOptions: vscode.InputBoxOptions) {
     super(name);
-    if (typeof option === "string") {
-      this.inputBoxOptions = { placeHolder: option };
-    } else {
-      this.inputBoxOptions = option;
-    }
+    this.inputBoxOptions = inputBoxOptions;
   }
 
   async showDialog(
@@ -24,10 +18,13 @@ export class InputBox extends InputBase {
     maximumStep: number
   ): Promise<string | undefined> {
     const stepOutput = this.generateStepOutput(currentStep, maximumStep);
+
+    // add the step indicator to the title
     if (this.inputBoxOptions.title) {
       this.inputBoxOptions.title += ` ${stepOutput}`;
     } else {
-      this.inputBoxOptions.title = `Choose a name - ${stepOutput}`; // XXX passt das für alles?
+      // fallback, if no title was given
+      this.inputBoxOptions.title = `Choose a value - ${stepOutput}`;
     }
 
     return await vscode.window.showInputBox(this.inputBoxOptions);

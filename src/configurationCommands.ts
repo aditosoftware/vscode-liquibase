@@ -113,16 +113,21 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
   const locationKey = "location";
 
   const inputs = [
-    new InputBox(nameKey, "the unique name for your configuration"),
-    new OpenDialog(locationKey, {
-      title: "Location of your existing liquibase.properties file",
-      canSelectFiles: true,
-      canSelectFolders: false,
-      canSelectMany: false,
-      filters: {
-        "Liquibase Properties": ["properties"],
-      },
+    new InputBox(nameKey, {
+      title: "The unique name for your configuration",
     }),
+    new OpenDialog(
+      {
+        title: "Location of your existing liquibase.properties file",
+        canSelectFiles: true,
+        canSelectFolders: false,
+        canSelectMany: false,
+        filters: {
+          "Liquibase Properties": ["properties"],
+        },
+      },
+      locationKey
+    ),
   ];
 
   const dialogValues = await handleMultiStepInput(inputs);
@@ -148,7 +153,7 @@ export async function removeExistingLiquibaseConfiguration() {
 
   const inputs = [
     new ConnectionType("propertyFile"),
-    new QuickPick(removeType, false, () => {
+    new QuickPick(removeType, "Choose how you wish to remove the connection", false, () => {
       return [
         {
           label: setting,

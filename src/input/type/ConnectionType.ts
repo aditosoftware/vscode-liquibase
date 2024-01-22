@@ -26,12 +26,12 @@ export class ConnectionType extends InputBase {
   ): Promise<string | undefined> {
     const configurations: vscode.QuickPickItem[] | undefined = await this.generateItems();
 
-    // TODO detail good in dialog?
+    const title: string = `Select one ${this.name === REFERENCE_PROPERTY_FILE ? "reference " : ""}system`;
 
     if (configurations && configurations.length !== 0) {
       const selectedConnection: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(configurations, {
-        title: `Select the system ${this.generateStepOutput(currentStep, maximumStep)}`,
-        placeHolder: "Pick your desired system",
+        title: `${title} ${this.generateStepOutput(currentStep, maximumStep)}`,
+        placeHolder: "Pick any system",
         canPickMany: false,
       });
 
@@ -51,13 +51,15 @@ export class ConnectionType extends InputBase {
     const configuration = await readConfiguration();
 
     if (configuration) {
-      return Object.keys(configuration).map((key) => {
-        const path = configuration[key];
-        return {
-          label: key,
-          detail: path,
-        };
-      });
+      return Object.keys(configuration)
+        .sort()
+        .map((key) => {
+          const path = configuration[key];
+          return {
+            label: key,
+            detail: path,
+          };
+        });
     }
   }
 }
