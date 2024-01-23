@@ -14,3 +14,4 @@ eslint-results.json
 
 # locally downloaded jar files during devolopment
 src/resources/**/*.jar
+resources/**/*.jar

@@ -33,8 +33,7 @@ export let resourcePath: string;
  */
 export async function activate(context: vscode.ExtensionContext) {
   // Constructing the path to the resources folder within the extension
-
-  resourcePath = path.join(context.extensionPath, "src", "resources");
+  resourcePath = path.join(context.extensionPath, "resources");
 
   // TODO remove when no longer needed
   const possibleFormats: vscode.QuickPickItem[] = [
