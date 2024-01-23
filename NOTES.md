@@ -13,6 +13,7 @@
 - Ordner, in dem Liquibase-Dateien liegen, auch zum Classpath hinzufügen? Konfigurierbar? Default workspace?
 - In Web-IDE funktionsfähig? Wenn nein, dann Extension einschränken!
 - unnötige Readme.md in Unterordner löschen
+- db-doc --> Tabelle auswählen -> Column auswählen -> zuzeit ungültige Datei -> Vor Dateiöffnung Ordner noch passend verschieben!
 
 # Sonstige Notizen
 

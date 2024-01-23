@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-  <changeSet author="a.riedl" id="e03b89e1-f7d1-43a8-9e60-e043d6eae241" >
-      <addColumn tableName="PRODUCT">
-          <column name="DIGITAL" type="CHAR(1)"/>
-      </addColumn>
-  </changeSet>
-</databaseChangeLog>

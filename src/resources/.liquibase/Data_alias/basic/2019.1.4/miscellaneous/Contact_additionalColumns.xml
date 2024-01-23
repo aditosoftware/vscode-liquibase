@@ -1,9 +1,0 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    
-    <changeSet author="j.goderbauer" id="bd41fff1-d139-41ea-ad0f-b30b77d69690">
-        <addColumn tableName="CONTACT">
-            <column name="LETTERSALUTATION" type="NVARCHAR(200)" />
-        </addColumn>
-    </changeSet>
-</databaseChangeLog>

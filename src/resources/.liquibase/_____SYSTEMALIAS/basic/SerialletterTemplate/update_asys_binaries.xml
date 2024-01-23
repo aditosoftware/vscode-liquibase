@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
-  <changeSet author="s.pongratz" id="67bc1e8f-67db-4c1e-abc7-b3b0ee16b2f6">
-      <update tableName="ASYS_BINARIES" >
-          <column name="KEYWORD" value="SERIALLETTER_TEMPLATE"/>
-          <where>ASYS_BINARIES.TABLENAME='SERIALLETTER' AND ASYS_BINARIES.CONTAINERNAME='SERIALLETTERFILE' AND ASYS_BINARIES.KEYWORD IS NULL</where>
-      </update>
-  </changeSet>
-</databaseChangeLog>

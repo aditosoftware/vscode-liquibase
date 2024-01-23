@@ -1,9 +1,0 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="d.tran" id="f420d656-da64-4ac2-aa10-8ce529479240">
-        <update tableName="AB_OBJECTRELATIONTYPE">
-            <column name="RELATION_TITLE" value="grandchild of" />
-            <where>AB_OBJECTRELATIONTYPEID = 'a2296f93-2371-4ab8-9f29-ef0795d1e9b2'</where>
-        </update>
-    </changeSet>
-</databaseChangeLog>

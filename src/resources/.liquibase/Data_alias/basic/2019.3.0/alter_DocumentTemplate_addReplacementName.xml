@@ -1,9 +1,0 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="j.hoermann" id="2d219d03-2822-4d61-804f-c060d56fcb9f">
-        <addColumn tableName="DOCUMENTTEMPLATE">
-            <column name="REPLACEMENTNAME" type="NVARCHAR(50)"/>
-        </addColumn>
-    </changeSet>
-</databaseChangeLog>

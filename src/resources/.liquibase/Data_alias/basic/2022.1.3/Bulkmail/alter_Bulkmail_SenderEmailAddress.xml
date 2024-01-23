@@ -1,8 +1,0 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-  <changeSet author="a.fraeder" id="7af811cb-a21e-49a5-a3c7-8f452ecf51dd">
-    <modifyDataType tableName="BULKMAIL" columnName="SENDER_EMAIL_ADDRESS" newDataType="VARCHAR(100)"/>
-  </changeSet>
-</databaseChangeLog>

@@ -1,9 +1,0 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="a.loreth" id="31d7b6f2-c376-4bfa-ba42-9aab6f07737c">
-        <addColumn tableName="ACTIVITY">
-            <column name="PARENT_CONTEXT" type="VARCHAR(64)"/>
-            <column name="PARENT_ID" type="CHAR(36)"/>
-        </addColumn>
-    </changeSet>
-</databaseChangeLog>

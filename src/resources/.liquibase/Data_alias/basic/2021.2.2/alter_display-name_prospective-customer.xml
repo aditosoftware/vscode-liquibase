@@ -1,9 +1,0 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-    <changeSet author="d.tran" id="5e9314bc-291b-4396-a155-e1a06afcbb1c">
-        <update tableName="AB_ATTRIBUTE">
-            <column name="ATTRIBUTE_NAME" value="Existing customer" />
-            <where>AB_ATTRIBUTEID = 'be3b5fe2-2146-4eab-80a4-3c1cf4d6156a'</where>
-        </update>
-    </changeSet>
-</databaseChangeLog>

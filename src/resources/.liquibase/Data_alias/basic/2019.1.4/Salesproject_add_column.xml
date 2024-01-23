@@ -1,9 +1,0 @@
-<?xml version="1.1" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-	<changeSet author="m.hofmann" id="e148d42d-ba3c-4cb7-a414-f2da9a9f2ae0">
-            <addColumn tableName="SALESPROJECT">
-                    <!-- space for 13 entries as Multistring encoded -->
-            <column name="REASONS" type="VARCHAR(498)"/>
-        </addColumn>
-    </changeSet>
-</databaseChangeLog>
