@@ -71,15 +71,21 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // Command that will be executed when the extension command is triggered
     context.subscriptions.push(
-      registerLiquibaseCommand("update", [
+      registerLiquibaseCommand(
+        "update",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+          {
+            input: new QuickPick("context", "Choose any context", true, readContextValues),
+            cmdArgs: "--contexts",
+          },
+        ],
         {
-          input: new ConnectionType("propertyFile"),
-        },
-        {
-          input: new QuickPick("context", "Choose any context", true, readContextValues),
-          cmdArgs: "--contexts",
-        },
-      ]),
+          searchPathRequired: true,
+        }
+      ),
 
       registerLiquibaseCommand(
         "drop-all",
