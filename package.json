@@ -1,7 +1,7 @@
 {
   "name": "liquibase",
   "displayName": "Liquibase",
-  "description": "execute liquibase changelogs",
+  "description": "Execute liquibase changelogs and create liquibase.properties",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.84.0"
@@ -43,7 +43,7 @@
       },
       {
         "command": "liquibase.db-doc",
-        "title": "db-doc",
+        "title": "Generate database documentation",
         "category": "Liquibase"
       },
       {
@@ -73,7 +73,7 @@
       },
       {
         "command": "liquibase.tag",
-        "title": "Tag",
+        "title": "Create Tag",
         "category": "Liquibase"
       },
       {
@@ -83,7 +83,7 @@
       },
       {
         "command": "liquibase.rollback",
-        "title": "Rollback",
+        "title": "Rollback to Tag",
         "category": "Liquibase"
       },
       {
