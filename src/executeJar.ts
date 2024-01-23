@@ -67,14 +67,12 @@ export function executeJar(
 
         childProcess.stdout.on("data", (data) => {
           stdoutData += data;
-          outputStream.appendLine(`${data}`);
-          progress.report({ message: `${data}` });
+          addToOutput(data, progress);
         });
 
         childProcess.stderr.on("data", (data) => {
           stderrData += data;
-          outputStream.appendLine(`${data}`);
-          progress.report({ message: `${data}` });
+          addToOutput(data, progress);
         });
 
         childProcess.on("close", (code) => {
@@ -98,4 +96,22 @@ export function executeJar(
       });
     }
   );
+}
+
+/**
+ * Writes any messages from stdout and stderr to the output.
+ * @param data - the data that should be written to any output
+ * @param progress - the progress where some messages should be written
+ */
+function addToOutput(data: any, progress: vscode.Progress<{ message: string | undefined }>) {
+  const line: string = `${data}`;
+
+  // append any message to the output stream
+  outputStream.appendLine(line);
+
+  if (!line.includes("WARNING: License service not loaded") && !line.includes("#####")) {
+    // Filter out lines with warnings of liquibase service and ####.
+    // Everything else, print to the progress
+    progress.report({ message: line });
+  }
 }

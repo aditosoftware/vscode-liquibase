@@ -52,7 +52,7 @@ export class ConnectionType extends InputBase {
 
     if (configuration) {
       return Object.keys(configuration)
-        .sort()
+        .sort((a, b) => a.localeCompare(b))
         .map((key) => {
           const path = configuration[key];
           return {
