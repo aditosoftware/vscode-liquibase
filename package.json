@@ -209,8 +209,8 @@
     "immer": "^10.0.3",
     "properties-file": "^3.3.15",
     "use-immer": "^0.9.0",
-    "xml2js": "0.6.2",
-    "xml-js": "1.6.11"
+    "xml-js": "1.6.11",
+    "xml2js": "0.6.2"
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
@@ -224,6 +224,7 @@
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.8",
     "eslint": "^8.54.0",
+    "eslint-plugin-tsdoc": "^0.2.17",
     "typescript": "^5.3.2"
   }
 }

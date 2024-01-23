@@ -20,7 +20,7 @@ export async function handleMultiStepInput(
   }
 
   for (const input of inputs) {
-    let result = await input.showDialog(dialogValues, currentStep, inputs.length);
+    const result = await input.showDialog(dialogValues, currentStep, inputs.length);
 
     if (!result) {
       // User canceled the selection

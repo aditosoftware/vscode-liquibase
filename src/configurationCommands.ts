@@ -4,7 +4,11 @@ import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPane
 import { isWindows } from "./utilities/osUtilities";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "./handleLiquibaseSettings";
-import { getPathOfConfiguration, readLiquibaseConfigurationNames, updateConfiguration } from "./configuration/crud/readConfiguration";
+import {
+  getPathOfConfiguration,
+  readLiquibaseConfigurationNames,
+  updateConfiguration,
+} from "./configuration/crud/readConfiguration";
 import * as fs from "fs";
 import {
   ConfirmationDialog,
@@ -119,8 +123,8 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
   const dialogValues = await handleMultiStepInput(inputs);
 
   if (dialogValues) {
-    let name = dialogValues.inputValues.get(nameKey)?.[0];
-    let location = dialogValues.inputValues.get(locationKey)?.[0];
+    const name = dialogValues.inputValues.get(nameKey)?.[0];
+    const location = dialogValues.inputValues.get(locationKey)?.[0];
 
     if (name && location) {
       addToLiquibaseConfiguration(name, location);
@@ -150,7 +154,7 @@ export async function removeExistingLiquibaseConfiguration() {
       ];
     }),
     new ConfirmationDialog((dialogValues) => {
-      let deletionMode = dialogValues.inputValues.get(removeType)?.[0];
+      const deletionMode = dialogValues.inputValues.get(removeType)?.[0];
 
       return `Are you sure you want to delete your configuration? This will remove it from the following: ${deletionMode}`;
     }),

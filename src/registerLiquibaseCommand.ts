@@ -117,7 +117,7 @@ export function registerLiquibaseCommand(
     }
 
     // build the additional arguments
-    let args: string[] = [];
+    const args: string[] = [];
     if (additionalCommandAction && additionalCommandAction.commandLineArgs) {
       // add any given command line arguments
       additionalCommandAction.commandLineArgs.forEach((pArg) => args.push(pArg));

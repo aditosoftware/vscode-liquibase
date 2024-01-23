@@ -14,7 +14,7 @@ import { readChangelogAndClasspathFile } from "./configuration/data/readFromProp
  * @returns A Promise that resolves to an array of QuickPickItem objects representing the context values.
  */
 export async function readContextValues(currentResults: DialogValues): Promise<QuickPickItem[]> {
-  let liquibasePropertiesPath = currentResults.inputValues.get(PROPERTY_FILE)?.[0];
+  const liquibasePropertiesPath = currentResults.inputValues.get(PROPERTY_FILE)?.[0];
 
   if (!liquibasePropertiesPath) {
     return [];

@@ -7,8 +7,6 @@ import { isWindows } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
-import * as vscode from "vscode";
-import path from "path";
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
 
 /**

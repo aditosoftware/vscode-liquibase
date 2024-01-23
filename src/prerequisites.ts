@@ -80,7 +80,7 @@ function getRequiredFiles() {
     "https://repo1.maven.org/maven2/org/liquibase/liquibase-core/4.24.0/liquibase-core-4.24.0.jar"
   );
   requiredFiles.set("picocli-4.7.5.jar", "https://repo1.maven.org/maven2/info/picocli/picocli/4.7.5/picocli-4.7.5.jar");
-  ALL_DRIVERS.forEach((value, key) => {
+  ALL_DRIVERS.forEach((value) => {
     requiredFiles.set(value.getFileName(), value.urlForDownload);
   });
   return requiredFiles;

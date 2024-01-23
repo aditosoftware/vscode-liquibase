@@ -103,7 +103,7 @@ export function executeJar(
  * @param data - the data that should be written to any output
  * @param progress - the progress where some messages should be written
  */
-function addToOutput(data: any, progress: vscode.Progress<{ message: string | undefined }>) {
+function addToOutput(data: unknown, progress: vscode.Progress<{ message: string | undefined }>) {
   const line: string = `${data}`;
 
   // append any message to the output stream
