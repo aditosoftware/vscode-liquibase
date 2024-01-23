@@ -82,7 +82,6 @@ async function readValuesFromFile(possibleFile: string): Promise<vscode.QuickPic
  * @returns A string representing the normalized path of the workspace folder.
  */
 export function getWorkFolder() {
-  // TODO hier liquibase-Ordner aus den Settings heranziehen? Benötigt? export notwendig?
   const activeTextEditor = vscode.window.activeTextEditor;
 
   if (activeTextEditor) {

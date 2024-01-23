@@ -27,7 +27,7 @@ class VSCodeAPIWrapper {
    * @remarks When running webview code inside a web browser, postMessage will instead
    * log the given message to the console.
    *
-   * @param message Arbitrary data (must be JSON serializable) to send to the extension context.
+   * @param message - Arbitrary data (must be JSON serializable) to send to the extension context.
    */
   public postMessage(message: MessageData) {
     if (this.vsCodeApi) {
@@ -38,9 +38,9 @@ class VSCodeAPIWrapper {
   }
 
   /**
-   * Adds an listener to the incoming message. When a correct message comes, 
+   * Adds an listener to the incoming message. When a correct message comes,
    * it will be parsed to MessageData and be handled by the given function.
-   * 
+   *
    * @param handleMessageData - the function to handle the message data
    */
   public addMessageListener(handleMessageData: (pMessageData: MessageData) => void): void {
@@ -78,7 +78,7 @@ class VSCodeAPIWrapper {
    * @remarks When running webview source code inside a web browser, setState will set the given
    * state using local storage (https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
    *
-   * @param newState New persisted state. This must be a JSON serializable object. Can be retrieved
+   * @param newState - New persisted state. This must be a JSON serializable object. Can be retrieved
    * using {@link getState}.
    *
    * @return The new state.
