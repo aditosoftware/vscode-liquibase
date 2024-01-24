@@ -63,9 +63,8 @@ vscode.window.showInformationMessage(
 - Macht drop-all auf Kontext Sinn?
 - Weitere commands auf Context-Menü-Actions?
 
-
 # Feedback
 
 ## SK
 
-- Create Liquibase Configuration: Bei Auswahl des Datenbanktypes einen Teil der jdbc-Url vorausfüllen? (`jdbc:mariadb://`)
+- (done) Create Liquibase Configuration: Bei Auswahl des Datenbanktypes einen Teil der jdbc-Url vorausfüllen? (`jdbc:mariadb://`)

@@ -1,5 +1,11 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
-import { VSCodeDivider, VSCodeTextField, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react";
+import {
+  VSCodeDivider,
+  VSCodeTextField,
+  VSCodeDropdown,
+  VSCodeOption,
+  VSCodeButton,
+} from "@vscode/webview-ui-toolkit/react";
 import { DatabaseConnection } from "../../../src/configuration/data/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER, ALL_DRIVERS } from "../../../src/configuration/drivers";
 
@@ -48,6 +54,14 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
             "The url of the database",
             "For example: jdbc:mariadb://localhost:3306/data"
           )}
+          <VSCodeButton
+            disabled={pProperties.databaseConnection?.databaseType === NO_PRE_CONFIGURED_DRIVER}
+            formnovalidate={true}
+            onClick={() => generateBasicUrlForDriver(pProperties)}
+            appearance="secondary">
+            Generate basic url for selected database type
+            <span slot="start" className="codicon codicon-database"></span>
+          </VSCodeButton>
         </fieldset>
         <fieldset>
           <legend>Database type</legend>
@@ -140,5 +154,16 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
         {pLabel}
       </VSCodeTextField>
     );
+  }
+
+  function generateBasicUrlForDriver(pProperties: DatabaseConfigurationProps): void {
+    const databaseType = pProperties.databaseConnection?.databaseType;
+
+    if (databaseType && databaseType !== NO_PRE_CONFIGURED_DRIVER) {
+      const driver = ALL_DRIVERS.get(databaseType);
+      if (driver && pProperties.databaseConnection) {
+        pProperties.onUpdate("url", driver.basicUrlForConnecting);
+      }
+    }
   }
 }

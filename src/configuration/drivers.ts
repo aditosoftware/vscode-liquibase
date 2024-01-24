@@ -17,9 +17,15 @@ export class Driver {
    */
   readonly urlForDownload: string;
 
-  constructor(pDriverClass: string, pUrlForDownload: string) {
+  /**
+   * A basic jdbc-url for connection to a database.
+   */
+  readonly basicUrlForConnecting: string;
+
+  constructor(pDriverClass: string, pUrlForDownload: string, pBasicUrlForConnecting: string) {
     this.driverClass = pDriverClass;
     this.urlForDownload = pUrlForDownload;
+    this.basicUrlForConnecting = pBasicUrlForConnecting;
   }
 
   /**
@@ -40,15 +46,18 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     "MariaDB",
     new Driver(
       "org.mariadb.jdbc.Driver",
-      "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.5.3/mariadb-java-client-2.5.3.jar"
+      "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.5.3/mariadb-java-client-2.5.3.jar",
+      "jdbc:mariadb://localhost:3306/data"
     ),
   ],
+  
   [
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     "MySQL",
     new Driver(
       "com.mysql.cj.jdbc.Driver",
-      "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar"
+      "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar",
+      "jdbc:mysql://localhost:3306/data"
     ),
   ],
 
@@ -57,23 +66,28 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     "MS SQL",
     new Driver(
       "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-      "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.2.0.jre11/mssql-jdbc-12.2.0.jre11.jar"
+      "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.2.0.jre11/mssql-jdbc-12.2.0.jre11.jar",
+      "jdbc:sqlserver://localhost:1433;databaseName=data"
     ),
   ],
+
   [
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
     "PostgreSQL",
     new Driver(
       "org.postgresql.Driver",
-      "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar"
+      "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar",
+      "jdbc:postgresql://localhost:5432/data"
     ),
   ],
+
   [
     // https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8
     "Oracle",
     new Driver(
       "oracle.jdbc.driver.OracleDriver",
-      "https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.2.0.0/ojdbc11-23.2.0.0.jar"
+      "https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.2.0.0/ojdbc11-23.2.0.0.jar",
+      "jdbc:oracle:thin:@localhost:1521:data"
     ),
   ],
 ]);
