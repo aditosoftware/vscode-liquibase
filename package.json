@@ -209,7 +209,57 @@
           "when": "resourceLangId == properties"
         }
       ]
-    }
+    },
+    "walkthroughs": [
+      {
+        "id": "liquibaseWalkthrough",
+        "title": "Get started with Liquibase",
+        "description": "A short overview how to use the liquibase extension.",
+        "steps": [
+          {
+            "id": "configureSetting",
+            "title": "Configure your settings",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "description": "First, you should configure your settings for the extension.\nAll the settings can be found under Liquibase.\n[Take me to the settings](command:workbench.action.openSettings?%22liquibase.%22)"
+          },
+          {
+            "id": "createLiquibaseProperties",
+            "title": "Create a liquibase property file",
+            "description": "In order to fully use this extension, you should create a liquibase.properties file. This is used for any command and stores the connection values to your database. The graphic editor will support you\nYou should **NOT** add this file to your version control system, because this file can contain sensitive information, such as passwords.\n[Create liquibase.properties](command:liquibase.createLiquibaseConfiguration)",
+            "media": {
+              "markdown": "media/walkthrough/properties.md"
+            },
+            "completionEvents": [
+              "onCommand:liquibase.createLiquibaseConfiguration"
+            ]
+          },
+          {
+            "id": "runFirstUpdate",
+            "title": "Run first command",
+            "description": "Now that you have created your liquibase properties file, you can now execute any command. You could run the `status` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "completionEvents": [
+              "onCommand:liquibase.status"
+            ]
+          },
+          {
+            "id": "learnMoreAboutLiquibase",
+            "title": "Learn more about liquibase",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "description": "Read more about liquibase [in the official documentation](https://docs.liquibase.com/start/home.html).",
+            "completionEvents": [
+              "onLink:https://docs.liquibase.com/start/home.htm"
+            ]
+          }
+        ]
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

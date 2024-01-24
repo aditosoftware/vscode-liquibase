@@ -68,3 +68,27 @@ vscode.window.showInformationMessage(
 ## SK
 
 - (done) Create Liquibase Configuration: Bei Auswahl des Datenbanktypes einen Teil der jdbc-Url vorausfüllen? (`jdbc:mariadb://`)
+
+## WG
+
+- Icon und Description in Extension anpassen
+- Default-Shortcuts --> FA&RH: eher nein
+
+- Doppelte Fehlermeldung beim Canceln von Commands, wenn nichts da ist (Command cancelled und No configuration found!)
+- Oder allgemein zu viele Dialoge?
+
+- FileChooser cancel / allgemein Command canceln - Meldung OK?
+
+- Database-Type anhand der URL erkennen? --- zurzeit anders rum
+
+- Idee: Beim Ausführen von Liquibase-Actions über die Command-Palette
+  nachfragen, auf welchem Changelog.xml der command ausgeführt wird, wenn kein
+  default angegeben.
+  Das ganze würde ich hier über einen eigenen Step in der Command-Palette lösen,
+  welcher mir Recents anzeigt, wenn welche vorhanden sind, sodass ich nur nochmal
+  enter drücken muss, damit es dann wirklich ausgeführt wird.
+
+- “Save Changelog” macht TopComponent nicht zu?
+- Command-Paltte: Update findet File nicht?
+
+- Nutzer einführen?
