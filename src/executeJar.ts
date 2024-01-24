@@ -2,6 +2,7 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { spawn } from "child_process";
 import { outputStream } from "./extension";
+import { isWindows } from "./utilities/osUtilities";
 
 class CustomError extends Error {
   stdout?: string;
@@ -42,7 +43,7 @@ export function executeJar(
         const liquibasePath = path.join(rootPath, "liquibase-core-4.24.0.jar");
         const picocliPath = path.join(rootPath, "picocli-4.7.5.jar");
 
-        const cp = `${liquibasePath};${picocliPath}`;
+        const cp = `${liquibasePath}${isWindows() ? ";" : ":"}${picocliPath}`;
         const argsArray = [
           // force liquibase to use english locale, because other I18N are not good
           "-Duser.language=en",

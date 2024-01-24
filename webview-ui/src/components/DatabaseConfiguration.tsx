@@ -46,7 +46,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
             "text",
             "url",
             "The url of the database",
-            "For example: jdbc:mariadb://localhost:9090/data"
+            "For example: jdbc:mariadb://localhost:3306/data"
           )}
         </fieldset>
         <fieldset>
