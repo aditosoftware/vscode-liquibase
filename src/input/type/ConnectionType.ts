@@ -39,7 +39,21 @@ export class ConnectionType extends InputBase {
         return selectedConnection.detail;
       }
     } else {
-      vscode.window.showErrorMessage("No configurations found");
+      // no configuration found, give the user the possibility to create one
+      await ConnectionType.suggestCreationOfConfiguration();
+    }
+  }
+
+  /**
+   * Suggests the user that they should create a configuration, when no liquibase configuration was found.
+   */
+  static async suggestCreationOfConfiguration() {
+    const answer = await vscode.window.showErrorMessage(
+      "No configurations found. Please create a configuration.",
+      "Create configuration"
+    );
+    if (answer === "Create configuration") {
+      await vscode.commands.executeCommand("liquibase.createLiquibaseConfiguration");
     }
   }
 

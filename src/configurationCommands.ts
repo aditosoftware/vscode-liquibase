@@ -89,7 +89,7 @@ async function selectFromExistingConfigurations(pTitle: string): Promise<string 
       return result;
     }
   } else {
-    vscode.window.showErrorMessage("No configurations found");
+    await ConnectionType.suggestCreationOfConfiguration();
   }
 }
 

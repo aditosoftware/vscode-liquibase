@@ -1,5 +1,4 @@
 import { InputBase, DialogValues } from ".";
-import * as vscode from "vscode";
 
 /**
  * Handles a multi-step input. All the inputs will be progressed in order.
@@ -24,7 +23,7 @@ export async function handleMultiStepInput(
 
     if (!result) {
       // User canceled the selection
-      vscode.window.showInformationMessage("Command was cancelled");
+      console.log(`Command ${input.name} was cancelled`);
       return;
     }
 

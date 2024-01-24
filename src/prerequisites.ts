@@ -45,8 +45,8 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   }
 
   if (missingFiles && missingFiles.length !== 0) {
-    vscode.window.showErrorMessage(
-      `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files. Try again`
+    vscode.window.showInformationMessage(
+      `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files. Try again.`
     );
     downloadLiquibaseFiles(resourcePath, missingUrls);
   }
