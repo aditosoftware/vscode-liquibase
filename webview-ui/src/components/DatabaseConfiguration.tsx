@@ -99,7 +99,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
       .forEach((pKey: string) => {
         const driver = ALL_DRIVERS.get(pKey);
         if (driver) {
-          radioElements.push(<VSCodeOption value={pKey}>{driver.displayName}</VSCodeOption>);
+          radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
         }
       });
 

@@ -54,3 +54,18 @@ vscode.window.showInformationMessage(
 - output per setting defaultmäßig anzeigen lassen?
 
 ---
+
+---
+
+# TODO
+
+- Alle DBs testen (Treiber über IDBTypes vergleiche)
+- Macht drop-all auf Kontext Sinn?
+- Weitere commands auf Context-Menü-Actions?
+
+
+# Feedback
+
+## SK
+
+- Create Liquibase Configuration: Bei Auswahl des Datenbanktypes einen Teil der jdbc-Url vorausfüllen? (`jdbc:mariadb://`)

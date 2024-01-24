@@ -129,19 +129,14 @@
           "markdownDescription": "The default selected database for creating a new configuration.",
           "enum": [
             "NO_PRE_CONFIGURED_DRIVER",
-            "MARIADB",
-            "MYSQL",
-            "MSSQL",
-            "POSTGRESQL",
-            "ORACLE"
-          ],
-          "enumItemLabels": [
-            "no pre-configured driver",
             "MariaDB",
             "MySQL",
             "MS SQL",
             "PostgreSQL",
             "Oracle"
+          ],
+          "enumItemLabels": [
+            "no pre-configured driver"
           ],
           "default": "NO_PRE_CONFIGURED_DRIVER"
         }

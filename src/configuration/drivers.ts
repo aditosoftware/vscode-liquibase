@@ -7,18 +7,17 @@ export const NO_PRE_CONFIGURED_DRIVER = "NO_PRE_CONFIGURED_DRIVER";
  * Class for pre-defining the drivers the users can preselect.
  */
 export class Driver {
-  readonly displayName: string;
+  /**
+   * The class which is needed for creating the Liquibase file.
+   */
   readonly driverClass: string;
-  readonly urlForDownload: string;
 
   /**
-   * Constructor.
-   * @param pDisplayname - the display name that should be visible for the user
-   * @param pDriverClass - the class which is needed for creating the Liquibase file
-   * @param pUrlForDownload - the url for downloading the driver
+   * The url for downloading the driver. This is only used in the prerequisites.
    */
-  constructor(pDisplayname: string, pDriverClass: string, pUrlForDownload: string) {
-    this.displayName = pDisplayname;
+  readonly urlForDownload: string;
+
+  constructor(pDriverClass: string, pUrlForDownload: string) {
     this.driverClass = pDriverClass;
     this.urlForDownload = pUrlForDownload;
   }
@@ -32,26 +31,22 @@ export class Driver {
   }
 }
 
-// TODO all the driver names / Keys and NO_PRE_CONFIGURED_DRIVER are duplicated in the settings
-
 /**
  * All the pre-configured drivers.
  */
 export const ALL_DRIVERS = new Map<string, Driver>([
   [
     // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
-    "MARIADB",
+    "MariaDB",
     new Driver(
-      "MariaDB",
       "org.mariadb.jdbc.Driver",
       "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.5.3/mariadb-java-client-2.5.3.jar"
     ),
   ],
   [
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
-    "MYSQL",
+    "MySQL",
     new Driver(
-      "MySQL",
       "com.mysql.cj.jdbc.Driver",
       "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar"
     ),
@@ -59,31 +54,26 @@ export const ALL_DRIVERS = new Map<string, Driver>([
 
   [
     // https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc
-    // TODO jre8 oder jre11?
-    "MSSQL",
+    "MS SQL",
     new Driver(
-      "MS SQL",
       "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-      "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.4.2.jre11/mssql-jdbc-12.4.2.jre11.jar"
+      "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.2.0.jre11/mssql-jdbc-12.2.0.jre11.jar"
     ),
   ],
   [
     // https://mvnrepository.com/artifact/org.postgresql/postgresql
-    "POSTGRESQL",
+    "PostgreSQL",
     new Driver(
-      "PostgreSQL",
       "org.postgresql.Driver",
-      "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.1/postgresql-42.7.1.jar"
+      "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar"
     ),
   ],
   [
     // https://mvnrepository.com/artifact/com.oracle.database.jdbc/ojdbc8
-    // TODO Version?
-    "ORACLE",
+    "Oracle",
     new Driver(
-      "Oracle",
       "oracle.jdbc.driver.OracleDriver",
-      "https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc8/23.3.0.23.09/ojdbc8-23.3.0.23.09.jar"
+      "https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.2.0.0/ojdbc11-23.2.0.0.jar"
     ),
   ],
 ]);
