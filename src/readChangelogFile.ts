@@ -6,6 +6,7 @@ import path from "path";
 import { isWindows } from "./utilities/osUtilities";
 import { DialogValues, PROPERTY_FILE } from "./input";
 import { readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
+import { getLiquibaseFolder } from "./handleLiquibaseSettings";
 
 /**
  * Reads context values from a Liquibase XML file and returns them as an array of QuickPickItem objects.
@@ -82,6 +83,12 @@ async function readValuesFromFile(possibleFile: string): Promise<vscode.QuickPic
  * @returns A string representing the normalized path of the workspace folder.
  */
 export function getWorkFolder() {
+  // First, find out the setting of the work folder of liquibase
+  const liquibaseFolder = getLiquibaseFolder();
+  if (liquibaseFolder) {
+    return path.normalize(liquibaseFolder);
+  }
+
   const activeTextEditor = vscode.window.activeTextEditor;
 
   if (activeTextEditor) {
