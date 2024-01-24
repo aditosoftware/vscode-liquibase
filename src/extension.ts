@@ -86,26 +86,26 @@ export async function activate(context: vscode.ExtensionContext) {
         }
       ),
 
+      registerLiquibaseCommand("drop-all", [
+        {
+          input: new ConnectionType("propertyFile"),
+        },
+        {
+          input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
+        },
+      ]),
+
       registerLiquibaseCommand(
-        "drop-all",
+        "validate",
         [
           {
             input: new ConnectionType("propertyFile"),
           },
-          {
-            input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
-          },
         ],
         {
-          changelogPathIgnored: true,
+          searchPathRequired: true,
         }
       ),
-
-      registerLiquibaseCommand("validate", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-      ]),
 
       registerLiquibaseCommand("status", [
         {

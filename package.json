@@ -161,7 +161,20 @@
         },
         {
           "submenu": "liquibase.configurationMenu",
-          "when": "resourceLangId == properties"
+          "when": "resourceLangId == properties",
+          "group": "Liquibase"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "liquibase.commandsMenu",
+          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml",
+          "group": "Liquibase"
+        },
+        {
+          "submenu": "liquibase.configurationMenu",
+          "when": "resourceLangId == properties",
+          "group": "Liquibase"
         }
       ],
       "liquibase.commandsMenu": [
@@ -172,13 +185,22 @@
           "command": "liquibase.validate"
         },
         {
-          "command": "liquibase.drop-all"
-        }
-      ],
-      "editor/context": [
+          "command": "liquibase.status"
+        },
         {
-          "submenu": "liquibase.configurationMenu",
-          "when": "resourceLangId == properties"
+          "command": "liquibase.db-doc"
+        },
+        {
+          "command": "liquibase.unexpected-changesets"
+        },
+        {
+          "command": "liquibase.changelog-sync"
+        },
+        {
+          "command": "liquibase.rollback"
+        },
+        {
+          "command": "liquibase.update-sql"
         }
       ],
       "liquibase.configurationMenu": [

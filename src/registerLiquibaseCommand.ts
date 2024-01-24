@@ -52,13 +52,6 @@ export interface AdditionalCommandAction {
    * Adds the "searchPath"-parameter to the command when needed.
    */
   searchPathRequired?: boolean;
-
-  /**
-   * Information, if the changelog path should not be built when coming from a right click menu.
-   * * If this property is there and `true`, then `--changelogFile` will not be added.
-   * * If this property is `false`, not there, or the interface is not there, then the `--changelogFile` will be added.
-   */
-  changelogPathIgnored?: boolean;
 }
 
 /**
@@ -164,18 +157,9 @@ export function registerLiquibaseCommand(
 
       if (dialogValues.uri) {
         // if this was called from an right click menu, then handle some parameters differently
+        args.push("--changelogFile=" + path.basename(dialogValues.uri.fsPath));
 
-        let ignoreChangelogPath: boolean = false;
-        if (additionalCommandAction && additionalCommandAction.changelogPathIgnored) {
-          ignoreChangelogPath = true;
-        }
-
-        if (!ignoreChangelogPath) {
-          args.push("--changelogFile=" + path.basename(dialogValues.uri.fsPath));
-        }
-        if (additionalCommandAction && additionalCommandAction.searchPathRequired) {
-          args.push("-Dliquibase.searchPath=" + path.join(dialogValues.uri.fsPath, ".."));
-        }
+        args.push("-Dliquibase.searchPath=" + path.join(dialogValues.uri.fsPath, ".."));
       }
 
       if (propertyFilePath) {
