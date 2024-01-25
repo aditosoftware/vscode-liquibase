@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 import download from "download";
 import { ALL_DRIVERS } from "./configuration/drivers";
-
+import { Logger } from "./logging/Logger";
 /**
  * Check and perform one-time setup tasks if it's the first activation of the extension.
  * @param context - The context object provided by VSCode to the extension.
@@ -15,7 +15,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   // Check if it's the first activation
   if (!context.globalState.get("liquibase-first-activation")) {
     // Perform one-time setup tasks (e.g., download files)
-    console.log("Liquibase was executed for the first time");
+    Logger.getLogger().info("Liquibase was executed for the first time");
     downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
 
     // Mark first activation as completed
@@ -48,10 +48,9 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
     vscode.window.showInformationMessage(
       `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`
     );
-    downloadLiquibaseFiles(resourcePath, missingUrls)
-      .then(() => {
-        vscode.window.showInformationMessage(`Successfully downloaded all the missing files to ${resourcePath}`);
-      });
+    downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
+      vscode.window.showInformationMessage(`Successfully downloaded all the missing files to ${resourcePath}`);
+    });
   }
 }
 
@@ -66,7 +65,7 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
       Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))));
       resolve();
     } catch (error) {
-      console.error(`downloadLiquibaseFiles threw an error: ${error}`);
+      Logger.getLogger().error("downloadLiquibaseFiles threw an error", error);
       reject(error);
     }
   });

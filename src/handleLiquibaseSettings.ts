@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
 import { NO_PRE_CONFIGURED_DRIVER } from "./configuration/drivers";
+import { Logger } from "./logging/Logger";
 
 /**
  * The general configuration name.
@@ -20,7 +21,7 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
   // get default value from setting, so it is not duplicated
   const defaultValue: unknown = configuration.inspect(configurationPathSetting)?.defaultValue;
   if (typeof defaultValue !== "string") {
-    console.error(`default value ${defaultValue} was not an string. Please report this error`);
+    Logger.getLogger().warn(`default value ${defaultValue} was not an string. This should never happen`);
     return;
   }
 

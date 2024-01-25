@@ -19,8 +19,7 @@ import {
   openIndexHtmlAfterCommandExecution,
 } from "./liquibaseCommandsUtilities";
 import * as fs from "fs";
-
-export const outputStream = vscode.window.createOutputChannel("Liquibase");
+import { Logger } from "./logging/Logger";
 
 /**
  * The path where all resources (jars) are located from the extension.
@@ -35,7 +34,6 @@ export let resourcePath: string;
  */
 export async function activate(context: vscode.ExtensionContext) {
   // Constructing the path to the resources folder in the os homedir
-  let resourcePath;
   if (context.globalStorageUri) {
     // use the global storage directory for the file system
     if (!fs.existsSync(context.globalStorageUri.fsPath)) {
@@ -46,6 +44,9 @@ export async function activate(context: vscode.ExtensionContext) {
     // Fallback - use home directory
     resourcePath = path.join(os.homedir(), ".liquibase", "resources");
   }
+
+  // initialize the logger
+  Logger.initializeLogger(context, "Liquibase");
 
   // TODO remove when no longer needed
   // const possibleFormats: vscode.QuickPickItem[] = [

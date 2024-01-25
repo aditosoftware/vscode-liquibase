@@ -9,6 +9,7 @@ import { MessageType } from "../transfer/transferData";
 import { readLiquibaseConfigurationNames, updateConfiguration } from "./readConfiguration";
 import { resourcePath } from "../../extension";
 import { openDocument } from "../../utilities/vscodeUtilities";
+import { Logger } from "../../logging/Logger";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -80,7 +81,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
     // save file with absolute path
     fs.writeFileSync(propertiesFilePath, properties, { encoding: "utf8" });
   } catch (error) {
-    console.error(error);
+    Logger.getLogger().error("Error writing file", error, true);
     return;
   }
 

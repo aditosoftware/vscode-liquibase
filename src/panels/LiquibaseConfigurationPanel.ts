@@ -8,6 +8,7 @@ import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuratio
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
+import { Logger } from "../logging/Logger";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -102,7 +103,7 @@ export class LiquibaseConfigurationPanel {
       .postMessage(new MessageData(pMessageType, data))
       .then((success) => {
         if (!success) {
-          console.error("error transferring the message to the webview");
+          Logger.getLogger().error("error transferring the message to the webview", null);
         }
       });
   }

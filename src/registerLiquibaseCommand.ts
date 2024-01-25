@@ -2,8 +2,9 @@ import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
 import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
-import { outputStream, resourcePath } from "./extension";
+import { resourcePath } from "./extension";
 import { DialogValues, InputBase, PROPERTY_FILE, handleMultiStepInput } from "./input";
+import { Logger } from "./logging/Logger";
 
 /**
  * Interface defining the configuration for pick panels.
@@ -105,7 +106,7 @@ export function registerLiquibaseCommand(
         transferActions.push(commandArg);
       } else if (typeof commandArg !== "undefined") {
         // XXX: this message will also appear, if everything was alright.
-        console.log(`Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`);
+        Logger.getLogger().debug(`Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`);
       }
     }
 
@@ -170,14 +171,14 @@ export function registerLiquibaseCommand(
               .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
               .then((result) => {
                 if (result && result === "Show log") {
-                  outputStream.show(true);
+                  Logger.getLogger().outputChannel.show(true);
                 }
               });
           } else {
             vscode.window.showWarningMessage(
               `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`
             );
-            outputStream.show();
+            Logger.getLogger().outputChannel.show();
           }
 
           // execute any action after the execution
@@ -189,10 +190,10 @@ export function registerLiquibaseCommand(
           transferActions.forEach((pTransferAction) => pTransferAction.executeAfterCommandAction());
         });
       } else {
-        console.log("No property file path given. Command could not be executed");
+        Logger.getLogger().info("No property file path given. Command could not be executed");
       }
     } catch (error) {
-      console.error("Error: " + error);
+      Logger.getLogger().error("Error:", error);
     }
   });
 }

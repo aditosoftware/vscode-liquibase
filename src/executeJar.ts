@@ -1,8 +1,8 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import { spawn } from "child_process";
-import { outputStream } from "./extension";
 import { isWindows } from "./utilities/osUtilities";
+import { Logger } from "./logging/Logger";
 
 class CustomError extends Error {
   stdout?: string;
@@ -59,9 +59,8 @@ export function executeJar(
 
         const childProcess = spawn(javaExecutable, argsArray);
 
-        outputStream.appendLine(`Liquibase command '${operation}' will be executed`);
-        outputStream.appendLine(`${javaExecutable} ${argsArray.join(" ")}`);
-        outputStream.appendLine("");
+        Logger.getLogger().info(`Liquibase command '${operation}' will be executed`);
+        Logger.getLogger().info(`${javaExecutable} ${argsArray.join(" ")}`);
 
         let stdoutData = "";
         let stderrData = "";
@@ -83,17 +82,15 @@ export function executeJar(
             const error = new CustomError(`Child process exited with code ${code}`);
             error.stdout = stdoutData;
             error.stderr = stderrData;
-            outputStream.appendLine(`${error}`);
+            Logger.getLogger().error("error while executing liquibase", error);
             reject(error);
           }
         });
 
         childProcess.on("error", (error) => {
-          outputStream.appendLine(`Child process encountered an error: ${error}`);
+          Logger.getLogger().error("Child process encountered an error", error);
           reject(error);
         });
-
-        outputStream.appendLine("");
       });
     }
   );
@@ -108,7 +105,7 @@ function addToOutput(data: unknown, progress: vscode.Progress<{ message: string 
   const line: string = `${data}`;
 
   // append any message to the output stream
-  outputStream.appendLine(line);
+  Logger.getLogger().info(line);
 
   if (!line.includes("WARNING: License service not loaded") && !line.includes("#####")) {
     // Filter out lines with warnings of liquibase service and ####.

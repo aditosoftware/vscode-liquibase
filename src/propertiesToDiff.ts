@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { readPossibleReferenceValues } from "./configuration/data/readFromProperties";
+import { Logger } from "./logging/Logger";
 
 /**
  * Retrieves reference keys and values from a Liquibase properties file.
@@ -18,6 +19,6 @@ export function getReferenceKeysFromPropertyFile(propertyFilePath: string | unde
     return readPossibleReferenceValues(propertyFilePath);
   } catch (error) {
     // Show an error message if there is an issue reading the file
-    vscode.window.showErrorMessage(`Error reading liquibase.properties: ${error}`);
+    Logger.getLogger().error("Error reading liquibase.properties:", error, true);
   }
 }
