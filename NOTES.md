@@ -92,3 +92,7 @@ vscode.window.showInformationMessage(
 - Command-Paltte: Update findet File nicht?
 
 - Nutzer einführen?
+
+# FIXME Wichtig
+
+Resources überdenken: Pfad hat fest die Version drinnen, bei Update ist alles runiniert!

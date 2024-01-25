@@ -6,6 +6,7 @@ import { registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { readContextValues } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
+import * as os from "os";
 import {
   addExistingLiquibaseConfiguration,
   editExistingLiquibaseConfiguration,
@@ -17,6 +18,7 @@ import {
   openFileAfterCommandExecution,
   openIndexHtmlAfterCommandExecution,
 } from "./liquibaseCommandsUtilities";
+import * as fs from "fs";
 
 export const outputStream = vscode.window.createOutputChannel("Liquibase");
 
@@ -32,16 +34,26 @@ export let resourcePath: string;
  *                  to store and retrieve global state.
  */
 export async function activate(context: vscode.ExtensionContext) {
-  // Constructing the path to the resources folder within the extension
-  resourcePath = path.join(context.extensionPath, "resources");
+  // Constructing the path to the resources folder in the os homedir
+  let resourcePath;
+  if (context.globalStorageUri) {
+    // use the global storage directory for the file system
+    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
+      fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
+    }
+    resourcePath = context.globalStorageUri.fsPath;
+  } else {
+    // Fallback - use home directory
+    resourcePath = path.join(os.homedir(), ".liquibase", "resources");
+  }
 
   // TODO remove when no longer needed
-  const possibleFormats: vscode.QuickPickItem[] = [
-    { label: "xml" },
-    { label: "json" },
-    { label: "yaml" },
-    { label: "yml" },
-  ];
+  // const possibleFormats: vscode.QuickPickItem[] = [
+  //   { label: "xml" },
+  //   { label: "json" },
+  //   { label: "yaml" },
+  //   { label: "yml" },
+  // ];
 
   //all possible diffTypes for the diff dialog
   //TODO: maybe all descriptions should say something useful?
