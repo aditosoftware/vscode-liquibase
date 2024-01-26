@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import winston from "winston";
 import TransportStream, { TransportStreamOptions } from "winston-transport";
+import { LoggingMessage } from "./LoggingMessage";
 
 /**
  * A logger to log to the log file, output and window message.
@@ -34,6 +35,28 @@ export class Logger {
    */
   showOutputChannel(preserveFocus?: boolean) {
     this.outputChannel.show(preserveFocus);
+  }
+
+  /**
+   * Logs any given message with the corresponding level.
+   * 
+   * @param loggingMessage - the message tht should be logged
+   */
+  log(loggingMessage: LoggingMessage) {
+    switch (loggingMessage.level) {
+      case "error":
+        this.error(loggingMessage.message, loggingMessage.error, loggingMessage.notifyUser);
+        break;
+      case "warn":
+        this.warn(loggingMessage.message, loggingMessage.notifyUser);
+        break;
+      case "info":
+        this.info(loggingMessage.message, loggingMessage.notifyUser);
+        break;
+      case "debug":
+        this.debug(loggingMessage.message);
+        break;
+    }
   }
 
   /**

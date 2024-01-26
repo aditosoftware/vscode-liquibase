@@ -5,7 +5,7 @@ import { Driver } from "../drivers";
 import { getLiquibaseConfigurationPath } from "../../handleLiquibaseSettings";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
-import { MessageType } from "../transfer/transferData";
+import { MessageType } from "../transfer";
 import { readLiquibaseConfigurationNames, updateConfiguration } from "./readConfiguration";
 import { resourcePath } from "../../extension";
 import { openDocument } from "../../utilities/vscodeUtilities";
