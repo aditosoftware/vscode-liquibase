@@ -9,17 +9,11 @@ export class Logger {
   private static instance: Logger;
 
   private logger: winston.Logger;
-  readonly outputChannel: vscode.OutputChannel;
+  private outputChannel: vscode.OutputChannel;
 
   private constructor(logger: winston.Logger, outputChannel: vscode.OutputChannel) {
     this.logger = logger;
     this.outputChannel = outputChannel;
-  }
-
-  static end() {
-    if (this.instance) {
-      this.instance.logger.end();
-    }
   }
 
   /**
@@ -31,6 +25,15 @@ export class Logger {
       throw new Error("no instance of the logger was created");
     }
     return this.instance;
+  }
+
+  /**
+   * Reveal this channel in the UI.
+   *
+   * @param preserveFocus - When `true` the channel will not take focus.
+   */
+  showOutputChannel(preserveFocus?: boolean) {
+    this.outputChannel.show(preserveFocus);
   }
 
   /**
@@ -80,13 +83,12 @@ export class Logger {
     this.logger.debug(message);
   }
 
-  // TODO TSDOC
+  /**
+   * Initializes the logger. This needs to be done in the `activate` method of the extension.
+   * @param context - the context where the logger needs to be registered.
+   * @param name - the name of the extension. This will be also used as the name for the output channel as well as the name for the main file
+   */
   static initializeLogger(context: vscode.ExtensionContext, name: string): void {
-    // TODO check if needed
-    // if (!fs.existsSync(logUri.fsPath)) {
-    //   fs.mkdirSync(logUri.fsPath, { recursive: true });
-    // }
-
     // create output channel for any logging
     const outputChannel = vscode.window.createOutputChannel(name);
     context.subscriptions.push(outputChannel);
@@ -106,13 +108,16 @@ export class Logger {
         )
       ),
       transports: [
+        // log everything to the output channel with info level or higher
         new VSCodeOutputChannelTransport(outputChannel, {
           level: "info",
         }),
+        // log in in a file with the name of the extension and output channel everything
         new winston.transports.File({
           dirname: context.logUri.fsPath,
           filename: `${outputChannel.name}.log`,
         }),
+        // separate file for every error log, including uncaught exceptions und rejections
         new winston.transports.File({
           level: "error",
           dirname: context.logUri.fsPath,
@@ -135,11 +140,19 @@ export class Logger {
       );
     }
 
+    // and create the instance
     this.instance = new Logger(logger, outputChannel);
   }
-}
 
-// TODO logging überall einbauen! und vscode.window.show... durch das hier ersetzen
+  /**
+   * Ends the logging.
+   */
+  static end() {
+    if (this.instance) {
+      this.instance.logger.end();
+    }
+  }
+}
 
 /**
  * A custom transport for any logs.

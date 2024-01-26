@@ -171,7 +171,7 @@ export function registerLiquibaseCommand(
               .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
               .then((result) => {
                 if (result && result === "Show log") {
-                  Logger.getLogger().outputChannel.show(true);
+                  Logger.getLogger().showOutputChannel(true);
                 }
               });
           } else {
@@ -179,7 +179,7 @@ export function registerLiquibaseCommand(
               `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`,
               true
             );
-            Logger.getLogger().outputChannel.show();
+            Logger.getLogger().showOutputChannel();
           }
 
           // execute any action after the execution
