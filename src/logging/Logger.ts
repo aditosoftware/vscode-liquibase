@@ -16,6 +16,12 @@ export class Logger {
     this.outputChannel = outputChannel;
   }
 
+  static end() {
+    if (this.instance) {
+      this.instance.logger.end();
+    }
+  }
+
   /**
    * Returns the singleton instance of the logger. Please note that you need to call `initializeLogger` once before getting the logger.
    * @returns - the logger of the extension.
@@ -33,7 +39,9 @@ export class Logger {
    * @param error - the error itself
    * @param notifyUser - if the user should also be notified via `vscode.window.showErrorMessage`
    */
-  error(message: string, error: unknown, notifyUser?: boolean) {
+  error(message: string, notifyUser: boolean): void;
+  error(message: string, error: unknown, notifyUser?: boolean): void;
+  error(message: string, error: unknown, notifyUser?: boolean): void {
     this.logger.error(message, error);
     if (notifyUser) {
       vscode.window.showErrorMessage(message);

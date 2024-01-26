@@ -20,6 +20,7 @@ import {
   handleMultiStepInput,
 } from "./input";
 import { readFullValues } from "./configuration/data/readFromProperties";
+import { Logger } from "./logging/Logger";
 
 /**
  * Edits an existing configuration.
@@ -180,9 +181,9 @@ export async function removeExistingLiquibaseConfiguration() {
       });
 
       if (success) {
-        vscode.window.showInformationMessage(`Configuration was successfully removed.`);
+        Logger.getLogger().info("Configuration was successfully removed.", true);
       } else {
-        vscode.window.showErrorMessage(`Error while removing the configuration.`);
+        Logger.getLogger().error("Error while removing the configuration.", true);
       }
     }
   }

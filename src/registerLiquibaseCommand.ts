@@ -175,8 +175,9 @@ export function registerLiquibaseCommand(
                 }
               });
           } else {
-            vscode.window.showWarningMessage(
-              `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`
+            Logger.getLogger().warn(
+              `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`,
+              true
             );
             Logger.getLogger().outputChannel.show();
           }

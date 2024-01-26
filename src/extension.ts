@@ -353,5 +353,5 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
  * Shutting down the client. This function is called when the extension is deactivated.
  */
 export function deactivate() {
-  console.log("Extension deactivated.");
+  Logger.end();
 }

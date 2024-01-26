@@ -26,8 +26,9 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   // Check if JAVA_HOME is set
   const javaHome = process.env["JAVA_HOME"];
   if (!javaHome) {
-    vscode.window.showErrorMessage(
-      "JAVA_HOME environment variable is not set. Please set JAVA_HOME accordingly and restart VSCode."
+    Logger.getLogger().error(
+      "JAVA_HOME environment variable is not set. Please set JAVA_HOME accordingly and restart VSCode.",
+      true
     );
     return;
   }
@@ -45,11 +46,12 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   }
 
   if (missingFiles && missingFiles.length !== 0) {
-    vscode.window.showInformationMessage(
-      `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`
+    Logger.getLogger().info(
+      `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`,
+      true
     );
     downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
-      vscode.window.showInformationMessage(`Successfully downloaded all the missing files to ${resourcePath}`);
+      Logger.getLogger().info(`Successfully downloaded all the missing files to ${resourcePath}`, true);
     });
   }
 }

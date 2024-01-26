@@ -1,7 +1,7 @@
-import * as vscode from "vscode";
 import * as fs from "fs";
 import { getLiquibaseConfigurationPath } from "../../handleLiquibaseSettings";
 import path from "path";
+import { Logger } from "../../logging/Logger";
 
 /**
  * The name of the settings file where all the configurations should be stored.
@@ -94,8 +94,9 @@ export async function readConfiguration(): Promise<Record<string, string> | unde
 async function readConfigurationInternal(): Promise<Configuration | undefined> {
   const configPath = await getLiquibaseSpecificSettingsPath();
   if (!configPath) {
-    vscode.window.showErrorMessage(
-      "No configuration path found for the liquibase specific configuration. Please configure it in the settings"
+    Logger.getLogger().error(
+      "No configuration path found for the liquibase specific configuration. Please configure it in the settings",
+      true
     );
     return;
   }

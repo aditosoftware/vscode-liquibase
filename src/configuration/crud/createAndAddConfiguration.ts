@@ -36,9 +36,9 @@ export async function addToLiquibaseConfiguration(pName: string, pPath: string, 
   });
 
   if (success) {
-    vscode.window.showInformationMessage(`Configuration for ${pName} was successfully saved.`);
+    Logger.getLogger().info(`Configuration for ${pName} was successfully saved.`, true);
   } else {
-    vscode.window.showErrorMessage(`Configuration for ${pName} could not be saved`);
+    Logger.getLogger().error(`Configuration for ${pName} could not be saved`, true);
   }
 }
 
@@ -50,7 +50,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   const configurationPath = await getLiquibaseConfigurationPath();
 
   if (!configurationPath) {
-    vscode.window.showErrorMessage("No configuration path was given. No configuration was saved");
+    Logger.getLogger().error("No configuration path was given. No configuration was saved", true);
     return;
   }
 
@@ -122,6 +122,6 @@ async function checkForOverridingExistingConfiguration(name: string): Promise<bo
     return true;
   }
 
-  vscode.window.showInformationMessage("Saving cancelled");
+  Logger.getLogger().info("Saving cancelled", true);
   return false;
 }

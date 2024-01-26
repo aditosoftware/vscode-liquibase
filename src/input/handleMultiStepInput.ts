@@ -1,4 +1,5 @@
 import { InputBase, DialogValues } from ".";
+import { Logger } from "../logging/Logger";
 
 /**
  * Handles a multi-step input. All the inputs will be progressed in order.
@@ -23,7 +24,7 @@ export async function handleMultiStepInput(
 
     if (!result) {
       // User canceled the selection
-      console.log(`Command ${input.name} was cancelled`);
+      Logger.getLogger().info(`Command ${input.name} was cancelled`);
       return;
     }
 

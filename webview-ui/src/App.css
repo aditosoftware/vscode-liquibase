@@ -18,6 +18,7 @@ vscode-dropdown {
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
+  max-width: 800px;
 }
 
 /* adjusting style for dropdowns */

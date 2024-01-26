@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import { readPossibleReferenceValues } from "./configuration/data/readFromProperties";
 import { Logger } from "./logging/Logger";
 
@@ -11,7 +10,7 @@ import { Logger } from "./logging/Logger";
 export function getReferenceKeysFromPropertyFile(propertyFilePath: string | undefined): string[] | undefined {
   // Check if propertyFilePath is provided
   if (!propertyFilePath) {
-    vscode.window.showErrorMessage("No Reference File was found.");
+    Logger.getLogger().error("No Reference File was found.", true);
     return;
   }
 
