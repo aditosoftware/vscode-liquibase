@@ -126,20 +126,42 @@ export async function activate(context: vscode.ExtensionContext) {
         },
       ]),
 
-      registerLiquibaseCommand("diff", [
+      registerLiquibaseCommand(
+        "diff",
+        [
+          {
+            input: new ConnectionType("propertyFile"),
+          },
+          {
+            input: new ConnectionType("referencePropertyFile"),
+            createCmdArgs: (dialogValues) =>
+              getReferenceKeysFromPropertyFile(dialogValues.inputValues.get(REFERENCE_PROPERTY_FILE)?.[0]),
+          },
+          {
+            input: new OpenDialog({
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            }),
+          },
+          // TODO format parameter can be there to create diff as json. Include?
+          {
+            input: new InputBox(fileName, {
+              title: "The file name where your diff should be written",
+              placeHolder: "any file name",
+              value: "diff.txt",
+            }),
+            createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+          },
+          {
+            input: new QuickPick("diffTypes", "Choose any diff types", true, () => diffTypes),
+            cmdArgs: "--diff-types",
+          },
+        ],
         {
-          input: new ConnectionType("propertyFile"),
-        },
-        {
-          input: new ConnectionType("referencePropertyFile"),
-          createCmdArgs: (dialogValues) =>
-            getReferenceKeysFromPropertyFile(dialogValues.inputValues.get(REFERENCE_PROPERTY_FILE)?.[0]),
-        },
-        {
-          input: new QuickPick("diffTypes", "Choose any diff types", true, () => diffTypes),
-          cmdArgs: "--diff-types",
-        },
-      ]),
+          afterCommandAction: openFileAfterCommandExecution,
+        }
+      ),
 
       //TODO: Generate-Changelog -> more steps and user-input
       registerLiquibaseCommand(
