@@ -24,7 +24,7 @@ export async function handleMultiStepInput(
 
     if (!result) {
       // User canceled the selection
-      Logger.getLogger().info(`Command ${input.name} was cancelled`);
+      Logger.getLogger().debug(`Command ${input.name} was cancelled`);
       return;
     }
 

@@ -2,13 +2,14 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties } from "../configuration/crud/createAndAddConfiguration";
-import { MessageData, MessageType } from "../configuration/transfer/transferData";
+import { MessageData, MessageType } from "../configuration/transfer";
 import { isWindows } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
 import { Logger } from "../logging/Logger";
+import { LoggingMessage } from "../logging/LoggingMessage";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
@@ -187,21 +188,28 @@ export class LiquibaseConfigurationPanel {
         const messageData: MessageData = MessageData.createFromSerializedData(message as MessageData);
 
         const messageType: string = messageData.messageType;
-        const data: LiquibaseConfigurationData = messageData.configurationData;
+        const data: LiquibaseConfigurationData | LoggingMessage = messageData.data;
 
-        switch (messageType) {
-          case MessageType.SAVE_CONNECTION:
-            createLiquibaseProperties(data);
-            break;
-          case MessageType.TEST_CONNECTION:
-            testLiquibaseConnection(data);
-            break;
-          case MessageType.CHOOSE_CHANGELOG: {
-            chooseFileForChangelog(data);
-            break;
+        if (data instanceof LiquibaseConfigurationData) {
+          switch (messageType) {
+            case MessageType.SAVE_CONNECTION:
+              createLiquibaseProperties(data);
+              break;
+            case MessageType.TEST_CONNECTION:
+              testLiquibaseConnection(data);
+              break;
+            case MessageType.CHOOSE_CHANGELOG:
+              chooseFileForChangelog(data);
+              break;
+            default:
+              throw new Error(`Handling for command ${messageType} not found.`);
           }
-          default:
+        } else {
+          if (messageData.messageType === MessageType.LOG_MESSAGE) {
+            Logger.getLogger().log(data);
+          } else {
             throw new Error(`Handling for command ${messageType} not found.`);
+          }
         }
       },
       undefined,

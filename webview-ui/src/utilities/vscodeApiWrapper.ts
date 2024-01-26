@@ -1,5 +1,5 @@
 import type { WebviewApi } from "vscode-webview";
-import { MessageData } from "../../../src/configuration/transfer/transferData";
+import { MessageData } from "../../../src/configuration/transfer";
 
 /**
  * A utility wrapper around the acquireVsCodeApi() function, which enables

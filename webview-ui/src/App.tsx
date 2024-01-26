@@ -20,7 +20,7 @@ import {
 } from "../../src/configuration/data/LiquibaseConfigurationData";
 import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
-import { MessageData, MessageType } from "../../src/configuration/transfer/transferData";
+import { MessageData, MessageType } from "../../src/configuration/transfer";
 
 function App() {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
@@ -59,12 +59,13 @@ function App() {
    */
   function handleInitData(messageData: MessageData) {
     const configurationData = messageData.configurationData;
+    if (configurationData) {
+      setReferenceConnection(typeof configurationData.referenceDatabaseConnection !== "undefined");
 
-    setReferenceConnection(typeof configurationData.referenceDatabaseConnection !== "undefined");
-
-    updateData((draft) => {
-      Object.assign(draft, configurationData);
-    });
+      updateData((draft) => {
+        Object.assign(draft, configurationData);
+      });
+    }
   }
 
   /**
@@ -72,7 +73,7 @@ function App() {
    * @param messageData - the message data given
    */
   function handleSavingSuccessful(messageData: MessageData) {
-    if (data.name === messageData.configurationData.name) {
+    if (messageData.configurationData && data.name === messageData.configurationData.name) {
       //just check the name if the loaded config is the same
       updateData((draft) => {
         draft.status = ConfigurationStatus.EDIT;
@@ -88,8 +89,10 @@ function App() {
    */
   function handleChooseChangelogResult(pMessage: MessageData) {
     updateData((draft) => {
-      draft.classpath = pMessage.configurationData.classpath;
-      draft.changelogFile = pMessage.configurationData.changelogFile;
+      if (pMessage.configurationData) {
+        draft.classpath = pMessage.configurationData.classpath;
+        draft.changelogFile = pMessage.configurationData.changelogFile;
+      }
     });
   }
 
@@ -118,7 +121,13 @@ function App() {
         // XXX Improve by? Send Message to Extension for generation and get back generated elements?
         setPreviewData(data.generateProperties(() => undefined));
       } catch (error) {
-        console.error(error);
+        vscodeApiWrapper.postMessage(
+          new MessageData(MessageType.LOG_MESSAGE, {
+            level: "error",
+            message: "Not able to set preview data",
+            error: error,
+          })
+        );
       }
     };
 
@@ -342,7 +351,7 @@ function App() {
    * The data will later return.
    */
   function handleChooseChangelog() {
-    vscodeApiWrapper.postMessage({ messageType: MessageType.CHOOSE_CHANGELOG, configurationData: data });
+    vscodeApiWrapper.postMessage(new MessageData(MessageType.CHOOSE_CHANGELOG, data));
   }
 
   /**

@@ -2,7 +2,7 @@ import path from "path";
 import * as vscode from "vscode";
 import { LiquibaseConfigurationData } from "./data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../panels/LiquibaseConfigurationPanel";
-import { MessageType } from "./transfer/transferData";
+import { MessageType } from "./transfer";
 
 /**
  * Chooses a file for a changelog. This result will be given back to the webview.
