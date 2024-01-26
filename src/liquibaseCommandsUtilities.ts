@@ -2,6 +2,8 @@ import path from "path";
 import { DialogValues, folderSelectionName } from "./input";
 import { openDocument } from "./utilities/vscodeUtilities";
 import * as vscode from "vscode";
+import * as fs from "fs";
+import { Logger } from "./logging/Logger";
 
 /**
  * The name that should be used for any file name input.
@@ -61,6 +63,29 @@ export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogVal
   const folder = dialogValues.inputValues.get(folderSelectionName)?.[0];
 
   if (folder) {
+    try {
+      // try to correctly move the columns folder under the tables folder, so all links resolve
+      const columns = path.join(folder, "columns");
+      const tables = path.join(folder, "tables");
+
+      if (fs.existsSync(columns) && fs.existsSync(tables)) {
+        const filesAndFolders = fs.readdirSync(columns);
+
+        const newColumns = path.join(tables, "columns");
+        fs.mkdirSync(newColumns);
+
+        for (const item of filesAndFolders) {
+          const sourcePath = path.join(columns, item);
+          const destinationPath = path.join(newColumns, item);
+
+          fs.renameSync(sourcePath, destinationPath);
+        }
+        fs.rmdirSync(columns);
+      }
+    } catch (error) {
+      Logger.getLogger().error("error while trying to move files", error);
+    }
+
     const fullPath = path.join(folder, "index.html");
     const uri = vscode.Uri.file(fullPath);
     await vscode.env.openExternal(uri);
