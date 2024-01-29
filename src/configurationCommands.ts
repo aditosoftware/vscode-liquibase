@@ -144,7 +144,7 @@ export async function removeExistingLiquibaseConfiguration() {
 
   const inputs = [
     new ConnectionType("propertyFile"),
-    new QuickPick(removeType, "Choose how you wish to remove the connection", false, () => {
+    new QuickPick(removeType, "Choose how you wish to remove the connection", () => {
       return [
         {
           label: setting,

@@ -19,18 +19,32 @@ export async function handleMultiStepInput(
     dialogValues = new DialogValues();
   }
 
+  let totalNumber: number = inputs.length;
+
   for (const input of inputs) {
-    const result = await input.showDialog(dialogValues, currentStep, inputs.length);
+    // check if input is needed
+    if (!input.beforeInput || input.beforeInput(dialogValues)) {
+      // if needed, then show dialog
+      const result = await input.showDialog(dialogValues, currentStep, totalNumber);
 
-    if (!result) {
-      // User canceled the selection
-      Logger.getLogger().debug(`Command ${input.name} was cancelled`);
-      return;
+      if (!result) {
+        // User canceled the selection
+        Logger.getLogger().debug(`Command ${input.name} was cancelled`);
+        return;
+      }
+
+      dialogValues.addValue(input, result);
+
+      // if there is some special behavior after the input, handle it
+      if (input.afterInput) {
+        input.afterInput(dialogValues);
+      }
+
+      currentStep++;
+    } else {
+      // input not needed, count down total number
+      totalNumber--;
     }
-
-    dialogValues.addValue(input, result);
-
-    currentStep++;
   }
 
   return dialogValues;

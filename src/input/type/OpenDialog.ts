@@ -1,4 +1,4 @@
-import { DialogValues, InputBase } from "..";
+import { DialogValues, InputBase, BeforeInputType, AfterInputType } from "..";
 import * as vscode from "vscode";
 
 /**
@@ -10,10 +10,18 @@ export const folderSelectionName = "folderSelection";
  * Input for any Open Dialog (files and directory).
  */
 export class OpenDialog extends InputBase {
-  private openDialogOptions: vscode.OpenDialogOptions;
+  /**
+   * Any options for the open dialog
+   */
+  private readonly openDialogOptions: vscode.OpenDialogOptions;
 
-  constructor(openDialogOptions: vscode.OpenDialogOptions, name: string = folderSelectionName) {
-    super(name);
+  constructor(
+    openDialogOptions: vscode.OpenDialogOptions,
+    name: string = folderSelectionName,
+    beforeInput?: BeforeInputType,
+    afterInput?: AfterInputType
+  ) {
+    super(name, beforeInput, afterInput);
     this.openDialogOptions = openDialogOptions;
   }
 
@@ -24,15 +32,15 @@ export class OpenDialog extends InputBase {
   ): Promise<string[] | undefined> {
     const stepOutput = this.generateStepOutput(currentStep, maximumStep);
 
-    if (this.openDialogOptions.title) {
-      this.openDialogOptions.title += ` ${stepOutput};`;
+    // copy the options, so they will not persist during multiple dialogs
+    const options = { ...this.openDialogOptions };
+    if (options.title) {
+      options.title += ` ${stepOutput}`;
     } else {
-      this.openDialogOptions.title = `Select ${
-        this.openDialogOptions.canSelectFolders ? "Directory" : "File"
-      } - ${stepOutput}`;
+      options.title = `Select a ${options.canSelectFolders ? "Directory" : "File"} - ${stepOutput}`;
     }
 
-    return await vscode.window.showOpenDialog(this.openDialogOptions).then((uri) => {
+    return await vscode.window.showOpenDialog(options).then((uri) => {
       if (uri) {
         // get from any uri the fileSystem path
         return uri.map((pElement) => pElement.fsPath);

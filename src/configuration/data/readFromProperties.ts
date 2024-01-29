@@ -22,7 +22,7 @@ const possibleReferenceKeys = [
 /**
  * Reads just classpath and changelog from any configuration file.
  *
- * @param pPath - the path which should the read
+ * @param pPath - the path which should be read
  * @param pIsWindows - if the current os is windows. Needed for the separator in the classpath
  * @returns the classpath and changelog of the file
  */
@@ -32,6 +32,17 @@ export function readChangelogAndClasspathFile(pPath: string, pIsWindows: boolean
   const classpath = liquibaseProperties["classpath"].split(pIsWindows ? ";" : ":");
   const changelog = liquibaseProperties["changelogFile"];
   return { classpath, changelog };
+}
+
+/**
+ * Reads the `changelogFile` element of the file.
+ * @param path -  the path which should be read
+ * @returns the changelogFile element of the file
+ */
+export function readChangelog(pPath: string): string | undefined {
+  const liquibaseProperties = readProperties(pPath);
+
+  return liquibaseProperties["changelogFile"];
 }
 
 /**

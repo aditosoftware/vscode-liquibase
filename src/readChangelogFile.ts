@@ -5,8 +5,48 @@ import { QuickPickItem } from "vscode";
 import path from "path";
 import { isWindows } from "./utilities/osUtilities";
 import { DialogValues, PROPERTY_FILE } from "./input";
-import { readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
+import { readChangelog, readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
+
+/**
+ * Checks if an extra user query (dialog) for the changelog file is needed.
+ *
+ * @param dialogValues - the current dialog values
+ * @returns `true` hwn an extra changelog query is needed, `false` when none is needed
+ */
+export function isExtraQueryForChangelogNeeded(dialogValues: DialogValues): boolean {
+  if (dialogValues.uri) {
+    // context menu, no changelog question needed
+    return false;
+  }
+
+  // otherwise, find out the property-file from the options
+  const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE);
+  if (propertyFile && propertyFile[0]) {
+    const changelog = readChangelog(propertyFile[0]);
+    if (changelog) {
+      // if there is a changelog in in property-file, no changelog question needed
+      return false;
+    }
+  }
+
+  // in all the other cases, ask for the changelog file
+  return true;
+}
+
+/**
+ * Sets the changelog file from the current dialog correctly as uri (exactly as context menu).
+ * This will mimic the behavior from a context menu, which is correct in this case.
+ * All the magic for setting the correct changelog-file will then automatically happen.
+ *
+ * @param dialogValues - the dialog values with the changelog file
+ */
+export function setExtraChangelogCorrectly(dialogValues: DialogValues): void {
+  const fileSelection = dialogValues.inputValues.get("changelog");
+  if (fileSelection && fileSelection[0]) {
+    dialogValues.uri = vscode.Uri.file(fileSelection[0]);
+  }
+}
 
 /**
  * Reads context values from a Liquibase XML file and returns them as an array of QuickPickItem objects.

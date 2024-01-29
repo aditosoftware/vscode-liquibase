@@ -1,18 +1,46 @@
 import { DialogValues } from "..";
 
 /**
+ * Type of the function that can be used the check, if the input should be shown or not. If the function returns `true`, then it should be shown.
+ * If the function returns `false`, then the dialog will not be shown.
+ */
+export type BeforeInputType = (dialogValues: DialogValues) => boolean;
+
+/**
+ * Type of the function that can be used to do some action after the input was shown.
+ *
+ * This can be for example used, if you get a value from any dialog values normal input that should be used as an uri instead.
+ */
+export type AfterInputType = (dialogValues: DialogValues) => void;
+
+/**
  * Any input for the extension.
  */
 export abstract class InputBase {
-  
   /**
    * The unique name which is needed to store the values.
    * This should be unique among all inputs from one multi-step input.
    */
   readonly name: string;
 
-  constructor(name: string) {
+  /**
+   * Function that should be executed before the input is shown.
+   *
+   * This function can be used the check, if the input should be shown or not. If the function returns `true`, then it should be shown.
+   */
+  readonly beforeInput?: BeforeInputType;
+
+  /**
+   * Function that should be executed after the input was shown and the new value was saved into the dialog values.
+   *
+   * This can be for example used, if you get a value from any dialog values normal input that should be used as an uri instead.
+   */
+  readonly afterInput?: AfterInputType;
+
+  constructor(name: string, beforeInput?: BeforeInputType, afterInput?: AfterInputType) {
     this.name = name;
+    this.beforeInput = beforeInput;
+    this.afterInput = afterInput;
   }
 
   /**

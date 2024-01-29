@@ -204,7 +204,7 @@ function App() {
               </section>
 
               <section>
-                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange} required>
+                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange}>
                   The basic changelog file for any command
                 </VSCodeTextField>
                 <VSCodeButton appearance="secondary" onClick={handleChooseChangelog}>
@@ -265,7 +265,6 @@ function App() {
               )}
 
               <div>{previewData !== null ? <pre>{previewData}</pre> : <p>Load Data...</p>}</div>
-              {/* <pre>{data.generatePropertiesForDisplay()}</pre> */}
             </fieldset>
           </div>
         </section>

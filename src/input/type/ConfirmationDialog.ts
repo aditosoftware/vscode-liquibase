@@ -1,4 +1,4 @@
-import { DialogValues, InputBase } from "..";
+import { AfterInputType, BeforeInputType, DialogValues, InputBase } from "..";
 import * as vscode from "vscode";
 
 type GenerateMessage = (currentResult: DialogValues) => string;
@@ -20,8 +20,8 @@ export class ConfirmationDialog extends InputBase {
   /**
    * @param message - either a fixed message or a generate message
    */
-  constructor(message: GenerateMessage | string) {
-    super("Confirmation");
+  constructor(message: GenerateMessage | string, beforeInput?: BeforeInputType, afterInput?: AfterInputType) {
+    super("Confirmation", beforeInput, afterInput);
 
     if (typeof message === "string") {
       this.fixedMessage = message;

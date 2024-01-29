@@ -2,8 +2,8 @@ import * as vscode from "vscode";
 import * as path from "path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
-import { registerLiquibaseCommand } from "./registerLiquibaseCommand";
-import { readContextValues } from "./readChangelogFile";
+import { PickPanelConfig, registerLiquibaseCommand } from "./registerLiquibaseCommand";
+import { isExtraQueryForChangelogNeeded, readContextValues, setExtraChangelogCorrectly } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
 import * as os from "os";
@@ -33,7 +33,7 @@ export let resourcePath: string;
  *                  to store and retrieve global state.
  */
 export async function activate(context: vscode.ExtensionContext) {
-  // Constructing the path to the resources folder in the os homedir
+  // Constructing the path to the resources folder
   if (context.globalStorageUri) {
     // use the global storage directory for the file system
     if (!fs.existsSync(context.globalStorageUri.fsPath)) {
@@ -48,34 +48,6 @@ export async function activate(context: vscode.ExtensionContext) {
   // initialize the logger
   Logger.initializeLogger(context, "Liquibase");
 
-  // TODO remove when no longer needed
-  // const possibleFormats: vscode.QuickPickItem[] = [
-  //   { label: "xml" },
-  //   { label: "json" },
-  //   { label: "yaml" },
-  //   { label: "yml" },
-  // ];
-
-  //all possible diffTypes for the diff dialog
-  //TODO: maybe all descriptions should say something useful?
-  const diffTypes: vscode.QuickPickItem[] = [
-    { label: "catalogs", description: "" },
-    { label: "tables", description: "default", picked: true },
-    { label: "functions", description: "" },
-    { label: "views", description: "default", picked: true },
-    { label: "columns", description: "default", picked: true },
-    { label: "indexes", description: "default", picked: true },
-    { label: "foreignkeys", description: "default", picked: true },
-    { label: "primarykeys", description: "default", picked: true },
-    { label: "uniqueconstraints", description: "default", picked: true },
-    { label: "data", description: "" },
-    { label: "storedprocedures", description: "" },
-    { label: "triggers", description: "" },
-    { label: "sequences", description: "" },
-    { label: "databasepackage", description: "" },
-    { label: "databasepackagebody", description: "" },
-  ];
-
   // Perform any necessary prerequisites setup before executing the extension logic
   prerequisites(context, resourcePath).then(() => {
     // Register all commands that are needed for handling liquibase properties
@@ -83,55 +55,27 @@ export async function activate(context: vscode.ExtensionContext) {
 
     // Command that will be executed when the extension command is triggered
     context.subscriptions.push(
-      registerLiquibaseCommand(
-        "update",
-        [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
-          {
-            input: new QuickPick("context", "Choose any context", true, readContextValues),
-            cmdArgs: "--contexts",
-          },
-        ],
-        {
-          searchPathRequired: true,
-        }
-      ),
+      registerLiquibaseCommand("update", [...generatePropertyFileDialogOptions(true, true)], {
+        searchPathRequired: true,
+      }),
 
       registerLiquibaseCommand("drop-all", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
+        ...generatePropertyFileDialogOptions(false, false),
         {
           input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
         },
       ]),
 
-      registerLiquibaseCommand(
-        "validate",
-        [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
-        ],
-        {
-          searchPathRequired: true,
-        }
-      ),
+      registerLiquibaseCommand("validate", [...generatePropertyFileDialogOptions(true, false)], {
+        searchPathRequired: true,
+      }),
 
-      registerLiquibaseCommand("status", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-      ]),
+      registerLiquibaseCommand("status", [...generatePropertyFileDialogOptions(true, true)]),
 
       registerLiquibaseCommand(
         "diff",
         [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
+          ...generatePropertyFileDialogOptions(false, false),
           {
             input: new ConnectionType("referencePropertyFile"),
             createCmdArgs: (dialogValues) =>
@@ -154,7 +98,30 @@ export async function activate(context: vscode.ExtensionContext) {
             createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
           },
           {
-            input: new QuickPick("diffTypes", "Choose any diff types", true, () => diffTypes),
+            input: new QuickPick(
+              "diffTypes",
+              "Choose any diff types",
+              //all possible diffTypes for the diff dialog
+              //TODO: maybe all descriptions should say something useful?
+              () => [
+                { label: "catalogs", description: "" },
+                { label: "tables", description: "default", picked: true },
+                { label: "functions", description: "" },
+                { label: "views", description: "default", picked: true },
+                { label: "columns", description: "default", picked: true },
+                { label: "indexes", description: "default", picked: true },
+                { label: "foreignkeys", description: "default", picked: true },
+                { label: "primarykeys", description: "default", picked: true },
+                { label: "uniqueconstraints", description: "default", picked: true },
+                { label: "data", description: "" },
+                { label: "storedprocedures", description: "" },
+                { label: "triggers", description: "" },
+                { label: "sequences", description: "" },
+                { label: "databasepackage", description: "" },
+                { label: "databasepackagebody", description: "" },
+              ],
+              true
+            ),
             cmdArgs: "--diff-types",
           },
         ],
@@ -167,9 +134,7 @@ export async function activate(context: vscode.ExtensionContext) {
       registerLiquibaseCommand(
         "generate-changelog",
         [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
+          ...generatePropertyFileDialogOptions(true, true),
           {
             input: new OpenDialog({
               canSelectFiles: false,
@@ -188,7 +153,12 @@ export async function activate(context: vscode.ExtensionContext) {
           },
           //  TODO other file endings except xml don't work. Find out why
           // {
-          //   input: new QuickPick("possibleFormat", false, () => possibleFormats),
+          //   input: new QuickPick("possibleFormat", false, () => [
+          //   { label: "xml" },
+          //   { label: "json" },
+          //   { label: "yaml" },
+          //   { label: "yml" },
+          // ];),
           // },
         ],
         {
@@ -199,9 +169,7 @@ export async function activate(context: vscode.ExtensionContext) {
       registerLiquibaseCommand(
         "db-doc",
         [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
+          ...generatePropertyFileDialogOptions(true, false),
           {
             input: new OpenDialog({
               canSelectFiles: false,
@@ -216,36 +184,18 @@ export async function activate(context: vscode.ExtensionContext) {
         }
       ),
 
-      registerLiquibaseCommand(
-        "unexpected-changesets",
-        [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
-        ],
-        {
-          commandLineArgs: ["--verbose"],
-        }
-      ),
+      registerLiquibaseCommand("unexpected-changesets", [...generatePropertyFileDialogOptions(true, true)], {
+        commandLineArgs: ["--verbose"],
+      }),
 
-      registerLiquibaseCommand("changelog-sync", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-      ]),
+      registerLiquibaseCommand("changelog-sync", [...generatePropertyFileDialogOptions(true, true)]),
 
-      registerLiquibaseCommand("clear-checksums", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
-      ]),
+      registerLiquibaseCommand("clear-checksums", [...generatePropertyFileDialogOptions(false, false)]),
 
       registerLiquibaseCommand(
         "history",
         [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
+          ...generatePropertyFileDialogOptions(false, false),
           {
             input: new OpenDialog({
               canSelectFiles: false,
@@ -262,7 +212,7 @@ export async function activate(context: vscode.ExtensionContext) {
             createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
           },
           {
-            input: new QuickPick("historyFormat", "Choose the desired history format", false, () => [
+            input: new QuickPick("historyFormat", "Choose the desired history format", () => [
               {
                 label: "TABULAR",
                 picked: true,
@@ -280,9 +230,7 @@ export async function activate(context: vscode.ExtensionContext) {
       ),
 
       registerLiquibaseCommand("tag", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
+        ...generatePropertyFileDialogOptions(false, false),
         {
           input: new InputBox("tagName", {
             title: "Choose a name of new Tag",
@@ -292,9 +240,7 @@ export async function activate(context: vscode.ExtensionContext) {
       ]),
 
       registerLiquibaseCommand("tag-exists", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
+        ...generatePropertyFileDialogOptions(false, false),
         {
           input: new InputBox("tagName", {
             title: "Tag to check if it exists",
@@ -304,9 +250,7 @@ export async function activate(context: vscode.ExtensionContext) {
       ]),
 
       registerLiquibaseCommand("rollback", [
-        {
-          input: new ConnectionType("propertyFile"),
-        },
+        ...generatePropertyFileDialogOptions(true, true),
         {
           input: new InputBox("tagName", {
             title: "Tag to rollback to",
@@ -318,9 +262,7 @@ export async function activate(context: vscode.ExtensionContext) {
       registerLiquibaseCommand(
         "update-sql",
         [
-          {
-            input: new ConnectionType("propertyFile"),
-          },
+          ...generatePropertyFileDialogOptions(true, true),
           {
             input: new OpenDialog({
               canSelectFiles: false,
@@ -343,6 +285,49 @@ export async function activate(context: vscode.ExtensionContext) {
       )
     );
   });
+}
+
+/**
+ * Generate the PickPanelConfigs for any dialog that needs a property file.
+ * This will return the basic `ConnectionType` input as well as the required changelog and context dialogs.
+ *
+ * @param changelogNeeded - information if the changelog is query is potentially needed for the command. This should be true, if the command can use a `--changelog-file` parameter
+ * @param contextNeeded - information if the context can be given as a parameter for the command. Note: If this is true, then the changelog should be also true, because the changelog is needed for finding out the contexts.
+ * @returns an array of the required elements for the property file querying in the dialog
+ */
+function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeeded: boolean): PickPanelConfig[] {
+  const inputConfigs: PickPanelConfig[] = [
+    {
+      input: new ConnectionType("propertyFile"),
+    },
+  ];
+
+  if (changelogNeeded) {
+    inputConfigs.push({
+      input: new OpenDialog(
+        {
+          canSelectFiles: true,
+          canSelectFolders: false,
+          canSelectMany: false,
+          filters: {
+            Changelog: ["xml", "json", "yaml", "yml"],
+          },
+        },
+        "changelog",
+        isExtraQueryForChangelogNeeded,
+        setExtraChangelogCorrectly
+      ),
+    });
+  }
+
+  if (contextNeeded) {
+    inputConfigs.push({
+      input: new QuickPick("context", "Choose any context", readContextValues, true),
+      cmdArgs: "--contexts",
+    });
+  }
+
+  return inputConfigs;
 }
 
 /**

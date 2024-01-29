@@ -1,18 +1,41 @@
-import { DialogValues, InputBase } from "..";
+import { AfterInputType, BeforeInputType, DialogValues, InputBase } from "..";
 import * as vscode from "vscode";
 
+/**
+ * The type of the function to generate the items for the quickPick.
+ *
+ * This function can read all previous entered dialog values.
+ */
 type QuickPickItemFunction = (currentResults: DialogValues) => Promise<vscode.QuickPickItem[]> | vscode.QuickPickItem[];
 
 /**
  * Any quick pick that is not an selection of an connection.
  */
 export class QuickPick extends InputBase {
-  private allowMultiple: boolean;
-  private generateItems: QuickPickItemFunction;
+  /**
+   * The title of the quick pick.
+   */
   private title: string;
 
-  constructor(name: string, title: string, allowMultiple: boolean, generateItems: QuickPickItemFunction) {
-    super(name);
+  /**
+   * Option, if multiple elements are allowed.
+   * If no value present, then only one element is allowed.
+   */
+  private allowMultiple?: boolean;
+  /**
+   * Any function to generate the items for the quick pick. This can be a sync or async function.
+   */
+  private generateItems: QuickPickItemFunction;
+
+  constructor(
+    name: string,
+    title: string,
+    generateItems: QuickPickItemFunction,
+    allowMultiple?: boolean,
+    beforeInput?: BeforeInputType,
+    afterInput?: AfterInputType
+  ) {
+    super(name, beforeInput, afterInput);
     this.title = title;
     this.allowMultiple = allowMultiple;
     this.generateItems = generateItems;
