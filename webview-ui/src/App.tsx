@@ -101,8 +101,16 @@ function App() {
    * Saving is only allowed when a name is present.
    */
   function handleSaveConfiguration(): void {
-    if (data.name) {
+    if (data.name && data.changelogFile) {
       vscodeApiWrapper.postMessage(new MessageData(MessageType.SAVE_CONNECTION, data));
+    } else {
+      vscodeApiWrapper.postMessage(
+        new MessageData(MessageType.LOG_MESSAGE, {
+          level: "error",
+          message: "Required value(s) name and/or changelog file are missing",
+          notifyUser: true,
+        })
+      );
     }
   }
 
@@ -196,7 +204,7 @@ function App() {
               </section>
 
               <section>
-                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange}>
+                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange} required>
                   The basic changelog file for any command
                 </VSCodeTextField>
                 <VSCodeButton appearance="secondary" onClick={handleChooseChangelog}>
