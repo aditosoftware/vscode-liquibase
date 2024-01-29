@@ -118,7 +118,6 @@ function App() {
     const fetchData = () => {
       try {
         // do not add any values for the driver, because we can not build them here (path is not allowed!)
-        // XXX Improve by? Send Message to Extension for generation and get back generated elements?
         setPreviewData(data.generateProperties(() => undefined));
       } catch (error) {
         vscodeApiWrapper.postMessage(

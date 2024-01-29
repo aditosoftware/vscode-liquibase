@@ -26,8 +26,6 @@ interface Configuration {
   jsonData: Record<string, string>;
 }
 
-// TODO caching of configurations?
-
 /**
  * Reads the database configuration and return all names.
  */
