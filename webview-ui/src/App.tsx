@@ -101,13 +101,13 @@ function App() {
    * Saving is only allowed when a name is present.
    */
   function handleSaveConfiguration(): void {
-    if (data.name && data.changelogFile) {
+    if (data.name) {
       vscodeApiWrapper.postMessage(new MessageData(MessageType.SAVE_CONNECTION, data));
     } else {
       vscodeApiWrapper.postMessage(
         new MessageData(MessageType.LOG_MESSAGE, {
           level: "error",
-          message: "Required value(s) name and/or changelog file are missing",
+          message: "Required value 'name of configuration' is missing",
           notifyUser: true,
         })
       );
