@@ -46,6 +46,17 @@ export function readChangelog(pPath: string): string | undefined {
 }
 
 /**
+ * Reads the `url` element of the file.
+ * @param path -  the path which should be read
+ * @returns the url element of the file
+ */
+export function readUrl(pPath: string) {
+  const liquibaseProperties = readProperties(pPath);
+
+  return liquibaseProperties["url"];
+}
+
+/**
  * Finds out all normal configuration values which should be treated as reference values of another configuration.
  *
  * This means, if the file contains `password: secret`, then `--reference-password=secret` will be the element in the array for this entry.

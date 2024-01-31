@@ -2,7 +2,7 @@
   "name": "liquibase",
   "displayName": "Liquibase",
   "description": "Execute liquibase changelogs and create liquibase.properties",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.84.0"
   },

@@ -5,29 +5,36 @@ type GenerateMessage = (currentResult: DialogValues) => string;
 
 /**
  * Any confirmation dialog.
+ * This dialog will be shown as a modal dialog and therefore be in the front.
  */
 export class ConfirmationDialog extends InputBase {
   /**
-   * A message that does not change.
+   * The normal message of the dialog.
    */
-  private fixedMessage?: string;
+  private message: string;
 
   /**
-   * A message that is dynamically created based on other dialog values.
+   * The detail message of this modal dialog. This will be dynamically generated from the other inputs.
    */
-  private generateMessage?: GenerateMessage;
+  private detail: GenerateMessage;
 
   /**
-   * @param message - either a fixed message or a generate message
+   * The name of the confirm button.
    */
-  constructor(message: GenerateMessage | string, beforeInput?: BeforeInputType, afterInput?: AfterInputType) {
+  private confirmButtonName: string;
+
+  constructor(
+    message: string,
+    detail: GenerateMessage,
+    confirmButtonName: string,
+    beforeInput?: BeforeInputType,
+    afterInput?: AfterInputType
+  ) {
     super("Confirmation", beforeInput, afterInput);
 
-    if (typeof message === "string") {
-      this.fixedMessage = message;
-    } else {
-      this.generateMessage = message;
-    }
+    this.message = message;
+    this.detail = detail;
+    this.confirmButtonName = confirmButtonName;
   }
 
   async showDialog(
@@ -35,20 +42,16 @@ export class ConfirmationDialog extends InputBase {
     _currentStep: number,
     _maximumStep: number
   ): Promise<boolean | undefined> {
-    // generate the message for the dialog
-    let message;
-    if (this.fixedMessage) {
-      message = this.fixedMessage;
-    } else if (this.generateMessage) {
-      message = this.generateMessage(currentResults);
-    } else {
-      // Fallback, normally not needed
-      message = "Are you sure?";
-    }
-
     // show the dialog and only return true, if Yes was selected
-    const answer = await vscode.window.showInformationMessage(message, "Yes", "No");
-    if (answer === "Yes") {
+    const answer = await vscode.window.showInformationMessage(
+      this.message,
+      {
+        detail: this.detail(currentResults),
+        modal: true,
+      },
+      this.confirmButtonName
+    );
+    if (answer === this.confirmButtonName) {
       return true;
     }
   }

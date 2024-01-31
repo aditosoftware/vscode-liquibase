@@ -154,11 +154,15 @@ export async function removeExistingLiquibaseConfiguration() {
         },
       ];
     }),
-    new ConfirmationDialog((dialogValues) => {
-      const deletionMode = dialogValues.inputValues.get(removeType)?.[0];
+    new ConfirmationDialog(
+      "Are you sure you want to delete your configuration?",
+      (dialogValues) => {
+        const deletionMode = dialogValues.inputValues.get(removeType)?.[0];
 
-      return `Are you sure you want to delete your configuration? This will remove it from the following: ${deletionMode}`;
-    }),
+        return `This will remove the configuration from the following:\n ${deletionMode}`;
+      },
+      "Delete"
+    ),
   ];
 
   const dialogResult = await handleMultiStepInput(inputs);

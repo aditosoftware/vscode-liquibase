@@ -5,7 +5,16 @@ import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { PickPanelConfig, registerLiquibaseCommand } from "./registerLiquibaseCommand";
 import { isExtraQueryForChangelogNeeded, readContextValues, setExtraChangelogCorrectly } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { ConfirmationDialog, ConnectionType, InputBox, OpenDialog, QuickPick, REFERENCE_PROPERTY_FILE } from "./input";
+import {
+  ConfirmationDialog,
+  ConnectionType,
+  DialogValues,
+  InputBox,
+  OpenDialog,
+  PROPERTY_FILE,
+  QuickPick,
+  REFERENCE_PROPERTY_FILE,
+} from "./input";
 import * as os from "os";
 import {
   addExistingLiquibaseConfiguration,
@@ -20,6 +29,7 @@ import {
 } from "./liquibaseCommandsUtilities";
 import * as fs from "fs";
 import { Logger } from "./logging/Logger";
+import { readUrl } from "./configuration/data/readFromProperties";
 
 /**
  * The path where all resources (jars) are located from the extension.
@@ -62,7 +72,23 @@ export async function activate(context: vscode.ExtensionContext) {
       registerLiquibaseCommand("drop-all", [
         ...generatePropertyFileDialogOptions(false, false),
         {
-          input: new ConfirmationDialog("Do you really want to execute 'drop-all'?"),
+          input: new ConfirmationDialog(
+            "Do you really want to execute 'drop-all'?",
+            (dialogValues: DialogValues) => {
+              const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
+
+              let detail: string = "";
+              if (propertyFile) {
+                const url = readUrl(propertyFile);
+                if (url) {
+                  detail = ` ${url}`;
+                }
+              }
+
+              return `This will remove all the data from your database${detail}.\n You can NOT restore any of the data.`;
+            },
+            "Drop-all"
+          ),
         },
       ]),
 
