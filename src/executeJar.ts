@@ -42,8 +42,11 @@ export function executeJar(
         const javaExecutable = path.join(javaHome, "bin", "java");
         const liquibasePath = path.join(rootPath, "liquibase-core-4.24.0.jar");
         const picocliPath = path.join(rootPath, "picocli-4.7.5.jar");
+        const snakeYamlPath = path.join(rootPath, "snakeyaml-2.2.jar");
 
-        const cp = `${liquibasePath}${isWindows() ? ";" : ":"}${picocliPath}`;
+        const cpElements: string[] = [liquibasePath, picocliPath, snakeYamlPath];
+        const cp = cpElements.join(isWindows() ? ";" : ":");
+
         const argsArray = [
           // force liquibase to use english locale, because other I18N are not good
           "-Duser.language=en",
