@@ -4,6 +4,27 @@ import * as fs from "fs";
 import download from "download";
 import { ALL_DRIVERS } from "./configuration/drivers";
 import { Logger } from "./logging/Logger";
+
+/**
+ * The name + version of the liquibase-core jar.
+ */
+export const liquibaseCore = "liquibase-core-4.24.0.jar";
+
+/**
+ * The name + version of the picocli jar.
+ */
+export const picocli = "picocli-4.7.5.jar";
+
+/**
+ * The name + version of the snakeyaml jar.
+ */
+export const snakeYaml = "snakeyaml-2.2.jar";
+
+/**
+ * The name + version of the gson jar.
+ */
+export const gson = "gson-2.10.1.jar";
+
 /**
  * Check and perform one-time setup tasks if it's the first activation of the extension.
  * @param context - The context object provided by VSCode to the extension.
@@ -80,15 +101,27 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
 function getRequiredFiles() {
   const requiredFiles = new Map<string, string>();
   requiredFiles.set(
-    "liquibase-core-4.24.0.jar",
+    liquibaseCore,
     "https://repo1.maven.org/maven2/org/liquibase/liquibase-core/4.24.0/liquibase-core-4.24.0.jar"
   );
   // picocli for using the CLI commands
-  requiredFiles.set("picocli-4.7.5.jar", "https://repo1.maven.org/maven2/info/picocli/picocli/4.7.5/picocli-4.7.5.jar");
+  requiredFiles.set(picocli, "https://repo1.maven.org/maven2/info/picocli/picocli/4.7.5/picocli-4.7.5.jar");
   // snakeyaml for handling yaml changelogs
-  requiredFiles.set("snakeyaml-2.2.jar", "https://repo1.maven.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar");
+  requiredFiles.set(snakeYaml, "https://repo1.maven.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar");
+  // Gson for executing the extended CLI file
+  requiredFiles.set(gson, "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar");
   ALL_DRIVERS.forEach((value) => {
     requiredFiles.set(value.getFileName(), value.urlForDownload);
   });
   return requiredFiles;
+}
+
+/**
+ * Builds the classpath by combining all desired jars into on array.
+ * @param rootPath - the root path where all the classpath elements are downloaded
+ * @param jars - the jar names that should be included in the path
+ * @returns a combined array of all jar paths, starting with the root path
+ */
+export function buildClasspath(rootPath: string, ...jars: string[]): string[] {
+  return jars.map((pJarName) => path.join(rootPath, pJarName));
 }

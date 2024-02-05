@@ -37,6 +37,11 @@ import { readUrl } from "./configuration/data/readFromProperties";
 export let resourcePath: string;
 
 /**
+ * Internal resources folder inside the extension.
+ */
+export let libFolder: string;
+
+/**
  * Main-Function that will execute all the code within
  * @param context - The context object provided by VSCode to the extension.
  *                  It represents the lifecycle of the extension and can be used
@@ -54,6 +59,9 @@ export async function activate(context: vscode.ExtensionContext) {
     // Fallback - use home directory
     resourcePath = path.join(os.homedir(), ".liquibase", "resources");
   }
+
+  // the folder, where additional libraries are included
+  libFolder = path.join(context.extensionPath, "lib");
 
   // initialize the logger
   Logger.initializeLogger(context, "Liquibase");
@@ -349,7 +357,12 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
   if (contextNeeded) {
     inputConfigs.push({
       input: new QuickPick("context", "Choose any context", readContextValues, true),
-      cmdArgs: "--contexts",
+      createCmdArgs: (dialogValues: DialogValues) => {
+        const context = dialogValues.inputValues.get("context");
+        // add a dummy value when no context should be used, otherwise transform them normally
+        const contextCmdValue: string = context && context.length > 0 ? context.join(",") : "###NO_CONTEXT_USED###";
+        return [`--contexts=${contextCmdValue}`];
+      },
     });
   }
 

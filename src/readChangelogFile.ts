@@ -1,12 +1,11 @@
-import * as fs from "fs";
-import * as xml2js from "xml2js";
 import * as vscode from "vscode";
 import { QuickPickItem } from "vscode";
 import path from "path";
-import { isWindows } from "./utilities/osUtilities";
+import { getClasspathSeparator } from "./utilities/osUtilities";
 import { DialogValues, PROPERTY_FILE } from "./input";
 import { readChangelog, readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
+import { loadContextsFromChangelogFile } from "./executeJar";
 
 /**
  * Checks if an extra user query (dialog) for the changelog file is needed.
@@ -63,11 +62,11 @@ export async function readContextValues(currentResults: DialogValues): Promise<Q
 
   if (currentResults.uri) {
     // we are in a right click menu, read the contexts from this file
-    return await readValuesFromFile(currentResults.uri.fsPath);
+    return await loadContextsFromChangelogFile(currentResults.uri.fsPath);
   }
 
   // Read Liquibase changelog  and classpath lines from properties file content
-  const classpathAndChangelogs = readChangelogAndClasspathFile(liquibasePropertiesPath, isWindows());
+  const classpathAndChangelogs = readChangelogAndClasspathFile(liquibasePropertiesPath, getClasspathSeparator());
 
   const contextValues: QuickPickItem[] = [];
 
@@ -78,42 +77,12 @@ export async function readContextValues(currentResults: DialogValues): Promise<Q
     for (const classpath of classpathAndChangelogs.classpath) {
       // Read and parse the specified XML file
       const possibleFile = path.join(classpath, path.normalize(changelogFileLine.trim()));
-      const contexts = await readValuesFromFile(possibleFile);
-      contexts.forEach((pContext) => contextValues.push(pContext));
+      const contexts = await loadContextsFromChangelogFile(possibleFile);
+      contextValues.push(...contexts);
     }
   }
 
   // Return an empty array if 'changelogFile:' line is not found
-  return contextValues;
-}
-
-/**
- * Reads the values from a file
- * @param possibleFile - the possible file which should be read
- * @returns all the quick pick items that contains contexts of the changelog file
- */
-async function readValuesFromFile(possibleFile: string): Promise<vscode.QuickPickItem[]> {
-  const contextValues: QuickPickItem[] = [];
-
-  if (fs.existsSync(possibleFile)) {
-    const xmlData: string = fs.readFileSync(possibleFile, "utf-8");
-    const parser = new xml2js.Parser({ explicitArray: false });
-    const parsedData = await parser.parseStringPromise(xmlData);
-
-    // Extract context values from parsed XML
-    const includes = parsedData.databaseChangeLog.include;
-
-    if (Array.isArray(includes)) {
-      for (const include of includes) {
-        if (include.$.context) {
-          contextValues.push({ label: include.$.context });
-        }
-      }
-    } else if (includes && includes.$.context) {
-      contextValues.push({ label: includes.$.context });
-    }
-  }
-
   return contextValues;
 }
 

@@ -3,6 +3,7 @@ import { DatabaseConnection } from "./DatabaseConnection";
 import { Driver } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
 import { LiquibaseSettings } from "./TransferSettings";
+import { ClasspathType } from "../../utilities/osUtilities";
 
 /**
  * The type for separating multiple classpath.
@@ -138,20 +139,20 @@ export class LiquibaseConfigurationData {
    * Creates a default object.
    * @param liquibaseSettings  - the settings relevant for creating a new configuration
    * @param state - if this configuration is used as a new one or to edit an existing one
-   * @param isWindows - if windows or linux/MacOs separators are used
+   * @param classpathSeparator - if windows or linux/MacOs separators are used
    * @returns the created default object
    */
   static createDefaultData(
     liquibaseSettings: LiquibaseSettings,
     status: ConfigurationStatus,
-    isWindows: boolean
+    classpathSeparator: ClasspathType
   ): LiquibaseConfigurationData {
     return new LiquibaseConfigurationData(
       status,
       liquibaseSettings,
       "",
       "",
-      isWindows ? ";" : ":",
+      classpathSeparator,
       "",
       DatabaseConnection.createDefaultDatabaseConnection(liquibaseSettings.defaultDatabaseForConfiguration),
       {}

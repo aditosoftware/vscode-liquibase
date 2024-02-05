@@ -3,7 +3,7 @@ import { getUri } from "../utilities/getUri";
 import { getNonce } from "../utilities/getNonce";
 import { createLiquibaseProperties } from "../configuration/crud/createAndAddConfiguration";
 import { MessageData, MessageType } from "../configuration/transfer";
-import { isWindows } from "../utilities/osUtilities";
+import { getClasspathSeparator } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
@@ -89,7 +89,7 @@ export class LiquibaseConfigurationPanel {
               liquibaseDirectoryInProject: getLiquibaseFolder(),
             },
             ConfigurationStatus.NEW,
-            isWindows()
+            getClasspathSeparator()
           )
     );
   }

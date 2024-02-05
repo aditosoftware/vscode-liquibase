@@ -29,7 +29,7 @@ function App() {
     LiquibaseConfigurationData.createDefaultData(
       { defaultDatabaseForConfiguration: NO_PRE_CONFIGURED_DRIVER, liquibaseDirectoryInProject: "" },
       ConfigurationStatus.NEW,
-      true
+      ";"
     )
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);

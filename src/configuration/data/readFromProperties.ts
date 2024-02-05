@@ -2,6 +2,7 @@ import * as fs from "fs";
 import { KeyValuePairObject, getProperties } from "properties-file";
 import { LiquibaseSettings } from "./TransferSettings";
 import { ConfigurationStatus, LiquibaseConfigurationData } from "./LiquibaseConfigurationData";
+import { ClasspathType } from "../../utilities/osUtilities";
 
 /**
  * All possible reference keys.
@@ -23,13 +24,13 @@ const possibleReferenceKeys = [
  * Reads just classpath and changelog from any configuration file.
  *
  * @param pPath - the path which should be read
- * @param pIsWindows - if the current os is windows. Needed for the separator in the classpath
+ * @param pClasspathSeparator - the separator in the classpath
  * @returns the classpath and changelog of the file
  */
-export function readChangelogAndClasspathFile(pPath: string, pIsWindows: boolean) {
+export function readChangelogAndClasspathFile(pPath: string, pClasspathSeparator: ClasspathType) {
   const liquibaseProperties = readProperties(pPath);
 
-  const classpath = liquibaseProperties["classpath"].split(pIsWindows ? ";" : ":");
+  const classpath = liquibaseProperties["classpath"].split(pClasspathSeparator);
   const changelog = liquibaseProperties["changelogFile"];
   return { classpath, changelog };
 }
@@ -85,19 +86,23 @@ export function readPossibleReferenceValues(pPath: string): string[] {
  * @param pName - the name of the configuration
  * @param pPath - the path of the file
  * @param pLiquibaseSettings - the settings used for creating and updating the configuration
- * @param isWindows - if the current os is windows. Needed for the separator in the classpath
+ * @param classpathSeparator - the separator in the classpath. This is depending on OS.
  * @returns the loaded content
  */
 export function readFullValues(
   pName: string,
   pPath: string,
   pLiquibaseSettings: LiquibaseSettings,
-  isWindows: boolean
+  classpathSeparator: ClasspathType
 ): LiquibaseConfigurationData {
   // read the liquibase properties from a file
   const liquibaseProperties = readProperties(pPath);
 
-  const data = LiquibaseConfigurationData.createDefaultData(pLiquibaseSettings, ConfigurationStatus.EDIT, isWindows);
+  const data = LiquibaseConfigurationData.createDefaultData(
+    pLiquibaseSettings,
+    ConfigurationStatus.EDIT,
+    classpathSeparator
+  );
   data.name = pName;
 
   // handle all key-value-pairs from the file

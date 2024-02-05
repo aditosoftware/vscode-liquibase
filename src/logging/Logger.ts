@@ -63,15 +63,20 @@ export class Logger {
   /**
    * Logs an error message to the log file and the output.
    * @param message - a user friendly message of the error
-   * @param error - the error itself
-   * @param notifyUser - if the user should also be notified via `vscode.window.showErrorMessage`
+   * @param error - the error itself. If the error includes a stack attribute (which the exception does), then the error will be logged.
+   *     If there is no stack attribute in the error, then nothing will be logged.
+   * @param notifyUser - if the user should also be notified via `vscode.window.showErrorMessage`. If there is a notification, then there will be also a button to open the output.
    */
   error(message: string, notifyUser: boolean): void;
   error(message: string, error: unknown, notifyUser?: boolean): void;
   error(message: string, error: unknown, notifyUser?: boolean): void {
     this.logger.error(message, error);
     if (notifyUser) {
-      vscode.window.showErrorMessage(message);
+      vscode.window.showErrorMessage(message, "Open output").then((dialogResult) => {
+        if (dialogResult === "Open output") {
+          this.outputChannel.show();
+        }
+      });
     }
   }
 

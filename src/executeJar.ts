@@ -1,8 +1,11 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { spawn } from "child_process";
-import { isWindows } from "./utilities/osUtilities";
+import { spawn, spawnSync } from "child_process";
 import { Logger } from "./logging/Logger";
+import { buildClasspath, gson, liquibaseCore, picocli, snakeYaml } from "./prerequisites";
+import * as fs from "fs";
+import { libFolder, resourcePath } from "./extension";
+import { getClasspathSeparator } from "./utilities/osUtilities";
 
 class CustomError extends Error {
   stdout?: string;
@@ -31,23 +34,14 @@ export function executeJar(
     },
     async (progress) => {
       return new Promise<number>((resolve, reject) => {
-        const javaHome = process.env["JAVA_HOME"];
-
-        if (!javaHome) {
-          const error = new CustomError("JAVA_HOME environment variable is not set.");
-          reject(error);
+        const javaExecutable = getJavaExecutable(reject);
+        if (!javaExecutable) {
           return;
         }
 
-        const javaExecutable = path.join(javaHome, "bin", "java");
-        const liquibasePath = path.join(rootPath, "liquibase-core-4.24.0.jar");
-        const picocliPath = path.join(rootPath, "picocli-4.7.5.jar");
-        const snakeYamlPath = path.join(rootPath, "snakeyaml-2.2.jar");
+        const cp = buildClasspath(rootPath, liquibaseCore, picocli, snakeYaml).join(getClasspathSeparator());
 
-        const cpElements: string[] = [liquibasePath, picocliPath, snakeYamlPath];
-        const cp = cpElements.join(isWindows() ? ";" : ":");
-
-        const argsArray = [
+        const argsArray: string[] = [
           // force liquibase to use english locale, because other I18N are not good
           "-Duser.language=en",
           // set encoding to utf-8, because otherwise special characters will not be displayed correctly
@@ -97,6 +91,124 @@ export function executeJar(
       });
     }
   );
+}
+
+/**
+ * Loads all contexts from a changelog file.
+ * @param changelogFile - the absolute path to the changelog file
+ * @returns the quick pick items containing all changelogs
+ */
+export async function loadContextsFromChangelogFile(changelogFile: string): Promise<vscode.QuickPickItem[]> {
+  if (!fs.existsSync(changelogFile)) {
+    Logger.getLogger().debug(`File ${changelogFile} does not exist for context search`);
+    return [];
+  }
+
+  const loadingMessage = `Loading possible contexts for ${changelogFile}`;
+  Logger.getLogger().debug(loadingMessage);
+  return await vscode.window.withProgress(
+    {
+      location: vscode.ProgressLocation.Notification,
+      cancellable: false,
+      title: loadingMessage,
+    },
+    (progress) => {
+      return new Promise<vscode.QuickPickItem[]>((resolve, reject) => {
+        // get the java executable
+        const javaExecutable = getJavaExecutable(reject);
+        if (!javaExecutable) {
+          return [];
+        }
+
+        // jar from lib directory
+        const extendedJar = path.join(libFolder, "liquibase-extended-cli.jar");
+
+        // classpath elements needed for execution of the jar
+        const cp = [extendedJar, ...buildClasspath(resourcePath, picocli, liquibaseCore, gson)];
+
+        // all arguments for the jar execution
+        const args = [
+          // set encoding to utf-8, because otherwise special characters will not be displayed correctly from liquibase
+          "-Dfile.encoding=UTF-8",
+          "-cp",
+          cp.join(getClasspathSeparator()),
+          "de.adito.context.ContextResolver",
+          changelogFile,
+        ];
+
+        Logger.getLogger().info(`Trying to load contexts for ${changelogFile}`);
+        Logger.getLogger().info(`${javaExecutable} ${args.join(" ")}`);
+
+        try {
+          progress.report({ message: "Started loading... This might take a while" });
+          const result = spawnSync(javaExecutable, args, { encoding: "utf-8" });
+
+          Logger.getLogger().info(`Fetching of contexts finished with ${result.status}`);
+          // Log every output (stdout, stderr) from the command for later information.
+          Logger.getLogger().debug(`${sanitizeOutput(result.output.toString())}`);
+
+          if (result.status === 0) {
+            // command execution was successful, trim the result and transform it to the array
+            const output = result.stdout.trim();
+            const contexts = JSON.parse(output.toString());
+
+            Logger.getLogger().info(`Loaded contexts: ${contexts}`);
+
+            // transform the elements to an quick pick array
+            const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {
+              return {
+                label: pContext,
+              };
+            });
+
+            resolve(contextValues);
+          } else {
+            // any error happened
+            Logger.getLogger().error(
+              `Error while fetching contexts`,
+              // adding the whole stderr as stack. This will put everything in the error log
+              { stack: sanitizeOutput(result.stderr) },
+              true
+            );
+            reject(`Error ${result.status}, ${result.error?.message}\n ${result.stderr}`);
+          }
+        } catch (error) {
+          Logger.getLogger().error("Error loading contexts", error, true);
+          reject(error);
+        }
+      });
+    }
+  );
+}
+
+/**
+ * Returns the path to the java executable, if the environment variable was set.
+ * @param reject - the reject of any promise
+ * @returns the path to `JAVA_HOME/bin/java`, when a java home was given
+ */
+function getJavaExecutable(reject: (reason?: unknown) => void) {
+  const javaHome = process.env["JAVA_HOME"];
+
+  if (!javaHome) {
+    const error = new CustomError("JAVA_HOME environment variable is not set.");
+    reject(error);
+    return;
+  }
+
+  return path.join(javaHome, "bin", "java");
+}
+
+/**
+ * Sanitizes any output that can include ANSI Escape Codes. These codes can do in some consoles color formats.
+ * In the VSCode output panel or any log file, these escape codes can not be interpreted correctly.
+ * Because of these two outputs, we are removing these elements.
+ *
+ * @param output - the output given that has potentially unsanitized elements
+ * @returns the sanitized output
+ */
+function sanitizeOutput(output: string): string {
+  // eslint-disable-next-line no-control-regex
+  return output.replace(/\x1b\[[0-9;]*[mG]/g, "");
 }
 
 /**
