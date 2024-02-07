@@ -110,6 +110,16 @@
         "command": "liquibase.removeExistingConfiguration",
         "title": "Remove existing liquibase.properties from the configuration",
         "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.openCacheFile",
+        "title": "Opens the cache file for any cached values",
+        "category": "Liquibase: Cache"
+      },
+      {
+        "command": "liquibase.removeFromCache",
+        "title": "Removes any values from the cache",
+        "category": "Liquibase: Cache"
       }
     ],
     "configuration": {
@@ -156,7 +166,7 @@
       "explorer/context": [
         {
           "submenu": "liquibase.commandsMenu",
-          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml",
+          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml || resourceLangId == sql",
           "group": "Liquibase"
         },
         {
@@ -168,7 +178,7 @@
       "editor/context": [
         {
           "submenu": "liquibase.commandsMenu",
-          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml",
+          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml || resourceLangId == sql",
           "group": "Liquibase"
         },
         {

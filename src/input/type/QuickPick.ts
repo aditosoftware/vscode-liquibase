@@ -15,17 +15,17 @@ export class QuickPick extends InputBase {
   /**
    * The title of the quick pick.
    */
-  private title: string;
+  protected title: string;
 
   /**
    * Option, if multiple elements are allowed.
    * If no value present, then only one element is allowed.
    */
-  private allowMultiple?: boolean;
+  protected allowMultiple?: boolean;
   /**
    * Any function to generate the items for the quick pick. This can be a sync or async function.
    */
-  private generateItems: QuickPickItemFunction;
+  protected generateItems: QuickPickItemFunction;
 
   constructor(
     name: string,

@@ -6,6 +6,7 @@ import { buildClasspath, gson, liquibaseCore, picocli, snakeYaml } from "./prere
 import * as fs from "fs";
 import { libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
+import { saveContexts } from "./cache/handleCache";
 
 class CustomError extends Error {
   stdout?: string;
@@ -96,9 +97,13 @@ export function executeJar(
 /**
  * Loads all contexts from a changelog file.
  * @param changelogFile - the absolute path to the changelog file
+ * @param liquibasePropertiesPath  - the path to the liquibase properties file
  * @returns the quick pick items containing all changelogs
  */
-export async function loadContextsFromChangelogFile(changelogFile: string): Promise<vscode.QuickPickItem[]> {
+export async function loadContextsFromChangelogFile(
+  changelogFile: string,
+  liquibasePropertiesPath: string
+): Promise<vscode.QuickPickItem[]> {
   if (!fs.existsSync(changelogFile)) {
     Logger.getLogger().debug(`File ${changelogFile} does not exist for context search`);
     return [];
@@ -124,7 +129,7 @@ export async function loadContextsFromChangelogFile(changelogFile: string): Prom
         const extendedJar = path.join(libFolder, "liquibase-extended-cli.jar");
 
         // classpath elements needed for execution of the jar
-        const cp = [extendedJar, ...buildClasspath(resourcePath, picocli, liquibaseCore, gson)];
+        const cp = [extendedJar, ...buildClasspath(resourcePath, picocli, liquibaseCore, snakeYaml, gson)];
 
         // all arguments for the jar execution
         const args = [
@@ -153,6 +158,9 @@ export async function loadContextsFromChangelogFile(changelogFile: string): Prom
             const contexts = JSON.parse(output.toString());
 
             Logger.getLogger().info(`Loaded contexts: ${contexts}`);
+
+            // save the loaded context into the cache
+            saveContexts(liquibasePropertiesPath, contexts);
 
             // transform the elements to an quick pick array
             const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {

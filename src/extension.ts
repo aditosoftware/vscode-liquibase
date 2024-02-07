@@ -30,6 +30,9 @@ import {
 import * as fs from "fs";
 import { Logger } from "./logging/Logger";
 import { readUrl } from "./configuration/data/readFromProperties";
+import { openDocument } from "./utilities/vscodeUtilities";
+import { readContexts } from "./cache/handleCache";
+import { removeFromCache } from "./cache/removeFromCache";
 
 /**
  * The path where all resources (jars) are located from the extension.
@@ -40,6 +43,11 @@ export let resourcePath: string;
  * Internal resources folder inside the extension.
  */
 export let libFolder: string;
+
+/**
+ * The location where the cache iss located. This will be inside the resourcePath in a json file.
+ */
+export let cacheLocation: string;
 
 /**
  * Main-Function that will execute all the code within
@@ -60,6 +68,9 @@ export async function activate(context: vscode.ExtensionContext) {
     resourcePath = path.join(os.homedir(), ".liquibase", "resources");
   }
 
+  // construct the cache location
+  cacheLocation = path.join(resourcePath, "cache.json");
+
   // the folder, where additional libraries are included
   libFolder = path.join(context.extensionPath, "lib");
 
@@ -70,6 +81,16 @@ export async function activate(context: vscode.ExtensionContext) {
   prerequisites(context, resourcePath).then(() => {
     // Register all commands that are needed for handling liquibase properties
     registerCommandsForLiquibasePropertiesHandling(context);
+
+    // TODO position
+    context.subscriptions.push(
+      vscode.commands.registerCommand("liquibase.openCacheFile", () => {
+        openDocument(cacheLocation);
+      }),
+      vscode.commands.registerCommand("liquibase.removeFromCache", async () => {
+        removeFromCache();
+      })
+    );
 
     // Command that will be executed when the extension command is triggered
     context.subscriptions.push(
@@ -168,7 +189,15 @@ export async function activate(context: vscode.ExtensionContext) {
       registerLiquibaseCommand(
         "generate-changelog",
         [
-          ...generatePropertyFileDialogOptions(true, true),
+          ...generatePropertyFileDialogOptions(true, false),
+          // This needs a separate context query, because it is only used for generating new files and not getting old files
+          {
+            input: new InputBox("context", {
+              title: "The context all the changelogs should get",
+              value: " ", // TODO empty value gets cancelled. How to improve?
+            }),
+            cmdArgs: "--context-filter",
+          },
           {
             input: new OpenDialog({
               canSelectFiles: false,
@@ -321,6 +350,12 @@ export async function activate(context: vscode.ExtensionContext) {
   });
 }
 
+const contextPreDialog = "contextPre";
+const noContext = "Do not use context";
+const loadContext = "Load all contexts from changelog file";
+const useCache = "Use any of the recent contexts";
+const NO_CONTEXT_USED = "###NO_CONTEXT_USED###";
+
 /**
  * Generate the PickPanelConfigs for any dialog that needs a property file.
  * This will return the basic `ConnectionType` input as well as the required changelog and context dialogs.
@@ -355,18 +390,104 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
   }
 
   if (contextNeeded) {
-    inputConfigs.push({
-      input: new QuickPick("context", "Choose any context", readContextValues, true),
-      createCmdArgs: (dialogValues: DialogValues) => {
-        const context = dialogValues.inputValues.get("context");
-        // add a dummy value when no context should be used, otherwise transform them normally
-        const contextCmdValue: string = context && context.length > 0 ? context.join(",") : "###NO_CONTEXT_USED###";
-        return [`--contexts=${contextCmdValue}`];
+    let cache: string[] = [];
+
+    inputConfigs.push(
+      {
+        input: new QuickPick(
+          contextPreDialog,
+          "Select context using for the command",
+          (currentResults: DialogValues) => {
+            const propertyFile = currentResults.inputValues.get(PROPERTY_FILE);
+
+            cache = [];
+
+            // read the contexts from the cache
+            let cachedContexts: string | undefined;
+            if (propertyFile && propertyFile[0]) {
+              cache = readContexts(propertyFile[0]);
+              cachedContexts = cache.join(", ");
+            }
+
+            const items: vscode.QuickPickItem[] = [
+              {
+                label: noContext,
+                detail: "This will only execute any changeset that does not have any context",
+                iconPath: new vscode.ThemeIcon("search-remove"),
+              },
+              {
+                label: loadContext,
+                detail: "The loading might take a while.",
+                iconPath: new vscode.ThemeIcon("sync"),
+              },
+              {
+                label: useCache,
+                detail: cachedContexts,
+                iconPath: new vscode.ThemeIcon("list-selection"),
+              },
+            ];
+            return items;
+          }
+        ),
+        createCmdArgs: (dialogValues: DialogValues) => {
+          const selected = dialogValues.inputValues.get(contextPreDialog);
+          if (selected && selected[0]) {
+            if (selected[0] === noContext) {
+              return [`--contexts=${NO_CONTEXT_USED}`];
+            }
+          }
+        },
       },
-    });
+
+      {
+        input: new QuickPick(
+          "context",
+          "Choose any context",
+          async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
+          true,
+          showContextSelection
+        ),
+        createCmdArgs: (dialogValues: DialogValues) => {
+          const context = dialogValues.inputValues.get("context");
+
+          // add a dummy value when no context should be used, otherwise transform them normally
+          const contextCmdValue: string = context && context.length > 0 ? context.join(",") : NO_CONTEXT_USED;
+          return [`--contexts=${contextCmdValue}`];
+        },
+      }
+    );
   }
 
   return inputConfigs;
+}
+
+// TODO TSDOC
+function showContextSelection(dialogValues: DialogValues): boolean {
+  const result = dialogValues.inputValues.get(contextPreDialog);
+
+  if (result && result[0]) {
+    return !(result[0] === noContext);
+  }
+
+  return false;
+}
+
+async function loadContexts(dialogValues: DialogValues, cache: string[]): Promise<vscode.QuickPickItem[]> {
+  const result = dialogValues.inputValues.get(contextPreDialog);
+
+  if (result && result[0]) {
+    if (result[0] === useCache) {
+      return cache.map((pCache) => {
+        return {
+          label: pCache,
+        };
+      });
+    } else if (result[0] === loadContext) {
+      return await readContextValues(dialogValues);
+    }
+  }
+
+  return [];
 }
 
 /**
