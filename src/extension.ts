@@ -351,8 +351,8 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 const contextPreDialog = "contextPre";
-const noContext = "Do not use context";
-const loadContext = "Load all contexts from changelog file";
+const noContext = "Do not use any contexts";
+const loadContext = "Load all contexts from the changelog file";
 const useCache = "Use any of the recent contexts";
 const NO_CONTEXT_USED = "###NO_CONTEXT_USED###";
 
@@ -420,12 +420,16 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
                 detail: "The loading might take a while.",
                 iconPath: new vscode.ThemeIcon("sync"),
               },
-              {
+            ];
+
+            if (cachedContexts) {
+              items.push({
                 label: useCache,
                 detail: cachedContexts,
                 iconPath: new vscode.ThemeIcon("list-selection"),
-              },
-            ];
+              });
+            }
+
             return items;
           }
         ),
