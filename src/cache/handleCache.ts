@@ -15,7 +15,6 @@ export interface Connection {
 /**
  * The cache itself.
  */
-// TODO export needed?
 export interface Cache {
   /**
    * Any connection in the cache.
@@ -83,6 +82,11 @@ export function readContexts(connectionLocation: string): string[] {
   }
 }
 
+/**
+ * Removes the complete cache file.
+ *
+ * The user will be informed, if this file is successfully removed.
+ */
 export function removeCache(): void {
   if (fs.existsSync(cacheLocation)) {
     fs.rmSync(cacheLocation);
@@ -90,6 +94,13 @@ export function removeCache(): void {
   }
 }
 
+/**
+ * Removes selected connections from the cache.
+ *
+ * The user will not be informed, if this was successful.
+ *
+ * @param connections - the connections that should be removed from the cache. All values need to be keys of the cache (= absolute paths)
+ */
 export function removeConnectionsFromCache(connections: string[]): void {
   const cache = readCache();
 

@@ -20,7 +20,7 @@ import {
   addExistingLiquibaseConfiguration,
   editExistingLiquibaseConfiguration,
   removeExistingLiquibaseConfiguration,
-} from "./configurationCommands";
+} from "./settings/configurationCommands";
 import {
   fileName,
   generateCommandLineArgs,
@@ -82,7 +82,7 @@ export async function activate(context: vscode.ExtensionContext) {
     // Register all commands that are needed for handling liquibase properties
     registerCommandsForLiquibasePropertiesHandling(context);
 
-    // TODO position
+    // Register all commands that are used for showing/deleting the cache
     context.subscriptions.push(
       vscode.commands.registerCommand("liquibase.openCacheFile", () => {
         openDocument(cacheLocation);

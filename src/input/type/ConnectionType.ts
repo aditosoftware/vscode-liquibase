@@ -16,26 +16,16 @@ export const REFERENCE_PROPERTY_FILE = "referencePropertyFile";
  * Input for the connection type.
  */
 export class ConnectionType extends InputBase {
-  // TODO diese klasse von quickpick erben lassen?
-
   constructor(
     name: typeof PROPERTY_FILE | typeof REFERENCE_PROPERTY_FILE,
-    // allowMultiple?: boolean,
     beforeInput?: BeforeInputType,
     afterInput?: AfterInputType
   ) {
-    super(
-      name,
-      // ConnectionType.generateTitle(name, allowMultiple),
-      // (_dialogValues: DialogValues) => ConnectionType.generateItems(),
-      // allowMultiple,
-      beforeInput,
-      afterInput
-    );
+    super(name, beforeInput, afterInput);
   }
 
   async showDialog(
-    currentResults: DialogValues,
+    _currentResults: DialogValues,
     currentStep: number,
     maximumStep: number
   ): Promise<string | undefined> {
@@ -53,14 +43,6 @@ export class ConnectionType extends InputBase {
       if (selectedConnection) {
         return selectedConnection.detail;
       }
-
-      // if (selectedConnection) {
-      //   if (Array.isArray(selectedConnection)) {
-      //     return selectedConnection.map((pElement) => pElement.detail);
-      //   } else if (selectedConnection.detail) {
-      //     return [selectedConnection.detail];
-      //   }
-      // }
     } else {
       // no configuration found, give the user the possibility to create one
       await ConnectionType.suggestCreationOfConfiguration();

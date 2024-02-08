@@ -39,7 +39,7 @@ label {
   margin-bottom: 2px;
 }
 
-/* add a required indicatore when needed */
+/* add a required indicator when needed */
 vscode-text-field[required]::part(label)::after {
   content: "*";
   color: var(--vscode-errorForeground);

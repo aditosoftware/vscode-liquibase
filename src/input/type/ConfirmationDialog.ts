@@ -37,11 +37,7 @@ export class ConfirmationDialog extends InputBase {
     this.confirmButtonName = confirmButtonName;
   }
 
-  async showDialog(
-    currentResults: DialogValues,
-    _currentStep: number,
-    _maximumStep: number
-  ): Promise<boolean | undefined> {
+  async showDialog(currentResults: DialogValues): Promise<boolean | undefined> {
     // show the dialog and only return true, if Yes was selected
     const answer = await vscode.window.showInformationMessage(
       this.message,

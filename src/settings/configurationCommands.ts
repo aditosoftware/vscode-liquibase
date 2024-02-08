@@ -1,26 +1,13 @@
 import * as vscode from "vscode";
-import { addToLiquibaseConfiguration } from "./configuration/crud/createAndAddConfiguration";
-import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
-import { getClasspathSeparator } from "./utilities/osUtilities";
+import { addToLiquibaseConfiguration } from "../configuration/crud/createAndAddConfiguration";
+import { LiquibaseConfigurationPanel } from "../panels/LiquibaseConfigurationPanel";
+import { getClasspathSeparator } from "../utilities/osUtilities";
 import * as path from "path";
-import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "./handleLiquibaseSettings";
-import {
-  getPathOfConfiguration,
-  readLiquibaseConfigurationNames,
-  updateConfiguration,
-} from "./configuration/crud/readConfiguration";
-import * as fs from "fs";
-import {
-  ConfirmationDialog,
-  ConnectionType,
-  InputBox,
-  OpenDialog,
-  PROPERTY_FILE,
-  QuickPick,
-  handleMultiStepInput,
-} from "./input";
-import { readFullValues } from "./configuration/data/readFromProperties";
-import { Logger } from "./logging/Logger";
+import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
+import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/crud/readConfiguration";
+import { ConnectionType, InputBox, OpenDialog, handleMultiStepInput } from "../input";
+import { readFullValues } from "../configuration/data/readFromProperties";
+import { removeConfiguration } from "./removeConfiguration";
 
 /**
  * Edits an existing configuration.
@@ -134,61 +121,8 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
 }
 
 /**
- * Removes an existing configuration from the configuration file.
+ * Removes an existing configuration from the setting configuration file.
  */
-export async function removeExistingLiquibaseConfiguration() {
-  const setting = "Remove the configuration from the settings";
-  const both = `${setting} and delete the corresponding file`;
-
-  const removeType = "removeType";
-
-  const inputs = [
-    new ConnectionType("propertyFile"),
-    new QuickPick(removeType, "Choose how you wish to remove the connection", () => {
-      return [
-        {
-          label: setting,
-        },
-        {
-          label: both,
-        },
-      ];
-    }),
-    new ConfirmationDialog(
-      "Are you sure you want to delete your configuration?",
-      (dialogValues) => {
-        const deletionMode = dialogValues.inputValues.get(removeType)?.[0];
-
-        return `This will remove the configuration from the following:\n ${deletionMode}`;
-      },
-      "Delete"
-    ),
-  ];
-
-  const dialogResult = await handleMultiStepInput(inputs);
-  if (dialogResult) {
-    const path = dialogResult.inputValues.get(PROPERTY_FILE)?.[0];
-    const deletionMode = dialogResult.inputValues.get(removeType);
-
-    if (path && deletionMode) {
-      const success = await updateConfiguration(async (pJsonData) => {
-        const foundKey = Object.keys(pJsonData).find((pKey) => {
-          return pJsonData[pKey] === path;
-        });
-
-        if (foundKey) {
-          if (deletionMode.indexOf(both) !== -1) {
-            fs.rmSync(path);
-          }
-          delete pJsonData[foundKey];
-        }
-      });
-
-      if (success) {
-        Logger.getLogger().info("Configuration was successfully removed.", true);
-      } else {
-        Logger.getLogger().error("Error while removing the configuration.", true);
-      }
-    }
-  }
+export function removeExistingLiquibaseConfiguration() {
+  removeConfiguration();
 }

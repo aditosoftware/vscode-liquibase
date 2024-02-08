@@ -50,8 +50,6 @@ export async function removeFromCache() {
       generateDetailMessageForConfirmation,
       "Delete"
     ),
-
-    // createInputForCacheValues(configuration, cache, removeOption, removeItems),
   ]);
 
   if (!result) {
@@ -80,6 +78,7 @@ function handleRemoving(toRemove: string, result: DialogValues, configuration: R
       removeCache();
       break;
     case removeConnection:
+      // remove just a few connections
       {
         const propertyFiles = result.inputValues.get(PROPERTY_FILE);
 
@@ -88,11 +87,11 @@ function handleRemoving(toRemove: string, result: DialogValues, configuration: R
 
           Object.keys(configuration)
             .filter((configKey) => propertyFiles.includes(configKey))
-            .forEach((key) => connectionsToRemove.push(key));
+            .forEach((key) => connectionsToRemove.push(configuration[key]));
 
           removeConnectionsFromCache(connectionsToRemove);
 
-          Logger.getLogger().info(`Successfully removed ${propertyFiles.join(", ")} from the cache`, true);
+          Logger.getLogger().info(`Successfully removed ${propertyFiles.join(", ")} from the cache.`, true);
         }
       }
       break;
@@ -175,10 +174,9 @@ function shouldShowPropertyFileSelection(currentResults: DialogValues): boolean 
 
 /**
  * Generates the `QuickPickItems` for the remove options
- * @param currentResults - the current dialog results
  * @returns the `QuickPickItems` for the remove option
  */
-function generateRemoveOptions(currentResults: DialogValues): QuickPickItem[] {
+function generateRemoveOptions(): QuickPickItem[] {
   const items: QuickPickItem[] = [];
 
   removeOptions.forEach((value, key) => {
@@ -190,68 +188,3 @@ function generateRemoveOptions(currentResults: DialogValues): QuickPickItem[] {
 
   return items;
 }
-
-// TODO benötigt?
-// function createInputForCacheValues(
-//   configuration: Record<string, string> | undefined,
-//   cache: Cache,
-//   removeOption: string,
-//   removeItems: string
-// ): InputBase {
-//   return new QuickPick(
-//     "cacheValues",
-//     "Select the values you want to remove from the cache",
-//     (dialogValues: DialogValues) => {
-//       const items: QuickPickItem[] = [];
-
-//       const propertyFiles: string[] | undefined = dialogValues.inputValues.get(PROPERTY_FILE);
-
-//       if (propertyFiles) {
-//         //  if (configuration) {
-//         //           const selectedElements = Object.entries(configuration).filter([key, value] => propertyFiles.includes(key));
-//         //         }
-//         if (configuration) {
-//           Object.keys(configuration)
-//             .filter((configKey) => propertyFiles.includes(configKey))
-//             .forEach((configKey) => {
-//               if (configuration) {
-//                 const configPath = configuration[configKey];
-
-//                 Object.keys(cache)
-//                   .filter((cacheKey) => configPath === cacheKey)
-//                   .forEach((cacheKey) => {
-//                     const connection = cache[cacheKey];
-
-//                     if (connection.contexts.length > 0) {
-//                       items.push(
-//                         {
-//                           label: configKey,
-//                           kind: QuickPickItemKind.Separator,
-//                         },
-//                         ...connection.contexts.map((pContext) => {
-//                           return {
-//                             label: pContext,
-//                           };
-//                         })
-//                       );
-//                     }
-//                   });
-//               }
-//             });
-//         }
-//       }
-
-//       return items;
-//     },
-//     true,
-//     (dialogValues: DialogValues) => {
-//       const toRemove = dialogValues.inputValues.get(removeOption);
-
-//       if (toRemove && toRemove[0]) {
-//         return toRemove[0] === removeItems;
-//       } else {
-//         return false;
-//       }
-//     }
-//   );
-// }

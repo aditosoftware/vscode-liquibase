@@ -61,7 +61,7 @@ class VSCodeAPIWrapper {
    * @remarks When running webview source code inside a web browser, getState will retrieve state
    * from local storage (https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
    *
-   * @return The current state or `undefined` if no state has been set.
+   * @returns The current state or `undefined` if no state has been set.
    */
   public getState(): unknown | undefined {
     if (this.vsCodeApi) {
@@ -81,7 +81,7 @@ class VSCodeAPIWrapper {
    * @param newState - New persisted state. This must be a JSON serializable object. Can be retrieved
    * using {@link getState}.
    *
-   * @return The new state.
+   * @returns The new state.
    */
   public setState<T extends unknown | undefined>(newState: T): T {
     if (this.vsCodeApi) {
