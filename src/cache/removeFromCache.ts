@@ -13,7 +13,7 @@ const removeOption = "removeOption";
 /**
  * The label for removing the whole cache.
  */
-const wholeCache = "Remove whole cache";
+const wholeCache = "Invalidate whole cache";
 
 /**
  * The label for removing only the cache for any number of connections.

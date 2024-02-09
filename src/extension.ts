@@ -357,7 +357,7 @@ export async function activate(context: vscode.ExtensionContext) {
 const contextPreDialog = "contextPre";
 const noContext = "Do not use any contexts";
 const loadContext = "Load all contexts from the changelog file";
-const useCache = "Use any of the recent contexts";
+const useCache = "Use any of the cached contexts";
 const NO_CONTEXT_USED = "###NO_CONTEXT_USED###";
 
 /**
