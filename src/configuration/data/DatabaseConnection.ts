@@ -119,17 +119,25 @@ export class DatabaseConnection {
    * @param properties - the properties editor where the properties should be written
    * @param pReferenceConnection - information if this is the reference connection or not
    * @param pBuildDriverPath - a function for building the drivers path
+   * @param pDisguisePassword - if the password should not be displayed as plain text, but as `***`. These should be used if you are in a preview.
    * @returns the path from the downloaded driver, if downloaded
    */
   writeDataForConnection(
     properties: PropertiesEditor,
     pReferenceConnection: boolean,
-    pBuildDriverPath: (pDriver: Driver) => string | undefined
+    pBuildDriverPath: (pDriver: Driver) => string | undefined,
+    pDisguisePassword: boolean
   ): string | undefined {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
     Object.entries(this).forEach(([key, value]) => {
       if (key && value && key !== "databaseType" && typeof value === "string") {
-        properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, value);
+        let val: string = value;
+
+        if (key === "password" && pDisguisePassword) {
+          val = "***";
+        }
+
+        properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, val);
       }
     });
     return this.writeDriverConfigurationAndDownload(properties, pReferenceConnection, pBuildDriverPath);

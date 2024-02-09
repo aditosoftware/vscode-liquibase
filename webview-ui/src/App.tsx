@@ -126,7 +126,7 @@ function App() {
     const fetchData = () => {
       try {
         // do not add any values for the driver, because we can not build them here (path is not allowed!)
-        setPreviewData(data.generateProperties(() => undefined));
+        setPreviewData(data.generateProperties(() => undefined, true));
       } catch (error) {
         vscodeApiWrapper.postMessage(
           new MessageData(MessageType.LOG_MESSAGE, {

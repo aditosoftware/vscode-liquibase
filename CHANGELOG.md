@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 
 ## [Unreleased]
 
+### Changed
+
+- Disguise the password in the preview of the configuration
+
 ## 0.0.4
 
 ### Added
