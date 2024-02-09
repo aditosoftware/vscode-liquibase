@@ -46,3 +46,22 @@ Quickpick:
 ## LICSENSE-Angabe
 
 - WG -an-> RL -an-> JB: Rückmeldung noch aussehtend
+
+---
+
+keine Kontexte gefunden -> info, dass nichts gefunden wurde
+
+preview -> passwort als \*\*\* anzeigen
+
+context: -> Recents eines nach oben?
+
+cache/recents => einheitliche benennung -> alles zu recent umbennen?
+remove whole cache => invalidate whole cache
+
+in multi step input -> zurückgehen möglich???? untersuchen
+
+oder Kontextakualisierung!
+oder irgendwie aktualisierung ermöglichen? Im Promt??? Link oder Button?
+ähnlich connect to gitlab bei gitkraken
+
+context -> in multi select -> cached dahinterstehen

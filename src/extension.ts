@@ -49,6 +49,8 @@ export let libFolder: string;
  */
 export let cacheLocation: string;
 
+export let magic = 1;
+
 /**
  * Main-Function that will execute all the code within
  * @param context - The context object provided by VSCode to the extension.
@@ -56,6 +58,8 @@ export let cacheLocation: string;
  *                  to store and retrieve global state.
  */
 export async function activate(context: vscode.ExtensionContext) {
+  magic = 42;
+
   // Constructing the path to the resources folder
   if (context.globalStorageUri) {
     // use the global storage directory for the file system
