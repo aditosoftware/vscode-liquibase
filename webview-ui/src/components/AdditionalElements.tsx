@@ -140,7 +140,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
    */
   function handleDeleteRow(pKey: string): void {
     // create new map for saving and deleting the row
-    const newElementValues: Map<string, string> = new Map(additionalElementValues);
+    const newElementValues = new Map<string, string>(additionalElementValues);
     newElementValues.delete(pKey);
 
     setAdditionalElementValues(newElementValues);

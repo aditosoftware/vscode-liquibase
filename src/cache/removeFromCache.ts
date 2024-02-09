@@ -5,12 +5,26 @@ import { readConfiguration } from "../configuration/crud/readConfiguration";
 import { Logger } from "../logging/Logger";
 import * as vscode from "vscode";
 
+/**
+ * The input name for the remove option.
+ */
 const removeOption = "removeOption";
 
+/**
+ * The label for removing the whole cache.
+ */
 const wholeCache = "Remove whole cache";
+
+/**
+ * The label for removing only the cache for any number of connections.
+ */
 const removeConnection = "Remove one or more connections";
 
-const removeOptions: Map<string, string> = new Map([
+/**
+ * The remove options that are possible in the remove input.
+ * The value is the detail message.
+ */
+const removeOptions = new Map<string, string>([
   [wholeCache, "This will remove the whole cache file."],
   [removeConnection, "This will remove everything that is cached for the selected connections."],
 ]);
@@ -141,7 +155,7 @@ function generateDetailMessageForConfirmation(dialogValues: DialogValues): strin
   const propertyFiles = dialogValues.inputValues.get(PROPERTY_FILE);
 
   // Build the details
-  let detail: string = "";
+  let detail = "";
   if (toRemove && toRemove[0]) {
     // add information about the remove option
     detail = removeOptions.get(toRemove[0]) || "";

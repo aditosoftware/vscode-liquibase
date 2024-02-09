@@ -29,7 +29,7 @@ const deleteAll = "Delete the whole file for this configuration";
 /**
  * Information what will be deleted when choosing each option.
  */
-const whatDeleted: Map<string, string[]> = new Map([
+const whatDeleted = new Map<string, string[]>([
   [cache, [cache]],
   [setting, [cache, setting]],
   [deleteAll, [cache, setting, deleteAll]],
@@ -109,7 +109,7 @@ function handleDialogResults(dialogResult: DialogValues): void {
 /**
  * Deletes the values from the configuration.
  * @param path - the path of the configuration
- * @param deletionMode  the modes what should be deleted. This was selected by the user.
+ * @param deletionMode - the modes what should be deleted. This was selected by the user.
  * @returns a function that has as parameter the jsonData from the setting and removes async the values from it.
  */
 function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<string, string>) => Promise<void> {

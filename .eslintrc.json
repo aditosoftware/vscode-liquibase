@@ -24,7 +24,6 @@
     "curly": "warn",
     "eqeqeq": "warn",
     "no-throw-literal": "warn",
-    "semi": "off",
     "tsdoc/syntax": "warn"
   },
   "ignorePatterns": ["out", "dist", "**/*.d.ts", "build"]

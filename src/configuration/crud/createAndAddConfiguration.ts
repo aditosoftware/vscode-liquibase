@@ -86,7 +86,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   }
 
   // save with the relative path in the settings
-  addToLiquibaseConfiguration(name, propertiesFilePath, false);
+  await addToLiquibaseConfiguration(name, propertiesFilePath, false);
 
   // open the created file
   await openDocument(propertiesFilePath);

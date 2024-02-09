@@ -20,7 +20,7 @@ export class DialogValues {
    * The key is the input, which was used to get the value.
    * The value is always stored as a string[], even if it is only a string.
    */
-  inputValues: Map<string, string[]> = new Map();
+  inputValues = new Map<string, string[]>();
 
   /**
    * Adds a value to the inputValues.

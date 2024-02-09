@@ -128,7 +128,7 @@ export class DatabaseConnection {
   ): string | undefined {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
     Object.entries(this).forEach(([key, value]) => {
-      if (key && value && key !== "databaseType") {
+      if (key && value && key !== "databaseType" && typeof value === "string") {
         properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, value);
       }
     });

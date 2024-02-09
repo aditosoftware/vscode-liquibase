@@ -61,7 +61,7 @@ export function readCache(): Cache {
 
   // otherwise, just read and parse the cache
   const cacheContext = fs.readFileSync(cacheLocation, { encoding: "utf-8" });
-  return JSON.parse(cacheContext);
+  return JSON.parse(cacheContext) as Cache;
 }
 
 /**

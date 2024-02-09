@@ -155,9 +155,9 @@ export async function loadContextsFromChangelogFile(
           if (result.status === 0) {
             // command execution was successful, trim the result and transform it to the array
             const output = result.stdout.trim();
-            const contexts = JSON.parse(output.toString());
+            const contexts = JSON.parse(output.toString()) as string[];
 
-            Logger.getLogger().info(`Loaded contexts: ${contexts}`);
+            Logger.getLogger().info(`Loaded contexts: ${contexts.toString()}`);
 
             // save the loaded context into the cache
             saveContexts(liquibasePropertiesPath, contexts);
