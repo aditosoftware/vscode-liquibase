@@ -411,7 +411,11 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
             let cachedContexts: string | undefined;
             if (propertyFile && propertyFile[0]) {
               cache = readContexts(propertyFile[0]);
-              cachedContexts = cache.join(", ");
+              cachedContexts = "No cached contexts";
+              if (cache && cache.length !== 0) {
+                // cached values are there, then join them together
+                cachedContexts = cache.join(", ");
+              }
             }
 
             const items: vscode.QuickPickItem[] = [

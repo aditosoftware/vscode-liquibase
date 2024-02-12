@@ -151,6 +151,10 @@ export async function loadContextsFromChangelogFile(
 
         Logger.getLogger().info(`Loaded contexts: ${contexts.toString()}`);
 
+        if (contexts.length === 0) {
+          Logger.getLogger().info("No contexts found. You can continue normal", true);
+        }
+
         // save the loaded context into the cache
         saveContexts(liquibasePropertiesPath, contexts);
 
