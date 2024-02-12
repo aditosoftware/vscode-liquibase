@@ -359,7 +359,7 @@ export async function activate(context: vscode.ExtensionContext) {
 const contextPreDialog = "contextPre";
 const noContext = "Do not use any contexts";
 const loadContext = "Load all contexts from the changelog file";
-const useCache = "Use any of the cached contexts";
+const useRecentlyLoaded = "Use any of the recently loaded contexts";
 const NO_CONTEXT_USED = "###NO_CONTEXT_USED###";
 
 /**
@@ -412,7 +412,7 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
             let cachedContexts: string | undefined;
             if (propertyFile && propertyFile[0]) {
               cache = readContexts(propertyFile[0]);
-              cachedContexts = "No cached contexts";
+              cachedContexts = "No recently loaded contexts";
               if (cache && cache.length !== 0) {
                 // cached values are there, then join them together
                 cachedContexts = cache.join(", ");
@@ -434,7 +434,7 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
 
             if (cachedContexts) {
               items.push({
-                label: useCache,
+                label: useRecentlyLoaded,
                 detail: cachedContexts,
                 iconPath: new vscode.ThemeIcon("list-selection"),
               });
@@ -491,14 +491,14 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
   const result = dialogValues.inputValues.get(contextPreDialog);
 
   if (result && result[0]) {
-    if (result[0] === useCache) {
+    if (result[0] === useRecentlyLoaded) {
       return {
         items: cache.map((pCache) => {
           return {
             label: pCache,
           };
         }),
-        additionalTitle: "from cache",
+        additionalTitle: "from recently loaded elements",
       };
     } else if (result[0] === loadContext) {
       const items = await readContextValues(dialogValues);

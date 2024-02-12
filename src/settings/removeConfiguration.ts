@@ -14,17 +14,17 @@ import * as fs from "fs";
 /**
  * The option to remove the cache.
  */
-const cache = "Remove the configuration from the cache";
+const cache = "Remove recently loaded elements";
 
 /**
  * The option to remove the setting entry.
  */
-const setting = "Remove the configuration from the settings";
+const setting = "Remove configuration from settings";
 
 /**
  * The option to remove everything.
  */
-const deleteAll = "Delete the whole file for this configuration";
+const deleteAll = "Delete configuration";
 
 /**
  * Information what will be deleted when choosing each option.
@@ -49,7 +49,7 @@ const removeType = "removeType";
 export function removeConfiguration() {
   const inputs = [
     new ConnectionType("propertyFile"),
-    new QuickPick(removeType, "Choose how you wish to remove the connection", () => {
+    new QuickPick(removeType, "Choose how you wish to remove the configuration", () => {
       return [
         {
           label: cache,
@@ -57,11 +57,10 @@ export function removeConfiguration() {
         },
         {
           label: setting,
-          detail: "Configuration file will still exist, but cache will be also deleted.",
+          detail: "Configuration file will still exist, but the recently loaded elements will be also deleted.",
         },
         {
           label: deleteAll,
-          detail: "Both setting and cache will be also deleted.",
         },
       ];
     }),

@@ -13,7 +13,7 @@ const removeOption = "removeOption";
 /**
  * The label for removing the whole cache.
  */
-const wholeCache = "Invalidate whole cache";
+const wholeCache = "Invalidate every recently loaded value";
 
 /**
  * The label for removing only the cache for any number of connections.
@@ -25,8 +25,11 @@ const removeConnection = "Remove one or more connections";
  * The value is the detail message.
  */
 const removeOptions = new Map<string, string>([
-  [wholeCache, "This will remove the whole cache file."],
-  [removeConnection, "This will remove everything that is cached for the selected connections."],
+  [wholeCache, "This will remove the whole file."],
+  [
+    removeConnection,
+    "This will remove everything that is saved as recently loaded values for the selected connections.",
+  ],
 ]);
 
 /**
@@ -38,7 +41,7 @@ export async function removeFromCache() {
 
   if (Object.keys(cache).length === 0) {
     // if we have no cached values, we do not need to query.
-    Logger.getLogger().info("There are no elements in the cache to remove", true);
+    Logger.getLogger().info("There are no elements stored to remove", true);
     return;
   }
 
@@ -49,7 +52,7 @@ export async function removeFromCache() {
 
     new QuickPick(
       PROPERTY_FILE,
-      "Select any number of connections you want to remove from the cache",
+      "Select any number of connections you want to remove from the recently loaded elements",
       async () => {
         configuration = (await readConfiguration()) || {};
 
@@ -60,14 +63,14 @@ export async function removeFromCache() {
     ),
 
     new ConfirmationDialog(
-      "Are you sure to remove the following from the cache?",
+      "Are you sure to remove the following from the recently loaded elements?",
       generateDetailMessageForConfirmation,
       "Delete"
     ),
   ]);
 
   if (!result) {
-    Logger.getLogger().debug("Dialog for deleting cache values cancelled");
+    Logger.getLogger().debug("Dialog for deleting recently loaded values cancelled");
     return;
   }
 
@@ -105,7 +108,10 @@ function handleRemoving(toRemove: string, result: DialogValues, configuration: R
 
           removeConnectionsFromCache(connectionsToRemove);
 
-          Logger.getLogger().info(`Successfully removed ${propertyFiles.join(", ")} from the cache.`, true);
+          Logger.getLogger().info(
+            `Successfully removed ${propertyFiles.join(", ")} from the recently loaded elements.`,
+            true
+          );
         }
       }
       break;

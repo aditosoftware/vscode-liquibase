@@ -114,12 +114,12 @@
       },
       {
         "command": "liquibase.openCacheFile",
-        "title": "Opens the cache file for any cached values",
+        "title": "Opens the file with the recently loaded elements",
         "category": "Liquibase: Cache"
       },
       {
         "command": "liquibase.removeFromCache",
-        "title": "Removes any values from the cache",
+        "title": "Removes any values from the recently loaded elements",
         "category": "Liquibase: Cache"
       }
     ],
