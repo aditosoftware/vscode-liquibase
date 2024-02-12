@@ -1,6 +1,7 @@
-import { QuickInputButton, ThemeIcon, window } from "vscode";
-import { AfterInputType, BeforeInputType, DialogValues, QuickPick, QuickPickItemFunction } from "..";
+import { QuickInputButton, QuickPickItem, ThemeIcon, window } from "vscode";
+import { AfterInputType, BeforeInputType, DialogValues, QuickPick, QuickPickItemFunction, QuickPickItems } from "..";
 import { Logger } from "../../logging/Logger";
+import * as vscode from "vscode";
 
 /**
  * A long loading quick pick input. This should be used, if there is any long-loading data is expected.
@@ -47,22 +48,6 @@ export class LoadingQuickPick extends QuickPick {
     currentStep: number,
     maximumStep: number
   ): Promise<string[] | undefined> {
-    // Show loading message
-    const loadingItem = window.createQuickPick();
-    loadingItem.title = this.generateTitle(this.loadingTitle, currentStep, maximumStep);
-    loadingItem.placeholder = "Please wait, loading is in progress. This might take a while.";
-    loadingItem.ignoreFocusOut = true;
-    loadingItem.busy = true;
-    loadingItem.enabled = false;
-    loadingItem.items = [{ label: "$(loading~spin) Loading..." }];
-    loadingItem.show();
-
-    // Generate the data for the read input
-    const data = await this.loadItems(this.generateItems, currentResults);
-
-    // Hide loading message
-    loadingItem.dispose();
-
     const reloadButton: QuickInputButton = {
       iconPath: new ThemeIcon("sync"),
       tooltip: this.reloadTooltip,
@@ -71,35 +56,36 @@ export class LoadingQuickPick extends QuickPick {
     // Show quick input with loaded data
     const quickPick = window.createQuickPick();
     quickPick.ignoreFocusOut = true;
-    quickPick.title = this.generateTitle(this.title, currentStep, maximumStep, data.additionalTitle);
-    quickPick.items = data.items;
     quickPick.canSelectMany = this.allowMultiple ? this.allowMultiple : false;
     quickPick.placeholder = this.generatePlaceholder();
     // add a reload button
     quickPick.buttons = [reloadButton];
+
     // and add a handler for the reload button
     quickPick.onDidTriggerButton((button) => {
       if (button === reloadButton) {
         Logger.getLogger().info("Reload triggered");
-        quickPick.busy = true;
-        quickPick.enabled = false;
-        quickPick.title = this.generateTitle(this.loadingTitle, currentStep, maximumStep);
+        this.prepareLoading(quickPick, currentStep, maximumStep);
 
         // dummy timeout, because I did not find any other solution how to show the busy indicator to the user
         setTimeout(() => {
           // load the items and then update title and items
           this.loadItems(this.reloadItems, currentResults).then((result) => {
-            quickPick.title = this.generateTitle(this.title, currentStep, maximumStep, result.additionalTitle);
-            quickPick.items = result.items;
-            quickPick.busy = false;
-            quickPick.enabled = true;
+            this.handlePostLoading(quickPick, currentStep, maximumStep, result);
             Logger.getLogger().info("reload done");
           });
         }, 1);
       }
     });
+    // sets everything for the first loading
+    this.prepareLoading(quickPick, currentStep, maximumStep);
 
+    // show the quick pick
     quickPick.show();
+
+    // loads all the items and shows them
+    const data = await this.loadItems(this.generateItems, currentResults);
+    this.handlePostLoading(quickPick, currentStep, maximumStep, data);
 
     // Wait for user input or cancellation
     const selected = await new Promise<string[] | undefined>((resolve) => {
@@ -114,5 +100,38 @@ export class LoadingQuickPick extends QuickPick {
     });
 
     return selected;
+  }
+
+  /**
+   * Blocks the quick pick for loading.
+   * @param quickPick - the real quick pick component
+   * @param currentStep - the current dialog step
+   * @param maximumStep - the maximum dialog step
+   */
+  private prepareLoading(quickPick: vscode.QuickPick<QuickPickItem>, currentStep: number, maximumStep: number): void {
+    quickPick.title = this.generateTitle(this.loadingTitle, currentStep, maximumStep);
+    quickPick.placeholder = "Please wait, loading is in progress. This might take a while.";
+    quickPick.busy = true;
+    quickPick.enabled = false;
+  }
+
+  /**
+   * Enables the quick pick after the loading and sets the new items.
+   * @param quickPick - the real quick pick component
+   * @param currentStep - the current dialog step
+   * @param maximumStep - the maximum dialog step
+   * @param data - the loaded data
+   */
+  private handlePostLoading(
+    quickPick: vscode.QuickPick<QuickPickItem>,
+    currentStep: number,
+    maximumStep: number,
+    data: QuickPickItems
+  ) {
+    quickPick.placeholder = this.generatePlaceholder();
+    quickPick.title = this.generateTitle(this.title, currentStep, maximumStep, data.additionalTitle);
+    quickPick.items = data.items;
+    quickPick.busy = false;
+    quickPick.enabled = true;
   }
 }
