@@ -195,13 +195,14 @@ export async function activate(context: vscode.ExtensionContext) {
         [
           ...generatePropertyFileDialogOptions(true, false),
           // This needs a separate context query, because it is only used for generating new files and not getting old files
-          {
-            input: new InputBox("context", {
-              title: "The context all the changelogs should get",
-              value: " ", // TODO empty value gets cancelled. How to improve?
-            }),
-            cmdArgs: "--context-filter",
-          },
+          // FIXME: better context handling at generate-changelog!!!!
+          // {
+          //   input: new InputBox("context", {
+          //     title: "The context all the changelogs should get",
+          //     value: " ", // TODO empty value gets cancelled. How to improve?
+          //   }),
+          //   cmdArgs: "--context-filter",
+          // },
           {
             input: new OpenDialog({
               canSelectFiles: false,
