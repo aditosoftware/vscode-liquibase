@@ -66,7 +66,7 @@ export class QuickPick extends InputBase {
     currentStep: number,
     maximumStep: number
   ): Promise<string[] | undefined> {
-    const items = await this.loadGeneratedItems(currentResults);
+    const items = await this.loadItems(this.generateItems, currentResults);
 
     const result: vscode.QuickPickItem | vscode.QuickPickItem[] | undefined = await vscode.window.showQuickPick(
       items.items,
@@ -89,16 +89,20 @@ export class QuickPick extends InputBase {
   }
 
   /**
-   * Loads the items via the `generateItems` function.
+   * Loads the items via the given function.
    * It will also transform all the different data formats into one format.
+   * @param loadFunction - the function to load the items
    * @param currentResults - the current dialog results
    * @returns the loaded items and an optional additional title
    */
-  protected async loadGeneratedItems(currentResults: DialogValues): Promise<QuickPickItems> {
+  protected async loadItems(
+    loadFunction: QuickPickItemFunction,
+    currentResults: DialogValues
+  ): Promise<QuickPickItems> {
     const items: vscode.QuickPickItem[] = [];
     let additionalTitle: string | undefined;
 
-    const generatedItems = await this.generateItems(currentResults);
+    const generatedItems = await loadFunction(currentResults);
 
     if (Array.isArray(generatedItems)) {
       items.push(...generatedItems);

@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Better support when changelogs without any contexts are loaded and cached
 - Loading dialog for any long loading processes
 - Indicator in the context dialog where the context was loaded from
+- Reload option for all loading dialogs 
 
 ### Changed
 

@@ -459,6 +459,8 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
           "Choose any context",
           "Loading contexts",
           async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
+          async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
+          "Reload contexts from changelog",
           true,
           showContextSelection
         ),
@@ -501,15 +503,24 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
         additionalTitle: "from recently loaded elements",
       };
     } else if (result[0] === loadContext) {
-      const items = await readContextValues(dialogValues);
-      return {
-        items,
-        additionalTitle: "loaded from changelogs",
-      };
+      return await loadContextsFromChangelog(dialogValues);
     }
   }
 
   return { items: [] };
+}
+
+/**
+ * Loads the items from the given root changelog file.
+ * @param dialogValues - the current dialog values
+ * @returns the loaded items
+ */
+async function loadContextsFromChangelog(dialogValues: DialogValues) {
+  const items = await readContextValues(dialogValues);
+  return {
+    items,
+    additionalTitle: "loaded from changelogs",
+  };
 }
 
 /**
