@@ -9,11 +9,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 ### Added
 
 - Better support when changelogs without any contexts are loaded and cached
+- Loading dialog for any long loading processes
+- Indicator in the context dialog where the context was loaded from
 
 ### Changed
 
 - Disguise the password in the preview of the configuration
-- Added loading dialog directly to the other inputs, so it is more understandable that any context is loaded.
+- Used loading dialog for the contexts
 
 ## 0.0.4
 

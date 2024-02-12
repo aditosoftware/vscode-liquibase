@@ -10,6 +10,7 @@ import {
   ConnectionType,
   DialogValues,
   InputBox,
+  QuickPickItems,
   LoadingQuickPick,
   OpenDialog,
   PROPERTY_FILE,
@@ -486,22 +487,29 @@ function showContextSelection(dialogValues: DialogValues): boolean {
   return false;
 }
 
-async function loadContexts(dialogValues: DialogValues, cache: string[]): Promise<vscode.QuickPickItem[]> {
+async function loadContexts(dialogValues: DialogValues, cache: string[]): Promise<QuickPickItems> {
   const result = dialogValues.inputValues.get(contextPreDialog);
 
   if (result && result[0]) {
     if (result[0] === useCache) {
-      return cache.map((pCache) => {
-        return {
-          label: pCache,
-        };
-      });
+      return {
+        items: cache.map((pCache) => {
+          return {
+            label: pCache,
+          };
+        }),
+        additionalTitle: "from cache",
+      };
     } else if (result[0] === loadContext) {
-      return await readContextValues(dialogValues);
+      const items = await readContextValues(dialogValues);
+      return {
+        items,
+        additionalTitle: "loaded from changelogs",
+      };
     }
   }
 
-  return [];
+  return { items: [] };
 }
 
 /**

@@ -42,15 +42,15 @@ export class LoadingQuickPick extends QuickPick {
     loadingItem.show();
 
     // Generate the data for the read input
-    const data = await this.generateItems(currentResults);
+    const data = await this.loadGeneratedItems(currentResults);
 
     // Hide loading message
     loadingItem.dispose();
 
     // Show quick input with loaded data
     const quickPick = window.createQuickPick();
-    quickPick.title = this.generateTitle(this.title, currentStep, maximumStep);
-    quickPick.items = data;
+    quickPick.title = this.generateTitle(this.title, currentStep, maximumStep, data.additionalTitle);
+    quickPick.items = data.items;
     quickPick.canSelectMany = this.allowMultiple ? this.allowMultiple : false;
     quickPick.placeholder = this.generatePlaceholder();
     quickPick.show();
