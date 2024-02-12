@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 ### Changed
 
 - Disguise the password in the preview of the configuration
+- Added loading dialog directly to the other inputs, so it is more understandable that any context is loaded.
 
 ## 0.0.4
 

@@ -10,6 +10,7 @@ import {
   ConnectionType,
   DialogValues,
   InputBox,
+  LoadingQuickPick,
   OpenDialog,
   PROPERTY_FILE,
   QuickPick,
@@ -448,9 +449,10 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
       },
 
       {
-        input: new QuickPick(
+        input: new LoadingQuickPick(
           "context",
           "Choose any context",
+          "Loading contexts",
           async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
           true,
           showContextSelection

@@ -6,7 +6,9 @@ import * as vscode from "vscode";
  *
  * This function can read all previous entered dialog values.
  */
-type QuickPickItemFunction = (currentResults: DialogValues) => Promise<vscode.QuickPickItem[]> | vscode.QuickPickItem[];
+export type QuickPickItemFunction = (
+  currentResults: DialogValues
+) => Promise<vscode.QuickPickItem[]> | vscode.QuickPickItem[];
 
 /**
  * Any quick pick that is not an selection of an connection.
@@ -50,8 +52,8 @@ export class QuickPick extends InputBase {
 
     const result: vscode.QuickPickItem | vscode.QuickPickItem[] | undefined = await vscode.window.showQuickPick(items, {
       canPickMany: this.allowMultiple,
-      title: `${this.title} -  ${this.generateStepOutput(currentStep, maximumStep)}`,
-      placeHolder: `Select ${this.allowMultiple ? "any number of items" : "one item"}`,
+      title: this.generateTitle(this.title, currentStep, maximumStep),
+      placeHolder: this.generatePlaceholder(),
     });
 
     if (result) {
@@ -63,5 +65,24 @@ export class QuickPick extends InputBase {
     }
 
     return result;
+  }
+
+  /**
+   * Generates the whole title for the input by using the given title and the step output
+   * @param pTitle - the describing text title. This should be given by creating the class
+   * @param currentStep - the current step of the input
+   * @param maximumStep - the maximum step of the input
+   * @returns the generated title
+   */
+  protected generateTitle(pTitle: string, currentStep: number, maximumStep: number): string {
+    return `${pTitle} -  ${this.generateStepOutput(currentStep, maximumStep)}`;
+  }
+
+  /**
+   * Generates the placeholder by using the allowMultiple flag.
+   * @returns the generated placeholder
+   */
+  protected generatePlaceholder(): string {
+    return `Select ${this.allowMultiple ? "any number of items" : "one item"}`;
   }
 }

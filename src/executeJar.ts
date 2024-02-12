@@ -111,82 +111,72 @@ export async function loadContextsFromChangelogFile(
 
   const loadingMessage = `Loading possible contexts for ${changelogFile}`;
   Logger.getLogger().debug(loadingMessage);
-  return await vscode.window.withProgress(
-    {
-      location: vscode.ProgressLocation.Notification,
-      cancellable: false,
-      title: loadingMessage,
-    },
-    (progress) => {
-      return new Promise<vscode.QuickPickItem[]>((resolve, reject) => {
-        // get the java executable
-        const javaExecutable = getJavaExecutable(reject);
-        if (!javaExecutable) {
-          return [];
-        }
-
-        // jar from lib directory
-        const extendedJar = path.join(libFolder, "liquibase-extended-cli.jar");
-
-        // classpath elements needed for execution of the jar
-        const cp = [extendedJar, ...buildClasspath(resourcePath, picocli, liquibaseCore, snakeYaml, gson)];
-
-        // all arguments for the jar execution
-        const args = [
-          // set encoding to utf-8, because otherwise special characters will not be displayed correctly from liquibase
-          "-Dfile.encoding=UTF-8",
-          "-cp",
-          cp.join(getClasspathSeparator()),
-          "de.adito.context.ContextResolver",
-          changelogFile,
-        ];
-
-        Logger.getLogger().info(`Trying to load contexts for ${changelogFile}`);
-        Logger.getLogger().info(`${javaExecutable} ${args.join(" ")}`);
-
-        try {
-          progress.report({ message: "Started loading... This might take a while" });
-          const result = spawnSync(javaExecutable, args, { encoding: "utf-8" });
-
-          Logger.getLogger().info(`Fetching of contexts finished with ${result.status}`);
-          // Log every output (stdout, stderr) from the command for later information.
-          Logger.getLogger().debug(`${sanitizeOutput(result.output.toString())}`);
-
-          if (result.status === 0) {
-            // command execution was successful, trim the result and transform it to the array
-            const output = result.stdout.trim();
-            const contexts = JSON.parse(output.toString()) as string[];
-
-            Logger.getLogger().info(`Loaded contexts: ${contexts.toString()}`);
-
-            // save the loaded context into the cache
-            saveContexts(liquibasePropertiesPath, contexts);
-
-            // transform the elements to an quick pick array
-            const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {
-              return {
-                label: pContext,
-              };
-            });
-
-            resolve(contextValues);
-          } else {
-            // any error happened
-            Logger.getLogger().error(
-              `Error while fetching contexts`,
-              // adding the whole stderr as stack. This will put everything in the error log
-              { stack: sanitizeOutput(result.stderr) },
-              true
-            );
-            reject(`Error ${result.status}, ${result.error?.message}\n ${result.stderr}`);
-          }
-        } catch (error) {
-          Logger.getLogger().error("Error loading contexts", error, true);
-          reject(error);
-        }
-      });
+  return new Promise<vscode.QuickPickItem[]>((resolve, reject) => {
+    // get the java executable
+    const javaExecutable = getJavaExecutable(reject);
+    if (!javaExecutable) {
+      return [];
     }
-  );
+
+    // jar from lib directory
+    const extendedJar = path.join(libFolder, "liquibase-extended-cli.jar");
+
+    // classpath elements needed for execution of the jar
+    const cp = [extendedJar, ...buildClasspath(resourcePath, picocli, liquibaseCore, snakeYaml, gson)];
+
+    // all arguments for the jar execution
+    const args = [
+      // set encoding to utf-8, because otherwise special characters will not be displayed correctly from liquibase
+      "-Dfile.encoding=UTF-8",
+      "-cp",
+      cp.join(getClasspathSeparator()),
+      "de.adito.context.ContextResolver",
+      changelogFile,
+    ];
+
+    Logger.getLogger().info(`Trying to load contexts for ${changelogFile}`);
+    Logger.getLogger().info(`${javaExecutable} ${args.join(" ")}`);
+
+    try {
+      const result = spawnSync(javaExecutable, args, { encoding: "utf-8" });
+
+      Logger.getLogger().info(`Fetching of contexts finished with ${result.status}`);
+      // Log every output (stdout, stderr) from the command for later information.
+      Logger.getLogger().debug(`${sanitizeOutput(result.output.toString())}`);
+
+      if (result.status === 0) {
+        // command execution was successful, trim the result and transform it to the array
+        const output = result.stdout.trim();
+        const contexts = JSON.parse(output.toString()) as string[];
+
+        Logger.getLogger().info(`Loaded contexts: ${contexts.toString()}`);
+
+        // save the loaded context into the cache
+        saveContexts(liquibasePropertiesPath, contexts);
+
+        // transform the elements to an quick pick array
+        const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {
+          return {
+            label: pContext,
+          };
+        });
+
+        resolve(contextValues);
+      } else {
+        // any error happened
+        Logger.getLogger().error(
+          `Error while fetching contexts`,
+          // adding the whole stderr as stack. This will put everything in the error log
+          { stack: sanitizeOutput(result.stderr) },
+          true
+        );
+        reject(`Error ${result.status}, ${result.error?.message}\n ${result.stderr}`);
+      }
+    } catch (error) {
+      Logger.getLogger().error("Error loading contexts", error, true);
+      reject(error);
+    }
+  });
 }
 
 /**
