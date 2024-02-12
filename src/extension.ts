@@ -3,15 +3,13 @@ import * as path from "path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { PickPanelConfig, registerLiquibaseCommand } from "./registerLiquibaseCommand";
-import { isExtraQueryForChangelogNeeded, readContextValues, setExtraChangelogCorrectly } from "./readChangelogFile";
+import { isExtraQueryForChangelogNeeded, setExtraChangelogCorrectly } from "./readChangelogFile";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import {
   ConfirmationDialog,
   ConnectionType,
   DialogValues,
   InputBox,
-  QuickPickItems,
-  LoadingQuickPick,
   OpenDialog,
   PROPERTY_FILE,
   QuickPick,
@@ -33,8 +31,8 @@ import * as fs from "fs";
 import { Logger } from "./logging/Logger";
 import { readUrl } from "./configuration/data/readFromProperties";
 import { openDocument } from "./utilities/vscodeUtilities";
-import { readContexts } from "./cache/handleCache";
 import { removeFromCache } from "./cache/removeFromCache";
+import { generateContextInputs } from "./handleContexts";
 
 /**
  * The path where all resources (jars) are located from the extension.
@@ -356,12 +354,6 @@ export async function activate(context: vscode.ExtensionContext) {
   });
 }
 
-const contextPreDialog = "contextPre";
-const noContext = "Do not use any contexts";
-const loadContext = "Load all contexts from the changelog file";
-const useRecentlyLoaded = "Use any of the recently loaded contexts";
-const NO_CONTEXT_USED = "###NO_CONTEXT_USED###";
-
 /**
  * Generate the PickPanelConfigs for any dialog that needs a property file.
  * This will return the basic `ConnectionType` input as well as the required changelog and context dialogs.
@@ -396,131 +388,10 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
   }
 
   if (contextNeeded) {
-    let cache: string[] = [];
-
-    inputConfigs.push(
-      {
-        input: new QuickPick(
-          contextPreDialog,
-          "Select context using for the command",
-          (currentResults: DialogValues) => {
-            const propertyFile = currentResults.inputValues.get(PROPERTY_FILE);
-
-            cache = [];
-
-            // read the contexts from the cache
-            let cachedContexts: string | undefined;
-            if (propertyFile && propertyFile[0]) {
-              cache = readContexts(propertyFile[0]);
-              cachedContexts = "No recently loaded contexts";
-              if (cache && cache.length !== 0) {
-                // cached values are there, then join them together
-                cachedContexts = cache.join(", ");
-              }
-            }
-
-            const items: vscode.QuickPickItem[] = [
-              {
-                label: noContext,
-                detail: "This will only execute any changeset that does not have any context",
-                iconPath: new vscode.ThemeIcon("search-remove"),
-              },
-              {
-                label: loadContext,
-                detail: "The loading might take a while.",
-                iconPath: new vscode.ThemeIcon("sync"),
-              },
-            ];
-
-            if (cachedContexts) {
-              items.push({
-                label: useRecentlyLoaded,
-                detail: cachedContexts,
-                iconPath: new vscode.ThemeIcon("list-selection"),
-              });
-            }
-
-            return items;
-          }
-        ),
-        createCmdArgs: (dialogValues: DialogValues) => {
-          const selected = dialogValues.inputValues.get(contextPreDialog);
-          if (selected && selected[0]) {
-            if (selected[0] === noContext) {
-              return [`--contexts=${NO_CONTEXT_USED}`];
-            }
-          }
-        },
-      },
-
-      {
-        input: new LoadingQuickPick(
-          "context",
-          "Choose any context",
-          "Loading contexts",
-          async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
-          async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
-          "Reload contexts from changelog",
-          true,
-          showContextSelection
-        ),
-        createCmdArgs: (dialogValues: DialogValues) => {
-          const context = dialogValues.inputValues.get("context");
-
-          // add a dummy value when no context should be used, otherwise transform them normally
-          const contextCmdValue: string = context && context.length > 0 ? context.join(",") : NO_CONTEXT_USED;
-          return [`--contexts=${contextCmdValue}`];
-        },
-      }
-    );
+    inputConfigs.push(...generateContextInputs());
   }
 
   return inputConfigs;
-}
-
-// TODO TSDOC
-function showContextSelection(dialogValues: DialogValues): boolean {
-  const result = dialogValues.inputValues.get(contextPreDialog);
-
-  if (result && result[0]) {
-    return !(result[0] === noContext);
-  }
-
-  return false;
-}
-
-async function loadContexts(dialogValues: DialogValues, cache: string[]): Promise<QuickPickItems> {
-  const result = dialogValues.inputValues.get(contextPreDialog);
-
-  if (result && result[0]) {
-    if (result[0] === useRecentlyLoaded) {
-      return {
-        items: cache.map((pCache) => {
-          return {
-            label: pCache,
-          };
-        }),
-        additionalTitle: "from recently loaded elements",
-      };
-    } else if (result[0] === loadContext) {
-      return await loadContextsFromChangelog(dialogValues);
-    }
-  }
-
-  return { items: [] };
-}
-
-/**
- * Loads the items from the given root changelog file.
- * @param dialogValues - the current dialog values
- * @returns the loaded items
- */
-async function loadContextsFromChangelog(dialogValues: DialogValues) {
-  const items = await readContextValues(dialogValues);
-  return {
-    items,
-    additionalTitle: "loaded from changelogs",
-  };
 }
 
 /**

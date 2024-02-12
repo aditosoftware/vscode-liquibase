@@ -1,11 +1,8 @@
 import * as vscode from "vscode";
-import { QuickPickItem } from "vscode";
 import path from "path";
-import { getClasspathSeparator } from "./utilities/osUtilities";
 import { DialogValues, PROPERTY_FILE } from "./input";
-import { readChangelog, readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
+import { readChangelog } from "./configuration/data/readFromProperties";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
-import { loadContextsFromChangelogFile } from "./executeJar";
 
 /**
  * Checks if an extra user query (dialog) for the changelog file is needed.
@@ -45,45 +42,6 @@ export function setExtraChangelogCorrectly(dialogValues: DialogValues): void {
   if (fileSelection && fileSelection[0]) {
     dialogValues.uri = vscode.Uri.file(fileSelection[0]);
   }
-}
-
-/**
- * Reads context values from a Liquibase XML file and returns them as an array of QuickPickItem objects.
- *
- * @param currentResults - the current dialog values
- * @returns A Promise that resolves to an array of QuickPickItem objects representing the context values.
- */
-export async function readContextValues(currentResults: DialogValues, ): Promise<QuickPickItem[]> {
-  const liquibasePropertiesPath = currentResults.inputValues.get(PROPERTY_FILE)?.[0];
-
-  if (!liquibasePropertiesPath) {
-    return [];
-  }
-
-  if (currentResults.uri) {
-    // we are in a right click menu, read the contexts from this file
-    return await loadContextsFromChangelogFile(currentResults.uri.fsPath, liquibasePropertiesPath);
-  }
-
-  // Read Liquibase changelog  and classpath lines from properties file content
-  const classpathAndChangelogs = readChangelogAndClasspathFile(liquibasePropertiesPath, getClasspathSeparator());
-
-  const contextValues: QuickPickItem[] = [];
-
-  // Process changelogFileLine if found
-  if (classpathAndChangelogs) {
-    const changelogFileLine = classpathAndChangelogs.changelog;
-
-    for (const classpath of classpathAndChangelogs.classpath) {
-      // Read and parse the specified XML file
-      const possibleFile = path.join(classpath, path.normalize(changelogFileLine.trim()));
-      const contexts = await loadContextsFromChangelogFile(possibleFile, liquibasePropertiesPath);
-      contextValues.push(...contexts);
-    }
-  }
-
-  // Return an empty array if 'changelogFile:' line is not found
-  return contextValues;
 }
 
 /**

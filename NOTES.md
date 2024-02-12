@@ -61,7 +61,7 @@ remove whole cache => invalidate whole cache
 in multi step input -> zurückgehen möglich???? untersuchen
 
 oder Kontextakualisierung!
-oder irgendwie aktualisierung ermöglichen? Im Promt??? Link oder Button?
+oder irgendwie aktualisierung ermöglichen? Im Promt??? Link oder Button? ---> https://github.com/microsoft/vscode/issues/78335 geht nicht
 ähnlich connect to gitlab bei gitkraken
 
 context -> in multi select -> cached dahinterstehen
