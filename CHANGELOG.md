@@ -11,13 +11,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Better support when changelogs without any contexts are loaded and cached
 - Loading dialog for any long loading processes
 - Indicator in the context dialog where the context was loaded from
-- Reload option for all loading dialogs 
+- Reload option for all loading dialogs
 
 ### Changed
 
 - Disguise the password in the preview of the configuration
 - Used loading dialog for the contexts
 - Wording improved: changed cache to recently loaded
+
+### Fixed
+
+- Fixed a typo in the settings
+- Removed a false second changelog selection at the generate changelog command
 
 ## 0.0.4
 
