@@ -193,7 +193,7 @@ export async function activate(context: vscode.ExtensionContext) {
       registerLiquibaseCommand(
         "generate-changelog",
         [
-          ...generatePropertyFileDialogOptions(true, false),
+          ...generatePropertyFileDialogOptions(false, false),
           // This needs a separate context query, because it is only used for generating new files and not getting old files
           // FIXME: better context handling at generate-changelog!!!!
           // {
@@ -219,15 +219,6 @@ export async function activate(context: vscode.ExtensionContext) {
             }),
             createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
           },
-          //  TODO other file endings except xml don't work. Find out why
-          // {
-          //   input: new QuickPick("possibleFormat", false, () => [
-          //   { label: "xml" },
-          //   { label: "json" },
-          //   { label: "yaml" },
-          //   { label: "yml" },
-          // ];),
-          // },
         ],
         {
           afterCommandAction: openFileAfterCommandExecution,
