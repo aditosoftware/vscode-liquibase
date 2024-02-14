@@ -1,5 +1,5 @@
 import { MessageType } from ".";
-import { LoggingMessage } from "../../logging/LoggingMessage";
+import { LoggingMessage } from "@aditosoftware/vscode-logging";
 import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
 
 /**

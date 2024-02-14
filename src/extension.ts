@@ -28,7 +28,7 @@ import {
   openIndexHtmlAfterCommandExecution,
 } from "./liquibaseCommandsUtilities";
 import * as fs from "fs";
-import { Logger } from "./logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 import { readUrl } from "./configuration/data/readFromProperties";
 import { openDocument } from "./utilities/vscodeUtilities";
 import { removeFromCache } from "./cache/removeFromCache";

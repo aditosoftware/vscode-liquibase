@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import { getLiquibaseConfigurationPath } from "../../handleLiquibaseSettings";
 import path from "path";
-import { Logger } from "../../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * The name of the settings file where all the configurations should be stored.

@@ -3,7 +3,7 @@ import { DialogValues, folderSelectionName } from "./input";
 import { openDocument } from "./utilities/vscodeUtilities";
 import * as vscode from "vscode";
 import * as fs from "fs";
-import { Logger } from "./logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * The name that should be used for any file name input.

@@ -4,7 +4,7 @@ import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
 import { resourcePath } from "./extension";
 import { DialogValues, InputBase, PROPERTY_FILE, handleMultiStepInput } from "./input";
-import { Logger } from "./logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * Interface defining the configuration for pick panels.

@@ -9,7 +9,7 @@ import { MessageType } from "../transfer";
 import { readLiquibaseConfigurationNames, updateConfiguration } from "./readConfiguration";
 import { resourcePath } from "../../extension";
 import { openDocument } from "../../utilities/vscodeUtilities";
-import { Logger } from "../../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * The file ending of all liquibase configuration files.

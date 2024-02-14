@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as vscode from "vscode";
 import { spawn, spawnSync } from "child_process";
-import { Logger } from "./logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 import { buildClasspath, gson, liquibaseCore, picocli, snakeYaml } from "./prerequisites";
 import * as fs from "fs";
 import { libFolder, resourcePath } from "./extension";

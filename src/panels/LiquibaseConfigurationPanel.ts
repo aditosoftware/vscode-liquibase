@@ -8,8 +8,8 @@ import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuratio
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
-import { Logger } from "../logging/Logger";
-import { LoggingMessage } from "../logging/LoggingMessage";
+import { Logger } from "@aditosoftware/vscode-logging";
+import { LoggingMessage } from "@aditosoftware/vscode-logging";
 
 /**
  * This class manages the state and behavior of HelloWorld webview panels.

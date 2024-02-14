@@ -1,5 +1,5 @@
 import { InputBase, DialogValues } from ".";
-import { Logger } from "../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * Handles a multi-step input. All the inputs will be progressed in order.

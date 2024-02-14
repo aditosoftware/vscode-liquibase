@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { cacheLocation } from "../extension";
-import { Logger } from "../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * Any connection in the cache.

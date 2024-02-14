@@ -3,7 +3,7 @@ import * as path from "path";
 import * as fs from "fs";
 import download from "download";
 import { ALL_DRIVERS } from "./configuration/drivers";
-import { Logger } from "./logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * The name + version of the liquibase-core jar.

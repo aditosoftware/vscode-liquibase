@@ -8,7 +8,7 @@ import {
   QuickPick,
   handleMultiStepInput,
 } from "../input";
-import { Logger } from "../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 import * as fs from "fs";
 
 /**

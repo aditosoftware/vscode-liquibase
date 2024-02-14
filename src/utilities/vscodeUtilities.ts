@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
-import { Logger } from "../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * Opens a document in VS-Code.

@@ -1,5 +1,5 @@
 import { readPossibleReferenceValues } from "./configuration/data/readFromProperties";
-import { Logger } from "./logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * Retrieves reference keys and values from a Liquibase properties file.

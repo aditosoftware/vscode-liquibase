@@ -1,6 +1,6 @@
 import { QuickInputButton, QuickPickItem, ThemeIcon, window } from "vscode";
 import { AfterInputType, BeforeInputType, DialogValues, QuickPick, QuickPickItemFunction, QuickPickItems } from "..";
-import { Logger } from "../../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 import * as vscode from "vscode";
 
 /**

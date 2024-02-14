@@ -2,7 +2,7 @@ import { QuickPickItem } from "vscode";
 import { ConfirmationDialog, DialogValues, PROPERTY_FILE, QuickPick, handleMultiStepInput } from "../input";
 import { Cache, readCache, removeCache, removeConnectionsFromCache } from "./handleCache";
 import { readConfiguration } from "../configuration/crud/readConfiguration";
-import { Logger } from "../logging/Logger";
+import { Logger } from "@aditosoftware/vscode-logging";
 import * as vscode from "vscode";
 
 /**
