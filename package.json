@@ -286,7 +286,7 @@
     "download": "^8.0.0",
     "immer": "^10.0.3",
     "properties-file": "^3.3.18",
-    "@aditosoftware/vscode-logging": "^0.0.1"
+    "@aditosoftware/vscode-logging": "^1.0.0"
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
