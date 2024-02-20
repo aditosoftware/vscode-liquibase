@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Disguise the password in the preview of the configuration
 - Used loading dialog for the contexts
 - Wording improved: changed cache to recently loaded
+- Moved logging into extra dependency
 
 ### Fixed
 
