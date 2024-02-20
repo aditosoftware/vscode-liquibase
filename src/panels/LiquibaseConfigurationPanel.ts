@@ -8,9 +8,7 @@ import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuratio
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/crud/testConfiguration";
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
-import { Logger } from "@aditosoftware/vscode-logging";
-import { LoggingMessage } from "@aditosoftware/vscode-logging";
-
+import { Logger, LoggingMessageWithLevel } from "@aditosoftware/vscode-logging";
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
  *
@@ -104,7 +102,7 @@ export class LiquibaseConfigurationPanel {
       .postMessage(new MessageData(pMessageType, data))
       .then((success) => {
         if (!success) {
-          Logger.getLogger().error("error transferring the message to the webview", null);
+          Logger.getLogger().error({ message: "error transferring the message to the webview" });
         }
       });
   }
@@ -188,7 +186,7 @@ export class LiquibaseConfigurationPanel {
         const messageData: MessageData = MessageData.createFromSerializedData(message as MessageData);
 
         const messageType: string = messageData.messageType;
-        const data: LiquibaseConfigurationData | LoggingMessage = messageData.data;
+        const data: LiquibaseConfigurationData | LoggingMessageWithLevel = messageData.data;
 
         if (data instanceof LiquibaseConfigurationData) {
           switch (messageType) {

@@ -92,10 +92,11 @@ export async function readConfiguration(): Promise<Record<string, string> | unde
 async function readConfigurationInternal(): Promise<Configuration | undefined> {
   const configPath = await getLiquibaseSpecificSettingsPath();
   if (!configPath) {
-    Logger.getLogger().error(
-      "No configuration path found for the liquibase specific configuration. Please configure it in the settings",
-      true
-    );
+    Logger.getLogger().error({
+      message:
+        "No configuration path found for the liquibase specific configuration. Please configure it in the settings",
+      notifyUser: true,
+    });
     return;
   }
 

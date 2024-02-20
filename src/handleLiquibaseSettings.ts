@@ -21,7 +21,7 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
   // get default value from setting, so it is not duplicated
   const defaultValue: unknown = configuration.inspect(configurationPathSetting)?.defaultValue;
   if (typeof defaultValue !== "string") {
-    Logger.getLogger().warn(`default value ${defaultValue} was not an string. This should never happen`);
+    Logger.getLogger().warn({ message: `default value ${defaultValue} was not an string. This should never happen` });
     return;
   }
 

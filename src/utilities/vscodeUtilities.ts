@@ -12,6 +12,9 @@ export async function openDocument(path: string) {
     const document = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(document);
   } else {
-    Logger.getLogger().info(`File ${path} could not be opened, because it does not exist.`, true);
+    Logger.getLogger().info({
+      message: `File ${path} could not be opened, because it does not exist.`,
+      notifyUser: true,
+    });
   }
 }

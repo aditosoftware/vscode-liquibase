@@ -64,7 +64,7 @@ export class LoadingQuickPick extends QuickPick {
     // and add a handler for the reload button
     quickPick.onDidTriggerButton((button) => {
       if (button === reloadButton) {
-        Logger.getLogger().info("Reload triggered");
+        Logger.getLogger().info({ message: "Reload triggered" });
         this.prepareLoading(quickPick, currentStep, maximumStep);
 
         // dummy timeout, because I did not find any other solution how to show the busy indicator to the user
@@ -72,7 +72,7 @@ export class LoadingQuickPick extends QuickPick {
           // load the items and then update title and items
           this.loadItems(this.reloadItems, currentResults).then((result) => {
             this.handlePostLoading(quickPick, currentStep, maximumStep, result);
-            Logger.getLogger().info("reload done");
+            Logger.getLogger().info({ message: "reload done" });
           });
         }, 1);
       }

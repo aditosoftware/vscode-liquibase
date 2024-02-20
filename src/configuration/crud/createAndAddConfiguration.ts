@@ -36,9 +36,9 @@ export async function addToLiquibaseConfiguration(pName: string, pPath: string, 
   });
 
   if (success) {
-    Logger.getLogger().info(`Configuration for ${pName} was successfully saved.`, true);
+    Logger.getLogger().info({ message: `Configuration for ${pName} was successfully saved.`, notifyUser: true });
   } else {
-    Logger.getLogger().error(`Configuration for ${pName} could not be saved`, true);
+    Logger.getLogger().error({ message: `Configuration for ${pName} could not be saved`, notifyUser: true });
   }
 }
 
@@ -50,7 +50,10 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   const configurationPath = await getLiquibaseConfigurationPath();
 
   if (!configurationPath) {
-    Logger.getLogger().error("No configuration path was given. No configuration was saved", true);
+    Logger.getLogger().error({
+      message: "No configuration path was given. No configuration was saved",
+      notifyUser: true,
+    });
     return;
   }
 
@@ -81,7 +84,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
     // save file with absolute path
     fs.writeFileSync(propertiesFilePath, properties, { encoding: "utf8" });
   } catch (error) {
-    Logger.getLogger().error("Error writing file", error, true);
+    Logger.getLogger().error({ message: "Error writing file", error, notifyUser: true });
     return;
   }
 
@@ -122,6 +125,6 @@ async function checkForOverridingExistingConfiguration(name: string): Promise<bo
     return true;
   }
 
-  Logger.getLogger().info("Saving cancelled", true);
+  Logger.getLogger().info({ message: "Saving cancelled", notifyUser: true });
   return false;
 }

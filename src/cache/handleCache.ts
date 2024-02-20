@@ -90,7 +90,7 @@ export function readContexts(connectionLocation: string): string[] {
 export function removeCache(): void {
   if (fs.existsSync(cacheLocation)) {
     fs.rmSync(cacheLocation);
-    Logger.getLogger().info(`Successfully removed all recently loaded elements.`, true);
+    Logger.getLogger().info({ message: `Successfully removed all recently loaded elements.`, notifyUser: true });
   }
 }
 

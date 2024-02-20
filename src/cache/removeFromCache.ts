@@ -41,7 +41,7 @@ export async function removeFromCache() {
 
   if (Object.keys(cache).length === 0) {
     // if we have no cached values, we do not need to query.
-    Logger.getLogger().info("There are no elements stored to remove", true);
+    Logger.getLogger().info({ message: "There are no elements stored to remove", notifyUser: true });
     return;
   }
 
@@ -70,7 +70,7 @@ export async function removeFromCache() {
   ]);
 
   if (!result) {
-    Logger.getLogger().debug("Dialog for deleting recently loaded values cancelled");
+    Logger.getLogger().debug({ message: "Dialog for deleting recently loaded values cancelled" });
     return;
   }
 
@@ -108,15 +108,15 @@ function handleRemoving(toRemove: string, result: DialogValues, configuration: R
 
           removeConnectionsFromCache(connectionsToRemove);
 
-          Logger.getLogger().info(
-            `Successfully removed ${propertyFiles.join(", ")} from the recently loaded elements.`,
-            true
-          );
+          Logger.getLogger().info({
+            message: `Successfully removed ${propertyFiles.join(", ")} from the recently loaded elements.`,
+            notifyUser: true,
+          });
         }
       }
       break;
     default:
-      Logger.getLogger().debug(`Not defined use case ${toRemove}`);
+      Logger.getLogger().debug({ message: `Not defined use case ${toRemove}` });
   }
 }
 

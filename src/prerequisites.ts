@@ -36,7 +36,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   // Check if it's the first activation
   if (!context.globalState.get("liquibase-first-activation")) {
     // Perform one-time setup tasks (e.g., download files)
-    Logger.getLogger().info("Liquibase was executed for the first time");
+    Logger.getLogger().info({ message: "Liquibase was executed for the first time" });
     downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
 
     // Mark first activation as completed
@@ -47,10 +47,10 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   // Check if JAVA_HOME is set
   const javaHome = process.env["JAVA_HOME"];
   if (!javaHome) {
-    Logger.getLogger().error(
-      "JAVA_HOME environment variable is not set. Please set JAVA_HOME accordingly and restart VSCode.",
-      true
-    );
+    Logger.getLogger().error({
+      message: "JAVA_HOME environment variable is not set. Please set JAVA_HOME accordingly and restart VSCode.",
+      notifyUser: true,
+    });
     return;
   }
 
@@ -67,12 +67,15 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   }
 
   if (missingFiles && missingFiles.length !== 0) {
-    Logger.getLogger().info(
-      `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`,
-      true
-    );
+    Logger.getLogger().info({
+      message: `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`,
+      notifyUser: true,
+    });
     downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
-      Logger.getLogger().info(`Successfully downloaded all the missing files to ${resourcePath}`, true);
+      Logger.getLogger().info({
+        message: `Successfully downloaded all the missing files to ${resourcePath}`,
+        notifyUser: true,
+      });
     });
   }
 }
@@ -88,7 +91,7 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
       Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))));
       resolve();
     } catch (error) {
-      Logger.getLogger().error("downloadLiquibaseFiles threw an error", error);
+      Logger.getLogger().error({ message: "downloadLiquibaseFiles threw an error", error });
       reject(error);
     }
   });

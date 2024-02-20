@@ -106,7 +106,9 @@ export function registerLiquibaseCommand(
         transferActions.push(commandArg);
       } else if (typeof commandArg !== "undefined") {
         // XXX: this message will also appear, if everything was alright.
-        Logger.getLogger().debug(`Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`);
+        Logger.getLogger().debug({
+          message: `Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`,
+        });
       }
     }
 
@@ -175,10 +177,10 @@ export function registerLiquibaseCommand(
                 }
               });
           } else {
-            Logger.getLogger().warn(
-              `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`,
-              true
-            );
+            Logger.getLogger().warn({
+              message: `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`,
+              notifyUser: true,
+            });
             Logger.getLogger().showOutputChannel();
           }
 
@@ -191,10 +193,10 @@ export function registerLiquibaseCommand(
           transferActions.forEach((pTransferAction) => pTransferAction.executeAfterCommandAction());
         });
       } else {
-        Logger.getLogger().info("No property file path given. Command could not be executed");
+        Logger.getLogger().info({ message: "No property file path given. Command could not be executed" });
       }
     } catch (error) {
-      Logger.getLogger().error("Error:", error);
+      Logger.getLogger().error({ message: "Error:", error });
     }
   });
 }

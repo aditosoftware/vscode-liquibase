@@ -10,7 +10,7 @@ import { Logger } from "@aditosoftware/vscode-logging";
 export function getReferenceKeysFromPropertyFile(propertyFilePath: string | undefined): string[] | undefined {
   // Check if propertyFilePath is provided
   if (!propertyFilePath) {
-    Logger.getLogger().error("No Reference File was found.", true);
+    Logger.getLogger().error({ message: "No Reference File was found.", notifyUser: true });
     return;
   }
 
@@ -18,6 +18,6 @@ export function getReferenceKeysFromPropertyFile(propertyFilePath: string | unde
     return readPossibleReferenceValues(propertyFilePath);
   } catch (error) {
     // Show an error message if there is an issue reading the file
-    Logger.getLogger().error("Error reading liquibase.properties:", error, true);
+    Logger.getLogger().error({ message: "Error reading liquibase.properties:", error, notifyUser: true });
   }
 }

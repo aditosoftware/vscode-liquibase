@@ -57,8 +57,8 @@ export function executeJar(
 
         const childProcess = spawn(javaExecutable, argsArray);
 
-        Logger.getLogger().info(`Liquibase command '${operation}' will be executed`);
-        Logger.getLogger().info(`${javaExecutable} ${argsArray.join(" ")}`);
+        Logger.getLogger().info({ message: `Liquibase command '${operation}' will be executed` });
+        Logger.getLogger().info({ message: `${javaExecutable} ${argsArray.join(" ")}` });
 
         let stdoutData = "";
         let stderrData = "";
@@ -80,13 +80,13 @@ export function executeJar(
             const error = new CustomError(`Child process exited with code ${code}`);
             error.stdout = stdoutData;
             error.stderr = stderrData;
-            Logger.getLogger().error("error while executing liquibase", error);
+            Logger.getLogger().error({ message: "error while executing liquibase", error });
             reject(error);
           }
         });
 
         childProcess.on("error", (error) => {
-          Logger.getLogger().error("Child process encountered an error", error);
+          Logger.getLogger().error({ message: "Child process encountered an error", error });
           reject(error);
         });
       });
@@ -105,12 +105,12 @@ export async function loadContextsFromChangelogFile(
   liquibasePropertiesPath: string
 ): Promise<vscode.QuickPickItem[]> {
   if (!fs.existsSync(changelogFile)) {
-    Logger.getLogger().debug(`File ${changelogFile} does not exist for context search`);
+    Logger.getLogger().debug({ message: `File ${changelogFile} does not exist for context search` });
     return [];
   }
 
   const loadingMessage = `Loading possible contexts for ${changelogFile}`;
-  Logger.getLogger().debug(loadingMessage);
+  Logger.getLogger().debug({ message: loadingMessage });
   return new Promise<vscode.QuickPickItem[]>((resolve, reject) => {
     // get the java executable
     const javaExecutable = getJavaExecutable(reject);
@@ -134,25 +134,25 @@ export async function loadContextsFromChangelogFile(
       changelogFile,
     ];
 
-    Logger.getLogger().info(`Trying to load contexts for ${changelogFile}`);
-    Logger.getLogger().info(`${javaExecutable} ${args.join(" ")}`);
+    Logger.getLogger().info({ message: `Trying to load contexts for ${changelogFile}` });
+    Logger.getLogger().info({ message: `${javaExecutable} ${args.join(" ")}` });
 
     try {
       const result = spawnSync(javaExecutable, args, { encoding: "utf-8" });
 
-      Logger.getLogger().info(`Fetching of contexts finished with ${result.status}`);
+      Logger.getLogger().info({ message: `Fetching of contexts finished with ${result.status}` });
       // Log every output (stdout, stderr) from the command for later information.
-      Logger.getLogger().debug(`${sanitizeOutput(result.output.toString())}`);
+      Logger.getLogger().debug({ message: `${sanitizeOutput(result.output.toString())}` });
 
       if (result.status === 0) {
         // command execution was successful, trim the result and transform it to the array
         const output = result.stdout.trim();
         const contexts = JSON.parse(output.toString()) as string[];
 
-        Logger.getLogger().info(`Loaded contexts: ${contexts.toString()}`);
+        Logger.getLogger().info({ message: `Loaded contexts: ${contexts.toString()}` });
 
         if (contexts.length === 0) {
-          Logger.getLogger().info("No contexts found. You can continue normal", true);
+          Logger.getLogger().info({ message: "No contexts found. You can continue normal", notifyUser: true });
         }
 
         // save the loaded context into the cache
@@ -168,16 +168,16 @@ export async function loadContextsFromChangelogFile(
         resolve(contextValues);
       } else {
         // any error happened
-        Logger.getLogger().error(
-          `Error while fetching contexts`,
+        Logger.getLogger().error({
+          message: `Error while fetching contexts`,
           // adding the whole stderr as stack. This will put everything in the error log
-          { stack: sanitizeOutput(result.stderr) },
-          true
-        );
+          error: { stack: sanitizeOutput(result.stderr) },
+          notifyUser: true,
+        });
         reject(`Error ${result.status}, ${result.error?.message}\n ${result.stderr}`);
       }
     } catch (error) {
-      Logger.getLogger().error("Error loading contexts", error, true);
+      Logger.getLogger().error({ message: "Error loading contexts", error, notifyUser: true });
       reject(error);
     }
   });
@@ -222,7 +222,7 @@ function addToOutput(data: unknown, progress: vscode.Progress<{ message: string 
   const line: string = `${data}`;
 
   // append any message to the output stream
-  Logger.getLogger().info(line);
+  Logger.getLogger().info({ message: line });
 
   if (!line.includes("WARNING: License service not loaded") && !line.includes("#####")) {
     // Filter out lines with warnings of liquibase service and ####.

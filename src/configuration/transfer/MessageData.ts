@@ -1,5 +1,5 @@
 import { MessageType } from ".";
-import { LoggingMessage } from "@aditosoftware/vscode-logging";
+import { LoggingMessageWithLevel } from "@aditosoftware/vscode-logging";
 import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
 
 /**
@@ -14,9 +14,9 @@ export class MessageData {
   /**
    * The configuration data or the logging message that needs to be passed.
    */
-  data: LiquibaseConfigurationData | LoggingMessage;
+  data: LiquibaseConfigurationData | LoggingMessageWithLevel;
 
-  constructor(messageType: MessageType, data: LiquibaseConfigurationData | LoggingMessage) {
+  constructor(messageType: MessageType, data: LiquibaseConfigurationData | LoggingMessageWithLevel) {
     this.messageType = messageType;
     this.data = data;
   }

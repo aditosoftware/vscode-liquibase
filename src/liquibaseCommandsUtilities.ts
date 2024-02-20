@@ -83,7 +83,7 @@ export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogVal
         fs.rmdirSync(columns);
       }
     } catch (error) {
-      Logger.getLogger().error("error while trying to move files", error);
+      Logger.getLogger().error({ message: "error while trying to move files", error });
     }
 
     const fullPath = path.join(folder, "index.html");

@@ -119,5 +119,6 @@ export function readFullValues(
  * @returns the properties as key-value pairs
  */
 function readProperties(pPath: string): KeyValuePairObject {
+  // TODO was tun, wenn file nicht da ist, nach Projektumbennenung passt nichts mehr!
   return getProperties(fs.readFileSync(pPath, "utf8"));
 }

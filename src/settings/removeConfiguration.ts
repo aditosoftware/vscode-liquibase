@@ -78,7 +78,7 @@ export function removeConfiguration() {
       }
     })
     .catch((error) => {
-      Logger.getLogger().error("error handling multi step input", error);
+      Logger.getLogger().error({ message: "error handling multi step input", error });
     });
 }
 
@@ -94,13 +94,19 @@ function handleDialogResults(dialogResult: DialogValues): void {
     updateConfiguration(deleteConfig(path, deletionMode))
       .then((success) => {
         if (success) {
-          Logger.getLogger().info(`Configuration was successfully removed with the option "${deletionMode}".`, true);
+          Logger.getLogger().info({
+            message: `Configuration was successfully removed with the option "${deletionMode}".`,
+            notifyUser: true,
+          });
         } else {
-          Logger.getLogger().error(`Error while removing the configuration with the option "${deletionMode}".`, true);
+          Logger.getLogger().error({
+            message: `Error while removing the configuration with the option "${deletionMode}".`,
+            notifyUser: true,
+          });
         }
       })
       .catch((error) => {
-        Logger.getLogger().error("Error removing connection", error, true);
+        Logger.getLogger().error({ message: "Error removing connection", error, notifyUser: true });
       });
   }
 }
