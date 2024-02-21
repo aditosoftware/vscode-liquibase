@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Used loading dialog for the contexts
 - Wording improved: changed cache to recently loaded
 - Moved logging into extra dependency
+- database url can be inputted in parts
 
 ### Fixed
 

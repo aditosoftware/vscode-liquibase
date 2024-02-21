@@ -1,6 +1,7 @@
 import { immerable } from "immer";
 import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
+import { UrlParts } from "./UrlParts";
 
 /**
  * The Database connection configuration with all the input that is needed for connecting to the database.
@@ -73,6 +74,46 @@ export class DatabaseConnection {
    */
   static createDefaultDatabaseConnection(defaultDatabaseForConfiguration: string): DatabaseConnection {
     return new DatabaseConnection("", "", "", "", defaultDatabaseForConfiguration);
+  }
+
+  /**
+   * Trying to extract all the url parts from a database connection
+   * @returns the url parts
+   */
+  extractUrlPartsFromDatabaseConfiguration(): UrlParts {
+    // find the driver for the database type
+    const driver = ALL_DRIVERS.get(this.databaseType);
+    if (driver) {
+      // removing the jdbc part of the url
+      const urlToCheck = this.url.replace(driver.jdbcName, "");
+
+      // find out where las occurrence of the separator is...
+      const separatorIndex = urlToCheck.lastIndexOf(driver.separator);
+      // ... and extract the database name from it
+      let databaseName = urlToCheck.substring(separatorIndex + 1);
+      if (databaseName.includes("?")) {
+        // remove any parameters from the url
+        databaseName = databaseName.substring(0, databaseName.indexOf("?"));
+      }
+
+      // take the url without the database name and splits by :
+      const parts = urlToCheck.substring(0, separatorIndex).split(":");
+
+      if (parts.length === 2) {
+        // extract server address and port from the parts
+        const serverAddress = parts[0];
+        const port = parseInt(parts[1]);
+
+        return {
+          serverAddress,
+          port,
+          databaseName,
+        };
+      }
+    }
+
+    // return a dummy object which can contain the port of the driver, is any was given
+    return { port: driver?.port };
   }
 
   /**

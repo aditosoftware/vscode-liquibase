@@ -18,14 +18,26 @@ export class Driver {
   readonly urlForDownload: string;
 
   /**
-   * A basic jdbc-url for connection to a database.
+   * The jdbc name of the driver.
    */
-  readonly basicUrlForConnecting: string;
+  readonly jdbcName: string;
 
-  constructor(pDriverClass: string, pUrlForDownload: string, pBasicUrlForConnecting: string) {
+  /**
+   * The default port of the driver.
+   */
+  readonly port: number;
+
+  /**
+   * The separator for the jdbc url.
+   */
+  readonly separator: string;
+
+  constructor(pDriverClass: string, pUrlForDownload: string, jdbcName: string, port: number, separator: string) {
     this.driverClass = pDriverClass;
     this.urlForDownload = pUrlForDownload;
-    this.basicUrlForConnecting = pBasicUrlForConnecting;
+    this.jdbcName = jdbcName;
+    this.port = port;
+    this.separator = separator;
   }
 
   /**
@@ -47,17 +59,21 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     new Driver(
       "org.mariadb.jdbc.Driver",
       "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.5.3/mariadb-java-client-2.5.3.jar",
-      "jdbc:mariadb://localhost:3306/data"
+      "jdbc:mariadb://",
+      3306,
+      "/"
     ),
   ],
-  
+
   [
     // https://mvnrepository.com/artifact/com.mysql/mysql-connector-j
     "MySQL",
     new Driver(
       "com.mysql.cj.jdbc.Driver",
       "https://repo1.maven.org/maven2/com/mysql/mysql-connector-j/8.2.0/mysql-connector-j-8.2.0.jar",
-      "jdbc:mysql://localhost:3306/data"
+      "jdbc:mysql://",
+      3306,
+      "/"
     ),
   ],
 
@@ -67,7 +83,10 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     new Driver(
       "com.microsoft.sqlserver.jdbc.SQLServerDriver",
       "https://repo1.maven.org/maven2/com/microsoft/sqlserver/mssql-jdbc/12.2.0.jre11/mssql-jdbc-12.2.0.jre11.jar",
-      "jdbc:sqlserver://localhost:1433;databaseName=data"
+      "jdbc:sqlserver://",
+      1443,
+      "/"
+      // TODO"jdbc:sqlserver://localhost:1433;databaseName=data"
     ),
   ],
 
@@ -77,7 +96,9 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     new Driver(
       "org.postgresql.Driver",
       "https://repo1.maven.org/maven2/org/postgresql/postgresql/42.6.0/postgresql-42.6.0.jar",
-      "jdbc:postgresql://localhost:5432/data"
+      "jdbc:postgresql://",
+      5432,
+      ";"
     ),
   ],
 
@@ -87,7 +108,9 @@ export const ALL_DRIVERS = new Map<string, Driver>([
     new Driver(
       "oracle.jdbc.driver.OracleDriver",
       "https://repo1.maven.org/maven2/com/oracle/database/jdbc/ojdbc11/23.2.0.0/ojdbc11-23.2.0.0.jar",
-      "jdbc:oracle:thin:@localhost:1521:data"
+      "jdbc:oracle:thin:@",
+      1521,
+      ":"
     ),
   ],
 ]);
