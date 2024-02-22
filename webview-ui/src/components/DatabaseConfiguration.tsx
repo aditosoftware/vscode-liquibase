@@ -60,23 +60,10 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
     const databaseType = newValues.databaseType ?? pProperties.databaseConnection?.databaseType ?? "";
     const driver = ALL_DRIVERS.get(databaseType);
     if (driver) {
-      // FIXME URL
-
-      // find out, if there are parameters in the old url
-      // these parameters need to be added to the new url as well
-      // let parameters = "";
-      // const oldUrl = pProperties.databaseConnection?.url;
-      // if (oldUrl && oldUrl.includes("?")) {
-      //   parameters = oldUrl.substring(oldUrl.indexOf("?"));
-      // }
-
-      // const url = `${driver.jdbcName}${newValues.serverAddress ?? serverAddress}:${newValues.port ?? port}${
-      //   driver.separator
-      // }${newValues.databaseName ?? databaseName}${parameters}`;
-
+      // builds the new url
       const url = driver.buildUrl(pProperties.databaseConnection?.url, newValues, serverAddress, port, databaseName);
 
-      // set the new url
+      // and set the new url
       pProperties.onUpdate("url", url);
     }
   }
@@ -132,17 +119,14 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
    */
   function handlePort(event: React.FocusEvent<HTMLInputElement>): void {
     const inputValue = event.target.value;
-    console.log("iv: " + inputValue);
 
+    // checks if the input value is a number
     if (inputValue && /^\d*$/.test(inputValue)) {
-      // checks if the input value is a number
-
       const newPort = parseInt(inputValue);
-      if (newPort >= 0 && newPort <= 65535) {
-        // checks if the port is in a valid range
-        setPort(newPort);
 
-        console.log("read: " + newPort);
+      // checks if the port is in a valid range
+      if (newPort >= 0 && newPort <= 65535) {
+        setPort(newPort);
 
         updateUrl({ port: newPort });
       } else {
@@ -182,7 +166,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
       <fieldset>
         <legend>{pProperties.title}</legend>
         <fieldset>
-          <legend>Connection configuration</legend>
+          <legend>Database credentials</legend>
           {createInput(pProperties, "text", "username", "Username of the database")}
           {createInput(pProperties, "password", "password", "Password of the database")}
         </fieldset>

@@ -81,40 +81,11 @@ export class DatabaseConnection {
    * @returns the url parts
    */
   extractUrlPartsFromDatabaseConfiguration(): UrlParts {
-    // FIXME URL
-
     // find the driver for the database type
     const driver = ALL_DRIVERS.get(this.databaseType);
     if (driver) {
+      // and extract the url parts
       return driver.extractUrlParts(this.url);
-      // console.log(erg);
-
-      // // removing the jdbc part of the url
-      // const urlToCheck = this.url.replace(driver.jdbcName, "");
-
-      // // find out where las occurrence of the separator is...
-      // const separatorIndex = urlToCheck.lastIndexOf(driver.separator);
-      // // ... and extract the database name from it
-      // let databaseName = urlToCheck.substring(separatorIndex + 1);
-      // if (databaseName.includes("?")) {
-      //   // remove any parameters from the url
-      //   databaseName = databaseName.substring(0, databaseName.indexOf("?"));
-      // }
-
-      // // take the url without the database name and splits by :
-      // const parts = urlToCheck.substring(0, separatorIndex).split(":");
-
-      // if (parts.length === 2) {
-      //   // extract server address and port from the parts
-      //   const serverAddress = parts[0];
-      //   const port = parseInt(parts[1]);
-
-      //   return {
-      //     serverAddress,
-      //     port,
-      //     databaseName,
-      //   };
-      // }
     }
 
     return {};

@@ -280,13 +280,14 @@
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint .",
     "test": "vscode-test",
+    "coverage": "c8 npm run test",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
+    "@aditosoftware/vscode-logging": "^1.0.0",
     "download": "^8.0.0",
     "immer": "^10.0.3",
-    "properties-file": "^3.3.18",
-    "@aditosoftware/vscode-logging": "^1.0.0"
+    "properties-file": "^3.3.18"
   },
   "devDependencies": {
     "@types/download": "^8.0.5",
@@ -297,6 +298,7 @@
     "@typescript-eslint/parser": "^6.21.0",
     "@vscode/test-cli": "^0.0.4",
     "@vscode/test-electron": "^2.3.9",
+    "c8": "^9.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "typescript": "^5.3.3"
