@@ -1,9 +1,10 @@
 import { QuickPickItem } from "vscode";
-import { ConfirmationDialog, DialogValues, PROPERTY_FILE, QuickPick, handleMultiStepInput } from "../input";
+import { ConfirmationDialog, DialogValues, QuickPick, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Cache, readCache, removeCache, removeConnectionsFromCache } from "./handleCache";
 import { readConfiguration } from "../configuration/crud/readConfiguration";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as vscode from "vscode";
+import { PROPERTY_FILE } from "../input/ConnectionType";
 
 /**
  * The input name for the remove option.
@@ -48,25 +49,26 @@ export async function removeFromCache() {
   let configuration: Record<string, string> = {};
 
   const result = await handleMultiStepInput([
-    new QuickPick(removeOption, "Pick what you want to remove", generateRemoveOptions),
+    new QuickPick({ name: removeOption, title: "Pick what you want to remove", generateItems: generateRemoveOptions }),
 
-    new QuickPick(
-      PROPERTY_FILE,
-      "Select any number of connections you want to remove from the recently loaded elements",
-      async () => {
+    new QuickPick({
+      name: PROPERTY_FILE,
+      title: "Select any number of connections you want to remove from the recently loaded elements",
+      generateItems: async () => {
         configuration = (await readConfiguration()) || {};
 
         return generatePropertiesForCacheRemoving(cache, configuration);
       },
-      true,
-      shouldShowPropertyFileSelection
-    ),
+      allowMultiple: true,
+      beforeInput: shouldShowPropertyFileSelection,
+    }),
 
-    new ConfirmationDialog(
-      "Are you sure to remove the following from the recently loaded elements?",
-      generateDetailMessageForConfirmation,
-      "Delete"
-    ),
+    new ConfirmationDialog({
+      name: "Confirmation",
+      message: "Are you sure to remove the following from the recently loaded elements?",
+      detail: generateDetailMessageForConfirmation,
+      confirmButtonName: "Delete",
+    }),
   ]);
 
   if (!result) {

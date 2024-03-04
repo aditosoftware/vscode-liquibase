@@ -1,7 +1,6 @@
-import { DialogValues } from "..";
+import { DialogValues, InputBase, InputBaseOptions } from "@aditosoftware/vscode-input";
 import * as vscode from "vscode";
-import { readConfiguration } from "../../configuration/crud/readConfiguration";
-import { AfterInputType, BeforeInputType, InputBase } from "./AbstractInputBase";
+import { readConfiguration } from "../configuration/crud/readConfiguration";
 
 /**
  * Name used for the normal property file.
@@ -13,17 +12,16 @@ export const PROPERTY_FILE = "propertyFile";
 export const REFERENCE_PROPERTY_FILE = "referencePropertyFile";
 
 /**
+ * Any options for any connection type configuration
+ */
+interface ConnectionTypeOptions extends InputBaseOptions {
+  name: typeof PROPERTY_FILE | typeof REFERENCE_PROPERTY_FILE;
+}
+
+/**
  * Input for the connection type.
  */
-export class ConnectionType extends InputBase {
-  constructor(
-    name: typeof PROPERTY_FILE | typeof REFERENCE_PROPERTY_FILE,
-    beforeInput?: BeforeInputType,
-    afterInput?: AfterInputType
-  ) {
-    super(name, beforeInput, afterInput);
-  }
-
+export class ConnectionType extends InputBase<ConnectionTypeOptions> {
   async showDialog(
     _currentResults: DialogValues,
     currentStep: number,
@@ -31,7 +29,7 @@ export class ConnectionType extends InputBase {
   ): Promise<string | undefined> {
     const configurations: vscode.QuickPickItem[] | undefined = await this.generateItems();
 
-    const title: string = `Select one ${this.name === REFERENCE_PROPERTY_FILE ? "reference " : ""}system`;
+    const title: string = `Select one ${this.inputOptions.name === REFERENCE_PROPERTY_FILE ? "reference " : ""}system`;
 
     if (configurations && configurations.length !== 0) {
       const selectedConnection: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(configurations, {

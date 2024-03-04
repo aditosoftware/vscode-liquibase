@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import path from "path";
-import { DialogValues, PROPERTY_FILE } from "./input";
+import { DialogValues } from "@aditosoftware/vscode-input";
 import { readChangelog } from "./configuration/data/readFromProperties";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
+import { PROPERTY_FILE } from "./input/ConnectionType";
 
 /**
  * Checks if an extra user query (dialog) for the changelog file is needed.

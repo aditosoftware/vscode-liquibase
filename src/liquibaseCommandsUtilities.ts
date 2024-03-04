@@ -1,9 +1,10 @@
 import path from "path";
-import { DialogValues, folderSelectionName } from "./input";
+import { DialogValues } from "@aditosoftware/vscode-input";
 import { openDocument } from "./utilities/vscodeUtilities";
 import * as vscode from "vscode";
 import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
+import { folderSelectionName } from "./extension";
 
 /**
  * The name that should be used for any file name input.

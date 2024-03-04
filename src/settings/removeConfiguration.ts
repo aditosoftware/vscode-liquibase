@@ -1,15 +1,9 @@
 import { removeConnectionsFromCache } from "../cache/handleCache";
 import { updateConfiguration } from "../configuration/crud/readConfiguration";
-import {
-  ConfirmationDialog,
-  ConnectionType,
-  DialogValues,
-  PROPERTY_FILE,
-  QuickPick,
-  handleMultiStepInput,
-} from "../input";
+import { ConfirmationDialog, DialogValues, QuickPick, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as fs from "fs";
+import { ConnectionType, PROPERTY_FILE } from "../input/ConnectionType";
 
 /**
  * The option to remove the cache.
@@ -48,27 +42,32 @@ const removeType = "removeType";
  */
 export function removeConfiguration() {
   const inputs = [
-    new ConnectionType("propertyFile"),
-    new QuickPick(removeType, "Choose how you wish to remove the configuration", () => {
-      return [
-        {
-          label: cache,
-          detail: "Configuration file and setting will still exist.",
-        },
-        {
-          label: setting,
-          detail: "Configuration file will still exist, but the recently loaded elements will be also deleted.",
-        },
-        {
-          label: deleteAll,
-        },
-      ];
+    new ConnectionType({ name: "propertyFile" }),
+    new QuickPick({
+      name: removeType,
+      title: "Choose how you wish to remove the configuration",
+      generateItems: () => {
+        return [
+          {
+            label: cache,
+            detail: "Configuration file and setting will still exist.",
+          },
+          {
+            label: setting,
+            detail: "Configuration file will still exist, but the recently loaded elements will be also deleted.",
+          },
+          {
+            label: deleteAll,
+          },
+        ];
+      },
     }),
-    new ConfirmationDialog(
-      "Are you sure you want to delete your configuration?",
-      generateDetailMessageForDeleteConfiguration,
-      "Delete"
-    ),
+    new ConfirmationDialog({
+      name: "confirmation",
+      message: "Are you sure you want to delete your configuration?",
+      detail: generateDetailMessageForDeleteConfiguration,
+      confirmButtonName: "Delete",
+    }),
   ];
 
   handleMultiStepInput(inputs)

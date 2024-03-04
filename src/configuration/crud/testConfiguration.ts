@@ -3,9 +3,9 @@ import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
 import * as fs from "fs";
 import path from "path";
 import * as os from "os";
-import { PROPERTY_FILE } from "../../input";
 import { TransferActionForCommand, TransferDataForCommand } from "../../registerLiquibaseCommand";
 import { buildDriverPath } from "./createAndAddConfiguration";
+import { PROPERTY_FILE } from "../../input/ConnectionType";
 
 /**
  * Tests a existing liquibase configuration from a webview.

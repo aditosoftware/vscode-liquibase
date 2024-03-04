@@ -3,8 +3,9 @@ import { executeJar } from "./executeJar";
 import { getWorkFolder } from "./readChangelogFile";
 import * as path from "path";
 import { resourcePath } from "./extension";
-import { DialogValues, InputBase, PROPERTY_FILE, handleMultiStepInput } from "./input";
+import { DialogValues, InputBase, InputBaseOptions, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";
+import { PROPERTY_FILE } from "./input/ConnectionType";
 
 /**
  * Interface defining the configuration for pick panels.
@@ -13,7 +14,7 @@ export interface PickPanelConfig {
   /**
    * The input which should be used to get the values.
    */
-  input: InputBase;
+  input: InputBase<InputBaseOptions>;
   /**
    * Any fix command line arguments. There will be filled after all the values where given with
    *
@@ -90,11 +91,11 @@ export function registerLiquibaseCommand(
         // find out the config we can delete
         let indexToDelete = -1;
         pickPanelConfigs.forEach((config, index) => {
-          if (config.input.name === commandArg.name) {
+          if (config.input.inputOptions.name === commandArg.name) {
             indexToDelete = index;
 
             // if a config was found, set the new value
-            preBuiltDialogValues.addValue(config.input, commandArg.data);
+            preBuiltDialogValues.addValue(config.input.inputOptions.name, commandArg.data);
           }
         });
 
@@ -138,7 +139,7 @@ export function registerLiquibaseCommand(
       // go over the dialog values
       dialogValues.inputValues.forEach((value, input) => {
         pOriginPickPanelConfigs
-          .filter((pConfig) => pConfig.input.name === input)
+          .filter((pConfig) => pConfig.input.inputOptions.name === input)
           .forEach((pConfig) => {
             if (input === PROPERTY_FILE) {
               // find out property file and save it in an extra variable

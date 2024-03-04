@@ -5,9 +5,10 @@ import { getClasspathSeparator } from "../utilities/osUtilities";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/crud/readConfiguration";
-import { ConnectionType, InputBox, OpenDialog, handleMultiStepInput } from "../input";
+import { InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
 import { removeConfiguration } from "./removeConfiguration";
+import { ConnectionType } from "../input/ConnectionType";
 
 /**
  * Edits an existing configuration.
@@ -91,11 +92,15 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
   const locationKey = "location";
 
   const inputs = [
-    new InputBox(nameKey, {
-      title: "The unique name for your configuration",
+    new InputBox({
+      name: nameKey,
+      inputBoxOptions: {
+        title: "The unique name for your configuration",
+      },
     }),
-    new OpenDialog(
-      {
+    new OpenDialog({
+      name: locationKey,
+      openDialogOptions: {
         title: "Location of your existing liquibase.properties file",
         canSelectFiles: true,
         canSelectFolders: false,
@@ -104,8 +109,7 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
           "Liquibase Properties": ["properties"],
         },
       },
-      locationKey
-    ),
+    }),
   ];
 
   const dialogValues = await handleMultiStepInput(inputs);

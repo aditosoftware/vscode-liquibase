@@ -1,11 +1,12 @@
 import { readContexts } from "./cache/handleCache";
 import { readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
 import { loadContextsFromChangelogFile } from "./executeJar";
-import { DialogValues, LoadingQuickPick, PROPERTY_FILE, QuickPick, QuickPickItems } from "./input";
+import { DialogValues, LoadingQuickPick, QuickPick, QuickPickItems } from "@aditosoftware/vscode-input";
 import { PickPanelConfig } from "./registerLiquibaseCommand";
 import * as vscode from "vscode";
 import { getClasspathSeparator } from "./utilities/osUtilities";
 import path from "path";
+import { PROPERTY_FILE } from "./input/ConnectionType";
 
 /**
  * The name of the pre selection dialog of the contexts.
@@ -43,51 +44,55 @@ export function generateContextInputs(): PickPanelConfig[] {
 
   return [
     {
-      input: new QuickPick(contextPreDialog, "Select context using for the command", (currentResults: DialogValues) => {
-        // reset the cache
-        cache = [];
+      input: new QuickPick({
+        name: contextPreDialog,
+        title: "Select context using for the command",
+        generateItems: (currentResults: DialogValues) => {
+          // reset the cache
+          cache = [];
 
-        // load the cache values
-        let cachedContexts: string | undefined;
-        ({ cachedContexts, cache } = loadCacheForPropertyFile(currentResults));
+          // load the cache values
+          let cachedContexts: string | undefined;
+          ({ cachedContexts, cache } = loadCacheForPropertyFile(currentResults));
 
-        const items: vscode.QuickPickItem[] = [
-          {
-            label: noContext,
-            detail: "This will only execute any changeset that does not have any context",
-            iconPath: new vscode.ThemeIcon("search-remove"),
-          },
-          {
-            label: loadContext,
-            detail: "The loading might take a while.",
-            iconPath: new vscode.ThemeIcon("sync"),
-          },
-        ];
+          const items: vscode.QuickPickItem[] = [
+            {
+              label: noContext,
+              detail: "This will only execute any changeset that does not have any context",
+              iconPath: new vscode.ThemeIcon("search-remove"),
+            },
+            {
+              label: loadContext,
+              detail: "The loading might take a while.",
+              iconPath: new vscode.ThemeIcon("sync"),
+            },
+          ];
 
-        if (cachedContexts) {
-          items.push({
-            label: useRecentlyLoaded,
-            detail: cachedContexts,
-            iconPath: new vscode.ThemeIcon("list-selection"),
-          });
-        }
+          if (cachedContexts) {
+            items.push({
+              label: useRecentlyLoaded,
+              detail: cachedContexts,
+              iconPath: new vscode.ThemeIcon("list-selection"),
+            });
+          }
 
-        return items;
+          return items;
+        },
       }),
       createCmdArgs: generateCmdArgsForPreContextSelection,
     },
 
     {
-      input: new LoadingQuickPick(
-        "context",
-        "Choose any context",
-        "Loading contexts",
-        async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
-        async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
-        "Reload contexts from changelog",
-        true,
-        showContextSelection
-      ),
+      input: new LoadingQuickPick({
+        name: "context",
+        title: "Choose any context",
+        loadingTitle: "Loading contexts",
+        generateItems: async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
+        reloadItems: async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
+        reloadTooltip: "Reload contexts from changelog",
+        allowMultiple: true,
+        beforeInput: showContextSelection,
+      }),
       createCmdArgs: createCmdArgsForContextSelection,
     },
   ];
