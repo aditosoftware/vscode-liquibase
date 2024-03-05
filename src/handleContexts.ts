@@ -91,7 +91,7 @@ export function generateContextInputs(): PickPanelConfig[] {
         reloadItems: async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
         reloadTooltip: "Reload contexts from changelog",
         allowMultiple: true,
-        beforeInput: showContextSelection,
+        onBeforeInput: showContextSelection,
       }),
       createCmdArgs: createCmdArgsForContextSelection,
     },

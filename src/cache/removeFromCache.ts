@@ -60,7 +60,7 @@ export async function removeFromCache() {
         return generatePropertiesForCacheRemoving(cache, configuration);
       },
       allowMultiple: true,
-      beforeInput: shouldShowPropertyFileSelection,
+      onBeforeInput: shouldShowPropertyFileSelection,
     }),
 
     new ConfirmationDialog({

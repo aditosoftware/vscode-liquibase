@@ -417,8 +417,8 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
             Changelog: ["xml", "json", "yaml", "yml"],
           },
         },
-        beforeInput: isExtraQueryForChangelogNeeded,
-        afterInput: setExtraChangelogCorrectly,
+        onBeforeInput: isExtraQueryForChangelogNeeded,
+        onAfterInput: setExtraChangelogCorrectly,
       }),
     });
   }
