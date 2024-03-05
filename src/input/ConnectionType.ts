@@ -15,6 +15,9 @@ export const REFERENCE_PROPERTY_FILE = "referencePropertyFile";
  * Any options for any connection type configuration
  */
 interface ConnectionTypeOptions extends InputBaseOptions {
+  /**
+   * The name of the connection type is restricted due to the nature of limited connection types.
+   */
   name: typeof PROPERTY_FILE | typeof REFERENCE_PROPERTY_FILE;
 }
 
@@ -51,11 +54,10 @@ export class ConnectionType extends InputBase<ConnectionTypeOptions> {
    * Suggests the user that they should create a configuration, when no liquibase configuration was found.
    */
   static async suggestCreationOfConfiguration() {
-    const answer = await vscode.window.showErrorMessage(
-      "No configurations found. Please create a configuration.",
-      "Create configuration"
-    );
-    if (answer === "Create configuration") {
+    const answer = await vscode.window.showErrorMessage("No configurations found. Please create a configuration.", {
+      title: "Create configuration",
+    });
+    if (answer?.title === "Create configuration") {
       await vscode.commands.executeCommand("liquibase.createLiquibaseConfiguration");
     }
   }
