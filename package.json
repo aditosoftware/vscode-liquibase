@@ -1,5 +1,5 @@
 {
-  "name": "liquibase",
+"name": "liquibase",
   "displayName": "Liquibase",
   "description": "Execute liquibase changelogs and create liquibase.properties",
   "version": "0.0.4",
