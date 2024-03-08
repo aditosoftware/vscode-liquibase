@@ -1,8 +1,8 @@
 import assert from "assert";
 import path from "path";
 import fs from "fs";
-import { Cache, CacheHandler } from "../../../cache/CacheHandler";
-import { initLoggerForTests } from "../utils";
+import { Cache, CacheHandler } from "../../../cache/";
+import { createTempFolderForTests, initLoggerForTests } from "../testUtils";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
 
@@ -13,17 +13,11 @@ suite("CacheHandler tests", () => {
   /**
    * Temporary folder for writing cache files.
    */
-  const temporaryResourcePath = path.join(process.cwd(), "..", "temp", Date.now().toString());
-
+  const temporaryResourcePath = createTempFolderForTests("cache", "handle");
   /**
-   * Makes the temporary directory for the cache.
-   * Also initialize the logger for the tests.
+   * Initialize the logger for the tests.
    */
-  suiteSetup("mkdir temp directory and init logger", () => {
-    if (!fs.existsSync(temporaryResourcePath)) {
-      fs.mkdirSync(temporaryResourcePath, { recursive: true });
-    }
-
+  suiteSetup("init logger", () => {
     initLoggerForTests();
   });
 

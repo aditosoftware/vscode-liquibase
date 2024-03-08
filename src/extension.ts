@@ -29,10 +29,9 @@ import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { readUrl } from "./configuration/data/readFromProperties";
 import { openDocument } from "./utilities/vscodeUtilities";
-import { removeFromCache } from "./cache/removeFromCache";
 import { generateContextInputs } from "./handleContexts";
 import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
-import { CacheHandler } from "./cache/CacheHandler";
+import { CacheHandler, CacheRemover } from "./cache/";
 
 /**
  * The name that should be used for any folder selection.
@@ -97,7 +96,7 @@ export async function activate(context: vscode.ExtensionContext) {
         openDocument(cacheLocation);
       }),
       vscode.commands.registerCommand("liquibase.removeFromCache", async () => {
-        removeFromCache();
+        new CacheRemover(cacheHandler).removeFromCache();
       })
     );
 
