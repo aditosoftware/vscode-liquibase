@@ -1,5 +1,5 @@
 {
-"name": "liquibase",
+  "name": "liquibase",
   "displayName": "Liquibase",
   "description": "Execute liquibase changelogs and create liquibase.properties",
   "version": "0.0.4",
@@ -274,10 +274,10 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
-    "test-compile": "tsc -p ./",
+    "test-compile": "rm -rf out && tsc -p ./",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile",
+    "pretest": "npm run test-compile",
     "lint": "eslint .",
     "test": "vscode-test",
     "coverage": "c8 --reporter html --reporter text npm run test",

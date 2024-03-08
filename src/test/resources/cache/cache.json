@@ -1,0 +1,19 @@
+{
+  "/path/to/project/data/liquibase/data.liquibase.properties": {
+    "contexts": [
+      "prod",
+      "qs",
+      "dev"
+    ]
+  },
+  "/path/to/project/data/liquibase/system.liquibase.properties": {
+    "contexts": [
+      "c3",
+      "c1",
+      "c5",
+      "c2",
+      "c6",
+      "c4"
+    ]
+  }
+}

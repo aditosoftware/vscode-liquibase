@@ -4,9 +4,8 @@ import { spawn, spawnSync } from "child_process";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { buildClasspath, gson, liquibaseCore, picocli, snakeYaml } from "./prerequisites";
 import * as fs from "fs";
-import { libFolder, resourcePath } from "./extension";
+import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
-import { saveContexts } from "./cache/handleCache";
 
 class CustomError extends Error {
   stdout?: string;
@@ -156,7 +155,7 @@ export async function loadContextsFromChangelogFile(
         }
 
         // save the loaded context into the cache
-        saveContexts(liquibasePropertiesPath, contexts);
+        cacheHandler.saveContexts(liquibasePropertiesPath, contexts);
 
         // transform the elements to an quick pick array
         const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {

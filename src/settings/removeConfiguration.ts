@@ -1,9 +1,9 @@
-import { removeConnectionsFromCache } from "../cache/handleCache";
 import { updateConfiguration } from "../configuration/crud/readConfiguration";
 import { ConfirmationDialog, DialogValues, QuickPick, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as fs from "fs";
 import { ConnectionType, PROPERTY_FILE } from "../input/ConnectionType";
+import { cacheHandler } from "../extension";
 
 /**
  * The option to remove the cache.
@@ -129,7 +129,7 @@ function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<
     if (foundKey && deleteOptions) {
       if (deleteOptions.includes(cache)) {
         // remove the cache
-        removeConnectionsFromCache([path]);
+        cacheHandler.removeConnectionsFromCache([path]);
       }
       if (deleteOptions.includes(setting)) {
         // remove the setting

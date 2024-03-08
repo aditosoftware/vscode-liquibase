@@ -1,4 +1,3 @@
-import { readContexts } from "./cache/handleCache";
 import { readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
 import { loadContextsFromChangelogFile } from "./executeJar";
 import { DialogValues, LoadingQuickPick, QuickPick, QuickPickItems } from "@aditosoftware/vscode-input";
@@ -7,6 +6,7 @@ import * as vscode from "vscode";
 import { getClasspathSeparator } from "./utilities/osUtilities";
 import path from "path";
 import { PROPERTY_FILE } from "./input/ConnectionType";
+import { cacheHandler } from "./extension";
 
 /**
  * The name of the pre selection dialog of the contexts.
@@ -140,7 +140,7 @@ function loadCacheForPropertyFile(currentResults: DialogValues) {
   // read the contexts from the cache
   let cachedContexts: string | undefined;
   if (propertyFile && propertyFile[0]) {
-    cache = readContexts(propertyFile[0]);
+    cache = cacheHandler.readContexts(propertyFile[0]);
     cachedContexts = "No recently loaded contexts";
     if (cache && cache.length !== 0) {
       // cached values are there, then join them together

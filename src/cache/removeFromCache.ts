@@ -1,10 +1,11 @@
 import { QuickPickItem } from "vscode";
 import { ConfirmationDialog, DialogValues, QuickPick, handleMultiStepInput } from "@aditosoftware/vscode-input";
-import { Cache, readCache, removeCache, removeConnectionsFromCache } from "./handleCache";
+import { Cache } from "./CacheHandler";
 import { readConfiguration } from "../configuration/crud/readConfiguration";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as vscode from "vscode";
 import { PROPERTY_FILE } from "../input/ConnectionType";
+import { cacheHandler } from "../extension";
 
 /**
  * The input name for the remove option.
@@ -38,7 +39,7 @@ const removeOptions = new Map<string, string>([
  */
 export async function removeFromCache() {
   // first, read the current cache, so we know what we are removing
-  const cache = readCache();
+  const cache = cacheHandler.readCache();
 
   if (Object.keys(cache).length === 0) {
     // if we have no cached values, we do not need to query.
@@ -94,7 +95,7 @@ function handleRemoving(toRemove: string, result: DialogValues, configuration: R
   switch (toRemove) {
     case wholeCache:
       // remove the whole cache
-      removeCache();
+      cacheHandler.removeCache();
       break;
     case removeConnection:
       // remove just a few connections
@@ -108,7 +109,7 @@ function handleRemoving(toRemove: string, result: DialogValues, configuration: R
             .filter((configKey) => propertyFiles.includes(configKey))
             .forEach((key) => connectionsToRemove.push(configuration[key]));
 
-          removeConnectionsFromCache(connectionsToRemove);
+          cacheHandler.removeConnectionsFromCache(connectionsToRemove);
 
           Logger.getLogger().info({
             message: `Successfully removed ${propertyFiles.join(", ")} from the recently loaded elements.`,

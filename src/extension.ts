@@ -32,6 +32,7 @@ import { openDocument } from "./utilities/vscodeUtilities";
 import { removeFromCache } from "./cache/removeFromCache";
 import { generateContextInputs } from "./handleContexts";
 import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
+import { CacheHandler } from "./cache/CacheHandler";
 
 /**
  * The name that should be used for any folder selection.
@@ -50,9 +51,9 @@ export let resourcePath: string;
 export let libFolder: string;
 
 /**
- * The location where the cache iss located. This will be inside the resourcePath in a json file.
+ * The cache handler used for handling the cache.
  */
-export let cacheLocation: string;
+export let cacheHandler: CacheHandler;
 
 /**
  * Main-Function that will execute all the code within
@@ -73,8 +74,9 @@ export async function activate(context: vscode.ExtensionContext) {
     resourcePath = path.join(os.homedir(), ".liquibase", "resources");
   }
 
-  // construct the cache location
-  cacheLocation = path.join(resourcePath, "cache.json");
+  // construct the cache location and cache handler
+  const cacheLocation = path.join(resourcePath, "cache.json");
+  cacheHandler = new CacheHandler(cacheLocation);
 
   // the folder, where additional libraries are included
   libFolder = path.join(context.extensionPath, "lib");
