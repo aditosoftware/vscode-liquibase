@@ -1,5 +1,5 @@
 import path from "path";
-import { createTempFolderForTests, initLoggerForTests } from "../testUtils";
+
 import * as fs from "fs";
 import { CacheHandler, CacheRemover } from "../../../cache/";
 import Sinon from "sinon";
@@ -7,6 +7,7 @@ import { Logger } from "@aditosoftware/vscode-logging";
 import assert from "assert";
 import { ConfirmationDialog, DialogValues, QuickPick, initializeLogger } from "@aditosoftware/vscode-input";
 import { PROPERTY_FILE } from "../../../input/ConnectionType";
+import { TestUtils } from "../TestUtils";
 
 /**
  * Tests the cache remover.
@@ -15,7 +16,7 @@ suite("CacheRemover tests", () => {
   /**
    * Temporary folder for writing cache files.
    */
-  const temporaryResourcePath = createTempFolderForTests("cache", "remove");
+  const temporaryResourcePath = TestUtils.createTempFolderForTests("cache", "remove");
 
   let infoLog: Sinon.SinonStub;
   let debugLog: Sinon.SinonStub;
@@ -24,7 +25,7 @@ suite("CacheRemover tests", () => {
    * Initialize the logger for the tests.
    */
   suiteSetup("init logger", () => {
-    initLoggerForTests();
+    TestUtils.initLoggerForTests();
     initializeLogger(Logger.getLogger());
   });
 

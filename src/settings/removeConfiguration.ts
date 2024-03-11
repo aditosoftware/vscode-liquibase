@@ -116,8 +116,8 @@ function handleDialogResults(dialogResult: DialogValues): void {
  * @param deletionMode - the modes what should be deleted. This was selected by the user.
  * @returns a function that has as parameter the jsonData from the setting and removes async the values from it.
  */
-function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<string, string>) => Promise<void> {
-  return async (pJsonData) => {
+function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<string, string>) => void {
+  return (pJsonData) => {
     // find out the key from the setting for the given path
     const foundKey = Object.keys(pJsonData).find((pKey) => {
       return pJsonData[pKey] === path;

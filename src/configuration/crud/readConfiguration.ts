@@ -41,7 +41,7 @@ export async function readLiquibaseConfigurationNames(): Promise<string[] | unde
  * @param pConfigurationName - the name of the configuration
  * @returns the path for this configuration
  */
-export async function getPathOfConfiguration(pConfigurationName: string) {
+export async function getPathOfConfiguration(pConfigurationName: string): Promise<string | undefined> {
   const configuration = await readConfiguration();
   if (configuration) {
     return configuration[pConfigurationName];
@@ -50,17 +50,15 @@ export async function getPathOfConfiguration(pConfigurationName: string) {
 
 /**
  * Updates the values of the configuration.
- * @param pUpdate - the function used for updating the json data. This data is given as key / value pairs
+ * @param pOnUpdate - the function used for updating the json data. This data is given as key / value pairs
  * @returns `true` when the updating was successful
- */
-export async function updateConfiguration(
-  pUpdate: (pJsonData: Record<string, string>) => Promise<void>
-): Promise<boolean> {
+ */ // TODO korrekter ort?
+export async function updateConfiguration(pOnUpdate: (pJsonData: Record<string, string>) => void): Promise<boolean> {
   // read the configuration
   const configuration = await readConfigurationInternal();
   if (configuration) {
     // update it
-    await pUpdate(configuration.jsonData);
+    pOnUpdate(configuration.jsonData);
 
     // and write the data to the file
     fs.writeFileSync(configuration.configPath, JSON.stringify(configuration.jsonData, undefined, 2), {
