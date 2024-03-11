@@ -21,9 +21,13 @@ const fileEnding: string = ".liquibase.properties";
  * @param pName - the name of the configuration
  * @param pPath - the path to the configuration file
  * @param pCheckForExisting - if there should be a check for existing configurations. This is by default always true.
- * You should only disable this check, if you have done one before
+ *   You should only disable this check, if you have done one separate check before
  */
-export async function addToLiquibaseConfiguration(pName: string, pPath: string, pCheckForExisting: boolean = true) {
+export async function addToLiquibaseConfiguration(
+  pName: string,
+  pPath: string,
+  pCheckForExisting: boolean = true
+): Promise<void> {
   const success = await updateConfiguration(async (pJsonData) => {
     // if there is a configuration with this name, check for override
     if (pJsonData[pName] && pCheckForExisting) {
