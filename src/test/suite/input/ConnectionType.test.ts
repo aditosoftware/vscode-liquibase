@@ -58,21 +58,24 @@ suite("ConnectionType test", () => {
 
       readConfigurationStub.resolves(undefined);
 
-      connectionType.showDialog(new DialogValues(), 2, 4).then((result) => {
-        assert.deepStrictEqual(undefined, result);
+      connectionType
+        .showDialog(new DialogValues(), 2, 4)
+        .then((result) => {
+          assert.deepStrictEqual(undefined, result);
 
-        // validate that error message was shown
-        Sinon.assert.calledOnce(vscodeShowErrorMessage);
-        Sinon.assert.calledWith(vscodeShowErrorMessage, "No configurations found. Please create a configuration.", {
-          title: "Create configuration",
-        });
+          // validate that error message was shown
+          Sinon.assert.calledOnce(vscodeShowErrorMessage);
+          Sinon.assert.calledWith(vscodeShowErrorMessage, "No configurations found. Please create a configuration.", {
+            title: "Create configuration",
+          });
 
-        // validate the command was called
-        Sinon.assert.calledOnce(vscodeExecuteCommand);
-        Sinon.assert.calledWith(vscodeExecuteCommand, "liquibase.createLiquibaseConfiguration");
+          // validate the command was called
+          Sinon.assert.calledOnce(vscodeExecuteCommand);
+          Sinon.assert.calledWith(vscodeExecuteCommand, "liquibase.createLiquibaseConfiguration");
 
-        done();
-      });
+          done();
+        })
+        .catch((error) => done(error));
     });
   });
 
@@ -127,17 +130,20 @@ suite("ConnectionType test", () => {
           detail: "my selected detail",
         });
 
-        pElement.connectionType.showDialog(new DialogValues(), 2, 4).then((result) => {
-          assert.deepStrictEqual("my selected detail", result);
+        pElement.connectionType
+          .showDialog(new DialogValues(), 2, 4)
+          .then((result) => {
+            assert.deepStrictEqual("my selected detail", result);
 
-          Sinon.assert.calledWithExactly(vscodeShowQuickPick, expectedQuickPickItems, {
-            title: pElement.expectedTitle,
-            placeHolder: "Pick any system",
-            canPickMany: false,
-          });
+            Sinon.assert.calledWithExactly(vscodeShowQuickPick, expectedQuickPickItems, {
+              title: pElement.expectedTitle,
+              placeHolder: "Pick any system",
+              canPickMany: false,
+            });
 
-          done();
-        });
+            done();
+          })
+          .catch((error) => done(error));
       });
     });
 
@@ -149,17 +155,20 @@ suite("ConnectionType test", () => {
 
       vscodeShowQuickPick.resolves(undefined);
 
-      connectionType.showDialog(new DialogValues(), 2, 4).then((result) => {
-        assert.deepStrictEqual(undefined, result);
+      connectionType
+        .showDialog(new DialogValues(), 2, 4)
+        .then((result) => {
+          assert.deepStrictEqual(undefined, result);
 
-        Sinon.assert.calledWithExactly(vscodeShowQuickPick, expectedQuickPickItems, {
-          title: "Select one system (Step 2 of 4)",
-          placeHolder: "Pick any system",
-          canPickMany: false,
-        });
+          Sinon.assert.calledWithExactly(vscodeShowQuickPick, expectedQuickPickItems, {
+            title: "Select one system (Step 2 of 4)",
+            placeHolder: "Pick any system",
+            canPickMany: false,
+          });
 
-        done();
-      });
+          done();
+        })
+        .catch((error) => done(error));
     });
   });
 });
