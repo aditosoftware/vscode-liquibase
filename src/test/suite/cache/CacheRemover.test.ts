@@ -5,8 +5,12 @@ import { CacheHandler, CacheRemover } from "../../../cache/";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
 import assert from "assert";
-import { QuickPick, initializeLogger } from "@aditosoftware/vscode-input";
+import { ConfirmationDialog, DialogValues, QuickPick, initializeLogger } from "@aditosoftware/vscode-input";
+import { PROPERTY_FILE } from "../../../input/ConnectionType";
 
+/**
+ * Tests the cache remover.
+ */
 suite("CacheRemover tests", () => {
   /**
    * Temporary folder for writing cache files.
@@ -37,12 +41,6 @@ suite("CacheRemover tests", () => {
     debugLog.restore();
   });
 
-  // TODO
-  // empty / not existing cache file
-  // cache file with content
-  // dialog ohne Ergebnis
-  // dialog mit ergebnis
-
   /**
    * Tests that the CacheRemover should work, when no cache is there.
    */
@@ -54,11 +52,14 @@ suite("CacheRemover tests", () => {
     const cacheHandler = new CacheHandler(cacheLocation);
     const cacheRemover = new CacheRemover(cacheHandler);
 
-    cacheRemover.removeFromCache().then(() => {
-      Sinon.assert.calledOnce(infoLog);
+    cacheRemover
+      .removeFromCache()
+      .then(() => {
+        Sinon.assert.calledOnce(infoLog);
 
-      done();
-    });
+        done();
+      })
+      .catch((error) => done(error));
   });
 
   /**
@@ -73,53 +74,302 @@ suite("CacheRemover tests", () => {
     const cacheHandler = new CacheHandler(cacheLocation);
     const cacheRemover = new CacheRemover(cacheHandler);
 
-    cacheRemover.removeFromCache().then(() => {
-      Sinon.assert.calledOnce(infoLog);
+    cacheRemover
+      .removeFromCache()
+      .then(() => {
+        Sinon.assert.calledOnce(infoLog);
 
-      done();
-    });
+        done();
+      })
+      .catch((error) => done(error));
   });
 
-  test("should work with filled cache and cancelled dialog", (done) => {
-    const showDialogQuickPick = Sinon.stub(QuickPick.prototype, "showDialog");
-
-    showDialogQuickPick.resolves(undefined);
-
+  /**
+   * Tests various scenarios with a filled cache.
+   */
+  suite("filled cache", () => {
     const cacheLocation = path.join(temporaryResourcePath, "filled.json");
 
-    fs.writeFileSync(
-      cacheLocation,
-      JSON.stringify({
-        c1: { contexts: ["a", "b"] },
-        c2: { contexts: ["c", "d"] },
-        c3: { contexts: ["e", "f"] },
-        c4: { contexts: ["g", "h"] },
-      })
-    );
-    assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
+    let cacheRemover: CacheRemover;
 
-    const cacheHandler = new CacheHandler(cacheLocation);
-    const cacheRemover = new CacheRemover(cacheHandler);
+    let showDialogQuickPick: Sinon.SinonStub;
+    let showDialogConfirmationDialog: Sinon.SinonStub;
 
-    cacheRemover.removeFromCache().then(() => {
-      Sinon.assert.calledOnce(showDialogQuickPick);
+    /**
+     * Fills the cache and set ups the cache remover before each test.
+     * Also create the necessary stubs.
+     */
+    setup("fill cache and create stubs", () => {
+      fs.writeFileSync(
+        cacheLocation,
+        JSON.stringify({
+          "path/to/connection/one.liquibase.properties": { contexts: ["a", "b"] },
+          "path/to/connection/two.liquibase.properties": { contexts: ["c", "d"] },
+          "path/to/connection/three.liquibase.properties": { contexts: ["e", "f"] },
+          "path/to/connection/four.liquibase.properties": { contexts: ["g", "h"] },
+        })
+      );
+      assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
 
+      const cacheHandler = new CacheHandler(cacheLocation);
+      cacheRemover = new CacheRemover(cacheHandler);
+
+      // set some dummy configurations
+      cacheRemover.configuration = {
+        one: "path/to/connection/one.liquibase.properties",
+        two: "path/to/connection/two.liquibase.properties",
+        three: "path/to/connection/three.liquibase.properties",
+        four: "path/to/connection/four.liquibase.properties",
+      };
+
+      // init the stubs
+      showDialogQuickPick = Sinon.stub(QuickPick.prototype, "showDialog").callThrough();
+
+      showDialogConfirmationDialog = Sinon.stub(ConfirmationDialog.prototype, "showDialog").callThrough();
+    });
+
+    /**
+     * Restore the stubs after each test.
+     */
+    teardown("restore stubs", () => {
+      showDialogQuickPick.restore();
+      showDialogConfirmationDialog.restore();
+    });
+
+    /**
+     * Tests that the generation of the remove options works correctly.
+     * This method is explicitly tested, because there is no easy way to test it correctly in the program flow.
+     */
+    test("should generateRemoveOptions", () => {
+      const result = cacheRemover["generateRemoveOptions"]();
+
+      assert.deepStrictEqual(
+        [
+          {
+            label: "Invalidate every recently loaded value",
+            detail: "This will remove the whole file.",
+          },
+          {
+            label: "Remove one or more connections",
+            detail: "This will remove everything that is saved as recently loaded values for the selected connections.",
+          },
+        ],
+        result
+      );
+    });
+    /**
+     * Tests that the generation of properties for the cache removing works correctly.
+     * This method is explicitly tested, because there is no easy way to test it correctly in the program flow.
+     */
+    test("should generatePropertiesForCacheRemoving", () => {
+      const result = cacheRemover["generatePropertiesForCacheRemoving"]({
+        "path/to/connection/one.liquibase.properties": {
+          contexts: ["a", "b"],
+        },
+        "path/to/connection/four.liquibase.properties": {
+          contexts: ["x", "y", "z"],
+        },
+      });
+
+      assert.deepStrictEqual(
+        [
+          {
+            label: "four",
+            detail: "path/to/connection/four.liquibase.properties",
+          },
+          { label: "one", detail: "path/to/connection/one.liquibase.properties" },
+        ],
+        result
+      );
+    });
+
+    [
+      {
+        name: "no dialog values",
+        expected: "",
+        dialogValues: () => {
+          const dialogValues = new DialogValues();
+
+          return dialogValues;
+        },
+      },
+      {
+        name: "empty remove option",
+        expected: "",
+        dialogValues: () => {
+          const dialogValues = new DialogValues();
+          dialogValues.addValue(CacheRemover["removeOption"], []);
+
+          return dialogValues;
+        },
+      },
+      {
+        name: "invalid remove option",
+        expected: "",
+        dialogValues: () => {
+          const dialogValues = new DialogValues();
+          dialogValues.addValue(CacheRemover["removeOption"], "invalid option");
+
+          return dialogValues;
+        },
+      },
+      {
+        name: "whole cache remove option",
+        expected: "This will remove the whole file.",
+        dialogValues: () => {
+          const dialogValues = new DialogValues();
+          dialogValues.addValue(CacheRemover["removeOption"], CacheRemover["wholeCache"]);
+
+          return dialogValues;
+        },
+      },
+      {
+        name: "connection remove option",
+        expected:
+          "This will remove everything that is saved as recently loaded values for the selected connections.\n - one\n - four",
+        dialogValues: () => {
+          const dialogValues = new DialogValues();
+          dialogValues.addValue(CacheRemover["removeOption"], CacheRemover["removeConnection"]);
+          dialogValues.addValue(PROPERTY_FILE, ["one", "four"]);
+
+          return dialogValues;
+        },
+      },
+    ].forEach((pArgument) => {
       /**
-       * TODO mehr machen!
-       * TODO argumente prüfen
-       * TODO alle drei erfolgreich durchlaufen lassen
-       * TODO andere prüfungen!
+       * Tests that the generation of the detail message for the confirm dialog works correctly.
+       * This method is explicitly tested, because there is no easy way to test it correctly in the program flow.
        */
+      test(`should generateDetailMessageForConfirmation ${pArgument.name}`, () => {
+        const result = cacheRemover["generateDetailMessageForConfirmation"](pArgument.dialogValues());
 
-      // const args = showDialogQuickPick.args[0];
+        assert.deepStrictEqual(pArgument.expected, result);
+      });
+    });
 
-      // assert.deepStrictEqual([], args);
+    /**
+     * Tests that the cancelling of the dialog works.
+     */
+    test("should work with filled cache and cancelled dialog", (done) => {
+      showDialogQuickPick.resolves(undefined);
 
-      // Sinon.assert.calledOnce(showDialogQuickPick); // Sinon.assert.calledOnceWithExactly(showDialogQuickPick, []);
+      cacheRemover
+        .removeFromCache()
+        .then(() => {
+          Sinon.assert.calledOnce(showDialogQuickPick);
 
-      Sinon.assert.calledOnce(debugLog);
+          Sinon.assert.calledTwice(debugLog);
 
-      done();
+          assertCacheLocationUnchanged(cacheLocation);
+
+          done();
+        })
+        .catch((error) => done(error));
+    });
+
+    /**
+     * Tests that it will work with a filled cache and a not filled remove option.
+     */
+    test("should work with filled cache and not selected remove option", (done) => {
+      showDialogQuickPick.resolves([]);
+      showDialogConfirmationDialog.resolves(true);
+
+      cacheRemover
+        .removeFromCache()
+        .then(() => {
+          Sinon.assert.calledOnce(showDialogQuickPick);
+          Sinon.assert.calledOnce(showDialogConfirmationDialog);
+
+          assertCacheLocationUnchanged(cacheLocation);
+
+          done();
+        })
+        .catch((error) => done(error));
+    });
+
+    /**
+     * Tests that it will work with a filled cache and a not defined use case.
+     */
+    test("should work with filled cache and not defined use case", (done) => {
+      showDialogQuickPick.resolves(["no_valid_use_case"]);
+      showDialogConfirmationDialog.resolves(true);
+
+      cacheRemover
+        .removeFromCache()
+        .then(() => {
+          Sinon.assert.calledTwice(showDialogQuickPick);
+          Sinon.assert.calledOnce(showDialogConfirmationDialog);
+
+          Sinon.assert.calledWith(debugLog, { message: "Not defined use case no_valid_use_case" });
+
+          assertCacheLocationUnchanged(cacheLocation);
+
+          done();
+        })
+        .catch((error) => done(error));
+    });
+
+    /**
+     * Tests that the removing of the whole cache works.
+     */
+    test("should work with remove option whole cache", (done) => {
+      showDialogQuickPick.resolves([CacheRemover["wholeCache"]]);
+      showDialogConfirmationDialog.resolves(true);
+
+      cacheRemover
+        .removeFromCache()
+        .then(() => {
+          Sinon.assert.calledOnce(showDialogQuickPick);
+          Sinon.assert.calledOnce(showDialogConfirmationDialog);
+
+          assert.ok(!fs.existsSync(cacheLocation), `Cache file removed ${cacheLocation}`);
+
+          done();
+        })
+        .catch((error) => done(error));
+    });
+
+    /**
+     * Tests that the removing of just a few connections works.
+     */
+    test("should work with remove option connection", (done) => {
+      showDialogQuickPick
+        .onFirstCall()
+        .resolves([CacheRemover["removeConnection"]])
+        .onSecondCall()
+        .resolves(["one", "three"]);
+      showDialogConfirmationDialog.resolves(true);
+
+      cacheRemover
+        .removeFromCache()
+        .then(() => {
+          Sinon.assert.calledTwice(showDialogQuickPick);
+          Sinon.assert.calledOnce(showDialogConfirmationDialog);
+
+          assert.ok(fs.existsSync(cacheLocation), `Cache file should be there ${cacheLocation}`);
+
+          const result = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" }));
+          const keys = Object.keys(result);
+
+          assert.deepStrictEqual(
+            ["path/to/connection/two.liquibase.properties", "path/to/connection/four.liquibase.properties"],
+            keys
+          );
+
+          Sinon.assert.callCount(debugLog, 0);
+
+          done();
+        })
+        .catch((error) => done(error));
     });
   });
 });
+
+/**
+ * Asserts that the cache location was not changed
+ * @param cacheLocation - the cache location
+ */
+function assertCacheLocationUnchanged(cacheLocation: string) {
+  const keys = Object.keys(JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" })));
+  assert.strictEqual(4, keys.length, `file should not have changed: ${keys}`);
+}

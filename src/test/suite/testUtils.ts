@@ -8,10 +8,13 @@ import { randomUUID } from "crypto";
 /**
  * Temporary folder for writing cache files.
  */
-const temporaryResourcePath = path.join(process.cwd(), "..", "temp");
+const temporaryResourcePath = path.join(process.cwd(), "..", "..", "out", "temp");
 
 /**
  * Creates a temporary folder for tests.
+ *
+ * This temp folder will be removed when `npm run test-compile` was run.
+ *
  * @param folderNames - the name of the folders
  * @returns the full path to the temporary folder.
  */

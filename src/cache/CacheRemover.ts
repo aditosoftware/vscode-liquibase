@@ -39,6 +39,11 @@ export class CacheRemover {
   ]);
 
   /**
+   * The configuration of the liquibase.properties files the user has saved.
+   */
+  configuration: Record<string, string> = {};
+
+  /**
    * Constructor.
    * @param cacheHandler - the cache handler
    */
@@ -57,8 +62,6 @@ export class CacheRemover {
       return;
     }
 
-    let configuration: Record<string, string> = {};
-
     const result = await handleMultiStepInput([
       new QuickPick({
         name: CacheRemover.removeOption,
@@ -69,11 +72,7 @@ export class CacheRemover {
       new QuickPick({
         name: PROPERTY_FILE,
         title: "Select any number of connections you want to remove from the recently loaded elements",
-        generateItems: async () => {
-          configuration = (await readConfiguration()) || {};
-
-          return this.generatePropertiesForCacheRemoving(cache, configuration);
-        },
+        generateItems: () => this.generatePropertiesForCacheRemoving(cache),
         allowMultiple: true,
         onBeforeInput: this.shouldShowPropertyFileSelection,
       }),
@@ -94,7 +93,7 @@ export class CacheRemover {
     const toRemove = result.inputValues.get(CacheRemover.removeOption);
 
     if (toRemove && toRemove[0]) {
-      this.handleRemoving(toRemove[0], result, configuration);
+      this.handleRemoving(toRemove[0], result);
     }
   }
 
@@ -103,9 +102,8 @@ export class CacheRemover {
    *
    * @param toRemove - the option what should be removed
    * @param result - the results from the dialog input
-   * @param configuration - the configuration of the liquibase.properties files the user has saved
    */
-  private handleRemoving(toRemove: string, result: DialogValues, configuration: Record<string, string>): void {
+  private handleRemoving(toRemove: string, result: DialogValues): void {
     switch (toRemove) {
       case CacheRemover.wholeCache:
         // remove the whole cache
@@ -119,9 +117,9 @@ export class CacheRemover {
           if (propertyFiles) {
             const connectionsToRemove: string[] = [];
 
-            Object.keys(configuration)
+            Object.keys(this.configuration)
               .filter((configKey) => propertyFiles.includes(configKey))
-              .forEach((key) => connectionsToRemove.push(configuration[key]));
+              .forEach((key) => connectionsToRemove.push(this.configuration[key]));
 
             this.cacheHandler.removeConnectionsFromCache(connectionsToRemove);
 
@@ -143,20 +141,20 @@ export class CacheRemover {
    * There will be only items from the configuration available that are also in the cache.
    *
    * @param cache - the cached values
-   * @param configuration - the configuration of the liquibase.properties files the user has saved
    * @returns the `QuickPickItems` for the liquibase.properties selection
    */
-  private generatePropertiesForCacheRemoving(
-    cache: Cache,
-    configuration: Record<string, string>
-  ): vscode.QuickPickItem[] {
+  private generatePropertiesForCacheRemoving(cache: Cache): vscode.QuickPickItem[] {
+    readConfiguration().then((result) => {
+      this.configuration = result ?? {};
+    });
+
     const cacheKeys: string[] = Object.keys(cache);
 
-    return Object.keys(configuration)
-      .filter((key) => cacheKeys.includes(configuration[key]))
+    return Object.keys(this.configuration)
+      .filter((key) => cacheKeys.includes(this.configuration[key]))
       .sort()
       .map((key) => {
-        const value = configuration[key];
+        const value = this.configuration[key];
         return {
           label: key,
           detail: value,
@@ -215,9 +213,6 @@ export class CacheRemover {
    */
   private generateRemoveOptions(): QuickPickItem[] {
     const items: QuickPickItem[] = [];
-
-    console.log(CacheRemover.removeOption);
-    console.log(CacheRemover.removeOptions);
 
     CacheRemover.removeOptions.forEach((value, key) => {
       items.push({
