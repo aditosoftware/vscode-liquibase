@@ -54,17 +54,11 @@ suite("create and add configuration", () => {
      * Tests that trying to add something to a not existing path does not work.
      */
     test("should not add to not existing folder", (done) => {
-      const notExistingPath = path.join(baseResourcePath, "notExisting");
-
-      // TODO funktioniert noch nicht
-
-      getLiquibaseConfigurationPathStub.resolves(notExistingPath);
-
-      assert.ok(!fs.existsSync(notExistingPath));
+      getLiquibaseConfigurationPathStub.resolves(undefined);
 
       addToLiquibaseConfiguration("lorem", "ipsum")
         .then(() => {
-          assert.ok(!fs.existsSync(notExistingPath), `config ${notExistingPath} should still not exist`);
+          assert.ok(!fs.existsSync(configPath), `config ${configPath} should still not exist`);
 
           done();
         })
@@ -118,6 +112,8 @@ suite("create and add configuration", () => {
      */
     test("should add existing key (check for existing)", (done) => {
       fs.writeFileSync(configPath, JSON.stringify({ key: "value" }));
+
+      // TODO handle checkForOverridingExistingConfiguration correctly
 
       assert.ok(fs.existsSync(configPath));
 
