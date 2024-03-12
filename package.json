@@ -280,7 +280,7 @@
     "pretest": "npm run test-compile",
     "lint": "eslint .",
     "test": "vscode-test",
-    "coverage": "c8 --reporter html --reporter text npm run test",
+    "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
@@ -298,9 +298,8 @@
     "@types/vscode": "^1.84.0",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
-    "c8": "^9.1.0",
     "eslint": "^8.56.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "sinon": "^17.0.1",
