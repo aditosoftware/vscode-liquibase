@@ -14,7 +14,7 @@ suite("url handling", () => {
   suite("url handling of dummy driver", () => {
     const driver: Driver = new Driver(
       "not needed",
-      "not needed",
+      "https://maven.central.org/url/to/my/driver/myDriver.jar",
       "jdbc:myDriver//",
       42,
       "/",
@@ -105,6 +105,13 @@ suite("url handling", () => {
         assert.deepStrictEqual(expected, driver.extractUrlParts("jdbc:myDriver//127.0.0.1:1234:not_valid/my_database"));
       });
     });
+
+    /**
+     * Tests the creation of the file name.
+     */
+    test("getFileName", () => {
+      assert.strictEqual(driver.getFileName(), "myDriver.jar");
+    });
   });
 
   /**
@@ -166,9 +173,14 @@ suite("url handling", () => {
      */
     test("should have test cases for every driver", () => {
       // gets all drivers from the test cases, distinct and sort them
-      const testCaseDrivers = Array.from(new Set(testCases.map((pCase) => pCase.driver))).sort();
+      const testCaseDrivers = Array.from(new Set(testCases.map((pCase) => pCase.driver))).sort((a, b) =>
+        a.localeCompare(b)
+      );
 
-      assert.deepStrictEqual(Array.from(ALL_DRIVERS.keys()).sort(), testCaseDrivers);
+      assert.deepStrictEqual(
+        Array.from(ALL_DRIVERS.keys()).sort((a, b) => a.localeCompare(b)),
+        testCaseDrivers
+      );
     });
 
     testCases.forEach((pCase) => {
