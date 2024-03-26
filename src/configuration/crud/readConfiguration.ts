@@ -53,12 +53,14 @@ export async function getPathOfConfiguration(pConfigurationName: string): Promis
  * @param pOnUpdate - the function used for updating the json data. This data is given as key / value pairs
  * @returns `true` when the updating was successful
  */ // TODO korrekter ort?
-export async function updateConfiguration(pOnUpdate: (pJsonData: Record<string, string>) => void): Promise<boolean> {
+export async function updateConfiguration(
+  pOnUpdate: (pJsonData: Record<string, string>) => Promise<void> | void
+): Promise<boolean> {
   // read the configuration
   const configuration = await readConfigurationInternal();
   if (configuration) {
     // update it
-    pOnUpdate(configuration.jsonData);
+    await pOnUpdate(configuration.jsonData);
 
     // and write the data to the file
     fs.writeFileSync(configuration.configPath, JSON.stringify(configuration.jsonData, undefined, 2), {
