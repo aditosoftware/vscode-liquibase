@@ -7,9 +7,9 @@ import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/Liquiba
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../transfer";
 import { readLiquibaseConfigurationNames, updateConfiguration } from "./readConfiguration";
-import { resourcePath } from "../../extension";
 import { openDocument } from "../../utilities/vscodeUtilities";
 import { Logger } from "@aditosoftware/vscode-logging";
+import { resourcePath } from "../../extension";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -31,7 +31,8 @@ export async function addToLiquibaseConfiguration(
   const success = await updateConfiguration(async (pJsonData) => {
     // if there is a configuration with this name, check for override
     if (pJsonData[pName] && pCheckForExisting) {
-      if (!(await checkForOverridingExistingConfiguration(pName))) {
+      const shouldOverride = await checkForOverridingExistingConfiguration(pName);
+      if (!shouldOverride) {
         return;
       }
     }
@@ -50,7 +51,7 @@ export async function addToLiquibaseConfiguration(
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
  * @param pConfigurationData - the inputted values from the user
  */
-export async function createLiquibaseProperties(pConfigurationData: LiquibaseConfigurationData) {
+export async function createLiquibaseProperties(pConfigurationData: LiquibaseConfigurationData): Promise<void> {
   const configurationPath = await getLiquibaseConfigurationPath();
 
   if (!configurationPath) {
@@ -104,6 +105,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
 
 /**
  * Builds the driver path for the classpath.
+ *
  * @param pDriver - the driver that need to be included in the classpath.
  * @returns the generated absolute path to the driver file
  */

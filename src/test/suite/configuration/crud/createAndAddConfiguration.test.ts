@@ -2,11 +2,21 @@ import path from "path";
 import { TestUtils } from "../../TestUtils";
 import assert from "assert";
 import fs from "fs";
-import { addToLiquibaseConfiguration } from "../../../../configuration/crud/createAndAddConfiguration";
+import {
+  addToLiquibaseConfiguration,
+  buildDriverPath,
+  createLiquibaseProperties,
+} from "../../../../configuration/crud/createAndAddConfiguration";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
 import Sinon from "sinon";
 import * as vscode from "vscode";
-import { Logger } from "@aditosoftware/vscode-logging";
+import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
+import {
+  ConfigurationStatus,
+  LiquibaseConfigurationData,
+} from "../../../../configuration/data/LiquibaseConfigurationData";
+import { Driver } from "../../../../configuration/drivers";
+import { setResourcePath } from "../../../../extension";
 
 /**
  * Tests the creating of configurations.
@@ -19,44 +29,44 @@ suite("create and add configuration", () => {
     TestUtils.initLoggerForTests();
   });
 
+  let infoLog: Sinon.SinonStub;
+  let errorLog: Sinon.SinonStub;
+
+  let baseResourcePath: string;
+  let getLiquibaseConfigurationPathStub: Sinon.SinonStub;
+
+  /**
+   * The path for all config files
+   */
+  let configPath: string;
+
+  /**
+   * Set up the resource directory for the tests and the resource path.
+   */
+  setup("init resource directory and stubs", () => {
+    baseResourcePath = TestUtils.createTempFolderForTests("configuration", "createAdd");
+
+    configPath = path.join(baseResourcePath, "settings.json");
+
+    getLiquibaseConfigurationPathStub = Sinon.stub(handleLiquibaseSettings, "getLiquibaseConfigurationPath").resolves(
+      baseResourcePath
+    );
+
+    infoLog = Sinon.stub(Logger.getLogger(), "info");
+    errorLog = Sinon.stub(Logger.getLogger(), "error");
+  });
+
+  /**
+   * Restore all stubs.
+   */
+  teardown("restore stubs", () => {
+    Sinon.restore();
+  });
+
   /**
    * Tests the addition of elements to the configurations.
    */
   suite("add", () => {
-    let baseResourcePath: string;
-    let getLiquibaseConfigurationPathStub: Sinon.SinonStub;
-
-    let infoLog: Sinon.SinonStub;
-    let errorLog: Sinon.SinonStub;
-
-    /**
-     * The path for all config files
-     */
-    let configPath: string;
-
-    /**
-     * Set up the resource directory for the tests and the resource path.
-     */
-    setup("init resource directory and stubs", () => {
-      baseResourcePath = TestUtils.createTempFolderForTests("configuration", "add");
-
-      configPath = path.join(baseResourcePath, "settings.json");
-
-      getLiquibaseConfigurationPathStub = Sinon.stub(handleLiquibaseSettings, "getLiquibaseConfigurationPath").resolves(
-        baseResourcePath
-      );
-
-      infoLog = Sinon.stub(Logger.getLogger(), "info");
-      errorLog = Sinon.stub(Logger.getLogger(), "error");
-    });
-
-    /**
-     * Restore all stubs.
-     */
-    teardown("restore stubs", () => {
-      Sinon.restore();
-    });
-
     /**
      * Tests that trying to add something to a not existing path does not work.
      */
@@ -198,7 +208,198 @@ suite("create and add configuration", () => {
         .catch(done);
     });
   });
+
+  /**
+   * Tests the creation of liquibase properties.
+   */
+  suite("createLiquibaseProperties", () => {
+    let liquibaseConfigurationData: LiquibaseConfigurationData;
+
+    setup("create data", () => {
+      liquibaseConfigurationData = LiquibaseConfigurationData.createDefaultData(
+        {
+          defaultDatabaseForConfiguration: "MariaDB",
+          liquibaseDirectoryInProject: "",
+        },
+        ConfigurationStatus.NEW,
+        ";"
+      );
+      liquibaseConfigurationData.name = "data";
+      liquibaseConfigurationData.databaseConnection.username = "admin";
+      liquibaseConfigurationData.databaseConnection.password = "secretPw";
+
+      setResourcePath(path.join(baseResourcePath, "dummy"));
+    });
+
+    /**
+     * Tests that it will not do anything when no config path was given
+     */
+    test("should not work with no config path", (done) => {
+      getLiquibaseConfigurationPathStub.resolves(undefined);
+
+      createLiquibaseProperties(liquibaseConfigurationData)
+        .then(() => {
+          assertLogging(infoLog, errorLog, { error: ["No configuration path was given. No configuration was saved"] });
+
+          done();
+        })
+        .catch(done);
+    });
+
+    /**
+     * Tests that the creation of a new liquibase properties file does work.
+     */
+    test(`should create liquibase properties`, (done) => {
+      assertCreationOfLiquibaseProperties(
+        baseResourcePath,
+        liquibaseConfigurationData,
+        configPath,
+        infoLog,
+        errorLog,
+        done
+      );
+    });
+
+    /**
+     * Tests that the creation of liquibase properties files with a existing config with an name already saved will work when the override is allowed.
+     */
+    test(`should create liquibase properties with existing config and Yes to override`, (done) => {
+      fs.writeFileSync(configPath, JSON.stringify({ data: "/path/to/old/data" }));
+
+      Sinon.replace(vscode.window, "showWarningMessage", Sinon.fake.resolves("Yes"));
+
+      assertCreationOfLiquibaseProperties(
+        baseResourcePath,
+        liquibaseConfigurationData,
+        configPath,
+        infoLog,
+        errorLog,
+        done
+      );
+    });
+
+    /**
+     * Tests that the creation of liquibase properties files with a existing config with an name already saved will not replace the existing config, when no was selected.
+     */
+    test(`should create liquibase properties with existing config and No to override`, (done) => {
+      const oldSettingsContent = { data: "/path/to/old/data" };
+      fs.writeFileSync(configPath, JSON.stringify(oldSettingsContent));
+
+      Sinon.replace(vscode.window, "showWarningMessage", Sinon.fake.resolves("No"));
+
+      createLiquibaseProperties(liquibaseConfigurationData)
+        .then(() => {
+          const liquibaseProperties = path.join(baseResourcePath, "data.liquibase.properties");
+
+          assert.ok(!fs.existsSync(liquibaseProperties), "properties file should not exist");
+
+          const settingsContent = fs.readFileSync(configPath, "utf-8");
+
+          assert.deepStrictEqual(JSON.parse(settingsContent), oldSettingsContent);
+
+          done();
+        })
+        .catch(done);
+    });
+
+    /**
+     * Tests than an error log will be written, when the file could not be written.
+     */
+    test("should exit correctly when file could not be written", (done) => {
+      Sinon.stub(fs, "writeFileSync").throws("unit test");
+
+      createLiquibaseProperties(liquibaseConfigurationData)
+        .then(() => {
+          Sinon.assert.calledWith(errorLog, {
+            message: "Error writing file",
+            notifyUser: true,
+            error: Sinon.match.any,
+          } as LoggingMessage);
+
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  /**
+   * Tests that the building of the driver path works as expected.
+   */
+  test("should buildDriverPath", () => {
+    const driver: Driver = new Driver(
+      "not needed",
+      "https://maven.central.org/url/to/my/driver/myDriver.jar",
+      "not needed",
+      42,
+      "not needed",
+      () => {
+        throw new Error("not needed");
+      },
+      () => {
+        throw new Error("not needed");
+      },
+      () => {
+        throw new Error("not needed");
+      }
+    );
+
+    setResourcePath(path.join("path", "to", "resource"));
+
+    assert.strictEqual(buildDriverPath(driver), path.normalize("path/to/resource/myDriver.jar"));
+  });
 });
+
+// TODO
+function assertCreationOfLiquibaseProperties(
+  baseResourcePath: string,
+  liquibaseConfigurationData: LiquibaseConfigurationData,
+  configPath: string,
+  infoLog: Sinon.SinonStub,
+  errorLog: Sinon.SinonStub,
+  done: Mocha.Done
+) {
+  createLiquibaseProperties(liquibaseConfigurationData)
+    .then(() => {
+      const expectedClasspath = path
+        .join(baseResourcePath, "dummy", "mariadb-java-client-2.5.3.jar")
+        .replaceAll(`\\`, `\\\\`);
+
+      const expectedFileContent = `
+# configuration for the database
+username = admin
+password = secretPw
+driver = org.mariadb.jdbc.Driver
+# Specifies the directories and JAR files to search for changelog files and custom extension classes.
+# To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
+classpath = ${expectedClasspath}`;
+
+      //  find opened editors
+      const text = vscode.window.visibleTextEditors
+        .filter((pEditor) => pEditor.document.uri.fsPath.endsWith("data.liquibase.properties"))
+        .map((pEditor) => {
+          return pEditor.document.getText();
+        });
+      // and check the content of the opened editor
+      assert.strictEqual(text.length, 1, "one editor should be opened");
+      assert.deepStrictEqual(text[0], expectedFileContent, "one editor should be opened");
+
+      const liquibaseProperties = path.join(baseResourcePath, "data.liquibase.properties");
+
+      assert.ok(fs.existsSync(liquibaseProperties), "properties file should exists");
+
+      const settingsContent = fs.readFileSync(configPath, "utf-8");
+
+      const propertiesContent = fs.readFileSync(liquibaseProperties, "utf-8");
+
+      assert.deepStrictEqual(JSON.parse(settingsContent), { data: liquibaseProperties }, "settings content");
+      assert.deepStrictEqual(propertiesContent, expectedFileContent, "properties content");
+
+      assertLogging(infoLog, errorLog, { info: ["Configuration for data was successfully saved."] });
+
+      done();
+    })
+    .catch(done);
+}
 
 /**
  * Asserts the logging.
@@ -220,13 +421,16 @@ function assertLogging(
 
   if (messages.info) {
     messages.info.forEach((infoMessage) =>
-      Sinon.assert.calledWith(infoLog, { message: infoMessage, notifyUser: true })
+      Sinon.assert.calledWith(infoLog, { message: infoMessage, notifyUser: true } as LoggingMessage)
     );
   }
 
   if (messages.error) {
     messages.error.forEach((errorMessage) =>
-      Sinon.assert.calledWith(errorLog, { message: errorMessage, notifyUser: true })
+      Sinon.assert.calledWith(errorLog, {
+        message: errorMessage,
+        notifyUser: true,
+      } as LoggingMessage)
     );
   }
 }

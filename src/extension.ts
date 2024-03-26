@@ -463,3 +463,12 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
 export function deactivate() {
   Logger.end();
 }
+
+/**
+ * Sets the resource path. This is used for tests, when no value was set.
+ *
+ * @param value - the value the set
+ */
+export function setResourcePath(value: string): void {
+  resourcePath = value;
+}
