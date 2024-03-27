@@ -17,7 +17,6 @@ import * as os from "os";
 import {
   addExistingLiquibaseConfiguration,
   editExistingLiquibaseConfiguration,
-  removeExistingLiquibaseConfiguration,
 } from "./settings/configurationCommands";
 import {
   fileName,
@@ -32,6 +31,7 @@ import { openDocument } from "./utilities/vscodeUtilities";
 import { generateContextInputs } from "./handleContexts";
 import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
 import { CacheHandler, CacheRemover } from "./cache/";
+import { removeConfiguration } from "./settings/removeConfiguration";
 
 /**
  * The name that should be used for any folder selection.
@@ -449,7 +449,7 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", removeExistingLiquibaseConfiguration)
+    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", removeConfiguration)
   );
 
   context.subscriptions.push(

@@ -7,15 +7,15 @@ import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handl
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
 import { InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
-import { removeConfiguration } from "./removeConfiguration";
 import { ConnectionType } from "../input/ConnectionType";
 
 /**
  * Edits an existing configuration.
+ * @param uri - the file that should be edited
  * @param context - the ExtensionContext. This is needed for opening the webview for editing the context
  */
 export async function editExistingLiquibaseConfiguration(
-  uri: vscode.Uri,
+  uri: vscode.Uri | undefined,
   context: vscode.ExtensionContext
 ): Promise<void> {
   let existingConfiguration:
@@ -122,14 +122,7 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
     const location = dialogValues.inputValues.get(locationKey)?.[0];
 
     if (name && location) {
-      addToLiquibaseConfiguration(name, location);
+      await addToLiquibaseConfiguration(name, location);
     }
   }
-}
-
-/**
- * Removes an existing configuration from the setting configuration file.
- */
-export function removeExistingLiquibaseConfiguration(): void {
-  removeConfiguration();
 }
