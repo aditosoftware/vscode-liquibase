@@ -237,7 +237,7 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
   const contextValues: vscode.QuickPickItem[] = [];
 
   // Process changelogFileLine if found
-  if (classpathAndChangelogs) {
+  if (classpathAndChangelogs && classpathAndChangelogs.changelog && classpathAndChangelogs.classpath) {
     const changelogFileLine = classpathAndChangelogs.changelog;
 
     for (const classpath of classpathAndChangelogs.classpath) {

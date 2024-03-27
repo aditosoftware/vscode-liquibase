@@ -27,11 +27,14 @@ const possibleReferenceKeys = [
  * @param pClasspathSeparator - the separator in the classpath
  * @returns the classpath and changelog of the file
  */
-export function readChangelogAndClasspathFile(pPath: string, pClasspathSeparator: ClasspathType): { classpath: string[]; changelog: string; } {
+export function readChangelogAndClasspathFile(
+  pPath: string,
+  pClasspathSeparator: ClasspathType
+): { classpath?: string[]; changelog?: string } {
   const liquibaseProperties = readProperties(pPath);
 
-  const classpath = liquibaseProperties["classpath"].split(pClasspathSeparator);
-  const changelog = liquibaseProperties["changelogFile"];
+  const classpath: string[] | undefined = liquibaseProperties["classpath"]?.split(pClasspathSeparator) ?? undefined;
+  const changelog: string | undefined = liquibaseProperties["changelogFile"];
   return { classpath, changelog };
 }
 
@@ -51,7 +54,7 @@ export function readChangelog(pPath: string): string | undefined {
  * @param path -  the path which should be read
  * @returns the url element of the file
  */
-export function readUrl(pPath: string): string {
+export function readUrl(pPath: string): string | undefined {
   const liquibaseProperties = readProperties(pPath);
 
   return liquibaseProperties["url"];
@@ -70,10 +73,18 @@ export function readPossibleReferenceValues(pPath: string): string[] {
 
   const referenceValues: string[] = [];
 
+  const referenceKeys = new Map<string, string>();
+  possibleReferenceKeys.forEach((pKey) => {
+    // in the file, the keys are without dashes and in camelCase
+    const keyFromFile = pKey.replaceAll(/-([a-z])/g, (_, match) => match.toUpperCase());
+    // for the output, the keys should still be in kebab-case
+    const formattedKey = `--reference-${pKey}`;
+    referenceKeys.set(keyFromFile, formattedKey);
+  });
+
   for (const [key, value] of Object.entries(liquibaseProperties)) {
-    const formattedKey = `--reference-${key}`;
-    if (possibleReferenceKeys.includes(key)) {
-      referenceValues.push(`${formattedKey}=${value}`);
+    if (referenceKeys.has(key)) {
+      referenceValues.push(`${referenceKeys.get(key)}=${value}`);
     }
   }
 
@@ -119,6 +130,9 @@ export function readFullValues(
  * @returns the properties as key-value pairs
  */
 function readProperties(pPath: string): KeyValuePairObject {
-  // TODO was tun, wenn file nicht da ist, nach Projektumbennenung passt nichts mehr!
-  return getProperties(fs.readFileSync(pPath, "utf8"));
+  if (fs.existsSync(pPath)) {
+    return getProperties(fs.readFileSync(pPath, "utf8"));
+  } else {
+    return {};
+  }
 }
