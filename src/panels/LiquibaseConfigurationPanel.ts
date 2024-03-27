@@ -1,6 +1,5 @@
 import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vscode";
-import { getUri } from "../utilities/getUri";
-import { getNonce } from "../utilities/getNonce";
+import { getUri, getNonce } from "../utilities/webviewUtilities";
 import { createLiquibaseProperties } from "../configuration/crud/createAndAddConfiguration";
 import { MessageData, MessageType } from "../configuration/transfer";
 import { getClasspathSeparator } from "../utilities/osUtilities";
