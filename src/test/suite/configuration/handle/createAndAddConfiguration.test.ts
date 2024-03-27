@@ -14,7 +14,7 @@ import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
 import { LiquibaseConfigurationData } from "../../../../configuration/data/LiquibaseConfigurationData";
 import { Driver } from "../../../../configuration/drivers";
 import { setResourcePath } from "../../../../extension";
-import { assertFileWasOpened } from "../../utitilites/vscodeUtilities.test";
+import { assertFileWasOpened } from "../../utilities/vscodeUtilities.test";
 
 /**
  * Tests the creating of configurations.
