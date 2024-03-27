@@ -1,4 +1,4 @@
-import { updateConfiguration } from "../configuration/crud/readConfiguration";
+import { updateConfiguration } from "../configuration/handle/readConfiguration";
 import { ConfirmationDialog, DialogValues, QuickPick, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as fs from "fs";

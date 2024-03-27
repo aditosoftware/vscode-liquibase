@@ -6,7 +6,7 @@ import {
   addToLiquibaseConfiguration,
   buildDriverPath,
   createLiquibaseProperties,
-} from "../../../../configuration/crud/createAndAddConfiguration";
+} from "../../../../configuration/handle/createAndAddConfiguration";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
 import Sinon from "sinon";
 import * as vscode from "vscode";

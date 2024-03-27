@@ -1,6 +1,6 @@
 import { DialogValues, InputBase, InputBaseOptions } from "@aditosoftware/vscode-input";
 import * as vscode from "vscode";
-import { readConfiguration } from "../configuration/crud/readConfiguration";
+import { readConfiguration } from "../configuration/handle/readConfiguration";
 
 /**
  * Name used for the normal property file.

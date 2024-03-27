@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
-import { addToLiquibaseConfiguration } from "../configuration/crud/createAndAddConfiguration";
+import { addToLiquibaseConfiguration } from "../configuration/handle/createAndAddConfiguration";
 import { LiquibaseConfigurationPanel } from "../panels/LiquibaseConfigurationPanel";
 import { getClasspathSeparator } from "../utilities/osUtilities";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
-import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/crud/readConfiguration";
+import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
 import { InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
 import { removeConfiguration } from "./removeConfiguration";

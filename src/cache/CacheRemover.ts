@@ -1,7 +1,7 @@
 import { QuickPickItem } from "vscode";
 import { ConfirmationDialog, DialogValues, QuickPick, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Cache, CacheHandler } from "./CacheHandler";
-import { readConfiguration } from "../configuration/crud/readConfiguration";
+import { readConfiguration } from "../configuration/handle/readConfiguration";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as vscode from "vscode";
 import { PROPERTY_FILE } from "../input/ConnectionType";

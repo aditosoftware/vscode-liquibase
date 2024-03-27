@@ -4,7 +4,7 @@ import {
   readConfiguration,
   readLiquibaseConfigurationNames,
   updateConfiguration,
-} from "../../../../configuration/crud/readConfiguration";
+} from "../../../../configuration/handle/readConfiguration";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
 import path from "path";
 import assert, { fail } from "assert";
