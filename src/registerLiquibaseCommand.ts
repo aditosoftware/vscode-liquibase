@@ -69,7 +69,7 @@ export function registerLiquibaseCommand(
   action: string,
   pOriginPickPanelConfigs: ReadonlyArray<PickPanelConfig>,
   additionalCommandAction?: AdditionalCommandAction
-) {
+): vscode.Disposable {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
     // copy the origin pickPanelConfigs, because we might delete an element from them
     const pickPanelConfigs = Array.from(pOriginPickPanelConfigs);

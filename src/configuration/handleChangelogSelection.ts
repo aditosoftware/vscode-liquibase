@@ -9,7 +9,7 @@ import { MessageType } from "./transfer";
  *
  * @param data - the data from the message from the webview
  */
-export function chooseFileForChangelog(data: LiquibaseConfigurationData) {
+export function chooseFileForChangelog(data: LiquibaseConfigurationData): void {
   vscode.window
     .showOpenDialog({
       canSelectFiles: true,

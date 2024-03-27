@@ -350,7 +350,16 @@ suite("create and add configuration", () => {
   });
 });
 
-// TODO
+/**
+ * Asserts the creation of the liquibase properties.
+ *
+ * @param baseResourcePath - the base path of the resources
+ * @param liquibaseConfigurationData - the liquibase data used for the creation of the properties
+ * @param configPath - the config path of the settings
+ * @param infoLog - the stub of the info log
+ * @param errorLog - the stub of the error log
+ * @param done - mochas done function to indicate that the test is over
+ */
 function assertCreationOfLiquibaseProperties(
   baseResourcePath: string,
   liquibaseConfigurationData: LiquibaseConfigurationData,
@@ -358,7 +367,7 @@ function assertCreationOfLiquibaseProperties(
   infoLog: Sinon.SinonStub,
   errorLog: Sinon.SinonStub,
   done: Mocha.Done
-) {
+): void {
   createLiquibaseProperties(liquibaseConfigurationData)
     .then(() => {
       const expectedClasspath = path
@@ -409,7 +418,7 @@ function assertLogging(
     info?: string[];
     error?: string[];
   }
-) {
+): void {
   Sinon.assert.callCount(infoLog, messages.info?.length ?? 0);
   Sinon.assert.callCount(errorLog, messages.error?.length ?? 0);
 

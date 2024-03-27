@@ -27,7 +27,7 @@ const possibleReferenceKeys = [
  * @param pClasspathSeparator - the separator in the classpath
  * @returns the classpath and changelog of the file
  */
-export function readChangelogAndClasspathFile(pPath: string, pClasspathSeparator: ClasspathType) {
+export function readChangelogAndClasspathFile(pPath: string, pClasspathSeparator: ClasspathType): { classpath: string[]; changelog: string; } {
   const liquibaseProperties = readProperties(pPath);
 
   const classpath = liquibaseProperties["classpath"].split(pClasspathSeparator);
@@ -51,7 +51,7 @@ export function readChangelog(pPath: string): string | undefined {
  * @param path -  the path which should be read
  * @returns the url element of the file
  */
-export function readUrl(pPath: string) {
+export function readUrl(pPath: string): string {
   const liquibaseProperties = readProperties(pPath);
 
   return liquibaseProperties["url"];

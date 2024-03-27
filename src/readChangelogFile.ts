@@ -50,7 +50,7 @@ export function setExtraChangelogCorrectly(dialogValues: DialogValues): void {
  *
  * @returns A string representing the normalized path of the workspace folder.
  */
-export function getWorkFolder() {
+export function getWorkFolder(): string {
   // First, find out the setting of the work folder of liquibase
   const liquibaseFolder = getLiquibaseFolder();
   if (liquibaseFolder) {

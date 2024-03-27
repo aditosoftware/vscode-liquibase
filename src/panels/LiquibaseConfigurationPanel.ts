@@ -49,7 +49,7 @@ export class LiquibaseConfigurationPanel {
    *
    * @param extensionUri - The URI of the directory containing the extension.
    */
-  public static render(extensionUri: Uri, data?: LiquibaseConfigurationData) {
+  public static render(extensionUri: Uri, data?: LiquibaseConfigurationData): void {
     if (LiquibaseConfigurationPanel.currentPanel) {
       // If the webview panel already exists reveal it
       LiquibaseConfigurationPanel.currentPanel._panel.reveal(ViewColumn.One);
@@ -96,7 +96,7 @@ export class LiquibaseConfigurationPanel {
    * @param pMessageType - the type of the message
    * @param data - the data of the message
    */
-  static transferMessage(pMessageType: MessageType, data: LiquibaseConfigurationData) {
+  static transferMessage(pMessageType: MessageType, data: LiquibaseConfigurationData): void {
     LiquibaseConfigurationPanel.currentPanel?._panel.webview
       .postMessage(new MessageData(pMessageType, data))
       .then((success) => {
@@ -109,7 +109,7 @@ export class LiquibaseConfigurationPanel {
   /**
    * Cleans up and disposes of webview resources when the webview panel is closed.
    */
-  public dispose() {
+  public dispose(): void {
     LiquibaseConfigurationPanel.currentPanel = undefined;
 
     // Dispose of the current webview panel
@@ -135,7 +135,7 @@ export class LiquibaseConfigurationPanel {
    * @returns A template string literal containing the HTML that should be
    * rendered within the webview panel
    */
-  private _getWebviewContent(webview: Webview, extensionUri: Uri) {
+  private _getWebviewContent(webview: Webview, extensionUri: Uri): string {
     // The CSS file from the React build output
     const stylesUri = getUri(webview, extensionUri, ["webview-ui", "build", "assets", "index.css"]);
     // Codicon font file from the React build output
@@ -178,7 +178,7 @@ export class LiquibaseConfigurationPanel {
    * @param webview - A reference to the extension webview
    * @param context - A reference to the extension context
    */
-  private _setWebviewMessageListener(webview: Webview) {
+  private _setWebviewMessageListener(webview: Webview): void {
     webview.onDidReceiveMessage(
       (message: unknown) => {
         // recreate a new object, because otherwise no methods will be there

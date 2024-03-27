@@ -14,7 +14,10 @@ import { ConnectionType } from "../input/ConnectionType";
  * Edits an existing configuration.
  * @param context - the ExtensionContext. This is needed for opening the webview for editing the context
  */
-export async function editExistingLiquibaseConfiguration(uri: vscode.Uri, context: vscode.ExtensionContext) {
+export async function editExistingLiquibaseConfiguration(
+  uri: vscode.Uri,
+  context: vscode.ExtensionContext
+): Promise<void> {
   let existingConfiguration:
     | {
         fsPath: string;
@@ -127,6 +130,6 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
 /**
  * Removes an existing configuration from the setting configuration file.
  */
-export function removeExistingLiquibaseConfiguration() {
+export function removeExistingLiquibaseConfiguration(): void {
   removeConfiguration();
 }

@@ -53,7 +53,7 @@ export class ConnectionType extends InputBase<ConnectionTypeOptions> {
   /**
    * Suggests the user that they should create a configuration, when no liquibase configuration was found.
    */
-  static async suggestCreationOfConfiguration() {
+  static async suggestCreationOfConfiguration(): Promise<void> {
     const answer = await vscode.window.showErrorMessage("No configurations found. Please create a configuration.", {
       title: "Create configuration",
     });

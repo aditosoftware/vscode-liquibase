@@ -164,7 +164,7 @@ export class LiquibaseConfigurationData {
    * @param key - the the of the liquibase properties file
    * @param value - the value of the liquibase properties file
    */
-  handleValueFromLiquibaseConfiguration(key: string, value: string) {
+  handleValueFromLiquibaseConfiguration(key: string, value: string): void {
     let normalizedKey = key;
     let reference: boolean = false;
     if (key.startsWith(DatabaseConnection.REFERENCE)) {

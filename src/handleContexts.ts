@@ -132,7 +132,10 @@ function createCmdArgsForContextSelection(dialogValues: DialogValues): string[] 
  * @param currentResults  - the current dialog values
  * @returns the cache values and an text for the details of the cache selection
  */
-function loadCacheForPropertyFile(currentResults: DialogValues) {
+function loadCacheForPropertyFile(currentResults: DialogValues): {
+  cachedContexts: string | undefined;
+  cache: string[];
+} {
   const propertyFile = currentResults.inputValues.get(PROPERTY_FILE);
 
   let cache: string[] = [];
@@ -161,7 +164,7 @@ function showContextSelection(dialogValues: DialogValues): boolean {
   const result = dialogValues.inputValues.get(contextPreDialog);
 
   if (result && result[0]) {
-    return !(result[0] === noContext);
+    return result[0] !== noContext;
   }
 
   return false;
@@ -202,12 +205,12 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
  * @param dialogValues - the current dialog values
  * @returns the loaded items
  */
-export async function loadContextsFromChangelog(dialogValues: DialogValues) {
+export async function loadContextsFromChangelog(dialogValues: DialogValues): Promise<QuickPickItems> {
   const items = await readContextValues(dialogValues);
   return {
     items,
     additionalTitle: "loaded from changelogs",
-  };
+  } as QuickPickItems;
 }
 
 /**

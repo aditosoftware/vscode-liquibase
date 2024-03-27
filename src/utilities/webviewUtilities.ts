@@ -11,10 +11,9 @@ import { Uri, Webview } from "vscode";
  * @param pathList - An array of strings representing the path to a file/resource
  * @returns A URI pointing to the file/resource
  */
-export function getUri(webview: Webview, extensionUri: Uri, pathList: string[]) {
+export function getUri(webview: Webview, extensionUri: Uri, pathList: string[]): Uri {
   return webview.asWebviewUri(Uri.joinPath(extensionUri, ...pathList));
 }
-
 
 /**
  * A helper function that returns a unique alphanumeric identifier called a nonce.
@@ -24,7 +23,7 @@ export function getUri(webview: Webview, extensionUri: Uri, pathList: string[]) 
  *
  * @returns A nonce
  */
-export function getNonce() {
+export function getNonce(): string {
   let text = "";
   const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   for (let i = 0; i < 32; i++) {

@@ -40,7 +40,7 @@ const removeType = "removeType";
  * This will show dialogs for the user what to remove and then handle the removing.
  *
  */
-export function removeConfiguration() {
+export function removeConfiguration(): void {
   const inputs = [
     new ConnectionType({ name: "propertyFile" }),
     new QuickPick({

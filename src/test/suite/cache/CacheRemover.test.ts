@@ -370,7 +370,7 @@ suite("CacheRemover tests", () => {
  * Asserts that the cache location was not changed
  * @param cacheLocation - the cache location
  */
-function assertCacheLocationUnchanged(cacheLocation: string) {
+function assertCacheLocationUnchanged(cacheLocation: string): void {
   const keys = Object.keys(JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" })));
   assert.strictEqual(4, keys.length, `file should not have changed: ${keys}`);
 }

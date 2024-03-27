@@ -34,7 +34,7 @@ export class TestUtils {
   /**
    * Initializes a dummy logger for tests.
    */
-  static initLoggerForTests() {
+  static initLoggerForTests(): void {
     const context: vscode.ExtensionContext = {
       subscriptions: [],
       logUri: vscode.Uri.file(path.join(process.cwd(), "..", "logging")),

@@ -60,7 +60,7 @@ export let cacheHandler: CacheHandler;
  *                  It represents the lifecycle of the extension and can be used
  *                  to store and retrieve global state.
  */
-export async function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
   // Constructing the path to the resources folder
   if (context.globalStorageUri) {
     // use the global storage directory for the file system
@@ -435,7 +435,7 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
  * Registers all the commands that are needed by liquibase properties handling
  * @param context - the Context for storing the commands
  */
-function registerCommandsForLiquibasePropertiesHandling(context: vscode.ExtensionContext) {
+function registerCommandsForLiquibasePropertiesHandling(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand("liquibase.createLiquibaseConfiguration", () => {
       LiquibaseConfigurationPanel.render(context.extensionUri);
@@ -460,7 +460,7 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
 /**
  * Shutting down the client. This function is called when the extension is deactivated.
  */
-export function deactivate() {
+export function deactivate(): void {
   Logger.end();
 }
 

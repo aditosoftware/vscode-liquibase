@@ -187,7 +187,7 @@ export async function loadContextsFromChangelogFile(
  * @param reject - the reject of any promise
  * @returns the path to `JAVA_HOME/bin/java`, when a java home was given
  */
-function getJavaExecutable(reject: (reason?: unknown) => void) {
+function getJavaExecutable(reject: (reason?: unknown) => void): string | undefined {
   const javaHome = process.env["JAVA_HOME"];
 
   if (!javaHome) {
@@ -217,7 +217,7 @@ function sanitizeOutput(output: string): string {
  * @param data - the data that should be written to any output
  * @param progress - the progress where some messages should be written
  */
-function addToOutput(data: unknown, progress: vscode.Progress<{ message: string | undefined }>) {
+function addToOutput(data: unknown, progress: vscode.Progress<{ message: string | undefined }>): void {
   const line: string = `${data}`;
 
   // append any message to the output stream

@@ -47,7 +47,7 @@ interface NewUrlValues extends UrlParts {
  * @param pProperties - the properties for creating the element
  * @returns the created element
  */
-export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
+export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): JSX.Element {
   const [serverAddress, setServerAddress] = useState<string>("localhost");
   const [port, setPort] = useState<number>(-1);
   const [databaseName, setDatabaseName] = useState<string>("data");
@@ -56,7 +56,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps) {
    * Updates the url for the changed values of the url parts.
    * @param newValues - the new values to set. You do not need to fill every value, just the new values
    */
-  function updateUrl(newValues: NewUrlValues) {
+  function updateUrl(newValues: NewUrlValues): void {
     const databaseType = newValues.databaseType ?? pProperties.databaseConnection?.databaseType ?? "";
     const driver = ALL_DRIVERS.get(databaseType);
     if (driver) {

@@ -22,7 +22,7 @@ import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnect
 import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
 import { MessageData, MessageType } from "../../src/configuration/transfer";
 
-function App() {
+function App(): JSX.Element {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
     // dummy data to create the element.
     // The data will be updated shortly after the view is created.
@@ -57,7 +57,7 @@ function App() {
    * All the required components will be set.
    * @param messageData - the message data given
    */
-  function handleInitData(messageData: MessageData) {
+  function handleInitData(messageData: MessageData): void {
     const configurationData = messageData.configurationData;
     if (configurationData) {
       setReferenceConnection(typeof configurationData.referenceDatabaseConnection !== "undefined");
@@ -72,7 +72,7 @@ function App() {
    * Handles the changing of the state after the saving was successful.
    * @param messageData - the message data given
    */
-  function handleSavingSuccessful(messageData: MessageData) {
+  function handleSavingSuccessful(messageData: MessageData): void {
     if (messageData.configurationData && data.name === messageData.configurationData.name) {
       //just check the name if the loaded config is the same
       updateData((draft) => {
@@ -87,7 +87,7 @@ function App() {
    * and changelog file.
    * @param pMessage - the message data given
    */
-  function handleChooseChangelogResult(pMessage: MessageData) {
+  function handleChooseChangelogResult(pMessage: MessageData): void {
     updateData((draft) => {
       if (pMessage.configurationData) {
         draft.classpath = pMessage.configurationData.classpath;
@@ -123,21 +123,6 @@ function App() {
 
   // Whenever the data changes, update the preview data
   useEffect(() => {
-    const fetchData = () => {
-      try {
-        // do not add any values for the driver, because we can not build them here (path is not allowed!)
-        setPreviewData(data.generateProperties(() => undefined, true));
-      } catch (error) {
-        vscodeApiWrapper.postMessage(
-          new MessageData(MessageType.LOG_MESSAGE, {
-            level: "error",
-            message: "Not able to set preview data",
-            error: error,
-          })
-        );
-      }
-    };
-
     fetchData();
   }, [data]);
 
@@ -289,6 +274,24 @@ function App() {
   );
 
   /**
+   * Fetches the data from the data and sets it to the preview, whenever the data changes.
+   */
+  function fetchData(): void {
+    try {
+      // do not add any values for the driver, because we can not build them here (path is not allowed!)
+      setPreviewData(data.generateProperties(() => undefined, true));
+    } catch (error) {
+      vscodeApiWrapper.postMessage(
+        new MessageData(MessageType.LOG_MESSAGE, {
+          level: "error",
+          message: "Not able to set preview data",
+          error: error,
+        })
+      );
+    }
+  }
+
+  /**
    * Updates a specific value of the DatabaseConnection .
    *
    * @param pComponent - The key of the component to be updated.
@@ -332,7 +335,7 @@ function App() {
    * Handles the name change of the input field.
    * @returns the event
    */
-  function handleChangeName(event: React.FocusEvent<HTMLInputElement>) {
+  function handleChangeName(event: React.FocusEvent<HTMLInputElement>): void {
     updateData((draft) => {
       draft.name = event.target.value;
 
@@ -345,7 +348,7 @@ function App() {
    * Handles the change of the changelog file.
    * @param event - the event which was triggered
    */
-  function handleChangelogFileChange(event: React.FocusEvent<HTMLInputElement>) {
+  function handleChangelogFileChange(event: React.FocusEvent<HTMLInputElement>): void {
     updateData((draft) => {
       draft.changelogFile = event.target.value;
     });
@@ -356,7 +359,7 @@ function App() {
    * In this case, we need to trigger an choose dialog outside of the webview.
    * The data will later return.
    */
-  function handleChooseChangelog() {
+  function handleChooseChangelog(): void {
     vscodeApiWrapper.postMessage(new MessageData(MessageType.CHOOSE_CHANGELOG, data));
   }
 
@@ -364,7 +367,7 @@ function App() {
    * Handles the change of the classpath elements.
    * @param event - the event which was triggered
    */
-  function handleChangeClasspath(event: React.FocusEvent<HTMLInputElement>) {
+  function handleChangeClasspath(event: React.FocusEvent<HTMLInputElement>): void {
     updateData((draft) => {
       draft.classpath = event.target.value;
     });

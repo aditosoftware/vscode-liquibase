@@ -39,7 +39,7 @@ export class CacheHandler {
    * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
    * @param contexts - the contexts that should be saved in the cache
    */
-  saveContexts(connectionLocation: string, contexts: string[]) {
+  saveContexts(connectionLocation: string, contexts: string[]): void {
     // first, read any existing cache
     const cache: Cache = this.readCache();
 
@@ -120,6 +120,3 @@ export class CacheHandler {
     fs.writeFileSync(this.cacheLocation, JSON.stringify(cache, undefined, 2), { encoding: "utf-8" });
   }
 }
-
-
-

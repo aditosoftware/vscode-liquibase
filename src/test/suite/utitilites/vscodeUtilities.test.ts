@@ -87,7 +87,7 @@ suite("vscodeUtilities", () => {
  * @param fileName - the name of the file
  * @param fileContent - the expected content of the file
  */
-export function assertFileWasOpened(fileName: string, fileContent: string) {
+export function assertFileWasOpened(fileName: string, fileContent: string): void {
   const text = vscode.window.visibleTextEditors
     .filter((pEditor) => pEditor.document.uri.fsPath.endsWith(fileName))
     .map((pEditor) => {

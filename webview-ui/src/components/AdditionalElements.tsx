@@ -31,7 +31,7 @@ const valueIndicator = "value";
  * @param pProperties - the properties that are needed for the additional elements
  * @returns the created component
  */
-export function AdditionalElements(pProperties: AdditionalElementProps) {
+export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Element {
   const [additionalElementValues, setAdditionalElementValues] = useState<Map<string, string>>(new Map());
 
   const [key, setKey] = useState<string>("");
@@ -53,7 +53,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
    * Makes the row editable when clicked on it.
    * @param pEvent - the click event
    */
-  function makeRowEditable(pEvent: { target: unknown }) {
+  function makeRowEditable(pEvent: { target: unknown }): void {
     const target = pEvent.target;
 
     if (target instanceof DataGridCell) {
@@ -77,7 +77,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
    * Exists the editing when Enter or Escape where pressed.
    * @param pEvent - the keyboard event
    */
-  function handleKeydown(pEvent: KeyboardEvent) {
+  function handleKeydown(pEvent: KeyboardEvent): void {
     if (pEvent.key === "Enter" || pEvent.key === "Escape") {
       handleEditFinished(pEvent);
     }
@@ -88,7 +88,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps) {
    * In this case the data will be updated.
    * @param pEvent - the event when the cell was left
    */
-  function handleEditFinished(pEvent: Event) {
+  function handleEditFinished(pEvent: Event): void {
     const target = pEvent.target;
 
     if (target instanceof DataGridCell) {

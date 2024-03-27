@@ -20,7 +20,7 @@ export const fileName = "fileName";
  * @param dialogValues - the dialog values
  * @returns the generated command line arguments
  */
-export function generateCommandLineArgs(argument: string, dialogValues: DialogValues) {
+export function generateCommandLineArgs(argument: string, dialogValues: DialogValues): string[] | undefined {
   const fullPathToChangelog = generateFilePath(dialogValues);
 
   if (fullPathToChangelog) {
@@ -32,7 +32,7 @@ export function generateCommandLineArgs(argument: string, dialogValues: DialogVa
  * Opens the created file after the command was executed.
  * @param dialogValues - the dialog values
  */
-export async function openFileAfterCommandExecution(dialogValues: DialogValues) {
+export async function openFileAfterCommandExecution(dialogValues: DialogValues): Promise<void> {
   const fullPathToChangelog = generateFilePath(dialogValues);
   if (fullPathToChangelog) {
     await openDocument(fullPathToChangelog);
@@ -60,7 +60,7 @@ function generateFilePath(dialogValues: DialogValues): string | undefined {
  * Opens the index.html, when the command was finished.
  * @param dialogValues - the dialog values
  */
-export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogValues) {
+export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogValues): Promise<void> {
   const folder = dialogValues.inputValues.get(folderSelectionName)?.[0];
 
   if (folder) {

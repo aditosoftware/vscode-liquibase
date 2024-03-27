@@ -11,7 +11,7 @@ import { PROPERTY_FILE } from "../../input/ConnectionType";
  * Tests a existing liquibase configuration from a webview.
  * @param pConfiguration - the whole configuration that should be tested
  */
-export async function testLiquibaseConnection(pConfiguration: LiquibaseConfigurationData) {
+export async function testLiquibaseConnection(pConfiguration: LiquibaseConfigurationData): Promise<void> {
   // we need to build a temporary file for testing the configuration
   const tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), "liquibase"));
   const tempFilePath = path.join(tempFolder, "temporary.liquibase.properties");

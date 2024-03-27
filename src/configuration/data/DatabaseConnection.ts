@@ -215,7 +215,7 @@ export class DatabaseConnection {
    * @param value - the value of the current driver configuration
    * @param connection - the database connection that should be changed
    */
-  adjustDriver(value: string) {
+  adjustDriver(value: string): void {
     let preConfiguredDriver = false;
 
     for (const [driverKey, driverValue] of ALL_DRIVERS.entries()) {
