@@ -11,10 +11,7 @@ import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
 import Sinon from "sinon";
 import * as vscode from "vscode";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
-import {
-  ConfigurationStatus,
-  LiquibaseConfigurationData,
-} from "../../../../configuration/data/LiquibaseConfigurationData";
+import { LiquibaseConfigurationData } from "../../../../configuration/data/LiquibaseConfigurationData";
 import { Driver } from "../../../../configuration/drivers";
 import { setResourcePath } from "../../../../extension";
 import { assertFileWasOpened } from "../../utitilites/vscodeUtilities.test";
@@ -217,14 +214,7 @@ suite("create and add configuration", () => {
     let liquibaseConfigurationData: LiquibaseConfigurationData;
 
     setup("create data", () => {
-      liquibaseConfigurationData = LiquibaseConfigurationData.createDefaultData(
-        {
-          defaultDatabaseForConfiguration: "MariaDB",
-          liquibaseDirectoryInProject: "",
-        },
-        ConfigurationStatus.NEW,
-        ";"
-      );
+      liquibaseConfigurationData = TestUtils.createDummyLiquibaseConfigurationData();
       liquibaseConfigurationData.name = "data";
       liquibaseConfigurationData.databaseConnection.username = "admin";
       liquibaseConfigurationData.databaseConnection.password = "secretPw";

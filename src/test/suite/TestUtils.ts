@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 
 import { Logger } from "@aditosoftware/vscode-logging";
 import { randomUUID } from "crypto";
+import { ConfigurationStatus, LiquibaseConfigurationData } from "../../configuration/data/LiquibaseConfigurationData";
 
 /**
  * Utility class for tests.
@@ -40,5 +41,21 @@ export class TestUtils {
       logUri: vscode.Uri.file(path.join(process.cwd(), "..", "logging")),
     } as unknown as vscode.ExtensionContext;
     Logger.initializeLogger(context, "Tests");
+  }
+
+  /**
+   * Creates some dummy liquibase configuration data.
+   *
+   * @returns the created LiquibaseConfigurationData
+   */
+  static createDummyLiquibaseConfigurationData(): LiquibaseConfigurationData {
+    return LiquibaseConfigurationData.createDefaultData(
+      {
+        defaultDatabaseForConfiguration: "MariaDB",
+        liquibaseDirectoryInProject: "",
+      },
+      ConfigurationStatus.NEW,
+      ";"
+    );
   }
 }
