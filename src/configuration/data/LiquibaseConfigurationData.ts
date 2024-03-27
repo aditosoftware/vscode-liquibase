@@ -128,7 +128,7 @@ export class LiquibaseConfigurationData {
       dataToClone.classpathSeparator,
       dataToClone.changelogFile,
       DatabaseConnection.clone(dataToClone.databaseConnection),
-      dataToClone.additionalConfiguration,
+      { ...dataToClone.additionalConfiguration },
       dataToClone.referenceDatabaseConnection
         ? DatabaseConnection.clone(dataToClone.referenceDatabaseConnection)
         : undefined
@@ -217,10 +217,7 @@ export class LiquibaseConfigurationData {
    * @returns the created properties file as a string
    */
   generateProperties(pBuildDriverPath: (pDriver: Driver) => string | undefined, pDisguisePassword?: boolean): string {
-    const propertiesEditor = this.generatePropertiesEditor(
-      typeof pDisguisePassword === "undefined" ? false : pDisguisePassword,
-      pBuildDriverPath
-    );
+    const propertiesEditor = this.generatePropertiesEditor(pDisguisePassword ?? false, pBuildDriverPath);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
     // TODO maybe more escapes are needed with unescapeContent
