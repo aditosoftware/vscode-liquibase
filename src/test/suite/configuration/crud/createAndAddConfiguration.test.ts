@@ -17,6 +17,7 @@ import {
 } from "../../../../configuration/data/LiquibaseConfigurationData";
 import { Driver } from "../../../../configuration/drivers";
 import { setResourcePath } from "../../../../extension";
+import { assertFileWasOpened } from "../../utitilites/vscodeUtilities.test";
 
 /**
  * Tests the creating of configurations.
@@ -374,14 +375,7 @@ driver = org.mariadb.jdbc.Driver
 classpath = ${expectedClasspath}`;
 
       //  find opened editors
-      const text = vscode.window.visibleTextEditors
-        .filter((pEditor) => pEditor.document.uri.fsPath.endsWith("data.liquibase.properties"))
-        .map((pEditor) => {
-          return pEditor.document.getText();
-        });
-      // and check the content of the opened editor
-      assert.strictEqual(text.length, 1, "one editor should be opened");
-      assert.deepStrictEqual(text[0], expectedFileContent, "one editor should be opened");
+      assertFileWasOpened("data.liquibase.properties", expectedFileContent);
 
       const liquibaseProperties = path.join(baseResourcePath, "data.liquibase.properties");
 
