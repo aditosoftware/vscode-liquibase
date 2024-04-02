@@ -168,6 +168,13 @@ function assertEditExistingLiquibaseConfiguration(
       const webviewPanel = currentPanel["_panel"];
       assert.ok(webviewPanel.visible, "panel is visible");
 
+      // test that a second call to show the panel still works
+      if (uri) {
+        LiquibaseConfigurationPanel.render(uri);
+
+        assert.ok(LiquibaseConfigurationPanel.currentPanel?.["_panel"], "panel is still visible");
+      }
+
       done();
     })
     .catch(done)
