@@ -187,6 +187,7 @@ export class LiquibaseConfigurationPanel {
         const messageType: string = messageData.messageType;
         const data: LiquibaseConfigurationData | LoggingMessageWithLevel = messageData.data;
 
+        // TODO asyncs?
         if (data instanceof LiquibaseConfigurationData) {
           switch (messageType) {
             case MessageType.SAVE_CONNECTION:

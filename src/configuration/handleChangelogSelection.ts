@@ -9,35 +9,33 @@ import { MessageType } from "./transfer";
  *
  * @param data - the data from the message from the webview
  */
-export function chooseFileForChangelog(data: LiquibaseConfigurationData): void {
-  vscode.window
-    .showOpenDialog({
-      canSelectFiles: true,
-      canSelectFolders: false,
-      canSelectMany: false,
-      defaultUri: vscode.Uri.file(data.liquibaseSettings.liquibaseDirectoryInProject),
-      filters: {
-        Changelog: ["json", "sql", "xml", "yml", "yaml"],
-        "All Files": ["*"],
-      },
-    })
-    .then((result) => {
-      if (result && result[0]) {
-        const chosenFile = result[0].fsPath;
+export async function chooseFileForChangelog(data: LiquibaseConfigurationData): Promise<void> {
+  const result = await vscode.window.showOpenDialog({
+    canSelectFiles: true,
+    canSelectFolders: false,
+    canSelectMany: false,
+    defaultUri: vscode.Uri.file(data.liquibaseSettings.liquibaseDirectoryInProject),
+    filters: {
+      Changelog: ["json", "sql", "xml", "yml", "yaml"],
+      "All Files": ["*"],
+    },
+  });
+  
+  if (result && result[0]) {
+    const chosenFile = result[0].fsPath;
 
-        // find out relative path
-        let relativePath = path.relative(data.liquibaseSettings.liquibaseDirectoryInProject, chosenFile);
+    // find out relative path
+    let relativePath = path.relative(data.liquibaseSettings.liquibaseDirectoryInProject, chosenFile);
 
-        if (relativePath === chosenFile) {
-          // if the path could not be transformed to a relative path, e.g. when on other drive, then add a new element to the classpath and
-          // make a relative path from the new classpathElement
-          const directoryOfChosenFile = path.dirname(chosenFile);
-          data.classpath = data.classpath + "\n" + directoryOfChosenFile;
-          relativePath = path.relative(directoryOfChosenFile, chosenFile);
-        }
+    if (relativePath === chosenFile) {
+      // if the path could not be transformed to a relative path, e.g. when on other drive, then add a new element to the classpath and
+      // make a relative path from the new classpathElement
+      const directoryOfChosenFile = path.dirname(chosenFile);
+      data.classpath = data.classpath + "\n" + directoryOfChosenFile;
+      relativePath = path.relative(directoryOfChosenFile, chosenFile);
+    }
 
-        data.changelogFile = relativePath;
-        LiquibaseConfigurationPanel.transferMessage(MessageType.CHOOSE_CHANGELOG_RESULT, data);
-      }
-    });
+    data.changelogFile = relativePath;
+    LiquibaseConfigurationPanel.transferMessage(MessageType.CHOOSE_CHANGELOG_RESULT, data);
+  }
 }
