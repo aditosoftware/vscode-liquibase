@@ -449,7 +449,7 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", removeConfiguration)
+    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", async () => removeConfiguration())
   );
 
   context.subscriptions.push(
@@ -467,8 +467,16 @@ export function deactivate(): void {
 /**
  * Sets the resource path. This is used for tests, when no value was set.
  *
- * @param value - the value the set
+ * @param pResourcePath - the value the set
  */
-export function setResourcePath(value: string): void {
-  resourcePath = value;
+export function setResourcePath(pResourcePath: string): void {
+  resourcePath = pResourcePath;
+}
+/**
+ * Sets the cache handler. This is used for tests, when no value was set.
+ *
+ * @param pCacheHandler - the value the set
+ */
+export function setCacheHandler(pCacheHandler: CacheHandler): void {
+  cacheHandler = pCacheHandler;
 }

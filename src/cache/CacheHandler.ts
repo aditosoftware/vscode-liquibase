@@ -87,7 +87,7 @@ export class CacheHandler {
     const cache = this.readCache();
 
     if (cache[connectionLocation]) {
-      return cache[connectionLocation].contexts.sort();
+      return cache[connectionLocation].contexts.sort((a, b) => a.localeCompare(b));
     } else {
       return [];
     }

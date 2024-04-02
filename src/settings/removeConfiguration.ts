@@ -8,17 +8,17 @@ import { cacheHandler } from "../extension";
 /**
  * The option to remove the cache.
  */
-const cache = "Remove recently loaded elements";
+export const cache = "Remove recently loaded elements";
 
 /**
  * The option to remove the setting entry.
  */
-const setting = "Remove configuration from settings";
+export const setting = "Remove configuration from settings";
 
 /**
  * The option to remove everything.
  */
-const deleteAll = "Delete configuration";
+export const deleteAll = "Delete configuration";
 
 /**
  * Information what will be deleted when choosing each option.
@@ -32,7 +32,7 @@ const whatDeleted = new Map<string, string[]>([
 /**
  * The name of the QuickPick for picking the remove type.
  */
-const removeType = "removeType";
+export const removeType = "removeType";
 
 /**
  * Removes an existing configuration from the setting configuration file.
@@ -40,7 +40,7 @@ const removeType = "removeType";
  * This will show dialogs for the user what to remove and then handle the removing.
  *
  */
-export function removeConfiguration(): void {
+export async function removeConfiguration(): Promise<void> {
   const inputs = [
     new ConnectionType({ name: "propertyFile" }),
     new QuickPick({
@@ -70,27 +70,26 @@ export function removeConfiguration(): void {
     }),
   ];
 
-  handleMultiStepInput(inputs)
-    .then((dialogResult) => {
-      if (dialogResult) {
-        handleDialogResults(dialogResult);
-      }
-    })
-    .catch((error) => {
-      Logger.getLogger().error({ message: "error handling multi step input", error });
-    });
+  try {
+    const dialogResult = await handleMultiStepInput(inputs);
+    if (dialogResult) {
+      await handleDialogResults(dialogResult);
+    }
+  } catch (error) {
+    Logger.getLogger().error({ message: "error handling multi step input", error });
+  }
 }
 
 /**
  * Handles the dialog results. This will delete depending on the mode the desired elements.
  * @param dialogResult - the results of the dialogs
  */
-function handleDialogResults(dialogResult: DialogValues): void {
+function handleDialogResults(dialogResult: DialogValues): Promise<void> | undefined {
   const path = dialogResult.inputValues.get(PROPERTY_FILE)?.[0];
   const deletionMode = dialogResult.inputValues.get(removeType);
 
   if (path && deletionMode) {
-    updateConfiguration(deleteConfig(path, deletionMode))
+    return updateConfiguration(deleteConfig(path, deletionMode))
       .then((success) => {
         if (success) {
           Logger.getLogger().info({
@@ -148,7 +147,7 @@ function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<
  * @param dialogValues - the current dialog values
  * @returns detail message what will be deleted
  */
-function generateDetailMessageForDeleteConfiguration(dialogValues: DialogValues): string {
+export function generateDetailMessageForDeleteConfiguration(dialogValues: DialogValues): string {
   const deletionMode = dialogValues.inputValues.get(removeType)?.[0];
 
   let deletedDetail: string = "";
