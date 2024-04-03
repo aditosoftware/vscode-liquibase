@@ -7,7 +7,6 @@ import {
   readChangelog,
   readChangelogAndClasspathFile,
   readFullValues,
-  readPossibleReferenceValues,
   readUrl,
 } from "../../../../configuration/data/readFromProperties";
 import {
@@ -100,56 +99,6 @@ suite("readFromProperties", () => {
       fs.writeFileSync(fileName, "", "utf-8");
 
       assert.deepStrictEqual(readUrl(fileName), undefined);
-    });
-  });
-
-  /**
-   * Tests the function `readPossibleReferenceValues`.
-   */
-  suite("readPossibleReferenceValues", () => {
-    /**
-     * Tests that nothing will be read when reading the reference values from an empty file.
-     */
-    test("should readPossibleReferenceValues with empty file", () => {
-      fs.writeFileSync(fileName, "", "utf-8");
-
-      assert.deepStrictEqual(readPossibleReferenceValues(fileName), []);
-    });
-
-    test("should readPossibleReferenceValues", () => {
-      fs.writeFileSync(
-        fileName,
-        `
-defaultCatalogName = lorem
-defaultSchemaName = ipsum
-driver = dolor
-driverPropertiesFile = sit
-liquibaseCatalogName = amat
-liquibaseSchemaName = consetetur
-password = sadipscing
-schemas = elitr
-username = sed
-url = diam
-invalidKey = notCorrect
-`,
-        "utf-8"
-      );
-
-      assert.deepStrictEqual(
-        readPossibleReferenceValues(fileName).sort((a, b) => a.localeCompare(b)),
-        [
-          "--reference-default-catalog-name=lorem",
-          "--reference-default-schema-name=ipsum",
-          "--reference-driver=dolor",
-          "--reference-driver-properties-file=sit",
-          "--reference-liquibase-catalog-name=amat",
-          "--reference-liquibase-schema-name=consetetur",
-          "--reference-password=sadipscing",
-          "--reference-schemas=elitr",
-          "--reference-username=sed",
-          "--reference-url=diam",
-        ].sort((a, b) => a.localeCompare(b))
-      );
     });
   });
 
