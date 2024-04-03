@@ -21,10 +21,10 @@ export const fileName = "fileName";
  * @returns the generated command line arguments
  */
 export function generateCommandLineArgs(argument: string, dialogValues: DialogValues): string[] | undefined {
-  const fullPathToChangelog = generateFilePath(dialogValues);
+  const fullPath = generateFilePath(dialogValues);
 
-  if (fullPathToChangelog) {
-    return [`--${argument}=${fullPathToChangelog}`];
+  if (fullPath) {
+    return [`--${argument}=${fullPath}`];
   }
 }
 
@@ -33,9 +33,9 @@ export function generateCommandLineArgs(argument: string, dialogValues: DialogVa
  * @param dialogValues - the dialog values
  */
 export async function openFileAfterCommandExecution(dialogValues: DialogValues): Promise<void> {
-  const fullPathToChangelog = generateFilePath(dialogValues);
-  if (fullPathToChangelog) {
-    await openDocument(fullPathToChangelog);
+  const fullPath = generateFilePath(dialogValues);
+  if (fullPath) {
+    await openDocument(fullPath);
   }
 }
 
