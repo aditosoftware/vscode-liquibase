@@ -13,6 +13,7 @@ import * as readConfiguration from "../../../../configuration/handle/readConfigu
 import Sinon from "sinon";
 import { ConnectionType } from "../../../../input/ConnectionType";
 import * as createAndAddConfiguration from "../../../../configuration/handle/createAndAddConfiguration";
+import * as handleLiquibaseFolder from "../../../../handleLiquibaseSettings";
 
 /**
  * Tests the file `configurationCommands.ts`.
@@ -88,6 +89,8 @@ suite("configurationCommands", () => {
      * Tests that editing without an uri and without any configuration works.
      */
     test("should edit without uri and no existing configs", (done) => {
+      Sinon.stub(handleLiquibaseFolder, "getLiquibaseFolder").returns("myFolder");
+      Sinon.stub(handleLiquibaseFolder, "getLiquibaseConfigurationPath").resolves("myFolder");
       Sinon.stub(ConnectionType, "suggestCreationOfConfiguration").resolves();
 
       assert.ok(!LiquibaseConfigurationPanel.currentPanel, "no current panel created");
@@ -159,6 +162,8 @@ function assertEditExistingLiquibaseConfiguration(
   uri: vscode.Uri | undefined,
   done: Mocha.Done
 ): void {
+  Sinon.stub(handleLiquibaseFolder, "getLiquibaseFolder").returns("myFolder");
+
   assert.ok(!LiquibaseConfigurationPanel.currentPanel, "no current panel created");
 
   editExistingLiquibaseConfiguration(uri, extensionContext)

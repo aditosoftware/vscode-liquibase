@@ -275,9 +275,10 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "test-compile": "rm -rf out && tsc -p ./",
+    "createTempWorkspace": "mkdirp out/temp/workspace",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "pretest": "npm run test-compile",
+    "pretest": "npm run test-compile && npm run createTempWorkspace",
     "lint": "eslint .",
     "test": "vscode-test",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
@@ -302,6 +303,7 @@
     "@vscode/test-electron": "^2.3.9",
     "eslint": "^8.56.0",
     "eslint-plugin-tsdoc": "^0.2.17",
+    "mkdirp": "^3.0.1",
     "sinon": "^17.0.1",
     "typescript": "^5.3.3"
   }
