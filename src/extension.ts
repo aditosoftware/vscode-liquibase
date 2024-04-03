@@ -480,3 +480,12 @@ export function setResourcePath(pResourcePath: string): void {
 export function setCacheHandler(pCacheHandler: CacheHandler): void {
   cacheHandler = pCacheHandler;
 }
+
+/**
+ * Sets the lib folder. This is used for tests, when no value was set.
+ *
+ * @param pLibFolder - the value the set
+ */
+export function setLibFolder(pLibFolder: string): void {
+  libFolder = pLibFolder;
+}
