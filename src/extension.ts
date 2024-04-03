@@ -87,6 +87,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
   // Perform any necessary prerequisites setup before executing the extension logic
   prerequisites(context, resourcePath).then(() => {
+    // add a dummy command for loading all resources
+    context.subscriptions.push(
+      vscode.commands.registerCommand("liquibase.initialize", () => {
+        Logger.getLogger().info({
+          message: "Triggered loading of all resources. Check logs afterwards.",
+          notifyUser: true,
+        });
+      })
+    );
+
     // Register all commands that are needed for handling liquibase properties
     registerCommandsForLiquibasePropertiesHandling(context);
 

@@ -104,7 +104,7 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
  * Gets all the required jar files that are needed for the execution of the extension.
  * @returns - the required files with filename and url to download
  */
-export function getRequiredFiles(): Map<string, string> {
+function getRequiredFiles(): Map<string, string> {
   const requiredFiles = new Map<string, string>();
   requiredFiles.set(
     liquibaseCore,
