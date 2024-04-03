@@ -275,7 +275,7 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "test-compile": "rm -rf out && tsc -p ./",
-    "createTempWorkspace": "mkdirp out/temp/workspace",
+    "createTempWorkspace": "copyfiles -u 3 -E src/test/workspace/**/* out/temp/workspace",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run createTempWorkspace",
@@ -301,6 +301,7 @@
     "@typescript-eslint/parser": "^6.21.0",
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.56.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "mkdirp": "^3.0.1",
