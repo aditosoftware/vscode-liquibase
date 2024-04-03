@@ -37,6 +37,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   if (!context.globalState.get("liquibase-first-activation")) {
     // Perform one-time setup tasks (e.g., download files)
     Logger.getLogger().info({ message: "Liquibase was executed for the first time" });
+    // TODO fehlendes await ok?
     downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
 
     // Mark first activation as completed
@@ -71,6 +72,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
       message: `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`,
       notifyUser: true,
     });
+    // TODO fehledes await / return ok?
     downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
       Logger.getLogger().info({
         message: `Successfully downloaded all the missing files to ${resourcePath}`,
@@ -89,6 +91,7 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
   return new Promise<void>((resolve, reject) => {
     try {
       Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))));
+      // TODO resolve ohne das innere Promise abzuwarten ok?
       resolve();
     } catch (error) {
       Logger.getLogger().error({ message: "downloadLiquibaseFiles threw an error", error });
