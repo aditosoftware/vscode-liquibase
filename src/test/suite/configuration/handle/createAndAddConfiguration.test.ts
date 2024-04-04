@@ -13,20 +13,13 @@ import * as vscode from "vscode";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
 import { LiquibaseConfigurationData } from "../../../../configuration/data/LiquibaseConfigurationData";
 import { Driver } from "../../../../configuration/drivers";
-import { setResourcePath } from "../../../../extension";
 import { assertFileWasOpened } from "../../utilities/vscodeUtilities.test";
+import { setResourcePath } from "../../../../extension";
 
 /**
  * Tests the creating of configurations.
  */
 suite("create and add configuration", () => {
-  /**
-   * Inits the logger for all tests.
-   */
-  suiteSetup("init logger", () => {
-    TestUtils.initLoggerForTests();
-  });
-
   let infoLog: Sinon.SinonStub;
   let errorLog: Sinon.SinonStub;
 
@@ -37,6 +30,13 @@ suite("create and add configuration", () => {
    * The path for all config files
    */
   let configPath: string;
+
+  /**
+   * Inits the logger for all tests.
+   */
+  suiteSetup("init logger", () => {
+    TestUtils.initLoggerForTests();
+  });
 
   /**
    * Set up the resource directory for the tests and the resource path.
@@ -396,7 +396,7 @@ classpath = ${expectedClasspath}`;
 
 /**
  * Asserts the logging.
- * //  TODO allgemeiner?
+ *
  * @param infoLog - the stub for info messages
  * @param errorLog - the stub for error messages
  * @param messages - the messages that should be checked if called

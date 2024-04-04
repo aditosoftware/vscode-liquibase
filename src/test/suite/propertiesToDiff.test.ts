@@ -11,14 +11,19 @@ import { getReferenceKeysFromPropertyFile } from "../../propertiesToDiff";
 suite("propertiesToDiff", () => {
   let tempPath: string;
   let fileName: string;
+
   /**
-   * Inits the logger for the tests.
+   * Inits the logger and temp folder for the tests.
    */
-  suiteSetup("init logger", () => {
+  suiteSetup("init logger and temp folder", () => {
     TestUtils.initLoggerForTests();
+
     tempPath = TestUtils.createTempFolderForTests("propertiesReading");
   });
 
+  /**
+   * Creates for every test an individual file name in in the temp folder.
+   */
   setup("create temp file name", () => {
     fileName = path.join(tempPath, `${randomUUID()}.liquibase.properties`);
   });

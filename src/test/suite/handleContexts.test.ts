@@ -6,33 +6,20 @@ import { PROPERTY_FILE } from "../../input/ConnectionType";
 import { TestUtils } from "./TestUtils";
 import path from "path";
 import * as fs from "fs";
-import { setCacheHandler, setLibFolder, setResourcePath } from "../../extension";
-import { getRequiredFiles } from "../../prerequisites";
-import download from "download";
-import { CacheHandler } from "../../cache";
 
 /**
  * Tests the file handleContexts
  */
 suite("handleContexts", () => {
   let tempDir: string;
-  suiteSetup("create temp dir and resources", async function () {
-    TestUtils.initLoggerForTests();
 
-    this.timeout(5_000);
+  /**
+   * Creates the temp dir and the necessary resources before all tests.
+   */
+  suiteSetup("create temp dir and resources", function () {
+    TestUtils.init();
 
     tempDir = TestUtils.createTempFolderForTests("contexts");
-
-    setLibFolder(path.join(__dirname, "..", "..", "..", "lib"));
-
-    // manually download the jars for this test
-    const resourceFolder = TestUtils.createTempFolderForTests("resourcesForContexts");
-    setResourcePath(resourceFolder);
-    for (const url of getRequiredFiles().values()) {
-      await download(url, resourceFolder);
-    }
-
-    setCacheHandler(new CacheHandler(path.join(tempDir, "cache.json")));
   });
 
   /**
@@ -58,7 +45,7 @@ classpath: ${tempDir.replaceAll("\\", "\\\\")}
       fs.writeFileSync(
         path.join(tempDir, "changelog.xml"),
         `<?xml version="1.0" encoding="UTF-8"?>
-        
+
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"

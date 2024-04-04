@@ -280,7 +280,7 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "test-compile": "rm -rf out && tsc -p ./",
-    "createTempWorkspace": "copyfiles -u 3 -E src/test/workspace/**/* out/temp/workspace",
+    "createTempWorkspace": "copyfiles -u 3 -E -a src/test/workspace/**/* out/temp/workspace",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run createTempWorkspace",

@@ -4,7 +4,7 @@ import fs from "fs";
 import { Cache, CacheHandler } from "../../../cache/";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
-import { TestUtils } from '../TestUtils';
+import { TestUtils } from "../TestUtils";
 
 /**
  * Tests various methods from the CacheHandler
@@ -14,6 +14,7 @@ suite("CacheHandler tests", () => {
    * Temporary folder for writing cache files.
    */
   const temporaryResourcePath = TestUtils.createTempFolderForTests("cache", "handle");
+
   /**
    * Initialize the logger for the tests.
    */

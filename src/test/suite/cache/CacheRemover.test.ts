@@ -5,7 +5,7 @@ import { CacheHandler, CacheRemover } from "../../../cache/";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
 import assert from "assert";
-import { ConfirmationDialog, DialogValues, QuickPick, initializeLogger } from "@aditosoftware/vscode-input";
+import { ConfirmationDialog, DialogValues, QuickPick } from "@aditosoftware/vscode-input";
 import { PROPERTY_FILE } from "../../../input/ConnectionType";
 import { TestUtils } from "../TestUtils";
 
@@ -26,7 +26,6 @@ suite("CacheRemover tests", () => {
    */
   suiteSetup("init logger", () => {
     TestUtils.initLoggerForTests();
-    initializeLogger(Logger.getLogger());
   });
 
   /**

@@ -10,13 +10,13 @@ import {
 } from "../../../../settings/removeConfiguration";
 import { TestUtils } from "../../TestUtils";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
-import { DialogValues, initializeLogger } from "@aditosoftware/vscode-input";
+import { DialogValues } from "@aditosoftware/vscode-input";
 import path from "path";
 import * as fs from "fs";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
+import assert from "assert";
 import { setCacheHandler } from "../../../../extension";
 import { CacheHandler } from "../../../../cache";
-import assert from "assert";
 
 /**
  * Tests the removing of the configuration.
@@ -37,7 +37,6 @@ suite("removeConfiguration", () => {
    */
   suiteSetup("create logger", () => {
     TestUtils.initLoggerForTests();
-    initializeLogger(Logger.getLogger());
   });
 
   /**
