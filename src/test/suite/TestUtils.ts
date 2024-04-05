@@ -22,6 +22,21 @@ export class TestUtils {
   private static readonly temporaryResourcePath = path.join(process.cwd(), "..", "..", "out", "temp");
 
   /**
+   * The resource path were all the resources were downloaded.
+   */
+  static readonly resourcePath = path.join(
+    __dirname,
+    "..",
+    "..",
+    "..",
+    ".vscode-test",
+    "user-data",
+    "User",
+    "globalStorage",
+    "undefined_publisher.liquibase"
+  );
+
+  /**
    * Creates a temporary folder for tests.
    *
    * This temp folder will be removed when `npm run test-compile` was run.
@@ -48,22 +63,10 @@ export class TestUtils {
 
     setLibFolder(path.join(__dirname, "..", "..", "..", "lib"));
 
-    const resourcePath = path.join(
-      __dirname,
-      "..",
-      "..",
-      "..",
-      ".vscode-test",
-      "user-data",
-      "User",
-      "globalStorage",
-      "undefined_publisher.liquibase"
-    );
+    assert.ok(fs.existsSync(TestUtils.resourcePath), TestUtils.resourcePath);
+    setResourcePath(TestUtils.resourcePath);
 
-    assert.ok(fs.existsSync(resourcePath), resourcePath);
-    setResourcePath(resourcePath);
-
-    setCacheHandler(new CacheHandler(path.join(resourcePath, "cache.json")));
+    setCacheHandler(new CacheHandler(path.join(TestUtils.resourcePath, "cache.json")));
   }
 
   /**
