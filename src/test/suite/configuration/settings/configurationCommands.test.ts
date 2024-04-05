@@ -154,7 +154,7 @@ suite("configurationCommands", () => {
  * Tests the method `editExistingLiquibaseConfiguration` and validates that a webview was created.
  *
  * @param extensionContext - the extension context that should be passed to the method
- * @param uri - the uri that should be passed to the method. This can be also `undefined´, if no uri was passed.
+ * @param uri - the uri that should be passed to the method. This can be also `undefined`, if no uri was passed.
  * @param done - mochas done to signal the end of the tests
  */
 function assertEditExistingLiquibaseConfiguration(

@@ -6,6 +6,7 @@ import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
 import { getClasspathSeparator } from "../../utilities/osUtilities";
 import { randomUUID } from "crypto";
+import { MariaDbDockerTestUtils } from "./MariaDbDockerTestUtils";
 
 /**
  * Tests commands of the extension.
@@ -33,8 +34,12 @@ suite("Extension Test Suite", () => {
    * Init the extension.
    * Also creates a properties file for the test.
    */
-  suiteSetup("init extension and properties file", function (done) {
-    this.timeout(10_000);
+  suiteSetup("init extension and properties file", async function () {
+    this.timeout(60_000);
+
+    // start a maria db container and wait for its status
+    MariaDbDockerTestUtils.startContainer();
+    await MariaDbDockerTestUtils.checkContainerStatus();
 
     fs.mkdirSync(outputFolder);
 
@@ -50,9 +55,12 @@ suite("Extension Test Suite", () => {
     );
 
     const properties = new PropertiesEditor("# written by the tests");
-    properties.insert("username", "root");
-    properties.insert("password", "root");
-    properties.insert("url", `jdbc:mariadb://localhost:3306/data`);
+    properties.insert("username", MariaDbDockerTestUtils.username);
+    properties.insert("password", MariaDbDockerTestUtils.password);
+    properties.insert(
+      "url",
+      `jdbc:mariadb://localhost:${MariaDbDockerTestUtils.port}/${MariaDbDockerTestUtils.dbName}`
+    );
     properties.insert(
       "classpath",
       [path.join(TestUtils.resourcePath, "mariadb-java-client-2.5.3.jar"), path.join(workspacePath, "liquibase")].join(
@@ -63,7 +71,14 @@ suite("Extension Test Suite", () => {
     fs.writeFileSync(propertiesFile, properties.format());
 
     // init the extension with a basic command
-    TestUtils.initExtension().then(done).catch(done);
+    await TestUtils.initExtension();
+  });
+
+  /**
+   * Remove the container after all tests.
+   */
+  suiteTeardown("remove docker container", async () => {
+    await MariaDbDockerTestUtils.stopAndRemoveContainer();
   });
 
   /**
