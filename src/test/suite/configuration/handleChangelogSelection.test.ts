@@ -10,6 +10,7 @@ import path from "path";
 import { chooseFileForChangelog } from "../../../configuration/handleChangelogSelection";
 import { LiquibaseConfigurationPanel } from "../../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../../../configuration/transfer";
+import { isWindows } from "../../../utilities/osUtilities";
 
 /**
  * Tests the changelog selection.
@@ -99,7 +100,12 @@ suite("handleChangelogSelection", () => {
     /**
      * Tests that the selection of an changelog for a different relative path should work.
      */
-    test("should handle changelog selection with different relative path", (done) => {
+    test("should handle changelog selection with different relative path", function (done) {
+      // this test only makes sense on windows, therefore skip it on all other OS
+      if (!isWindows()) {
+        this.skip();
+      }
+
       data.liquibaseSettings = {
         defaultDatabaseForConfiguration: "MariaDB",
         liquibaseDirectoryInProject: "D:\\",
