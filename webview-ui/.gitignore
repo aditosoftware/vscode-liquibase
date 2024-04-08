@@ -5,3 +5,10 @@ dist-ssr
 build
 build-ssr
 *.local
+
+# playwright test rsults
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+test-results.xml
