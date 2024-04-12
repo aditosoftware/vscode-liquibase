@@ -172,17 +172,19 @@ function App(): JSX.Element {
                     // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
                     const value = e.target.value;
                     updateData((draft) => {
-                      draft.classpathSeparator = value;
+                      if (value) {
+                        draft.classpathSeparator = value;
+                      }
                     });
                   }}>
                   <label slot="label">
                     The separator for multiple classpaths. This is depending on your operating system
                   </label>
 
-                  <VSCodeRadio value=";">
+                  <VSCodeRadio id="classpathSeparatorWindows" value=";">
                     semicolon (<code>;</code>) for Windows
                   </VSCodeRadio>
-                  <VSCodeRadio value=":">
+                  <VSCodeRadio id="classpathSeparatorUnix" value=":">
                     colon (<code>:</code>) for Linux and MacOS
                   </VSCodeRadio>
                 </VSCodeRadioGroup>
