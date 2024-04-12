@@ -285,9 +285,11 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run test-compile && npm run createTempWorkspace",
     "lint": "eslint .",
-    "test": "vscode-test",
+    "test:unit": "vscode-test",
+    "test": "npm run test:e2e:vscode-extension-tester",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
-    "postinstall": "cd webview-ui && npm install && npm run build"
+    "postinstall": "cd webview-ui && npm install && npm run build",
+    "test:e2e:vscode-extension-tester": "extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/vscode-extension-tester/settings.json --mocha_config ./src/test/e2e/vscode-extension-tester/.mocharc.json out/test/e2e/vscode-extension-tester/**/*.test.js"
   },
   "dependencies": {
     "@aditosoftware/vscode-input": "^1.0.0",
@@ -311,6 +313,7 @@
     "eslint-plugin-tsdoc": "^0.2.17",
     "mkdirp": "^3.0.1",
     "sinon": "^17.0.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vscode-extension-tester": "^8.0.2"
   }
 }

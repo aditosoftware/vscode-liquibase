@@ -1,0 +1,5 @@
+{
+  "files.simpleDialog.enable": true,
+  "window.dialogStyle": "custom",
+  "extensions.ignoreRecommendations": true
+}
