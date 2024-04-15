@@ -172,9 +172,7 @@ function App(): JSX.Element {
                     // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
                     const value = e.target.value;
                     updateData((draft) => {
-                      if (value) {
-                        draft.classpathSeparator = value;
-                      }
+                      draft.classpathSeparator = value;
                     });
                   }}>
                   <label slot="label">
@@ -182,10 +180,10 @@ function App(): JSX.Element {
                   </label>
 
                   <VSCodeRadio id="classpathSeparatorWindows" value=";">
-                    semicolon (<code>;</code>) for Windows
+                    Windows: semicolon (<code>;</code>)
                   </VSCodeRadio>
                   <VSCodeRadio id="classpathSeparatorUnix" value=":">
-                    colon (<code>:</code>) for Linux and MacOS
+                    Linux and MacOS: colon (<code>:</code>)
                   </VSCodeRadio>
                 </VSCodeRadioGroup>
               </section>
