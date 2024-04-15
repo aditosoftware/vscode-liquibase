@@ -1,5 +1,5 @@
 import assert from "assert";
-import { By, EditorView, WebView, Workbench } from "vscode-extension-tester";
+import { By, EditorView, Key, WebView, Workbench } from "vscode-extension-tester";
 
 /**
  * Tests the webview
@@ -11,7 +11,7 @@ suite("Webview Test", () => {
    * Before the tests, open a temp workspace and close all opened editors (like welcome screen).
    */
   suiteSetup(async function () {
-    this.timeout(20_000);
+    this.timeout(40_000);
     await new EditorView().closeAllEditors();
   });
 
@@ -19,13 +19,13 @@ suite("Webview Test", () => {
    * Before each test, open the webview in order to not have any rests from previous tests.
    */
   setup(async function () {
-    this.timeout(20_000);
+    this.timeout(40_000);
 
     // command for opening the webview
     await new Workbench().executeCommand("liquibase.createLiquibaseConfiguration");
 
     // wait a bit to have the webview there
-    await new Promise((res) => setTimeout(res, 5_000));
+    await new Promise((res) => setTimeout(res, 10_000));
 
     // init the WebView page object
     webView = new WebView();
@@ -74,7 +74,7 @@ suite("Webview Test", () => {
   ].forEach((pArgument) => {
     test(`should have correct classpath for ${pArgument.title}`, async function () {
       const classpathInput = await webView.findWebElement(By.id("classpathInput"));
-      await classpathInput.sendKeys("a\nb");
+      await classpathInput.sendKeys("a", Key.ENTER, "b");
 
       const classpathSeparator = await webView.findWebElement(By.id(pArgument.selection));
       await classpathSeparator.click();

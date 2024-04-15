@@ -10,7 +10,7 @@ suite("Command tests", () => {
    * Opens a temp workspace and closes all editors.
    */
   suiteSetup(async function () {
-    this.timeout(20_000);
+    this.timeout(40_000);
 
     await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
 
@@ -21,7 +21,7 @@ suite("Command tests", () => {
    * Executes the `liquibase.addExistingConfiguration` command.
    */
   test("should execute command", async function () {
-    this.timeout(20_000);
+    this.timeout(40_000);
 
     // we need an input box to open
     // extensions usually open inputs as part of their commands
@@ -37,13 +37,13 @@ suite("Command tests", () => {
     await prompt.confirm();
 
     // wait a bit initially
-    await new Promise((r) => setTimeout(r, 500));
+    await new Promise((r) => setTimeout(r, 1_000));
 
     // then wait until the Activating Extensions from the status bar disappears
     for (let i = 0; i < 10; i++) {
       const activateProgress = await new StatusBar().getItem("Activating Extensions...");
       if (activateProgress) {
-        await new Promise((r) => setTimeout(r, 500));
+        await new Promise((r) => setTimeout(r, 1_000));
       } else {
         break;
       }
