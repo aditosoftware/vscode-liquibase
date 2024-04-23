@@ -221,8 +221,8 @@ function App(): JSX.Element {
                 disabled={!referenceConnection}
                 onClick={() => handleAddRemoveReferenceConnection(false)}
                 appearance="secondary">
-                Remove reference connection
                 <span slot="start" className="codicon codicon-remove"></span>
+                Remove reference connection
               </VSCodeButton>
             </section>
 
@@ -249,7 +249,7 @@ function App(): JSX.Element {
                 </p>
               )}
 
-              <div>{previewData !== null ? <pre id="preview">{previewData}</pre> : <p>Load Data...</p>}</div>
+              <div>{previewData !== null ? <pre>{previewData}</pre> : <p>Load Data...</p>}</div>
             </fieldset>
           </div>
         </section>
