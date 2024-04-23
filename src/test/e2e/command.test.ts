@@ -55,7 +55,7 @@ suite("Command tests", () => {
 
     // select the folder
     await input.setText(
-      path.join(process.cwd(), "src", "test", "e2e", "vscode-extension-tester", "dummy.liquibase.properties")
+      path.join(process.cwd(), "src", "test", "e2e", "dummy.liquibase.properties")
     );
     // and the file
     await input.selectQuickPick("dummy.liquibase.properties");

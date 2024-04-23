@@ -22,9 +22,9 @@
       "program": "${workspaceFolder}/node_modules/vscode-extension-tester/out/cli.js",
       "args": [
         "setup-and-run",
-        "${workspaceFolder}/out/test/e2e/vscode-extension-tester/**/*.test.js",
+        "${workspaceFolder}/out/test/e2e/**/*.test.js",
         "--mocha_config",
-        "${workspaceFolder}/src/test/e2e/vscode-extension-tester/.mocharc-debug.json"
+        "${workspaceFolder}/src/test/e2e/.mocharc-debug.json"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
