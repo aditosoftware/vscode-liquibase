@@ -286,11 +286,10 @@
     "pretest": "npm run test-compile && npm run createTempWorkspace",
     "lint": "eslint .",
     "test:unit": "vscode-test",
-    "test": "npm run test:e2e:wdio-vscode-service",
+    "test": "npm run test:e2e:vscode-extension-tester",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
     "postinstall": "cd webview-ui && npm install && npm run build",
-    "test:e2e:vscode-extension-tester": "extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/vscode-extension-tester/settings.json --mocha_config ./src/test/e2e/vscode-extension-tester/.mocharc.json out/test/e2e/vscode-extension-tester/**/*.test.js",
-    "test:e2e:wdio-vscode-service": "wdio run ./src/test/e2e/wdio-vscode-service/wdio.conf.ts"
+    "test:e2e:vscode-extension-tester": "extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/vscode-extension-tester/settings.json --mocha_config ./src/test/e2e/vscode-extension-tester/.mocharc.json out/test/e2e/vscode-extension-tester/**/*.test.js"
   },
   "dependencies": {
     "@aditosoftware/vscode-input": "^1.0.0",
@@ -300,7 +299,6 @@
     "properties-file": "^3.3.18"
   },
   "devDependencies": {
-    "@testing-library/webdriverio": "^3.2.1",
     "@types/download": "^8.0.5",
     "@types/mocha": "^10.0.6",
     "@types/node": "20.x",
@@ -310,21 +308,12 @@
     "@typescript-eslint/parser": "^6.21.0",
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
-    "@wdio/cli": "^8.36.0",
-    "@wdio/globals": "^8.36.0",
-    "@wdio/junit-reporter": "^8.36.0",
-    "@wdio/local-runner": "^8.36.0",
-    "@wdio/mocha-framework": "^8.36.0",
-    "@wdio/spec-reporter": "^8.36.0",
     "copyfiles": "^2.4.1",
     "eslint": "^8.56.0",
     "eslint-plugin-tsdoc": "^0.2.17",
     "mkdirp": "^3.0.1",
     "sinon": "^17.0.1",
-    "ts-node": "^10.9.2",
     "typescript": "^5.3.3",
-    "vscode-extension-tester": "^8.0.2",
-    "wdio-vscode-service": "^6.0.3",
-    "wdio-wait-for": "^3.0.11"
+    "vscode-extension-tester": "^8.0.2"
   }
 }
