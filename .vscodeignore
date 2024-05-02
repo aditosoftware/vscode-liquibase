@@ -12,6 +12,8 @@ out/test/**
 # Ignore source code
 src/**
 resources/**
+out/e2e/**
+
 
 # Ignore node_modules overhead
 # node_modules/**

@@ -280,6 +280,7 @@
   "scripts": {
     "clean": "rimraf ./out",
     "compile": "tsc -p ./",
+    "watch": "tsc --watch -p ./",
     "clean-compile": "npm run clean && npm run compile",
     "createTempWorkspace": "copyfiles -u 3 -E -a src/test/workspace/**/* out/temp/workspace",
     "lint": "eslint .",
@@ -287,6 +288,7 @@
     "test:unit": "vscode-test",
     "test:e2e": "extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
     "test": "npm run test:unit && npm run test:e2e",
+    "e2e-testing": "npm run pretest && npm run test:e2e",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
@@ -314,6 +316,7 @@
     "sinon": "^17.0.1",
     "typescript": "^5.3.3",
     "vscode-extension-tester": "^8.0.2",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.5",
+    "mariadb": "^3.3.0"
   }
 }

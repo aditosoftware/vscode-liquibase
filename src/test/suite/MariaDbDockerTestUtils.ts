@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 import { isWindows } from "../../utilities/osUtilities";
+import mariadb from 'mariadb';
 
 /**
  * Creates and manages a maria docker container for tests.
@@ -126,5 +127,26 @@ export class MariaDbDockerTestUtils {
         resolve(stdout);
       });
     });
+  }
+
+  /**
+   * 
+   * @param command 
+   * @returns 
+   */
+  static async executeSQL(command: string, database?: string): Promise<string> {
+    const pool = mariadb.createPool({ host: "localhost", user: this.username, password: this.password, connectionLimit: 5, port: this.port, database: database });
+    let conn;
+    try {
+      conn = await pool.getConnection();
+      const res = await conn.query(command);
+      await conn.release();
+      return res;
+    }
+    finally {
+      if (conn) {
+        await conn.release();
+      }
+    }
   }
 }
