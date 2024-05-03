@@ -1,4 +1,3 @@
-import path from "path";
 import { By, InputBox, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
 
 /**

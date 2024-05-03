@@ -134,19 +134,20 @@ export class MariaDbDockerTestUtils {
    * @param command 
    * @returns 
    */
-  static async executeSQL(command: string, database?: string): Promise<string> {
-    const pool = mariadb.createPool({ host: "localhost", user: this.username, password: this.password, connectionLimit: 5, port: this.port, database: database });
+  static async executeSQL(pool: mariadb.Pool, command: string): Promise<string> {
     let conn;
     try {
       conn = await pool.getConnection();
       const res = await conn.query(command);
-      await conn.release();
+      console.error("current activ connections: " + pool.activeConnections());
       return res;
     }
+    catch {
+      conn?.destroy();
+      return "";
+    }
     finally {
-      if (conn) {
-        await conn.release();
-      }
+      conn?.destroy();
     }
   }
 }
