@@ -138,16 +138,20 @@ export class MariaDbDockerTestUtils {
     let conn;
     try {
       conn = await pool.getConnection();
+      console.error(conn);
       const res = await conn.query(command);
-      console.error("current activ connections: " + pool.activeConnections());
+      console.error("Try: " + res);
+      conn?.destroy();
       return res;
     }
     catch {
       conn?.destroy();
+      console.error("Catch");
       return "";
     }
     finally {
       conn?.destroy();
+      console.error("Finally");
     }
   }
 }
