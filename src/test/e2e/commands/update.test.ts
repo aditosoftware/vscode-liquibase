@@ -2,58 +2,58 @@ import path from "path";
 import assert from "assert";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "./commandUtils";
+import { CommandUtils } from "../CommandUtils";
 
 
-suite("Update", () => {
+suite("Update", function () {
 
-    suiteSetup(async function () {
-        await CommandUtils.setupTests();
-    });
+  suiteSetup(async function () {
+    this.timeout(50_000);
+    await CommandUtils.setupTests();
+  });
 
-    /**
-     * 
-     */
-    CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
-      test("should execute 'update' with context type '" + option + "' command with " + key, async function () {
-        this.timeout(40_000);
-        await CommandUtils.resetDB(CommandUtils.pool);
+  /**
+   * 
+   */
+  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+    test("should execute 'update' with context type '" + option + "' command with " + key, async function () {
+      this.timeout(40_000);
+      await CommandUtils.resetDB(CommandUtils.pool);
 
-        await wait();
+      const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-        const input = await LiquibaseGUITestUtils.preCommandExecution("update");
+      await input.setText('dummy');
+      await input.confirm();
 
-        await input.setText('dummy');
+      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+      await input.selectQuickPick(1);
+
+      if (option === CommandUtils.noContext) {
+
+        await input.setText(option);
         await input.confirm();
-        await wait();
 
-        await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-        await input.selectQuickPick(1);
-        await wait();
+        assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "0");
+      }
+      else {
+        await input.setText(option);
+        await input.confirm();
 
-        if (option === CommandUtils.noContext) {
+        await exec();
 
-          await input.setText(option);
-          await input.confirm();
-
-          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "0");
+        if (key === 'all available contexts' || key === 'the first available context') {
+          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "1");
         }
         else {
-          await input.setText(option);
-          await input.confirm();
-          await wait();
-
-          await exec();
-
-          if (key === 'all available contexts' || key === 'the first available context') {
-            assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "1");
-          }
-          else {
-            assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "0");
-          }
+          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "0");
         }
+      }
 
-        assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."));
-      });
+      assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."));
     });
   });
+
+  suiteTeardown(async () => {
+    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+  });
+});

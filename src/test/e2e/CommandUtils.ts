@@ -1,15 +1,14 @@
 import { BottomBarPanel, EditorView, InputBox, OutputView, VSBrowser } from "vscode-extension-tester";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { MariaDbDockerTestUtils } from "../suite/MariaDbDockerTestUtils";
 import mariadb from 'mariadb';
 import path from "path";
-import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
+import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
 
 export class CommandUtils {
-
     static readonly noContext = "Do not use any contexts";
     static readonly loadAllContext: string = "Load all contexts from the changelog file";
     static readonly recentContext: string = "Use any of the recently loaded contexts";
-    static pool: mariadb.Pool;
+    static readonly pool = CommandUtils.createPool();
     static outputPanel: OutputView;
     static readonly contextOptions = [CommandUtils.noContext, CommandUtils.loadAllContext, CommandUtils.recentContext];
     static readonly contextFunctions = {
@@ -23,19 +22,16 @@ export class CommandUtils {
      * Opens a temp workspace and closes all editors.
      */
     static async setupTests(): Promise<void> {
-        await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        await MariaDbDockerTestUtils.startContainer();
         await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
         await new EditorView().closeAllEditors();
-        await MariaDbDockerTestUtils.startContainer();
-
-        CommandUtils.pool = mariadb.createPool({ host: "localhost", user: MariaDbDockerTestUtils.username, password: MariaDbDockerTestUtils.password, connectionLimit: 5000, port: MariaDbDockerTestUtils.port });
-
 
         CommandUtils.outputPanel = (await new BottomBarPanel().openOutputView());
 
         await LiquibaseGUITestUtils.addConfiguration("dummy", path.join(process.cwd(), "out", "temp", "workspace"), "dummy.liquibase.properties");
 
         await CommandUtils.outputPanel.selectChannel('Liquibase');
+        //await CommandUtils.outputPanel.clearText();
     }
 
     /**
@@ -43,9 +39,9 @@ export class CommandUtils {
      */
     static async getAllContext(): Promise<void> {
         const input = await InputBox.create();
+        await wait();
         await input.toggleAllQuickPicks(true);
         await input.confirm();
-        await wait();
     }
 
     /**
@@ -53,10 +49,10 @@ export class CommandUtils {
      */
     static async getFirstContext(): Promise<void> {
         const input = await InputBox.create();
+        await wait();
         await input.setText("foo");
         await input.toggleAllQuickPicks(true);
         await input.confirm();
-        await wait();
     }
 
     /**
@@ -64,10 +60,14 @@ export class CommandUtils {
      */
     static async getNoneContext(): Promise<void> {
         const input = await InputBox.create();
-        await input.confirm();
         await wait();
+        await input.toggleAllQuickPicks(false);
+        await input.confirm();
     }
 
+    static createPool(): mariadb.Pool {
+        return mariadb.createPool({ host: "localhost", user: MariaDbDockerTestUtils.username, password: MariaDbDockerTestUtils.password, connectionLimit: 100, port: MariaDbDockerTestUtils.port });
+    }
 
     /**
      * Cartesian Product thingy

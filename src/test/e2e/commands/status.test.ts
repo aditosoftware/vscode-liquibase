@@ -1,45 +1,45 @@
 import path from "path";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "./commandUtils";
+import { CommandUtils } from "../CommandUtils";
+import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 
-suite("Status", () => {
+suite("Status", function () {
 
-    suiteSetup(async function () {
-        await CommandUtils.setupTests();
-    });
+  suiteSetup(async function () {
+    this.timeout(50_000);
+    await CommandUtils.setupTests();
+  });
 
-    CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
-      test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
+  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+    test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
 
-        this.timeout(40_000);
+      this.timeout(40_000);
 
-        const input = await LiquibaseGUITestUtils.preCommandExecution("status");
+      const input = await LiquibaseGUITestUtils.startCommandExecution("status");
 
-        // wait a bit initially
-        await wait();
+      await input.setText("dummy");
+      await input.confirm();
 
-        await input.setText("dummy");
+      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+      await input.selectQuickPick(1);
+
+      if (option === CommandUtils.noContext) {
+
+        await input.setText(option);
         await input.confirm();
-        await wait();
+      }
+      else {
+        await input.setText(option);
+        await input.confirm();
 
-        await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-        await input.selectQuickPick(1);
-        await wait();
-
-        if (option === CommandUtils.noContext) {
-
-          await input.setText(option);
-          await input.confirm();
-        }
-        else {
-          await input.setText(option);
-          await input.confirm();
-          await wait();
-
-          await exec();
-        }
-        assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully."));
-      });
+        await exec();
+      }
+      assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully."));
     });
   });
+
+  suiteTeardown(async () => {
+    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+  });
+});

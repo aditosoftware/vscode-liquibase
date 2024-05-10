@@ -3,42 +3,40 @@ import assert from "assert";
 import fs from "fs";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "./commandUtils";
+import { CommandUtils } from "../CommandUtils";
 
-suite("generate changelog",  function () {
+suite("generate changelog", function () {
 
-    suiteSetup(async function () {
-        await CommandUtils.setupTests();
-    });
-
-    /**
-    * 
-    */
-    test("should execute 'generate changelog' command", async function () {
-      this.timeout(80_000);
-      await CommandUtils.resetDB(CommandUtils.pool);
-
-      await wait();
-
-      await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "CREATE TABLE test_table (column1 char(36), column2 varchar(255))");
-
-      await wait();
-
-      const input = await LiquibaseGUITestUtils.preCommandExecution("generate changelog");
-
-      await input.setText('dummy');
-      await input.confirm();
-      await wait();
-
-      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
-      await input.confirm();
-      await input.confirm();
-      await wait();
-
-      await input.confirm();
-
-      await wait();
-
-      assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "changelog.xml")));
-    });
+  suiteSetup(async function () {
+    this.timeout(50_000);
+    await CommandUtils.setupTests();
   });
+
+  /**
+  * 
+  */
+  test("should execute 'generate changelog' command", async function () {
+    this.timeout(80_000);
+    await CommandUtils.resetDB(CommandUtils.pool);
+
+    await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "CREATE TABLE test_table (column1 char(36), column2 varchar(255))");
+
+    const input = await LiquibaseGUITestUtils.startCommandExecution("generate changelog");
+
+    await input.setText('dummy');
+    await input.confirm();
+
+    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+    await input.confirm();
+    await input.confirm();
+
+    await input.confirm();
+
+
+    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "changelog.xml")));
+  });
+
+  suiteTeardown(async () => {
+    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+  });
+});

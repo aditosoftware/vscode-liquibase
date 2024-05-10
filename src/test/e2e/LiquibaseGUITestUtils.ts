@@ -1,4 +1,5 @@
 import { By, InputBox, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
+import { CommandUtils, wait } from "./CommandUtils";
 
 /**
  * 
@@ -12,8 +13,9 @@ export class LiquibaseGUITestUtils {
     * or undefined if no such notification is found.
     */
     static async waitForCommandExecution(text: string): Promise<boolean> {
+        await wait();
         try {
-            return await VSBrowser.instance.driver.wait(async () => { return await LiquibaseGUITestUtils.notificationExists(text); }, 2000);
+            return await VSBrowser.instance.driver.wait(async () => { return await LiquibaseGUITestUtils.notificationExists(text); }, 5000);
         }
         catch (err) {
             console.error(err);
@@ -59,8 +61,9 @@ export class LiquibaseGUITestUtils {
      * @param pCommand 
      * @returns 
      */
-    static async preCommandExecution(pCommand: string): Promise<InputBox> {
+    static async startCommandExecution(pCommand: string): Promise<InputBox> {
 
+        await CommandUtils.outputPanel.clearText();
         const center = new Workbench();
         const notification = await center.openNotificationsCenter();
         if ((await notification.getNotifications(NotificationType.Any)).length > 0) {
@@ -79,7 +82,7 @@ export class LiquibaseGUITestUtils {
         const input = await InputBox.create();
 
         // execute our command
-        await prompt.setText(">liquibase." + pCommand);
+        await prompt.setText(">Liquibase: " + pCommand);
         await new Promise((r) => setTimeout(r, 2_000));
         await prompt.confirm();
 
