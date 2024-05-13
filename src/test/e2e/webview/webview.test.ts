@@ -1,5 +1,5 @@
 import assert from "assert";
-import { By, EditorView, InputBox, Key, WebView } from "vscode-extension-tester";
+import { By, EditorView, InputBox, Key } from "vscode-extension-tester";
 import { CommandUtils } from "../CommandUtils";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 import { WebviewTestUtils } from "./WebviewTestUtils";
@@ -9,29 +9,12 @@ import path from "path";
  * Tests the webview
  */
 suite("Webview Test", () => {
-  let webView: WebView;
-
   /**
    * Before the tests, open a temp workspace and close all opened editors (like welcome screen).
    */
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.setupTests();
-  });
-
-  /**
-   * Before each test, open the webview in order to not have any rests from previous tests.
-   */
-  setup(async function () {
-    this.timeout(40_000);
-    webView = await WebviewTestUtils.openWebview();
-  });
-
-  /**
-   * Switch webdriver back to the vscode window after each test.
-   */
-  teardown(async function () {
-    await webView.switchBack();
   });
 
   /**
@@ -46,8 +29,10 @@ suite("Webview Test", () => {
    * Tests that the title should be correct.
    */
   test("should title be correct", async function () {
-    const element = await webView.findWebElement(By.css("h1"));
-    assert.strictEqual(await element.getText(), "Liquibase Configuration");
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const element = await webView.findWebElement(By.css("h1"));
+      assert.strictEqual(await element.getText(), "Liquibase Configuration");
+    });
   });
 
   /**
@@ -66,16 +51,16 @@ suite("Webview Test", () => {
     },
   ].forEach((pArgument) => {
     test(`should have correct classpath for ${pArgument.title}`, async function () {
-      const classpathInput = await webView.findWebElement(By.id("classpathInput"));
-      await classpathInput.sendKeys("a", Key.ENTER, "b");
+      await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+        const classpathInput = await webView.findWebElement(By.id("classpathInput"));
+        await classpathInput.sendKeys("a", Key.ENTER, "b");
 
-      const classpathSeparator = await webView.findWebElement(By.id(pArgument.selection));
-      await classpathSeparator.click();
+        const classpathSeparator = await webView.findWebElement(By.id(pArgument.selection));
+        await classpathSeparator.click();
 
-      // find the preview text
-      const preview = await webView.findWebElement(By.id("preview"));
-      const text = await preview.getText();
-      assert.match(text, pArgument.expected);
+        // find the preview text
+        await WebviewTestUtils.assertMatchPreview(webView, pArgument.expected);
+      });
     });
   });
 
@@ -83,34 +68,51 @@ suite("Webview Test", () => {
    * Tests that the link to the documentation should be there.
    */
   test("should have link to documentation", async () => {
-    const link = await webView.findWebElement(By.id("documentationLink"));
-    const href = await link.getAttribute("href");
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const link = await webView.findWebElement(By.id("documentationLink"));
+      const href = await link.getAttribute("href");
 
-    assert.strictEqual(href, "https://docs.liquibase.com/concepts/connections/creating-config-properties.html");
+      assert.strictEqual(href, "https://docs.liquibase.com/concepts/connections/creating-config-properties.html");
+    });
   });
 
   /**
    * Tests that the changelog can be selected from the folder selection button.
    */
   test("should be able to select changelog", async () => {
-    const changelogSelection = await webView.findWebElement(By.id("changelogSelection"));
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const changelogSelection = await webView.findWebElement(By.id("changelogSelection"));
 
-    await changelogSelection.click();
+      await changelogSelection.click();
 
-    // swap out of the webview to fill in the folder
-    await webView.switchBack();
+      // swap out of the webview to fill in the folder
+      await webView.switchBack();
 
-    const input = new InputBox();
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-    await input.selectQuickPick(1);
+      const input = new InputBox();
+      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+      await input.selectQuickPick(1);
 
-    // swap back to the webview
-    await webView.switchToFrame();
+      // swap back to the webview
+      await webView.switchToFrame();
 
-    const changelogInput = await webView.findWebElement(By.id("changelogInput"));
+      const changelogInput = await webView.findWebElement(By.id("changelogInput"));
 
-    const changelogValue = await changelogInput.getAttribute("value");
+      const changelogValue = await changelogInput.getAttribute("value");
 
-    assert.strictEqual(changelogValue, path.join("liquibase", "changelog.xml"));
+      assert.strictEqual(changelogValue, path.join("liquibase", "changelog.xml"));
+    });
+  });
+
+  /**
+   * Tests that the password put into the the password field is disguised.
+   */
+  test("should disguise password", async () => {
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const password = await webView.findWebElement(By.id("dbConfig_password"));
+
+      await password.sendKeys("Lorem_ipsum1");
+
+      await WebviewTestUtils.assertMatchPreview(webView, /password = \*\*\*/);
+    });
   });
 });

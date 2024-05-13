@@ -11,6 +11,11 @@ import { UrlParts } from "../../../src/configuration/data/UrlParts";
  */
 interface DatabaseConfigurationProps {
   /**
+   * The basic id for all elements inside
+   */
+  baseId: string;
+
+  /**
    * The title for the configuration.
    */
   title: string;
@@ -171,18 +176,24 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
           {createInput(pProperties, "password", "password", "Password of the database")}
         </fieldset>
 
-        <fieldset>
+        <fieldset id={pProperties.baseId + "_databaseConnection"}>
           <legend>Database url</legend>
 
           {pProperties.databaseConnection?.databaseType !== NO_PRE_CONFIGURED_DRIVER && (
             <>
-              <VSCodeTextField value={serverAddress} onBlur={handleServerAddress}>
+              <VSCodeTextField
+                id={pProperties.baseId + "_serverAddress"}
+                value={serverAddress}
+                onBlur={handleServerAddress}>
                 server address
               </VSCodeTextField>
-              <VSCodeTextField value={port.toString()} onBlur={handlePort}>
+              <VSCodeTextField id={pProperties.baseId + "_port"} value={port.toString()} onBlur={handlePort}>
                 port
               </VSCodeTextField>
-              <VSCodeTextField value={databaseName} onBlur={handleDatabaseName}>
+              <VSCodeTextField
+                id={pProperties.baseId + "_databaseName"}
+                value={databaseName}
+                onBlur={handleDatabaseName}>
                 database name
               </VSCodeTextField>
             </>
@@ -199,7 +210,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
           <div className="dropdown-container">
             <label htmlFor="databaseTypeSelection">Database type for the configuration</label>
             <VSCodeDropdown
-              id="databaseTypeSelection"
+              id={pProperties.baseId + "_databaseTypeSelection"}
               value={pProperties.databaseConnection?.databaseType}
               onInput={(e) => {
                 // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
@@ -280,6 +291,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
   ): JSX.Element {
     return (
       <VSCodeTextField
+        id={pProperties.baseId + "_" + pFieldName.toString()}
         type={pType}
         placeholder={pPlaceholder}
         value={pProperties.databaseConnection?.getValue(pFieldName)}
