@@ -132,7 +132,9 @@ function App(): JSX.Element {
 
       <p>
         For more information about the <code>liquibase.properties</code> file, see{" "}
-        <VSCodeLink href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html">
+        <VSCodeLink
+          id="documentationLink"
+          href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html">
           the official documentation
         </VSCodeLink>
         .
@@ -189,10 +191,10 @@ function App(): JSX.Element {
               </section>
 
               <section>
-                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange}>
+                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange} id="changelogInput">
                   The basic changelog file for any command
                 </VSCodeTextField>
-                <VSCodeButton appearance="secondary" onClick={handleChooseChangelog}>
+                <VSCodeButton appearance="secondary" onClick={handleChooseChangelog} id="changelogSelection">
                   Choose changelog
                   <span slot="start" className="codicon codicon-file-code"></span>
                 </VSCodeButton>
@@ -249,7 +251,7 @@ function App(): JSX.Element {
                 </p>
               )}
 
-              <div>{previewData !== null ? <pre>{previewData}</pre> : <p>Load Data...</p>}</div>
+              <div>{previewData !== null ? <pre id="preview">{previewData}</pre> : <p>Load Data...</p>}</div>
             </fieldset>
           </div>
         </section>
