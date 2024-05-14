@@ -3,7 +3,7 @@ import assert from "assert";
 import fs from "fs";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
+import { CommandUtils, wait } from "../CommandUtils";
 
 suite("diff", function () {
 
@@ -31,8 +31,10 @@ suite("diff", function () {
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
     await input.selectQuickPick(1);
 
-    await input.setText("Use any ");
+    await input.setText(CommandUtils.loadAllContext);
     await input.confirm();
+
+    await wait();
 
     await input.toggleAllQuickPicks(true);
     await input.confirm();
@@ -49,10 +51,14 @@ suite("diff", function () {
     await input.confirm();
     await input.confirm();
 
+    //name of file
     await input.confirm();
 
-    await input.toggleAllQuickPicks(true);
+    //available types
     await input.confirm();
+
+    await wait();
+    await wait();
 
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "diff.txt")));
   });

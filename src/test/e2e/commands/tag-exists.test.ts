@@ -1,6 +1,6 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
+import { CommandUtils, wait } from "../CommandUtils";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 
 suite("Tag Exist", function () {
@@ -13,10 +13,20 @@ suite("Tag Exist", function () {
   /**
    * 
    */
-  test("should execute 'tag-exists' command", async function () {
+  test("should execute 'tag-exists' command successfully when tag exists", async function () {
     this.timeout(40_000);
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
+    const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
+
+    await input.setText('dummy');
+    await input.confirm();
+
+    await input.setText("test");
+    await input.confirm();
+
+    await wait();
+
+    await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
 
     await input.setText('dummy');
     await input.confirm();
@@ -25,14 +35,13 @@ suite("Tag Exist", function () {
     await input.confirm();
 
     assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag-exists' was executed successfully."));
-    assert.ok((await CommandUtils.outputPanel.getText()).includes('does NOT exist'));
-    //TODO: check logs for real result or change behaviour of tag-exists
+    assert.ok((await CommandUtils.outputPanel.getText()).includes("The tag 'test' already exists in"), "Tag does NOT exist");
   });
 
   /**
    * 
    */
-  test("should execute 'tag-exists' command unsuccessfully", async function () {
+  test("should execute 'tag-exists' command successfully even if no tag exists", async function () {
     this.timeout(40_000);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
@@ -44,9 +53,7 @@ suite("Tag Exist", function () {
     await input.confirm();
 
     assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag-exists' was executed successfully."));
-
-
-    //TODO: check logs for real result or change behaviour of tag-exists
+    assert.ok((await CommandUtils.outputPanel.getText()).includes('does NOT exist'), "The tag DOES exist");
   });
 
   suiteTeardown(async () => {

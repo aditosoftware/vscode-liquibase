@@ -2,7 +2,7 @@ import path from "path";
 import assert from "assert";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
+import { CommandUtils, wait } from "../CommandUtils";
 
 
 suite("Update", function () {
@@ -33,7 +33,9 @@ suite("Update", function () {
         await input.setText(option);
         await input.confirm();
 
-        assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "0");
+        await wait();
+
+        assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
       }
       else {
         await input.setText(option);
@@ -41,11 +43,13 @@ suite("Update", function () {
 
         await exec();
 
+        await wait();
+
         if (key === 'all available contexts' || key === 'the first available context') {
-          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "1");
+          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it shouldn't");
         }
         else {
-          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length, "0");
+          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
         }
       }
 

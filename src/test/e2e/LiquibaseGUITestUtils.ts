@@ -63,7 +63,14 @@ export class LiquibaseGUITestUtils {
      */
     static async startCommandExecution(pCommand: string): Promise<InputBox> {
 
-        await CommandUtils.outputPanel.clearText();
+        try{
+            await CommandUtils.outputPanel.clearText();
+        }
+        catch(e)
+        {
+            console.error(e);
+        }
+
         const center = new Workbench();
         const notification = await center.openNotificationsCenter();
         if ((await notification.getNotifications(NotificationType.Any)).length > 0) {

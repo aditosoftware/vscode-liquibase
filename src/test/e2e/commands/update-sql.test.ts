@@ -5,7 +5,7 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 
-suite("Update-sql", function () {
+suite("Update-sql", async function () {
 
   suiteSetup(async function () {
     this.timeout(50_000);
@@ -14,10 +14,8 @@ suite("Update-sql", function () {
 
   test("should execute 'Update SQL' command", async function () {
     this.timeout(80_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
 
-    //execute only one changeset to roll back to
-    const input = await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
+    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
     await input.setText('dummy');
     await input.confirm();
@@ -25,23 +23,49 @@ suite("Update-sql", function () {
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
     await input.selectQuickPick(1);
 
-    await input.setText("Load All ");
+    await input.setText(CommandUtils.loadAllContext);
     await input.confirm();
-    
+
+    await wait();
+
+    await input.setText("foo");
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
-    await input.confirm(); //this dumb shit only works if you DOUBLE CONFIRM IT -> https://github.com/redhat-developer/vscode-extension-tester/blob/b283b0f7a1ca451b9decf6b08d76fda24134f897/docs/Home.md?plain=1#L77
+    await wait();
+
+    //execute only one changeset to roll back to
+    await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
+
+    await input.setText('dummy');
     await input.confirm();
+
+    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.selectQuickPick(1);
+
+    await input.setText(CommandUtils.loadAllContext);
+    await input.confirm();
+
+    await wait();
+
+    await input.toggleAllQuickPicks(true);
+    await input.confirm();
+
+
+
+    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+    await input.confirm();
+    await input.confirm();
+
+    await wait();
 
     await input.setText("update.sql");
     await input.confirm();
 
     await wait();
 
-    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."));
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "update.sql")));
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."), "Notification did NOT show up");
+    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "update.sql")), "Did NOT create a SQL File");
   });
 
   suiteTeardown(async () => {

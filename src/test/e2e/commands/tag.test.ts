@@ -16,7 +16,7 @@ suite("Tag", function () {
   test("should execute 'tag' command", async function () {
     this.timeout(40_000);
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("tag");
+    const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
 
     await input.setText('dummy');
     await input.confirm();

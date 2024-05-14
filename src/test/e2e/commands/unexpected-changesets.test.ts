@@ -1,7 +1,7 @@
 import path from "path";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
+import { CommandUtils, wait } from "../CommandUtils";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 
 suite("Unexpected Changesets", function () {
@@ -17,7 +17,6 @@ suite("Unexpected Changesets", function () {
   CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
     test("should execute 'Unexpected Changesets' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
-
       await CommandUtils.resetDB(CommandUtils.pool);
 
       const input = await LiquibaseGUITestUtils.startCommandExecution("unexpected changesets");
@@ -39,6 +38,11 @@ suite("Unexpected Changesets", function () {
         await exec();
       }
 
+      await wait();
+      await wait();
+      await wait();
+
+      //TODO: SQL query to check if it was right
       assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'unexpected-changesets' was executed successfully."));
     });
   });

@@ -1,4 +1,4 @@
-import { BottomBarPanel, EditorView, InputBox, OutputView, VSBrowser } from "vscode-extension-tester";
+import { BottomBarPanel, EditorView, InputBox, OutputView, TextEditor, VSBrowser } from "vscode-extension-tester";
 import { MariaDbDockerTestUtils } from "../suite/MariaDbDockerTestUtils";
 import mariadb from 'mariadb';
 import path from "path";
@@ -21,7 +21,14 @@ export class CommandUtils {
     /**
      * Opens a temp workspace and closes all editors.
      */
-    static async setupTests(): Promise<void> {
+    static async setupTests(): Promise<void> {        
+        try{
+            await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        }
+        catch(e)
+        {
+            console.error(e);
+        }        
         await MariaDbDockerTestUtils.startContainer();
         await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
         await new EditorView().closeAllEditors();
@@ -65,8 +72,8 @@ export class CommandUtils {
         await input.confirm();
     }
 
-    static createPool(): mariadb.Pool {
-        return mariadb.createPool({ host: "localhost", user: MariaDbDockerTestUtils.username, password: MariaDbDockerTestUtils.password, connectionLimit: 100, port: MariaDbDockerTestUtils.port });
+    static createPool(database?: string): mariadb.Pool {
+        return mariadb.createPool({ host: "localhost", user: MariaDbDockerTestUtils.username, password: MariaDbDockerTestUtils.password, connectionLimit: 50, port: MariaDbDockerTestUtils.port, database: database });
     }
 
     /**
@@ -89,6 +96,8 @@ export class CommandUtils {
         await MariaDbDockerTestUtils.executeSQL(pool, "DROP SCHEMA data");
         await MariaDbDockerTestUtils.executeSQL(pool, "CREATE SCHEMA data");
     }
+
+    
 }
 
 /**
@@ -96,4 +105,15 @@ export class CommandUtils {
  */
 export async function wait(): Promise<void> {
     await new Promise((r) => setTimeout(r, 2000));
+}
+
+export async function openAndSelectRMBItem(action: string): Promise<void> {
+    await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+
+    await wait();
+
+    const editor = new TextEditor();
+    const menu = await editor.openContextMenu();
+    const liquibaseMenu = await menu.select('Liquibase');
+    await liquibaseMenu?.select(action);
 }
