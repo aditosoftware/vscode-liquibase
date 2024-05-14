@@ -68,13 +68,14 @@ export class CommandUtils {
     await input.confirm();
   }
 
-  static createPool(): mariadb.Pool {
+  static createPool(database?: string): mariadb.Pool {
     return mariadb.createPool({
       host: "localhost",
       user: MariaDbDockerTestUtils.username,
       password: MariaDbDockerTestUtils.password,
       connectionLimit: 100,
       port: MariaDbDockerTestUtils.port,
+      database: database
     });
   }
 
