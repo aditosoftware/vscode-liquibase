@@ -4,6 +4,8 @@ import { CommandUtils } from "../CommandUtils";
 import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import path from "path";
+import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
+import { NO_PRE_CONFIGURED_DRIVER } from "../../../configuration/drivers";
 
 /**
  * Tests the webview
@@ -110,9 +112,184 @@ suite("Webview Test", () => {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
       const password = await webView.findWebElement(By.id("dbConfig_password"));
 
-      await password.sendKeys("Lorem_ipsum1");
+      await password.sendKeys("Lorem_ipsum1", Key.TAB);
 
       await WebviewTestUtils.assertMatchPreview(webView, /password = \*\*\*/);
+    });
+  });
+
+  /**
+   * Tests that the password put into the the password field of the reference connection is disguised.
+   */
+  test("should disguise reference password", async function () {
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      // click the button to show the reference connection
+      const addReferenceConnection = await webView.findWebElement(By.id("addReferenceConnection"));
+      await addReferenceConnection.click();
+
+      const password = await webView.findWebElement(By.id("referenceConfig_password"));
+
+      await password.sendKeys("Lorem_ipsum1", Key.TAB);
+
+      await WebviewTestUtils.assertMatchPreview(webView, /referencePassword = \*\*\*/);
+    });
+  });
+
+  /**
+   * Tests that the database config is set up correctly when the default database is set to `NO_PRE_CONFIGURED_DRIVER`.
+   */
+  test("should be loaded correctly with no pre configured driver", async function () {
+    await LiquibaseGUITestUtils.setSetting("liquibase.defaultDatabaseForConfiguration", NO_PRE_CONFIGURED_DRIVER);
+
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      // check that the value is set correctly
+      const databaseTypeSelection = await webView.findWebElement(By.id("dbConfig_databaseTypeSelection"));
+      const value = await databaseTypeSelection.getAttribute("value");
+
+      assert.strictEqual(value, NO_PRE_CONFIGURED_DRIVER);
+
+      // check that the necessary elements are visible
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_url")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_driver")));
+
+      // and check that the elements for pre configured drivers are not visible and therefore throwing an error
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_serverAddress")));
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_port")));
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_databaseName")));
+    });
+  });
+
+  /**
+   * Tests that the database config is set up correctly when the default database is set to a pre configured database (in this case MariaDB).
+   */
+  test("should be loaded correctly with a pre configured driver", async function () {
+    const database = "MariaDB";
+
+    await LiquibaseGUITestUtils.setSetting("liquibase.defaultDatabaseForConfiguration", database);
+
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      // check that the value is set correctly
+      const databaseTypeSelection = await webView.findWebElement(By.id("dbConfig_databaseTypeSelection"));
+      const value = await databaseTypeSelection.getAttribute("value");
+
+      assert.strictEqual(value, database);
+
+      // check that the necessary elements are visible
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_url")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_serverAddress")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_port")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_databaseName")));
+
+      // and check that the elements for pre configured drivers are not visible and therefore throwing an error
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_driver")));
+    });
+  });
+
+  /**
+   * Tests that the url is correctly built when server address, port and database name are filled.
+   */
+  test("should update url correctly", async function () {
+    const database = "MariaDB";
+
+    await LiquibaseGUITestUtils.setSetting("liquibase.defaultDatabaseForConfiguration", database);
+
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const serverAddress = await webView.findWebElement(By.id("dbConfig_serverAddress"));
+      await serverAddress.sendKeys("127.0.0.1", Key.TAB);
+
+      const port = await webView.findWebElement(By.id("dbConfig_port"));
+      await port.sendKeys("3307", Key.TAB);
+
+      const databaseName = await webView.findWebElement(By.id("dbConfig_databaseName"));
+      await databaseName.sendKeys("myDatabase", Key.TAB);
+
+      const url = await webView.findWebElement(By.id("dbConfig_url"));
+      const value = await url.getAttribute("value");
+
+      assert.strictEqual(value, "jdbc:mariadb://127.0.0.1:3307/myDatabase");
+    });
+  });
+
+  /**
+   * Tests that the url parts are updated correctly when the url was updated.
+   */
+  test("should update url parts correctly", async function () {
+    const database = "MariaDB";
+
+    await LiquibaseGUITestUtils.setSetting("liquibase.defaultDatabaseForConfiguration", database);
+
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const url = await webView.findWebElement(By.id("dbConfig_url"));
+      await url.sendKeys("jdbc:mariadb://127.0.0.1:3307/myDatabase", Key.TAB);
+
+      const serverAddress = await webView.findWebElement(By.id("dbConfig_serverAddress"));
+      assert.strictEqual(await serverAddress.getAttribute("value"), "127.0.0.1");
+
+      const port = await webView.findWebElement(By.id("dbConfig_port"));
+      assert.strictEqual(await port.getAttribute("value"), "3307");
+
+      const databaseName = await webView.findWebElement(By.id("dbConfig_databaseName"));
+      assert.strictEqual(await databaseName.getAttribute("value"), "myDatabase");
+    });
+  });
+
+  /**
+   * Tests that the change from no pre configured driver to a configured driver works as expected.
+   */
+  test("should change correctly drivers", async function () {
+    await LiquibaseGUITestUtils.setSetting("liquibase.defaultDatabaseForConfiguration", NO_PRE_CONFIGURED_DRIVER);
+
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const databaseTypeSelection = await webView.findWebElement(By.id("dbConfig_databaseTypeSelection"));
+
+      // check that the necessary elements are visible
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_url")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_driver")));
+
+      // and check that the elements for pre configured drivers are not visible and therefore throwing an error
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_serverAddress")));
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_port")));
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_databaseName")));
+
+      // change the value of the database selection to MariaDB
+      await databaseTypeSelection.sendKeys("MariaDB");
+
+      // check that the necessary elements are visible
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_url")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_serverAddress")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_port")));
+      await assert.doesNotReject(webView.findWebElement(By.id("dbConfig_databaseName")));
+
+      // and check that the elements for pre configured drivers are not visible and therefore throwing an error
+      await assert.rejects(webView.findWebElement(By.id("dbConfig_driver")));
+    });
+  });
+
+  /**
+   * Tests that the reference connection will be shown correctly when it should be shown via button. Also checks if the reference connection will not be shown when removed
+   */
+  test("should show correctly the reference connection", async function () {
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const addReferenceConnection = await webView.findWebElement(By.id("addReferenceConnection"));
+      const removeReferenceConnection = await webView.findWebElement(By.id("removeReferenceConnection"));
+
+      // test that the reference connection is currently not visible
+      await assert.rejects(webView.findWebElement(By.id("referenceConfig_databaseConnection")));
+      assert.ok(await addReferenceConnection.isEnabled());
+
+      // click the button to show the reference connection
+      await addReferenceConnection.click();
+
+      // check that the reference connection is now there
+      await assert.doesNotReject(webView.findWebElement(By.id("referenceConfig_databaseConnection")));
+      assert.ok(await removeReferenceConnection.isEnabled());
+
+      // click the button to remove the reference connection
+      await removeReferenceConnection.click();
+
+      // test that the reference connection is currently not visible
+      await assert.rejects(webView.findWebElement(By.id("referenceConfig_databaseConnection")));
+      assert.ok(await addReferenceConnection.isEnabled());
     });
   });
 });

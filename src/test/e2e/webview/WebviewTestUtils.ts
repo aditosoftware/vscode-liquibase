@@ -55,9 +55,6 @@ export class WebviewTestUtils {
   static async assertMatchPreview(webView: WebView, expected: RegExp): Promise<void> {
     const preview = await webView.findWebElement(By.id("preview"));
 
-    // make a dummy click in order to leave any last element
-    await preview.click();
-
     const text = await preview.getText();
     assert.match(text, expected);
   }

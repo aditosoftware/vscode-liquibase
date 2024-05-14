@@ -210,6 +210,7 @@ function App(): JSX.Element {
 
             <section>
               <VSCodeButton
+                id="addReferenceConnection"
                 className="normalButton"
                 formnovalidate={true}
                 disabled={referenceConnection}
@@ -219,6 +220,7 @@ function App(): JSX.Element {
                 <span slot="start" className="codicon codicon-add"></span>
               </VSCodeButton>
               <VSCodeButton
+                id="removeReferenceConnection"
                 className="normalButton"
                 formnovalidate={true}
                 disabled={!referenceConnection}
