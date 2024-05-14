@@ -168,16 +168,21 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
           <VSCodeDataGridRow key="newDataRow">
             <VSCodeDataGridCell cell-type="columnheader" grid-column="1">
-              <VSCodeTextField value={key} onBlur={(e: React.FocusEvent<HTMLInputElement>) => setKey(e.target.value)} />
+              <VSCodeTextField
+                id="keyInput"
+                value={key}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => setKey(e.target.value)}
+              />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="2">
               <VSCodeTextField
+                id="valueInput"
                 value={value}
                 onBlur={(e: React.FocusEvent<HTMLInputElement>) => setValue(e.target.value)}
               />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-              <VSCodeButton onClick={() => createNewRow()} appearance="icon" formnovalidate={true}>
+              <VSCodeButton id="addButton" onClick={() => createNewRow()} appearance="icon" formnovalidate={true}>
                 <span className="codicon codicon-add"></span>
               </VSCodeButton>
             </VSCodeDataGridCell>
@@ -198,7 +203,11 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
                 {value}
               </VSCodeDataGridCell>
               <VSCodeDataGridCell grid-column="3">
-                <VSCodeButton onClick={() => handleDeleteRow(key)} appearance="icon" formnovalidate={true}>
+                <VSCodeButton
+                  id={"delete" + separator + key + separator + value}
+                  onClick={() => handleDeleteRow(key)}
+                  appearance="icon"
+                  formnovalidate={true}>
                   <span className="codicon codicon-trash"></span>
                 </VSCodeButton>
               </VSCodeDataGridCell>

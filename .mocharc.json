@@ -1,4 +1,5 @@
 {
   "$schema": "https://json.schemastore.org/mocharc.json",
-  "ui": "tdd"
+  "ui": "tdd",
+  "timeout": 80000
 }

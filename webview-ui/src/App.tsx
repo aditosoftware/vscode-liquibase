@@ -203,12 +203,14 @@ function App(): JSX.Element {
 
             <DatabaseConfiguration
               title="Database configuration"
+              baseId="dbConfig"
               databaseConnection={data.databaseConnection}
               onUpdate={changeDatabaseConnection}
             />
 
             <section>
               <VSCodeButton
+                id="addReferenceConnection"
                 className="normalButton"
                 formnovalidate={true}
                 disabled={referenceConnection}
@@ -218,6 +220,7 @@ function App(): JSX.Element {
                 <span slot="start" className="codicon codicon-add"></span>
               </VSCodeButton>
               <VSCodeButton
+                id="removeReferenceConnection"
                 className="normalButton"
                 formnovalidate={true}
                 disabled={!referenceConnection}
@@ -232,6 +235,7 @@ function App(): JSX.Element {
             {referenceConnection && (
               <DatabaseConfiguration
                 title="Reference Database configuration"
+                baseId="referenceConfig"
                 databaseConnection={data.referenceDatabaseConnection}
                 onUpdate={changeReferenceConnection}
               />
