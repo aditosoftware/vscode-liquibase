@@ -1,5 +1,6 @@
 import assert from "assert";
-import { By, WebView, Workbench } from "vscode-extension-tester";
+import { By, EditorView, WebView, Workbench } from "vscode-extension-tester";
+import { wait } from "../CommandUtils";
 
 /**
  * Utility class for the webview e2e tests.
@@ -13,8 +14,20 @@ export class WebviewTestUtils {
     // command for opening the webview
     await new Workbench().executeCommand("liquibase.createLiquibaseConfiguration");
 
-    // wait a bit to have the webview there // TODO besserer Timeout?
-    await new Promise((res) => setTimeout(res, 10_000));
+    const editor = new EditorView();
+
+    // wait a bit to have the webview there
+    for (let i = 2; i <= 10; i++) {
+      try {
+        await editor.getTabByTitle("Liquibase Configuration");
+        break;
+      } catch (e) {
+        if (i === 10) {
+          throw e;
+        }
+      }
+      await wait(500);
+    }
 
     // init the WebView page object
     const webView = new WebView();
@@ -53,9 +66,30 @@ export class WebviewTestUtils {
    * @param expected - the expected text that should be contained in the preview
    */
   static async assertMatchPreview(webView: WebView, expected: RegExp): Promise<void> {
-    const preview = await webView.findWebElement(By.id("preview"));
+    const text = await WebviewTestUtils.extractPreviewText(webView);
 
-    const text = await preview.getText();
     assert.match(text, expected);
+  }
+
+  /**
+   * Tests if the content in the preview is equals to the expected expression.
+   * @param webView - the webview from which the preview should be taken
+   * @param expected - the expected text that should be equals the preview
+   */
+  static async assertEqualsPreview(webView: WebView, expected: string): Promise<void> {
+    const text = await WebviewTestUtils.extractPreviewText(webView);
+
+    assert.strictEqual(text, expected);
+  }
+
+  /**
+   *Extracts the text of the preview.
+   * @param webView - the webview from which the preview should be taken
+   * @returns the text of the preview
+   */
+  private static async extractPreviewText(webView: WebView): Promise<string> {
+    const preview = await webView.findWebElement(By.id("preview"));
+    const text = await preview.getText();
+    return text;
   }
 }
