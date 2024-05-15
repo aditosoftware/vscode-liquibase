@@ -22,7 +22,7 @@ export class CommandUtils {
    */
   static async setupTests(): Promise<void> {
     await MariaDbDockerTestUtils.startContainer();
-    await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
+    await CommandUtils.openWorkspace();
     await new EditorView().closeAllEditors();
 
     CommandUtils.outputPanel = await new BottomBarPanel().openOutputView();
@@ -35,6 +35,13 @@ export class CommandUtils {
 
     await CommandUtils.outputPanel.selectChannel("Liquibase");
     //await CommandUtils.outputPanel.clearText();
+  }
+
+  /**
+   * Opens the workspace.
+   */
+  static async openWorkspace(): Promise<void> {
+    await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
   }
 
   /**
@@ -75,7 +82,7 @@ export class CommandUtils {
       password: MariaDbDockerTestUtils.password,
       connectionLimit: 100,
       port: MariaDbDockerTestUtils.port,
-      database: database
+      database: database,
     });
   }
 
@@ -114,12 +121,14 @@ export async function wait(timeout: number = 2000): Promise<void> {
 }
 
 export async function openAndSelectRMBItem(action: string): Promise<void> {
-    await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+  await VSBrowser.instance.openResources(
+    path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml")
+  );
 
-    await wait();
+  await wait();
 
-    const editor = new TextEditor();
-    const menu = await editor.openContextMenu();
-    const liquibaseMenu = await menu.select('Liquibase');
-    await liquibaseMenu?.select(action);
+  const editor = new TextEditor();
+  const menu = await editor.openContextMenu();
+  const liquibaseMenu = await menu.select("Liquibase");
+  await liquibaseMenu?.select(action);
 }

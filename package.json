@@ -291,7 +291,7 @@
     "e2e-testing": "npm run pretest && npm run test:e2e",
     "e2e-specific": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/commands/update.test.js --coverage --uninstall_extension",
     "e2e-specific2": "extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/commands/changelog-sync.test.js",
-    "e2e-webview-specific": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/webview/webview.test.js",
+    "e2e-webview-specific": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/webview/*.test.js",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
     "help": "extest setup-and-run --help",
     "postinstall": "cd webview-ui && npm install && npm run build"

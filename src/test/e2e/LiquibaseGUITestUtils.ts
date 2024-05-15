@@ -1,5 +1,6 @@
 import { By, InputBox, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
 import { CommandUtils, wait } from "./CommandUtils";
+import assert from "assert";
 
 /**
  *
@@ -154,5 +155,8 @@ export class LiquibaseGUITestUtils {
     // get the setting and set the new value
     const setting = await settingsEditor.findSettingByID(settingId);
     await setting.setValue(value);
+
+    //double check, was the setting correctly updated
+    assert.strictEqual(value, await setting.getValue());
   }
 }

@@ -16,13 +16,14 @@ export class WebviewTestUtils {
 
     const editor = new EditorView();
 
+    const maxTries = 10;
     // wait a bit to have the webview there
-    for (let i = 2; i <= 10; i++) {
+    for (let i = 1; i <= maxTries; i++) {
       try {
         await editor.getTabByTitle("Liquibase Configuration");
         break;
       } catch (e) {
-        if (i === 10) {
+        if (i === maxTries) {
           throw e;
         }
       }
@@ -50,6 +51,8 @@ export class WebviewTestUtils {
    * @param toExecute - the tests that should be executed on the webview
    */
   static async openAndExecuteOnWebview(toExecute: (webView: WebView) => Promise<void>): Promise<void> {
+    await new EditorView().closeAllEditors();
+
     const webView = await this.openWebview();
 
     try {
