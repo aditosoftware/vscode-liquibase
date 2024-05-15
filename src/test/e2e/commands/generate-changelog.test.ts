@@ -33,6 +33,7 @@ suite("generate changelog", function () {
     await input.confirm();
 
     await wait();
+    await wait();
 
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "changelog.xml")), "File does NOT exist");
   });

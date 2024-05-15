@@ -1,5 +1,6 @@
 import path from "path";
 import assert from "assert";
+import fs from "fs";
 import { InputBox } from "vscode-extension-tester";
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
@@ -38,6 +39,7 @@ suite("Right Click Menu", function () {
         await wait();
 
         assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'db-doc' was executed successfully."));
+        assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "dbdoc", "index.html")), "Did NOT create a DB-DOC Files");
     });
 
     suiteTeardown(async () => {

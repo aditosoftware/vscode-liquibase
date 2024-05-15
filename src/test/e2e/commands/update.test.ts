@@ -46,7 +46,7 @@ suite("Update", function () {
         await wait();
 
         if (key === 'all available contexts' || key === 'the first available context') {
-          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it shouldn't");
+          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it should");
         }
         else {
           assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
