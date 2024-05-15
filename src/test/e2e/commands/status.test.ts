@@ -2,7 +2,7 @@ import path from "path";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils } from "../CommandUtils";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Status", function () {
 
@@ -40,6 +40,6 @@ suite("Status", function () {
   });
 
   suiteTeardown(async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

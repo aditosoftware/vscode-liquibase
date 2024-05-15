@@ -4,7 +4,7 @@ import fs from "fs";
 import { InputBox } from "vscode-extension-tester";
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
-import { MariaDbDockerTestUtils } from "../../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
 suite("Right Click Menu", function () {
 
@@ -43,6 +43,6 @@ suite("Right Click Menu", function () {
     });
 
     suiteTeardown(async () => {
-        await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        await DockerTestUtils.stopAndRemoveContainer();
     });
 });

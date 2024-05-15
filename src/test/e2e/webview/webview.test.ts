@@ -1,7 +1,7 @@
 import assert from "assert";
 import { By, EditorView, InputBox, Key, WebView } from "vscode-extension-tester";
 import { CommandUtils } from "../CommandUtils";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import path from "path";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
@@ -24,7 +24,7 @@ suite("Webview Test", () => {
    */
   suiteTeardown(async function () {
     await new EditorView().closeAllEditors();
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 
   /**

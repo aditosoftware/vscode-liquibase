@@ -39,7 +39,7 @@ export function executeJar(
           return;
         }
 
-        const cp = buildClasspath(rootPath, liquibaseCore, picocli, snakeYaml).join(getClasspathSeparator());
+        const cp = [path.join(rootPath, "*")].join(getClasspathSeparator());
 
         const argsArray: string[] = [
           // force liquibase to use english locale, because other I18N are not good

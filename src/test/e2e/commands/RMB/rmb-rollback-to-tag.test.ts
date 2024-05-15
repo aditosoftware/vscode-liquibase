@@ -1,5 +1,5 @@
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
-import { MariaDbDockerTestUtils } from "../../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import path from "path";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import assert from "assert";
@@ -91,11 +91,11 @@ suite("Right Click Menu", function () {
 
         //check if the message is popping up
         assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully."));
-        assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"))?.length === 0, "Rollback did not remove values from DB");
+        assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"))?.length === 0, "Rollback did not remove values from DB");
 
     });
 
     suiteTeardown(async () => {
-        await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        await DockerTestUtils.stopAndRemoveContainer();
     });
 });

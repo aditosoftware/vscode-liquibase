@@ -1,6 +1,6 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
-import { MariaDbDockerTestUtils } from "../../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 
@@ -35,6 +35,6 @@ suite("Right Click Menu", function () {
     });
 
     suiteTeardown(async () => {
-        await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        await DockerTestUtils.stopAndRemoveContainer();
     });
 });

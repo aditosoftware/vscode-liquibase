@@ -1,6 +1,6 @@
 import path from "path";
 import assert from "assert";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
@@ -35,7 +35,7 @@ suite("Update", function () {
 
         await wait();
 
-        assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
+        assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
       }
       else {
         await input.setText(option);
@@ -46,10 +46,10 @@ suite("Update", function () {
         await wait();
 
         if (key === 'all available contexts' || key === 'the first available context') {
-          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it should");
+          assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it should");
         }
         else {
-          assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
+          assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
         }
       }
 
@@ -58,6 +58,6 @@ suite("Update", function () {
   });
 
   suiteTeardown(async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

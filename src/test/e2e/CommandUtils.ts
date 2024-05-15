@@ -1,5 +1,5 @@
 import { BottomBarPanel, EditorView, InputBox, OutputView, TextEditor, VSBrowser } from "vscode-extension-tester";
-import { MariaDbDockerTestUtils } from "../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../suite/DockerTestUtils";
 import mariadb from "mariadb";
 import path from "path";
 import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
@@ -21,7 +21,7 @@ export class CommandUtils {
    * Opens a temp workspace and closes all editors.
    */
   static async setupTests(): Promise<void> {
-    await MariaDbDockerTestUtils.startContainer();
+    await DockerTestUtils.startContainer();
     await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
     await new EditorView().closeAllEditors();
 
@@ -71,10 +71,10 @@ export class CommandUtils {
   static createPool(database?: string): mariadb.Pool {
     return mariadb.createPool({
       host: "localhost",
-      user: MariaDbDockerTestUtils.username,
-      password: MariaDbDockerTestUtils.password,
+      user: DockerTestUtils.username,
+      password: DockerTestUtils.password,
       connectionLimit: 100,
-      port: MariaDbDockerTestUtils.port,
+      port: 3310,
       database: database
     });
   }
@@ -100,8 +100,8 @@ export class CommandUtils {
    *
    */
   static async resetDB(pool: mariadb.Pool): Promise<void> {
-    await MariaDbDockerTestUtils.executeSQL(pool, "DROP SCHEMA data");
-    await MariaDbDockerTestUtils.executeSQL(pool, "CREATE SCHEMA data");
+    await DockerTestUtils.executeMariaDBSQL(pool, "DROP SCHEMA data");
+    await DockerTestUtils.executeMariaDBSQL(pool, "CREATE SCHEMA data");
   }
 }
 

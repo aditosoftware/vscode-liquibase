@@ -1,6 +1,6 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
-import { MariaDbDockerTestUtils } from "../../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 
@@ -39,10 +39,10 @@ suite("Right Click Menu", function () {
         await wait();
 
         assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."), "Notification did NOT show");
-        assert.ok((await MariaDbDockerTestUtils.executeSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it should");
+        assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it should");
     });
 
     suiteTeardown(async () => {
-        await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        await DockerTestUtils.stopAndRemoveContainer();
     });
 });

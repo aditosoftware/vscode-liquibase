@@ -3,7 +3,7 @@ import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import assert from "assert";
 import { CommandUtils, wait } from "../CommandUtils";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 
 suite("Add existing liquibase.properties to the configuration", function () {
@@ -15,7 +15,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
 
     test("should add a liquibase.properties file to the config", async function () {
         this.timeout(50_000);
-        await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        await DockerTestUtils.stopAndRemoveContainer();
         await LiquibaseGUITestUtils.addConfiguration("dummy2", path.join(process.cwd(), "out", "temp", "workspace"), "dummy2.liquibase.properties");
 
         await wait();
@@ -27,6 +27,6 @@ suite("Add existing liquibase.properties to the configuration", function () {
     });
 
     suiteTeardown(async function() {
-        await MariaDbDockerTestUtils.stopAndRemoveContainer();
+        await DockerTestUtils.stopAndRemoveContainer();
     });
 });
