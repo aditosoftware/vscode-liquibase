@@ -1,6 +1,7 @@
 import assert from "assert";
 import { By, EditorView, WebView, Workbench } from "vscode-extension-tester";
 import { wait } from "../CommandUtils";
+import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
 /**
  * Utility class for the webview e2e tests.
@@ -29,6 +30,9 @@ export class WebviewTestUtils {
       }
       await wait(500);
     }
+
+    // clear all notifications after the webview was loaded
+    await LiquibaseGUITestUtils.clearNotifications();
 
     // init the WebView page object
     const webView = new WebView();

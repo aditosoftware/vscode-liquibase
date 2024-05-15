@@ -1,4 +1,4 @@
-import { By, InputBox, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
+import { By, InputBox, Notification, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
 import { CommandUtils, wait } from "./CommandUtils";
 import assert from "assert";
 
@@ -16,7 +16,7 @@ export class LiquibaseGUITestUtils {
     await wait();
     try {
       return await VSBrowser.instance.driver.wait(async () => {
-        return await LiquibaseGUITestUtils.notificationExists(text);
+        return typeof (await LiquibaseGUITestUtils.notificationExists(text)) !== "undefined";
       }, 5000);
     } catch (err) {
       console.error(err);
@@ -25,19 +25,18 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
-   *
-   * @param text
-   * @returns
+   * Checks if a notification exits.
+   * @param text - the text that should be contained in the message
+   * @returns the notification, if one was there with the text, or `undefined`, if no message was found
    */
-  static async notificationExists(text: string): Promise<boolean> {
+  static async notificationExists(text: string): Promise<Notification | undefined> {
     const notifications = await new Workbench().getNotifications();
     for (const notification of notifications) {
       const message = await notification.getMessage();
       if (message.includes(text)) {
-        return true;
+        return notification;
       }
     }
-    return false;
   }
 
   /**
@@ -64,13 +63,7 @@ export class LiquibaseGUITestUtils {
    */
   static async startCommandExecution(pCommand: string): Promise<InputBox> {
     await CommandUtils.outputPanel.clearText();
-    const center = new Workbench();
-    const notification = await center.openNotificationsCenter();
-    if ((await notification.getNotifications(NotificationType.Any)).length > 0) {
-      await notification.clearAllNotifications();
-    }
-
-    await notification.close();
+    const center = await LiquibaseGUITestUtils.clearNotifications();
 
     // we need an input box to open
     // extensions usually open inputs as part of their commands
@@ -97,6 +90,22 @@ export class LiquibaseGUITestUtils {
     }
 
     return input;
+  }
+
+  /**
+   * Clears all notifications from the workbench.
+   *
+   * @returns the workbench
+   */
+  static async clearNotifications(): Promise<Workbench> {
+    const center = new Workbench();
+    const notification = await center.openNotificationsCenter();
+    if ((await notification.getNotifications(NotificationType.Any)).length > 0) {
+      await notification.clearAllNotifications();
+    }
+
+    await notification.close();
+    return center;
   }
 
   /**

@@ -262,12 +262,13 @@ function App(): JSX.Element {
 
         <VSCodeDivider />
 
-        <VSCodeButton onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
+        <VSCodeButton id="saveButton" onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
           Save configuration
           <span slot="start" className="codicon codicon-save"></span>
         </VSCodeButton>
 
         <VSCodeButton
+          id="testButton"
           onClick={handleTestConfiguration}
           appearance="secondary"
           formnovalidate={true}

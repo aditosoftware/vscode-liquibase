@@ -27,6 +27,7 @@ export class CommandUtils {
 
     CommandUtils.outputPanel = await new BottomBarPanel().openOutputView();
 
+    // FIXME hier dann eine beispielhafte config hinzufügen
     await LiquibaseGUITestUtils.addConfiguration(
       "dummy",
       path.join(process.cwd(), "out", "temp", "workspace"),
@@ -115,7 +116,6 @@ export class CommandUtils {
 /**
  * just wait, pls
  */
-
 export async function wait(timeout: number = 2000): Promise<void> {
   await new Promise((r) => setTimeout(r, timeout));
 }
