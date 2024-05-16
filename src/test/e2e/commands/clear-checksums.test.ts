@@ -3,7 +3,7 @@ import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils } from "../CommandUtils";
 import { suiteTeardown } from "mocha";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Clear Checksums", function () {
 
@@ -49,6 +49,6 @@ suite("Clear Checksums", function () {
   });
 
   suiteTeardown(async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

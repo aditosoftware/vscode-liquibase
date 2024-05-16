@@ -5,7 +5,7 @@ import assert from "assert";
 import { randomUUID } from "crypto";
 import { CommandUtils } from "../CommandUtils";
 import path from "path";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
  * Tests the normal configuration of the webview.
@@ -23,7 +23,7 @@ suite("Configuration of the Webview", () => {
    * Stop all docker containers after the test.
    */
   suiteTeardown(async function () {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 
   /**
@@ -57,8 +57,13 @@ suite("Configuration of the Webview", () => {
  *
  * @param name - the name of the configuration that should be written
  * @param buttonToClick - the button that should be clicked
+ * @param pPort - the port that should be written
  */
-async function addConfigurationDataToWebview(name: string, buttonToClick: "saveButton" | "testButton"): Promise<void> {
+async function addConfigurationDataToWebview(
+  name: string,
+  buttonToClick: "saveButton" | "testButton",
+  pPort: number = 3310
+): Promise<void> {
   await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
     const nameInput = await webView.findWebElement(By.id("nameInput"));
     await nameInput.sendKeys(name);
@@ -78,10 +83,10 @@ async function addConfigurationDataToWebview(name: string, buttonToClick: "saveB
     await webView.switchToFrame();
 
     const username = await webView.findWebElement(By.id("dbConfig_username"));
-    await username.sendKeys(MariaDbDockerTestUtils.username, Key.TAB);
+    await username.sendKeys(DockerTestUtils.username, Key.TAB);
 
     const password = await webView.findWebElement(By.id("dbConfig_password"));
-    await password.sendKeys(MariaDbDockerTestUtils.password, Key.TAB);
+    await password.sendKeys(DockerTestUtils.password, Key.TAB);
 
     const databaseType = await webView.findWebElement(By.id("dbConfig_databaseTypeSelection"));
     await databaseType.sendKeys("MariaDB");
@@ -90,10 +95,10 @@ async function addConfigurationDataToWebview(name: string, buttonToClick: "saveB
     await serverAddress.sendKeys("localhost", Key.TAB);
 
     const port = await webView.findWebElement(By.id("dbConfig_port"));
-    await port.sendKeys(MariaDbDockerTestUtils.port, Key.TAB);
+    await port.sendKeys(pPort, Key.TAB);
 
     const databaseName = await webView.findWebElement(By.id("dbConfig_databaseName"));
-    await databaseName.sendKeys(MariaDbDockerTestUtils.dbName, Key.TAB);
+    await databaseName.sendKeys(DockerTestUtils.dbName, Key.TAB);
 
     const button = await webView.findWebElement(By.id(buttonToClick));
 

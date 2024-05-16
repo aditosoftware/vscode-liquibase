@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
 import { getClasspathSeparator } from "../../utilities/osUtilities";
 import { randomUUID } from "crypto";
-import { MariaDbDockerTestUtils } from "./MariaDbDockerTestUtils";
+import { DockerTestUtils } from "./DockerTestUtils";
 
 /**
  * Tests commands of the extension.
@@ -38,8 +38,8 @@ suite("Extension Test Suite", () => {
     this.timeout(60_000);
 
     // start a maria db container and wait for its status
-    MariaDbDockerTestUtils.startContainer();
-    await MariaDbDockerTestUtils.checkContainerStatus();
+    DockerTestUtils.startContainer();
+    await DockerTestUtils.checkContainerStatus();
 
     fs.mkdirSync(outputFolder);
 
@@ -55,11 +55,11 @@ suite("Extension Test Suite", () => {
     );
 
     const properties = new PropertiesEditor("# written by the tests");
-    properties.insert("username", MariaDbDockerTestUtils.username);
-    properties.insert("password", MariaDbDockerTestUtils.password);
+    properties.insert("username", DockerTestUtils.username);
+    properties.insert("password", DockerTestUtils.password);
     properties.insert(
       "url",
-      `jdbc:mariadb://localhost:${MariaDbDockerTestUtils.port}/${MariaDbDockerTestUtils.dbName}`
+      `jdbc:mariadb://localhost:3310/${DockerTestUtils.dbName}`
     );
     properties.insert(
       "classpath",
@@ -78,7 +78,7 @@ suite("Extension Test Suite", () => {
    * Remove the container after all tests.
    */
   suiteTeardown("remove docker container", async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 
   /**

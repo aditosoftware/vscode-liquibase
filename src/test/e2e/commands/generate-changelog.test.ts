@@ -1,7 +1,7 @@
 import path from "path";
 import assert from "assert";
 import fs from "fs";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
@@ -19,7 +19,7 @@ suite("generate changelog", function () {
     this.timeout(80_000);
     await CommandUtils.resetDB(CommandUtils.pool);
 
-    await MariaDbDockerTestUtils.executeSQL(CommandUtils.createPool("data"), "CREATE TABLE test_table (column1 char(36), column2 varchar(255))");
+    await DockerTestUtils.executeMariaDBSQL(CommandUtils.createPool("data"), "CREATE TABLE test_table (column1 char(36), column2 varchar(255))");
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("generate changelog");
 
@@ -39,6 +39,6 @@ suite("generate changelog", function () {
   });
 
   suiteTeardown(async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

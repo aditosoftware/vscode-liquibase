@@ -2,7 +2,7 @@ import assert from "assert";
 import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Drop-all", function () {
 
@@ -50,6 +50,6 @@ suite("Drop-all", function () {
   });
 
   suiteTeardown(async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

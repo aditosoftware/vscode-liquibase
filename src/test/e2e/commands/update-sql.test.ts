@@ -3,7 +3,7 @@ import assert from "assert";
 import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
-import { MariaDbDockerTestUtils } from "../../suite/MariaDbDockerTestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Update-sql", async function () {
 
@@ -69,6 +69,6 @@ suite("Update-sql", async function () {
   });
 
   suiteTeardown(async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 });
