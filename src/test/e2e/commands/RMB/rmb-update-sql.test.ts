@@ -6,9 +6,14 @@ import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
 suite("Right Click Menu", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -20,7 +25,7 @@ suite("Right Click Menu", function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -40,7 +45,7 @@ suite("Right Click Menu", function () {
     await openAndSelectRMBItem("Generate SQL File for incoming changes");
     await wait();
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(CommandUtils.loadAllContext);
@@ -51,9 +56,7 @@ suite("Right Click Menu", function () {
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
-    await input.confirm();
-    await input.confirm();
+    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
 
     await input.setText("update.sql");
     await input.confirm();

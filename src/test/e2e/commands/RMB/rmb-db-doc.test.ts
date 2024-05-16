@@ -7,9 +7,14 @@ import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
 suite("Right Click Menu", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -17,6 +22,9 @@ suite("Right Click Menu", function () {
    */
   test("should execute 'db-doc' command", async function () {
     this.timeout(50_000);
+    // TODO: tempdir erzeugen, in den die db-doc landen darf?
+    const directoryForDbDoc = path.join(process.cwd(), "out", "temp", "workspace", "db-doc");
+
     await CommandUtils.resetDB(CommandUtils.pool);
 
     await openAndSelectRMBItem("Generate database documentation (db-doc)");
@@ -24,26 +32,21 @@ suite("Right Click Menu", function () {
 
     const input = await InputBox.create();
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(CommandUtils.noContext);
     await input.confirm();
 
     // Set the output directory for the generated documentation.
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "db-doc"));
-    await input.confirm();
-    await input.confirm();
+    await CommandUtils.selectFolder(input, directoryForDbDoc);
 
     await wait();
 
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'db-doc' was executed successfully.")
     );
-    assert.ok(
-      fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "dbdoc", "index.html")),
-      "Did NOT create a DB-DOC Files"
-    );
+    assert.ok(fs.existsSync(path.join(directoryForDbDoc, "index.html")), "Did NOT create a DB-DOC Files");
   });
 
   suiteTeardown(async () => {

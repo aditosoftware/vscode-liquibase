@@ -6,9 +6,14 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
 suite("diff", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -20,15 +25,14 @@ suite("diff", function () {
 
     await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "CREATE SCHEMA data2");
 
-    await LiquibaseGUITestUtils.addConfiguration(
-      "dummy2",
-      path.join(process.cwd(), "out", "temp", "workspace"),
-      "dummy2.liquibase.properties"
-    );
+    // for this test, we need a second configuration
+    const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("MariaDB", 3310, "data2");
+
+    await wait(500);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -44,20 +48,18 @@ suite("diff", function () {
 
     await LiquibaseGUITestUtils.startCommandExecution("diff");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText("dummy2");
+    await input.setText(secondConfiguration);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
-    await input.confirm();
+    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+
+    //name of file, leave to default
     await input.confirm();
 
-    //name of file
-    await input.confirm();
-
-    //available types
+    //available types, leave to default
     await input.confirm();
 
     await wait();
@@ -69,22 +71,22 @@ suite("diff", function () {
   /**
    *
    */
-  test("should execute 'diff' command", async function () {
+  test("should execute 'diff' command for postgres", async function () {
     this.timeout(80_000);
     await CommandUtils.resetDB(CommandUtils.pool);
 
-    await DockerTestUtils.startContainer("postgres", 5432);
+    const postgresPort = 5435;
+
+    await DockerTestUtils.startContainer("postgres", postgresPort);
     await DockerTestUtils.checkContainerStatus("postgres");
 
-    await LiquibaseGUITestUtils.addConfiguration(
-      "dummy3",
-      path.join(process.cwd(), "out", "temp", "workspace"),
-      "dummy3.liquibase.properties"
-    );
+    const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("PostgreSQL", postgresPort);
+
+    await wait();
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -100,15 +102,13 @@ suite("diff", function () {
 
     await LiquibaseGUITestUtils.startCommandExecution("diff");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText("dummy3");
+    await input.setText(secondConfiguration);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
-    await input.confirm();
-    await input.confirm();
+    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
 
     await wait();
 

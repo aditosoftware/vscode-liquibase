@@ -5,9 +5,14 @@ import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 
 suite("Right Click Menu", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -23,7 +28,7 @@ suite("Right Click Menu", function () {
 
     await wait();
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(CommandUtils.noContext);

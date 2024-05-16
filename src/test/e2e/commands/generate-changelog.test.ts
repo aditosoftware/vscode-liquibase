@@ -6,9 +6,14 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
 suite("generate changelog", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -25,17 +30,15 @@ suite("generate changelog", function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("generate changelog");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
-    await input.confirm();
+    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+
+    // name of the changelog
     await input.confirm();
 
-    await input.confirm();
-
-    await wait();
-    await wait();
+    await wait(4000);
 
     assert.ok(
       fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "changelog.xml")),

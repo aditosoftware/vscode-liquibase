@@ -5,9 +5,14 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Drop-all", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -20,11 +25,11 @@ suite("Drop-all", function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    const test = new ModalDialog();
-    test.pushButton("Drop-all");
+    const modalDialog = new ModalDialog();
+    modalDialog.pushButton("Drop-all");
 
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully.")
@@ -32,6 +37,8 @@ suite("Drop-all", function () {
 
     //TODO: add comparison to db to check if everything was removed
   });
+
+  // FIXME diese beiden Methoden zusammenlegen
 
   /**
    *
@@ -41,11 +48,11 @@ suite("Drop-all", function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    const test = new ModalDialog();
-    test.pushButton("Cancel");
+    const modelDialog = new ModalDialog();
+    modelDialog.pushButton("Cancel");
 
     assert.ok(
       !(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully."))

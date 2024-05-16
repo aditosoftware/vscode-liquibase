@@ -5,9 +5,14 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Unexpected Changesets", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -22,7 +27,7 @@ suite("Unexpected Changesets", function () {
 
         const input = await LiquibaseGUITestUtils.startCommandExecution("unexpected changesets");
 
-        await input.setText("dummy");
+        await input.setText(configurationName);
         await input.confirm();
 
         await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));

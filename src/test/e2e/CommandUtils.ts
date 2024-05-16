@@ -20,22 +20,18 @@ export class CommandUtils {
   /**
    * Opens a temp workspace and closes all editors.
    */
-  static async setupTests(): Promise<void> {
+  static async setupTests(): Promise<string> {
     await DockerTestUtils.startContainer();
     await CommandUtils.openWorkspace();
+
+    const configurationName = await LiquibaseGUITestUtils.createConfiguration();
+
     await new EditorView().closeAllEditors();
 
     CommandUtils.outputPanel = await new BottomBarPanel().openOutputView();
-
-    // FIXME hier dann eine beispielhafte config hinzufügen
-    await LiquibaseGUITestUtils.addConfiguration(
-      "dummy",
-      path.join(process.cwd(), "out", "temp", "workspace"),
-      "dummy.liquibase.properties"
-    );
-
     await CommandUtils.outputPanel.selectChannel("Liquibase");
-    //await CommandUtils.outputPanel.clearText();
+
+    return configurationName;
   }
 
   /**
@@ -81,7 +77,7 @@ export class CommandUtils {
       host: "localhost",
       user: DockerTestUtils.username,
       password: DockerTestUtils.password,
-      connectionLimit: 100,
+      connectionLimit: 10,
       port: 3310,
       database: database,
     });
@@ -101,6 +97,29 @@ export class CommandUtils {
         callback(option, exec, key);
       });
     });
+  }
+
+  /**
+   * Selects the folder and confirms the dialog
+   * @param input - the input where the folder should be put into
+   * @param folderName - the name of the folder
+   * @see https://github.com/redhat-developer/vscode-extension-tester/blob/b283b0f7a1ca451b9decf6b08d76fda24134f897/docs/Home.md?plain=1#L77
+   */
+  static async selectFolder(input: InputBox, folderName: string): Promise<void> {
+    const lastFolderName = path.basename(folderName);
+
+    // set the dialog input to the folder name plus a path separator
+    await input.setText(folderName + path.sep);
+
+    // check if the folder name is there in the quick pick
+    const optionForFolderName = await input.findQuickPick(lastFolderName);
+    if (typeof optionForFolderName !== "undefined") {
+      // if it is there, select it
+      await input.selectQuickPick(lastFolderName);
+    }
+
+    // then confirm normally the dialog
+    await input.confirm();
   }
 
   /**

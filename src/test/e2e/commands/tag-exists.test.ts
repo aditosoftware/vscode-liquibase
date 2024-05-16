@@ -4,9 +4,14 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Tag Exist", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -15,22 +20,24 @@ suite("Tag Exist", function () {
   test("should execute 'tag-exists' command successfully when tag exists", async function () {
     this.timeout(40_000);
 
+    const tagName = "test";
+
     const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText("test");
+    await input.setText(tagName);
     await input.confirm();
 
     await wait();
 
     await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText("test");
+    await input.setText(tagName);
     await input.confirm();
 
     assert.ok(
@@ -50,7 +57,7 @@ suite("Tag Exist", function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText("test2");

@@ -5,9 +5,14 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
 suite("Update", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -20,7 +25,7 @@ suite("Update", function () {
 
       const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-      await input.setText("dummy");
+      await input.setText(configurationName);
       await input.confirm();
 
       await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));

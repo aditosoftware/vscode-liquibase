@@ -5,9 +5,14 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
 suite("Rollback to Tag", function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -17,10 +22,12 @@ suite("Rollback to Tag", function () {
     this.timeout(80_000);
     await CommandUtils.resetDB(CommandUtils.pool);
 
+    const tagName = "test";
+
     //execute only one changeset to roll back to
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -38,16 +45,16 @@ suite("Rollback to Tag", function () {
     //set tag
     await LiquibaseGUITestUtils.startCommandExecution("create tag");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText("test");
+    await input.setText(tagName);
     await input.confirm();
 
     //Update all datasets
     await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -66,7 +73,7 @@ suite("Rollback to Tag", function () {
     //rollback time
     await LiquibaseGUITestUtils.startCommandExecution("Rollback to Tag");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -80,13 +87,9 @@ suite("Rollback to Tag", function () {
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-    await input.setText("test");
+    await input.setText(tagName);
     await input.confirm();
 
-    await wait();
-    await wait();
-    await wait();
-    await wait();
     await wait();
 
     //check if the message is popping up

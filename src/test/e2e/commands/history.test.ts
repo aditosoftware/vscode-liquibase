@@ -9,9 +9,14 @@ import { DockerTestUtils } from "../../suite/DockerTestUtils";
  *
  */
 suite("History", async function () {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    configurationName = await CommandUtils.setupTests();
   });
 
   /**
@@ -22,12 +27,10 @@ suite("History", async function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("history");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
-    await input.confirm(); //this dumb shit only works if you DOUBLE CONFIRM IT -> https://github.com/redhat-developer/vscode-extension-tester/blob/b283b0f7a1ca451b9decf6b08d76fda24134f897/docs/Home.md?plain=1#L77
-    await input.confirm();
+    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
 
     await input.setText("Test2.txt");
     await input.confirm();
@@ -40,6 +43,8 @@ suite("History", async function () {
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "Test2.txt")));
   });
 
+  // FIXME diese beiden Methoden in eine zusammenlegen
+
   /**
    *
    */
@@ -49,12 +54,10 @@ suite("History", async function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("history");
 
-    await input.setText("dummy");
+    await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
-    await input.confirm(); //this dumb shit only works if you DOUBLE CONFIRM IT -> https://github.com/redhat-developer/vscode-extension-tester/blob/b283b0f7a1ca451b9decf6b08d76fda24134f897/docs/Home.md?plain=1#L77
-    await input.confirm();
+    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
 
     await input.setText("Test.txt");
     await input.confirm();

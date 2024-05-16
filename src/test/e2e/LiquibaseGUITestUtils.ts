@@ -1,6 +1,9 @@
-import { By, InputBox, Notification, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
+import { InputBox, Notification, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
 import { CommandUtils, wait } from "./CommandUtils";
 import assert from "assert";
+import { randomUUID } from "crypto";
+import { WebviewTestUtils } from "./webview/WebviewTestUtils";
+import { DockerTestUtils } from "../suite/DockerTestUtils";
 
 /**
  *
@@ -109,47 +112,6 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
-   *
-   */
-  static async addConfiguration(configName: string, configPath: string, configPropertyName: string): Promise<void> {
-    // we need an input box to open
-    // extensions usually open inputs as part of their commands
-    // the built-in input box we can use is the command prompt/palette
-    const prompt = await new Workbench().openCommandPrompt();
-
-    // openCommandPrompt returns an InputBox, but if you need to wait for an arbitrary input to appear
-    // note this does not open the input, it simply waits for it to open and constructs the page object
-    const input = await InputBox.create();
-
-    // execute our command
-    await prompt.setText(">liquibase.addExistingConfiguration");
-    await prompt.confirm();
-
-    // wait a bit initially
-    await new Promise((r) => setTimeout(r, 1_000));
-
-    // then wait until the Activating Extensions from the status bar disappears
-    for (let i = 0; i < 10; i++) {
-      const activateProgress = await new StatusBar().getItem("Activating Extensions...");
-      if (activateProgress) {
-        await new Promise((r) => setTimeout(r, 1_000));
-      } else {
-        break;
-      }
-    }
-
-    // Input the name
-    await input.setText(configName);
-    await input.confirm();
-
-    await input.setText(configPath + "\\");
-    await input.confirm();
-
-    // select the folder
-    await input.findElement(By.linkText(configPropertyName)).click();
-  }
-
-  /**
    * Sets a setting to the given value.
    *
    * @param settingId - the id of the setting
@@ -167,5 +129,32 @@ export class LiquibaseGUITestUtils {
 
     //double check, was the setting correctly updated
     assert.strictEqual(value, await setting.getValue());
+  }
+
+  /**
+   * Creates a configuration.
+
+   * @param databaseType - the type of the database that should be used for the configuration
+   * @param port - the port that should be used for creating the configuration
+   * @param databaseName - the name of the database 
+   * @returns the name that was used for creating the configuration
+   */
+  static async createConfiguration(
+    databaseType: "MariaDB" | "PostgreSQL" = "MariaDB",
+    port: number = 3310,
+    databaseName: string = DockerTestUtils.dbName
+  ): Promise<string> {
+    const name = randomUUID();
+
+    // create a configuration
+    await WebviewTestUtils.addConfigurationDataToWebview({
+      name,
+      buttonToClick: "saveButton",
+      databaseType,
+      port,
+      databaseName,
+    });
+
+    return name;
   }
 }
