@@ -4,16 +4,14 @@ import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
-
 suite("Update", function () {
-
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.setupTests();
   });
 
   /**
-   * 
+   *
    */
   CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
     test("should execute 'update' with context type '" + option + "' command with " + key, async function () {
@@ -22,22 +20,28 @@ suite("Update", function () {
 
       const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-      await input.setText('dummy');
+      await input.setText("dummy");
       await input.confirm();
 
       await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
       await input.selectQuickPick(1);
 
       if (option === CommandUtils.noContext) {
-
         await input.setText(option);
         await input.confirm();
 
         await wait();
 
-        assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
-      }
-      else {
+        assert.ok(
+          (
+            await DockerTestUtils.executeMariaDBSQL(
+              CommandUtils.pool,
+              "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
+            )
+          )?.length === 0,
+          "Table 'person' DOES exist, while it shouldn't"
+        );
+      } else {
         await input.setText(option);
         await input.confirm();
 
@@ -45,15 +49,32 @@ suite("Update", function () {
 
         await wait();
 
-        if (key === 'all available contexts' || key === 'the first available context') {
-          assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length >= 1, "Table 'person' DOES NOT exist, while it should");
-        }
-        else {
-          assert.ok((await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))?.length === 0, "Table 'person' DOES exist, while it shouldn't");
+        if (key === "all available contexts" || key === "the first available context") {
+          assert.ok(
+            (
+              await DockerTestUtils.executeMariaDBSQL(
+                CommandUtils.pool,
+                "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
+              )
+            )?.length >= 1,
+            "Table 'person' DOES NOT exist, while it should"
+          );
+        } else {
+          assert.ok(
+            (
+              await DockerTestUtils.executeMariaDBSQL(
+                CommandUtils.pool,
+                "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
+              )
+            )?.length === 0,
+            "Table 'person' DOES exist, while it shouldn't"
+          );
         }
       }
 
-      assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."));
+      assert.ok(
+        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully.")
+      );
     });
   });
 

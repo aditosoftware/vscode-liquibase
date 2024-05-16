@@ -6,7 +6,6 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Update-sql", async function () {
-
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.setupTests();
@@ -17,7 +16,7 @@ suite("Update-sql", async function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -37,7 +36,7 @@ suite("Update-sql", async function () {
     //execute only one changeset to roll back to
     await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -51,8 +50,6 @@ suite("Update-sql", async function () {
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-
-
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
     await input.confirm();
     await input.confirm();
@@ -64,8 +61,14 @@ suite("Update-sql", async function () {
 
     await wait();
 
-    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."), "Notification did NOT show up");
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "update.sql")), "Did NOT create a SQL File");
+    assert.ok(
+      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),
+      "Notification did NOT show up"
+    );
+    assert.ok(
+      fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "update.sql")),
+      "Did NOT create a SQL File"
+    );
   });
 
   suiteTeardown(async () => {

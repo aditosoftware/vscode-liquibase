@@ -83,7 +83,7 @@ export class CommandUtils {
       password: DockerTestUtils.password,
       connectionLimit: 100,
       port: 3310,
-      database: database
+      database: database,
     });
   }
 

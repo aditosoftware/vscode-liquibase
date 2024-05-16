@@ -6,14 +6,13 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
 suite("diff", function () {
-
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.setupTests();
   });
 
   /**
-   * 
+   *
    */
   test("should execute 'diff' command", async function () {
     this.timeout(80_000);
@@ -21,11 +20,15 @@ suite("diff", function () {
 
     await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "CREATE SCHEMA data2");
 
-    await LiquibaseGUITestUtils.addConfiguration("dummy2", path.join(process.cwd(), "out", "temp", "workspace"), "dummy2.liquibase.properties");
+    await LiquibaseGUITestUtils.addConfiguration(
+      "dummy2",
+      path.join(process.cwd(), "out", "temp", "workspace"),
+      "dummy2.liquibase.properties"
+    );
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -41,10 +44,10 @@ suite("diff", function () {
 
     await LiquibaseGUITestUtils.startCommandExecution("diff");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
-    await input.setText('dummy2');
+    await input.setText("dummy2");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
@@ -64,7 +67,7 @@ suite("diff", function () {
   });
 
   /**
-   * 
+   *
    */
   test("should execute 'diff' command", async function () {
     this.timeout(80_000);
@@ -73,11 +76,15 @@ suite("diff", function () {
     await DockerTestUtils.startContainer("postgres", 5432);
     await DockerTestUtils.checkContainerStatus("postgres");
 
-    await LiquibaseGUITestUtils.addConfiguration("dummy3", path.join(process.cwd(), "out", "temp", "workspace"), "dummy3.liquibase.properties");
+    await LiquibaseGUITestUtils.addConfiguration(
+      "dummy3",
+      path.join(process.cwd(), "out", "temp", "workspace"),
+      "dummy3.liquibase.properties"
+    );
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
@@ -93,10 +100,10 @@ suite("diff", function () {
 
     await LiquibaseGUITestUtils.startCommandExecution("diff");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
-    await input.setText('dummy3');
+    await input.setText("dummy3");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));

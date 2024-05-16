@@ -4,37 +4,40 @@ import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 
-
 suite("Right Click Menu", function () {
+  suiteSetup(async function () {
+    this.timeout(50_000);
+    await CommandUtils.setupTests();
+  });
 
-    suiteSetup(async function () {
-        this.timeout(50_000);
-        await CommandUtils.setupTests();
-    });
+  /**
+   *
+   */
+  test("should execute 'Unexpected Changesets' command", async function () {
+    this.timeout(50_000);
+    await CommandUtils.resetDB(CommandUtils.pool);
 
-    /**
-     * 
-     */
-    test("should execute 'Unexpected Changesets' command", async function () {
-        this.timeout(50_000);
-        await CommandUtils.resetDB(CommandUtils.pool);
+    await openAndSelectRMBItem("Unexpected Changesets");
 
-        await openAndSelectRMBItem("Unexpected Changesets");
+    const input = await InputBox.create(50000);
 
-        const input = await InputBox.create(50000);
+    await wait();
 
-        await wait();
+    await input.setText("dummy");
+    await input.confirm();
 
-        await input.setText("dummy");
-        await input.confirm();
+    await input.setText(CommandUtils.noContext);
+    await input.confirm();
 
-        await input.setText(CommandUtils.noContext);
-        await input.confirm();
+    assert.ok(
+      await LiquibaseGUITestUtils.waitForCommandExecution(
+        "Liquibase command 'unexpected-changesets' was executed successfully."
+      ),
+      "Notification did NOT show"
+    );
+  });
 
-        assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'unexpected-changesets' was executed successfully."), "Notification did NOT show");
-    });
-
-    suiteTeardown(async () => {
-        await DockerTestUtils.stopAndRemoveContainer();
-    });
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+  });
 });

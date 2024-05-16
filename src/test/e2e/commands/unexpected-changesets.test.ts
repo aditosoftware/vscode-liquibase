@@ -5,46 +5,51 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 suite("Unexpected Changesets", function () {
-
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.setupTests();
   });
 
   /**
-  * 
-  */
+   *
+   */
   CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
-    test("should execute 'Unexpected Changesets' with context type '" + option + "' command with " + key, async function () {
-      this.timeout(40_000);
-      await CommandUtils.resetDB(CommandUtils.pool);
+    test(
+      "should execute 'Unexpected Changesets' with context type '" + option + "' command with " + key,
+      async function () {
+        this.timeout(40_000);
+        await CommandUtils.resetDB(CommandUtils.pool);
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution("unexpected changesets");
+        const input = await LiquibaseGUITestUtils.startCommandExecution("unexpected changesets");
 
-      await input.setText('dummy');
-      await input.confirm();
-
-      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-      await input.selectQuickPick(1);
-
-      if (option === CommandUtils.noContext) {
-        await input.setText(option);
-        await input.confirm();
-      }
-      else {
-        await input.setText(option);
+        await input.setText("dummy");
         await input.confirm();
 
-        await exec();
+        await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+        await input.selectQuickPick(1);
+
+        if (option === CommandUtils.noContext) {
+          await input.setText(option);
+          await input.confirm();
+        } else {
+          await input.setText(option);
+          await input.confirm();
+
+          await exec();
+        }
+
+        await wait();
+        await wait();
+        await wait();
+
+        //TODO: SQL query to check if it was right
+        assert.ok(
+          await LiquibaseGUITestUtils.waitForCommandExecution(
+            "Liquibase command 'unexpected-changesets' was executed successfully."
+          )
+        );
       }
-
-      await wait();
-      await wait();
-      await wait();
-
-      //TODO: SQL query to check if it was right
-      assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'unexpected-changesets' was executed successfully."));
-    });
+    );
   });
 
   suiteTeardown(async () => {

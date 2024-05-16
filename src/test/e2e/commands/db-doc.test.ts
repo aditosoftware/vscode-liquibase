@@ -6,10 +6,9 @@ import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
-  * This suite of tests is designed to validate the functionality of the 'db-doc' command in a Liquibase extension for Visual Studio Code.
-  */
+ * This suite of tests is designed to validate the functionality of the 'db-doc' command in a Liquibase extension for Visual Studio Code.
+ */
 suite("db-doc", function () {
-
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.setupTests();
@@ -28,7 +27,7 @@ suite("db-doc", function () {
     // Prepare input for the command execution.
     const input = await LiquibaseGUITestUtils.startCommandExecution("Generate database documentation (db-doc)");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
     // Set the path to the Liquibase changelog file.
@@ -43,7 +42,9 @@ suite("db-doc", function () {
     await input.confirm(); // Double confirmation workaround
 
     // Assert that the 'db-doc' command was executed successfully.
-    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'db-doc' was executed successfully."));
+    assert.ok(
+      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'db-doc' was executed successfully.")
+    );
 
     // Assert that a file of the generated documentation exists.
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "db-doc", "index.html")));

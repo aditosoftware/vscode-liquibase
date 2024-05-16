@@ -6,24 +6,23 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
-   * 
-   */
+ *
+ */
 suite("History", async function () {
-
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.setupTests();
   });
 
   /**
-   * 
+   *
    */
   test("should execute 'history' command as TABULAR", async function () {
     this.timeout(40_000);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("history");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
@@ -33,7 +32,7 @@ suite("History", async function () {
     await input.setText("Test2.txt");
     await input.confirm();
 
-    await input.setText('TABULAR');
+    await input.setText("TABULAR");
     await input.confirm();
 
     await wait();
@@ -42,7 +41,7 @@ suite("History", async function () {
   });
 
   /**
-   * 
+   *
    */
   test("should execute 'history' command as TEXT", async function () {
     this.timeout(40_000);
@@ -50,7 +49,7 @@ suite("History", async function () {
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("history");
 
-    await input.setText('dummy');
+    await input.setText("dummy");
     await input.confirm();
 
     await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
@@ -60,7 +59,7 @@ suite("History", async function () {
     await input.setText("Test.txt");
     await input.confirm();
 
-    await input.setText('TEXT');
+    await input.setText("TEXT");
     await input.confirm();
 
     await wait();
