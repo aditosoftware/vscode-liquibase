@@ -5,19 +5,25 @@ import { CommandUtils, wait, openAndSelectRMBItem } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
+/**
+ * Test suite for the Right Click Menu functionality.
+ */
 suite("Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Setup function that runs before the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case to execute the 'update-sql' command.
    */
   test("should execute 'update-sql' command", async function () {
     this.timeout(80_000);
@@ -73,6 +79,9 @@ suite("Right Click Menu", function () {
     );
   });
 
+  /**
+   * Teardown function that runs after the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

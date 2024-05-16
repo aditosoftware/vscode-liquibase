@@ -4,19 +4,25 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
+/**
+ * Test suite for the 'drop-all' command.
+ */
 suite("Drop-all", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Sets up the test suite before running any tests.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case for executing the 'drop-all' command.
    */
   test("should execute 'drop-all' command", async function () {
     this.timeout(40_000);
@@ -38,10 +44,8 @@ suite("Drop-all", function () {
     //TODO: add comparison to db to check if everything was removed
   });
 
-  // FIXME diese beiden Methoden zusammenlegen
-
   /**
-   *
+   * Test case for cancelling the execution of the 'drop-all' command.
    */
   test("should cancel execute 'drop-all' command", async function () {
     this.timeout(40_000);
@@ -59,6 +63,9 @@ suite("Drop-all", function () {
     );
   });
 
+  /**
+   * Cleans up the test suite after running all tests.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

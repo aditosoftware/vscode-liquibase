@@ -4,19 +4,25 @@ import path from "path";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import assert from "assert";
 
+/**
+ * Test suite for the "Rollback to Tag" command in the Right Click Menu.
+ */
 suite("Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Setup function that runs before all tests in the suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case for executing the "rollback-to-tag" command.
    */
   test("should execute 'rollback-to-tag' command", async function () {
     this.timeout(80_000);
@@ -43,7 +49,7 @@ suite("Right Click Menu", function () {
 
     await wait();
 
-    //set tag
+    // Set tag
     await LiquibaseGUITestUtils.startCommandExecution("create tag");
 
     await input.setText(configurationName);
@@ -52,7 +58,7 @@ suite("Right Click Menu", function () {
     await input.setText(tagName);
     await input.confirm();
 
-    //Update all datasets
+    // Update all datasets
     await LiquibaseGUITestUtils.startCommandExecution("update");
 
     await input.setText(configurationName);
@@ -92,7 +98,7 @@ suite("Right Click Menu", function () {
 
     await wait();
 
-    //check if the message is popping up
+    // Check if the message is popping up
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
     );
@@ -107,6 +113,9 @@ suite("Right Click Menu", function () {
     );
   });
 
+  /**
+   * Teardown function that runs after all tests in the suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

@@ -6,7 +6,7 @@ import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
- * This suite of tests is designed to validate the functionality of the 'db-doc' command in a Liquibase extension for Visual Studio Code.
+ * This suite of tests is designed to validate the functionality of the 'db-doc' command.
  */
 suite("db-doc", function () {
   /**
@@ -14,10 +14,14 @@ suite("db-doc", function () {
    */
   let configurationName: string;
 
+  /**
+   * Sets up the test suite by creating a configuration and setting the timeout.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
+
   /**
    * This test verifies that the 'db-doc' command is executed successfully.
    * It sets up a temporary database, generates documentation using Liquibase, and checks for the existence of the generated documentation file.
@@ -52,6 +56,9 @@ suite("db-doc", function () {
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "db-doc", "index.html")));
   });
 
+  /**
+   * Cleans up the test suite by stopping and removing the Docker container.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

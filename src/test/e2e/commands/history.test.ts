@@ -6,7 +6,7 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
- *
+ * Test suite for the 'history' command.
  */
 suite("History", async function () {
   /**
@@ -14,13 +14,16 @@ suite("History", async function () {
    */
   let configurationName: string;
 
+  /**
+   * Set up the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test the 'history' command with TABULAR output format.
    */
   test("should execute 'history' command as TABULAR", async function () {
     this.timeout(40_000);
@@ -43,10 +46,8 @@ suite("History", async function () {
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "Test2.txt")));
   });
 
-  // FIXME diese beiden Methoden in eine zusammenlegen
-
   /**
-   *
+   * Test the 'history' command with TEXT output format.
    */
   test("should execute 'history' command as TEXT", async function () {
     this.timeout(40_000);
@@ -70,6 +71,9 @@ suite("History", async function () {
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "Test.txt")));
   });
 
+  /**
+   * Clean up after the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

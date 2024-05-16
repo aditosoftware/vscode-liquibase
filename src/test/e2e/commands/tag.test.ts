@@ -3,19 +3,25 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
+/**
+ * Test suite for the 'Tag' command.
+ */
 suite("Tag", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Sets up the test suite before running any tests.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case for executing the 'tag' command.
    */
   test("should execute 'tag' command", async function () {
     this.timeout(40_000);
@@ -33,6 +39,9 @@ suite("Tag", function () {
     );
   });
 
+  /**
+   * Cleans up the test suite after running all tests.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

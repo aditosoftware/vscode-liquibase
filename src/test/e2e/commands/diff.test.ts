@@ -5,19 +5,25 @@ import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
+/**
+ * Test suite for the 'diff' command.
+ */
 suite("diff", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Set up the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case for executing the 'diff' command.
    */
   test("should execute 'diff' command", async function () {
     this.timeout(80_000);
@@ -69,7 +75,7 @@ suite("diff", function () {
   });
 
   /**
-   *
+   * Test case for executing the 'diff' command for PostgreSQL.
    */
   test("should execute 'diff' command for postgres", async function () {
     this.timeout(80_000);
@@ -127,6 +133,9 @@ suite("diff", function () {
     assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "diff2.txt")));
   });
 
+  /**
+   * Clean up after the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
     await DockerTestUtils.stopAndRemoveContainer("postgres");

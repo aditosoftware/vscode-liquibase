@@ -4,19 +4,25 @@ import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 
+/**
+ * Test suite for the Right Click Menu functionality.
+ */
 suite("Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Sets up the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case for executing the 'status' command.
    */
   test("should execute 'status' command", async function () {
     this.timeout(50_000);
@@ -40,6 +46,9 @@ suite("Right Click Menu", function () {
     );
   });
 
+  /**
+   * Cleans up the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

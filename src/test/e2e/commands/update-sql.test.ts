@@ -5,17 +5,26 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
+/**
+ * Test suite for the 'update-sql' command.
+ */
 suite("Update-sql", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Set up the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
+  /**
+   * Test the execution of the 'Update SQL' command.
+   */
   test("should execute 'Update SQL' command", async function () {
     this.timeout(80_000);
 
@@ -38,7 +47,7 @@ suite("Update-sql", function () {
 
     await wait();
 
-    //execute only one changeset to roll back to
+    // Execute only one changeset to roll back to
     await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
 
     await input.setText(configurationName);
@@ -74,6 +83,9 @@ suite("Update-sql", function () {
     );
   });
 
+  /**
+   * Clean up after the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

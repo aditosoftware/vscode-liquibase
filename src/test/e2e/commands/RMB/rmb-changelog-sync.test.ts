@@ -4,19 +4,25 @@ import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { InputBox } from "vscode-extension-tester";
 
+/**
+ * Test suite for the Right Click Menu functionality.
+ */
 suite("Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Setup function that runs before the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case for executing the 'changelog sync' command.
    */
   test("should execute 'changelog sync' command", async function () {
     this.timeout(50_000);
@@ -43,6 +49,9 @@ suite("Right Click Menu", function () {
     );
   });
 
+  /**
+   * Teardown function that runs after the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

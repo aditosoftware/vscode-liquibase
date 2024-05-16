@@ -4,21 +4,30 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
+/**
+ * Test suite for the 'Changelog Sync' functionality.
+ */
 suite("Changelog Sync", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Sets up the test suite before running the tests.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Executes the 'Changelog Sync' command with different context types and options.
    */
   CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+    /**
+     * Test case for executing the 'Changelog Sync' command with a specific context type and option.
+     */
     test("should execute 'Changelog Sync' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
       await CommandUtils.resetDB(CommandUtils.pool);
@@ -51,6 +60,9 @@ suite("Changelog Sync", function () {
     });
   });
 
+  /**
+   * Cleans up the test suite after running the tests.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

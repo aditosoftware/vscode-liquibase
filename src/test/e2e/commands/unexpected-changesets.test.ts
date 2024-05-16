@@ -4,19 +4,25 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
+/**
+ * Test suite for testing unexpected changesets.
+ */
 suite("Unexpected Changesets", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Setup function that runs before the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test function that executes the 'Unexpected Changesets' command with different context types.
    */
   CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
     test(
@@ -57,6 +63,9 @@ suite("Unexpected Changesets", function () {
     );
   });
 
+  /**
+   * Teardown function that runs after the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

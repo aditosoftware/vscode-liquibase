@@ -4,19 +4,25 @@ import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 
+/**
+ * Test suite for the "Rollback to Tag" command.
+ */
 suite("Rollback to Tag", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
 
+  /**
+   * Setup function that runs before the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
   });
 
   /**
-   *
+   * Test case for executing the "Rollback to Tag" command.
    */
   test("should execute 'Rollback to Tag' command", async function () {
     this.timeout(80_000);
@@ -24,7 +30,7 @@ suite("Rollback to Tag", function () {
 
     const tagName = "test";
 
-    //execute only one changeset to roll back to
+    // Execute only one changeset to roll back to
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
     await input.setText(configurationName);
@@ -42,7 +48,7 @@ suite("Rollback to Tag", function () {
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-    //set tag
+    // Set tag
     await LiquibaseGUITestUtils.startCommandExecution("create tag");
 
     await input.setText(configurationName);
@@ -51,7 +57,7 @@ suite("Rollback to Tag", function () {
     await input.setText(tagName);
     await input.confirm();
 
-    //Update all datasets
+    // Update all datasets
     await LiquibaseGUITestUtils.startCommandExecution("update");
 
     await input.setText(configurationName);
@@ -70,7 +76,7 @@ suite("Rollback to Tag", function () {
 
     await wait();
 
-    //rollback time
+    // Rollback time
     await LiquibaseGUITestUtils.startCommandExecution("Rollback to Tag");
 
     await input.setText(configurationName);
@@ -92,7 +98,7 @@ suite("Rollback to Tag", function () {
 
     await wait();
 
-    //check if the message is popping up
+    // Check if the message is popping up
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
     );
@@ -107,6 +113,9 @@ suite("Rollback to Tag", function () {
     );
   });
 
+  /**
+   * Teardown function that runs after the test suite.
+   */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });

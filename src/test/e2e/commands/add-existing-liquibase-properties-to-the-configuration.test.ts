@@ -6,35 +6,41 @@ import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { By, InputBox, StatusBar, Workbench } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 
+/**
+ * Test suite for adding an existing liquibase.properties file to the configuration.
+ */
 suite("Add existing liquibase.properties to the configuration", function () {
+  /**
+   * Set up the test suite.
+   */
   suiteSetup(async function () {
     this.timeout(50_000);
     await CommandUtils.openWorkspace();
   });
 
+  /**
+   * Test case for adding a liquibase.properties file to the config.
+   */
   test("should add a liquibase.properties file to the config", async function () {
     this.timeout(50_000);
 
     const configName = randomUUID();
     const propertiesFileName = "dummy.liquibase.properties";
 
-    // we need an input box to open
-    // extensions usually open inputs as part of their commands
-    // the built-in input box we can use is the command prompt/palette
+    // Open the command prompt/palette
     const prompt = await new Workbench().openCommandPrompt();
 
-    // openCommandPrompt returns an InputBox, but if you need to wait for an arbitrary input to appear
-    // note this does not open the input, it simply waits for it to open and constructs the page object
+    // Wait for the input box to appear
     const input = await InputBox.create();
 
-    // execute our command
+    // Execute the command
     await prompt.setText(">liquibase.addExistingConfiguration");
     await prompt.confirm();
 
-    // wait a bit initially
+    // Wait for a bit initially
     await wait(1000);
 
-    // then wait until the Activating Extensions from the status bar disappears
+    // Wait until the "Activating Extensions..." progress disappears from the status bar
     for (let i = 0; i < 10; i++) {
       const activateProgress = await new StatusBar().getItem("Activating Extensions...");
       if (activateProgress) {
@@ -44,13 +50,14 @@ suite("Add existing liquibase.properties to the configuration", function () {
       }
     }
 
-    // Input the name
+    // Input the configuration name
     await input.setText(configName);
     await input.confirm();
 
+    // Select the folder
     await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace"));
 
-    // select the folder
+    // Select the properties file
     await input.findElement(By.linkText(propertiesFileName)).click();
 
     await wait();
@@ -58,11 +65,11 @@ suite("Add existing liquibase.properties to the configuration", function () {
     const settingsFile = path.join(process.cwd(), "out", "temp", "workspace", "data", "liquibase", "settings.json");
     assert.ok(fs.existsSync(settingsFile));
 
-    // get the content of the setting file
+    // Get the content of the settings file
     const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
     const dataForName = data[configName];
 
-    // and check that there is the config inside
+    // Check that the config is inside the settings file
     assert.ok(dataForName);
     assert.strictEqual(
       dataForName.toLowerCase(),
@@ -70,6 +77,9 @@ suite("Add existing liquibase.properties to the configuration", function () {
     );
   });
 
+  /**
+   * Tear down the test suite.
+   */
   suiteTeardown(async function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
