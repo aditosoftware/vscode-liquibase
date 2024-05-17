@@ -2,7 +2,7 @@ import path from "path";
 import assert from "assert";
 import fs from "fs";
 import { InputBox } from "vscode-extension-tester";
-import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
+import { CommandUtils, openAndSelectRMBItemFromChangelog, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { randomUUID } from "crypto";
@@ -35,7 +35,7 @@ suite("Right Click Menu", function () {
 
     await CommandUtils.resetDB(CommandUtils.pool);
 
-    await openAndSelectRMBItem("Generate database documentation (db-doc)");
+    await openAndSelectRMBItemFromChangelog("Generate database documentation (db-doc)");
     await wait();
 
     const input = await InputBox.create();

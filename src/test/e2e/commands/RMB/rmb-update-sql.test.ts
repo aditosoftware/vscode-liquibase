@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { CommandUtils, wait, openAndSelectRMBItem } from "../../CommandUtils";
+import { CommandUtils, wait, openAndSelectRMBItemFromChangelog } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
@@ -48,7 +48,7 @@ suite("Right Click Menu", function () {
 
     await wait();
 
-    await openAndSelectRMBItem("Generate SQL File for incoming changes");
+    await openAndSelectRMBItemFromChangelog("Generate SQL File for incoming changes");
     await wait();
 
     await input.setText(configurationName);

@@ -18,21 +18,7 @@ export class WebviewTestUtils {
     // command for opening the webview
     await new Workbench().executeCommand("liquibase.createLiquibaseConfiguration");
 
-    const editor = new EditorView();
-
-    const maxTries = 10;
-    // wait a bit to have the webview there
-    for (let i = 1; i <= maxTries; i++) {
-      try {
-        await editor.getTabByTitle("Liquibase Configuration");
-        break;
-      } catch (e) {
-        if (i === maxTries) {
-          throw e;
-        }
-      }
-      await wait(1000);
-    }
+    assert.ok(await this.checkForOpenedWebview());
 
     // clear all notifications after the webview was loaded
     await LiquibaseGUITestUtils.clearNotifications();
@@ -45,6 +31,27 @@ export class WebviewTestUtils {
     await webView.switchToFrame();
 
     return webView;
+  }
+
+  /**
+   * Check if the webview is opened
+   */
+  static async checkForOpenedWebview(): Promise<boolean | undefined> {
+    const editor = new EditorView();
+
+    const maxTries = 10;
+    // wait a bit to have the webview there
+    for (let i = 1; i <= maxTries; i++) {
+      try {
+        await editor.getTabByTitle("Liquibase Configuration");
+        return true;
+      } catch (e) {
+        if (i === maxTries) {
+          throw e;
+        }
+      }
+      await wait(1000);
+    }
   }
 
   /**

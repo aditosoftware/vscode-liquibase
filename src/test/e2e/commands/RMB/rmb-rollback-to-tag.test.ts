@@ -1,4 +1,4 @@
-import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
+import { CommandUtils, openAndSelectRMBItemFromChangelog, wait } from "../../CommandUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import path from "path";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
@@ -77,7 +77,7 @@ suite("Right Click Menu", function () {
 
     await wait();
 
-    await openAndSelectRMBItem("Rollback to Tag");
+    await openAndSelectRMBItemFromChangelog("Rollback to Tag");
     await wait();
 
     await input.setText(configurationName);

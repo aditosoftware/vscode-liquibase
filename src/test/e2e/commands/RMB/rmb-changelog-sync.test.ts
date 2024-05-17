@@ -1,5 +1,5 @@
 import assert from "assert";
-import { CommandUtils, wait, openAndSelectRMBItem } from "../../CommandUtils";
+import { CommandUtils, wait, openAndSelectRMBItemFromChangelog } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { InputBox } from "vscode-extension-tester";
@@ -29,7 +29,7 @@ suite("Right Click Menu", function () {
     await CommandUtils.resetDB(CommandUtils.pool);
 
     await wait();
-    await openAndSelectRMBItem("Changelog Sync");
+    await openAndSelectRMBItemFromChangelog("Changelog Sync");
     await wait();
 
     const input = await InputBox.create(50000);

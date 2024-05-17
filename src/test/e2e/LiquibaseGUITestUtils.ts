@@ -65,7 +65,9 @@ export class LiquibaseGUITestUtils {
    * @returns the input box for the commands
    */
   static async startCommandExecution(pCommand: string): Promise<InputBox> {
-    await CommandUtils.outputPanel.clearText();
+    if (CommandUtils.outputPanel && (await CommandUtils.outputPanel.isDisplayed())) {
+      await CommandUtils.outputPanel.clearText();
+    }
     const center = await LiquibaseGUITestUtils.clearNotifications();
 
     // we need an input box to open
@@ -79,14 +81,14 @@ export class LiquibaseGUITestUtils {
 
     // execute our command
     await prompt.setText(">Liquibase: " + pCommand);
-    await new Promise((r) => setTimeout(r, 2_000));
+    await wait(2_000);
     await prompt.confirm();
 
     // then wait until the Activating Extensions from the status bar disappears
     for (let i = 0; i < 10; i++) {
       const activateProgress = await new StatusBar().getItem("Activating Extensions...");
       if (activateProgress) {
-        await new Promise((r) => setTimeout(r, 1_000));
+        await wait(1_000);
       } else {
         break;
       }

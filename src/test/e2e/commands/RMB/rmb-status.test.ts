@@ -1,7 +1,7 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
-import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
+import { CommandUtils, openAndSelectRMBItemFromChangelog, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 
 /**
@@ -28,7 +28,7 @@ suite("Right Click Menu", function () {
     this.timeout(50_000);
     await CommandUtils.resetDB(CommandUtils.pool);
 
-    await openAndSelectRMBItem("Status");
+    await openAndSelectRMBItemFromChangelog("Status");
 
     const input = await InputBox.create(50000);
 

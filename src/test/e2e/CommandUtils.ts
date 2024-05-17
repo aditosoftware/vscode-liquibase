@@ -4,7 +4,11 @@ import mariadb from "mariadb";
 import path from "path";
 import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
 
+/**
+ * Utils for executing commands during the test.
+ */
 export class CommandUtils {
+  // TODO duplicate values from existing variables!!
   static readonly noContext = "Do not use any contexts";
   static readonly loadAllContext: string = "Load all contexts from the changelog file";
   static readonly recentContext: string = "Use any of the recently loaded contexts";
@@ -72,6 +76,11 @@ export class CommandUtils {
     await input.confirm();
   }
 
+  /**
+   * Creates a pool for the database.
+   * @param database - the name of the database
+   * @returns the created pool
+   */
   static createPool(database?: string): mariadb.Pool {
     return mariadb.createPool({
       host: "localhost",
@@ -85,7 +94,7 @@ export class CommandUtils {
 
   /**
    * Cartesian Product thingy
-   *
+   * TODO tsdoc
    */
   static matrixExecution(
     options: string[],
@@ -123,8 +132,8 @@ export class CommandUtils {
   }
 
   /**
-   *
-   *
+   * Resets the database by dropping and creating the schema.
+   * @param pool - the pool for the mariaDB database
    */
   static async resetDB(pool: mariadb.Pool): Promise<void> {
     await DockerTestUtils.executeMariaDBSQL(pool, "DROP SCHEMA data");
@@ -134,18 +143,35 @@ export class CommandUtils {
 
 /**
  * just wait, pls
+ * @param timeout - the number of milliseconds that should be waited.
  */
 export async function wait(timeout: number = 2000): Promise<void> {
   await new Promise((r) => setTimeout(r, timeout));
 }
 
-export async function openAndSelectRMBItem(action: string): Promise<void> {
+/**
+ * Opens the Liquibase context menu and selects the given action.
+ *
+ * This method will open an changelog before executing the action.
+ *
+ * @param action - the action that should be called
+ */
+export async function openAndSelectRMBItemFromChangelog(action: string): Promise<void> {
   await VSBrowser.instance.openResources(
     path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml")
   );
 
   await wait();
 
+  await openAndSelectRMBItemFromAlreadyOpenedFile(action);
+}
+
+/**
+ * Opens the Liquibase context menu and selects the given action.
+ *
+ * @param action - the action that should be called
+ */
+export async function openAndSelectRMBItemFromAlreadyOpenedFile(action: string): Promise<void> {
   const editor = new TextEditor();
   const menu = await editor.openContextMenu();
   const liquibaseMenu = await menu.select("Liquibase");
