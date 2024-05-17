@@ -4,6 +4,7 @@ import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { randomUUID } from "crypto";
 
 /**
  * This suite of tests is designed to validate the functionality of the 'db-doc' command.
@@ -30,6 +31,9 @@ suite("db-doc", function () {
     // Extend the timeout to accommodate potentially long-running Liquibase operations.
     this.timeout(80_000);
 
+    const dbDocFolder = path.join(process.cwd(), "out", "temp", "workspace", "output", randomUUID());
+    fs.mkdirSync(dbDocFolder);
+
     // Reset the temporary database to ensure a clean state.
     await CommandUtils.resetDB(CommandUtils.pool);
 
@@ -44,8 +48,7 @@ suite("db-doc", function () {
     await input.selectQuickPick(1);
 
     // Set the output directory for the generated documentation.
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "db-doc"));
-    // TODO create temp folder for output?
+    await CommandUtils.selectFolder(input, dbDocFolder);
 
     // Assert that the 'db-doc' command was executed successfully.
     assert.ok(
@@ -53,7 +56,7 @@ suite("db-doc", function () {
     );
 
     // Assert that a file of the generated documentation exists.
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "db-doc", "index.html")));
+    assert.ok(fs.existsSync(path.join(dbDocFolder, "index.html")));
   });
 
   /**

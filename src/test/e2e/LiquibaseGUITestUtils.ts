@@ -6,7 +6,7 @@ import { WebviewTestUtils } from "./webview/WebviewTestUtils";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
 
 /**
- *
+ * General Util methods for e2e / GUI tests with Liquibase.
  */
 export class LiquibaseGUITestUtils {
   /**
@@ -43,8 +43,8 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
-   *
-   * @returns
+   * Gets all messages from the notifications.
+   * @returns all messages
    */
   static async getResultingNotifications(): Promise<string[]> {
     // get all notifications
@@ -60,9 +60,9 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
-   *
-   * @param pCommand
-   * @returns
+   * Starts the execution of an command
+   * @param pCommand - the command that should be executed
+   * @returns the input box for the commands
    */
   static async startCommandExecution(pCommand: string): Promise<InputBox> {
     await CommandUtils.outputPanel.clearText();

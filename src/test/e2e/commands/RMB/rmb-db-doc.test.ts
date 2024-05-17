@@ -5,6 +5,7 @@ import { InputBox } from "vscode-extension-tester";
 import { CommandUtils, openAndSelectRMBItem, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
+import { randomUUID } from "crypto";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -28,8 +29,9 @@ suite("Right Click Menu", function () {
    */
   test("should execute 'db-doc' command", async function () {
     this.timeout(50_000);
-    // TODO: tempdir erzeugen, in den die db-doc landen darf?
-    const directoryForDbDoc = path.join(process.cwd(), "out", "temp", "workspace", "db-doc");
+
+    const directoryForDbDoc = path.join(process.cwd(), "out", "temp", "workspace", "output", randomUUID());
+    fs.mkdirSync(directoryForDbDoc);
 
     await CommandUtils.resetDB(CommandUtils.pool);
 
