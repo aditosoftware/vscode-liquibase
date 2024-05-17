@@ -144,9 +144,12 @@ export class CacheRemover {
    * @returns the `QuickPickItems` for the liquibase.properties selection
    */
   private generatePropertiesForCacheRemoving(cache: Cache): vscode.QuickPickItem[] {
-    readConfiguration().then((result) => {
-      this.configuration = result ?? {};
-    });
+    readConfiguration().then(
+      (result) => {
+        this.configuration = result ?? {};
+      },
+      (rejects) => Logger.getLogger().debug({ message: `configuration dialog was rejected ${rejects}` })
+    );
 
     const cacheKeys: string[] = Object.keys(cache);
 

@@ -38,7 +38,7 @@ suite("Extension Test Suite", () => {
     this.timeout(60_000);
 
     // start a maria db container and wait for its status
-    DockerTestUtils.startContainer();
+    await DockerTestUtils.startContainer();
     await DockerTestUtils.checkContainerStatus();
 
     fs.mkdirSync(outputFolder);
@@ -57,10 +57,7 @@ suite("Extension Test Suite", () => {
     const properties = new PropertiesEditor("# written by the tests");
     properties.insert("username", DockerTestUtils.username);
     properties.insert("password", DockerTestUtils.password);
-    properties.insert(
-      "url",
-      `jdbc:mariadb://localhost:3310/${DockerTestUtils.dbName}`
-    );
+    properties.insert("url", `jdbc:mariadb://localhost:3310/${DockerTestUtils.dbName}`);
     properties.insert(
       "classpath",
       [path.join(TestUtils.resourcePath, "mariadb-java-client-2.5.3.jar"), path.join(workspacePath, "liquibase")].join(

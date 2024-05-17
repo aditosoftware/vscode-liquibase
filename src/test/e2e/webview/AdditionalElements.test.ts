@@ -72,10 +72,10 @@ suite("AdditionalElements", () => {
  */
 async function addAdditionalElement(webView: WebView): Promise<void> {
   const keyInput = await webView.findWebElement(By.id("keyInput"));
-  await keyInput.sendKeys("lorem");
+  await keyInput.sendKeys("lorem", Key.TAB);
 
   const valueInput = await webView.findWebElement(By.id("valueInput"));
-  await valueInput.sendKeys("ipsum");
+  await valueInput.sendKeys("ipsum", Key.TAB);
 
   const addButton = await webView.findWebElement(By.id("addButton"));
   await addButton.click();

@@ -86,7 +86,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   initializeLogger(Logger.getLogger());
 
   // Perform any necessary prerequisites setup before executing the extension logic
-  prerequisites(context, resourcePath).then(() => {
+  void prerequisites(context, resourcePath).then(() => {
     // add a dummy command for loading all resources
     context.subscriptions.push(
       vscode.commands.registerCommand("liquibase.initialize", () => {
@@ -102,11 +102,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 
     // Register all commands that are used for showing/deleting the cache
     context.subscriptions.push(
-      vscode.commands.registerCommand("liquibase.openCacheFile", () => {
-        openDocument(cacheLocation);
+      vscode.commands.registerCommand("liquibase.openCacheFile", async () => {
+        await openDocument(cacheLocation);
       }),
       vscode.commands.registerCommand("liquibase.removeFromCache", async () => {
-        new CacheRemover(cacheHandler).removeFromCache();
+        await new CacheRemover(cacheHandler).removeFromCache();
       })
     );
 

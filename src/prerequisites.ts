@@ -38,10 +38,10 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
     // Perform one-time setup tasks (e.g., download files)
     Logger.getLogger().info({ message: "Liquibase was executed for the first time" });
     // TODO fehlendes await ok?
-    downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
+    void downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
 
     // Mark first activation as completed
-    context.globalState.update("liquibase-first-activation", true);
+    void context.globalState.update("liquibase-first-activation", true);
   }
 
   // Check beforehand if action is ready to be used
@@ -73,7 +73,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
       notifyUser: true,
     });
     // TODO fehledes await / return ok?
-    downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
+    void downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
       Logger.getLogger().info({
         message: `Successfully downloaded all the missing files to ${resourcePath}`,
         notifyUser: true,
@@ -90,7 +90,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
 async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: string[]): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     try {
-      Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))));
+      void Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))));
       // TODO resolve ohne das innere Promise abzuwarten ok?
       resolve();
     } catch (error) {

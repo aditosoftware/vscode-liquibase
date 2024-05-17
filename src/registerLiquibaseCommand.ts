@@ -168,9 +168,9 @@ export function registerLiquibaseCommand(
 
       if (propertyFilePath) {
         // Execute Liquibase update with the final selections
-        executeJar(resourcePath, action, propertyFilePath, args).then((code) => {
+        void executeJar(resourcePath, action, propertyFilePath, args).then((code) => {
           if (code === 0) {
-            vscode.window
+            void vscode.window
               .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
               .then((result) => {
                 if (result && result === "Show log") {

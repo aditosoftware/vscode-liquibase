@@ -97,13 +97,14 @@ export class LiquibaseConfigurationPanel {
    * @param data - the data of the message
    */
   static transferMessage(pMessageType: MessageType, data: LiquibaseConfigurationData): void {
-    LiquibaseConfigurationPanel.currentPanel?._panel.webview
-      .postMessage(new MessageData(pMessageType, data))
-      .then((success) => {
+    LiquibaseConfigurationPanel.currentPanel?._panel.webview.postMessage(new MessageData(pMessageType, data)).then(
+      (success) => {
         if (!success) {
           Logger.getLogger().error({ message: "error transferring the message to the webview" });
         }
-      });
+      },
+      (reject) => Logger.getLogger().debug({ message: `transfer message was rejected ${reject}` })
+    );
   }
 
   /**
@@ -191,13 +192,19 @@ export class LiquibaseConfigurationPanel {
         if (data instanceof LiquibaseConfigurationData) {
           switch (messageType) {
             case MessageType.SAVE_CONNECTION:
-              createLiquibaseProperties(data);
+              createLiquibaseProperties(data).catch((error) =>
+                Logger.getLogger().error({ message: "Error saving the connection", error })
+              );
               break;
             case MessageType.TEST_CONNECTION:
-              testLiquibaseConnection(data);
+              testLiquibaseConnection(data).catch((error) =>
+                Logger.getLogger().error({ message: "Error testing the connection", error })
+              );
               break;
             case MessageType.CHOOSE_CHANGELOG:
-              chooseFileForChangelog(data);
+              chooseFileForChangelog(data).catch((error) =>
+                Logger.getLogger().error({ message: "Error choosing a changelog", error })
+              );
               break;
             default:
               throw new Error(`Handling for command ${messageType} not found.`);
