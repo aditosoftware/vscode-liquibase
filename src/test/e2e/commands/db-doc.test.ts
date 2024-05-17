@@ -44,7 +44,7 @@ suite("db-doc", function () {
     await input.selectQuickPick(1);
 
     // Set the output directory for the generated documentation.
-    CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "db-doc"));
+    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "db-doc"));
     // TODO create temp folder for output?
 
     // Assert that the 'db-doc' command was executed successfully.

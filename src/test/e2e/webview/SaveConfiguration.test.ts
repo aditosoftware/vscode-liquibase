@@ -11,6 +11,13 @@ import path from "path";
  */
 suite("save configuration", () => {
   /**
+   * Opens the workspace before all tests.
+   */
+  suiteSetup("open workspace", async () => {
+    await CommandUtils.openWorkspace();
+  });
+
+  /**
    * Tests that an error was given, when no name was written.
    */
   test("should give error when no name was given", async function () {
@@ -29,9 +36,7 @@ suite("save configuration", () => {
   test("should save correctly when a name was given", async function () {
     const name = randomUUID();
 
-    await CommandUtils.openWorkspace();
-
-    saveSimpleConnection(name);
+    await saveSimpleConnection(name);
 
     assert.ok(await LiquibaseGUITestUtils.notificationExists(`Configuration for ${name} was successfully saved.`));
 
@@ -49,8 +54,6 @@ suite("save configuration", () => {
    */
   test("should overwrite existing configuration", async function () {
     const name = randomUUID();
-
-    await CommandUtils.openWorkspace();
 
     // first, save successfully a simple connection
     await saveSimpleConnection(name);
@@ -85,8 +88,6 @@ suite("save configuration", () => {
    */
   test("should cancel overwriting of existing configuration", async function () {
     const name = randomUUID();
-
-    await CommandUtils.openWorkspace();
 
     // first, save successfully a simple connection
     await saveSimpleConnection(name);

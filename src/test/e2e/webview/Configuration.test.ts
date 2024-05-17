@@ -33,7 +33,7 @@ suite("Configuration of the Webview", () => {
     await WebviewTestUtils.addConfigurationDataToWebview({
       name,
       port: 3310,
-      buttonToClick: "saveButton",
+      buttonToClick: "testButton",
       databaseType: "MariaDB",
       databaseName: DockerTestUtils.dbName,
       addChangelog: true,

@@ -35,7 +35,7 @@ suite("Drop-all", function () {
     await input.confirm();
 
     const modalDialog = new ModalDialog();
-    modalDialog.pushButton("Drop-all");
+    await modalDialog.pushButton("Drop-all");
 
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully.")
@@ -56,7 +56,7 @@ suite("Drop-all", function () {
     await input.confirm();
 
     const modelDialog = new ModalDialog();
-    modelDialog.pushButton("Cancel");
+    await modelDialog.pushButton("Cancel");
 
     assert.ok(
       !(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully."))

@@ -58,6 +58,7 @@ export class WebviewTestUtils {
    * @param toExecute - the tests that should be executed on the webview
    */
   static async openAndExecuteOnWebview(toExecute: (webView: WebView) => Promise<void>): Promise<void> {
+    await LiquibaseGUITestUtils.clearNotifications();
     await new EditorView().closeAllEditors();
 
     const webView = await this.openWebview();
