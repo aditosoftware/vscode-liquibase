@@ -45,19 +45,21 @@ suite("editExistingLiquibaseConfiguration", () => {
     await prompt.confirm();
     await openAndSelectRMBItemFromAlreadyOpenedFile("Edit existing Liquibase Configuration");
 
-    await shouldEditExistingConfiguration(propertiesFile);
+    await shouldEditExistingConfiguration();
   });
 
   /**
    * Tests that the configuration can be edited by using the command.
    */
   test("should be able to edit existing configuration via command", async () => {
+    await new EditorView().closeAllEditors();
+
     const input = await LiquibaseGUITestUtils.startCommandExecution("Edit existing Liquibase Configuration");
 
     await input.setText(configurationName);
     await input.confirm();
 
-    await shouldEditExistingConfiguration(propertiesFile);
+    await shouldEditExistingConfiguration();
   });
 });
 
@@ -66,16 +68,12 @@ suite("editExistingLiquibaseConfiguration", () => {
  * The command for editing need to be called before calling this method.
  *
  * This method will check that the webview was opened and changes one value and checks that the changed value can be saved correctly.
- *
- * @param propertiesFile - the name of the properties file that was edited.
  */
-async function shouldEditExistingConfiguration(propertiesFile: string): Promise<void> {
+async function shouldEditExistingConfiguration(): Promise<void> {
   assert.ok(await WebviewTestUtils.checkForOpenedWebview());
 
   // init the WebView page object
   const webView = new WebView();
-
-  await new EditorView().closeEditor(propertiesFile);
 
   await webView.switchToFrame();
 
