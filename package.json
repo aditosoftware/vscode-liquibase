@@ -155,6 +155,11 @@
             "no pre-configured driver"
           ],
           "default": "NO_PRE_CONFIGURED_DRIVER"
+        },
+        "liquibase.clearOutputChannelOnStart": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Clears the output channel on start of the extension."
         }
       }
     },

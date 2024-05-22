@@ -6,6 +6,7 @@ import { buildClasspath, gson, liquibaseCore, picocli, snakeYaml } from "./prere
 import * as fs from "fs";
 import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
+import { getClearOutputChannelOnStartSetting } from "./handleLiquibaseSettings";
 
 class CustomError extends Error {
   stdout?: string;
@@ -55,6 +56,10 @@ export function executeJar(
         ];
 
         const childProcess = spawn(javaExecutable, argsArray);
+
+        if (getClearOutputChannelOnStartSetting()) {
+          Logger.clear();
+        }
 
         Logger.getLogger().info({ message: `Liquibase command '${operation}' will be executed` });
         Logger.getLogger().info({ message: `${javaExecutable} ${argsArray.join(" ")}` });
