@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Loading dialog for any long loading processes
 - Indicator in the context dialog where the context was loaded from
 - Reload option for all loading dialogs
+- Setting to clear the output "clearOutputChannelOnStart" was added
 
 ### Changed
 
@@ -25,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 
 - Fixed a typo in the settings
 - Removed a false second changelog selection at the generate changelog command
+- Parameters for changelogPath and searchPath were alternated to be based off of the opened workspace
 
 ## 0.0.4
 

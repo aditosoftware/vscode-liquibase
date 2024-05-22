@@ -161,9 +161,9 @@ export function registerLiquibaseCommand(
 
       if (dialogValues.uri) {
         // if this was called from an right click menu, then handle some parameters differently
-        args.push("--changelogFile=" + path.basename(dialogValues.uri.fsPath));
+        args.push("--changelogFile=" + path.relative(getWorkFolder(), dialogValues.uri.fsPath));
 
-        args.push("-Dliquibase.searchPath=" + path.join(dialogValues.uri.fsPath, ".."));
+        args.push("-Dliquibase.searchPath=" + getWorkFolder());
       }
 
       if (propertyFilePath) {
