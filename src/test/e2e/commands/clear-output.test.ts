@@ -5,7 +5,7 @@ import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
- * Test suite for the 'drop-all' command.
+ * Test suite for the 'clear' functionality and setting.
  */
 suite("Clear Output Channel On Start", function () {
   /**
