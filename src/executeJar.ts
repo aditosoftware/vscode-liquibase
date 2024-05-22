@@ -56,7 +56,8 @@ export function executeJar(
         ];
 
         const childProcess = spawn(javaExecutable, argsArray);
-
+        const startTime = new Date().getTime();
+        
         if (getClearOutputChannelOnStartSetting()) {
           Logger.getLogger().clear();
         }
@@ -92,6 +93,15 @@ export function executeJar(
         childProcess.on("error", (error) => {
           Logger.getLogger().error({ message: "Child process encountered an error", error });
           reject(error);
+        });
+
+        childProcess.on("exit", () => {
+            const duration = new Date().getTime() - startTime;
+            const minutes = Math.floor(duration / 60000);
+            const seconds = Math.floor((duration % 60000) / 1000);
+            const milliseconds = duration % 1000;
+            const formattedDuration = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(3, '0')}`;
+            Logger.getLogger().info({ message: `Liquibase command '${operation}' finished in ${formattedDuration} min` });
         });
       });
     }

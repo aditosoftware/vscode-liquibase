@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Indicator in the context dialog where the context was loaded from
 - Reload option for all loading dialogs
 - Setting to clear the output "clearOutputChannelOnStart" was added
+- Added execution time for commands
 
 ### Changed
 
