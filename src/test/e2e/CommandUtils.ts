@@ -1,8 +1,18 @@
-import { BottomBarPanel, EditorView, InputBox, OutputView, TextEditor, VSBrowser } from "vscode-extension-tester";
+import {
+  BottomBarPanel,
+  EditorView,
+  InputBox,
+  ModalDialog,
+  OutputView,
+  TextEditor,
+  VSBrowser,
+} from "vscode-extension-tester";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
 import mariadb from "mariadb";
 import path from "path";
 import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
+import { RemoveCacheOptions } from "../../constants";
+import assert from "assert";
 
 /**
  * Utils for executing commands during the test.
@@ -176,4 +186,48 @@ export async function openAndSelectRMBItemFromAlreadyOpenedFile(action: string):
   const menu = await editor.openContextMenu();
   const liquibaseMenu = await menu.select("Liquibase");
   await liquibaseMenu?.select(action);
+}
+
+/**
+ * Removes the whole cache.
+ */
+export async function removeWholeCache(): Promise<void> {
+  const input = await LiquibaseGUITestUtils.startCommandExecution(
+    "Cache: Removes any values from the recently loaded elements"
+  );
+
+  await input.setText(RemoveCacheOptions.WHOLE_CACHE);
+  await input.confirm();
+
+  const modalDialog = new ModalDialog();
+  await modalDialog.pushButton("Delete");
+}
+
+/**
+ * Creates some data for the cache via the update command.
+ *
+ * TODO allgemeiner auslagern?
+ *
+ * @param configurationName - the name of the current configuration
+ */
+export async function createDataViaUpdate(configurationName: string): Promise<void> {
+  const input = await LiquibaseGUITestUtils.startCommandExecution("update");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+  await input.selectQuickPick(1);
+
+  await input.setText(CommandUtils.loadAllContext);
+  await input.confirm();
+
+  await wait();
+
+  await input.toggleAllQuickPicks(true);
+  await input.confirm();
+
+  assert.ok(
+    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully")
+  );
 }

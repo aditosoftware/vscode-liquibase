@@ -32,11 +32,16 @@ export class LiquibaseGUITestUtils {
    * @param text - the text that should be contained in the message
    * @returns the notification, if one was there with the text, or `undefined`, if no message was found
    */
-  static async notificationExists(text: string): Promise<Notification | undefined> {
+  static async notificationExists(text: string | RegExp): Promise<Notification | undefined> {
     const notifications = await new Workbench().getNotifications();
     for (const notification of notifications) {
       const message = await notification.getMessage();
-      if (message.includes(text)) {
+      console.log(message);
+      if (typeof text === "string") {
+        if (message.includes(text)) {
+          return notification;
+        }
+      } else if (message.match(text)) {
         return notification;
       }
     }
@@ -53,8 +58,6 @@ export class LiquibaseGUITestUtils {
     for (const notification of center) {
       messages.push(await notification.getMessage());
     }
-
-    await new Workbench().clear();
 
     return messages;
   }

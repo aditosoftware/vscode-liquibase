@@ -1,0 +1,86 @@
+import assert from "assert";
+import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { CommandUtils, createDataViaUpdate, removeWholeCache } from "../CommandUtils";
+import { RemoveCacheOptions } from "../../../constants";
+import { ModalDialog } from "vscode-extension-tester";
+
+/**
+ * Tests the removing of the cache values.
+ */
+suite("Removes any values from the recently loaded elements", () => {
+  /**
+   * The name of the configuration that was created during the setup.
+   */
+  let configurationName: string;
+
+  /**
+   * Set up the test suite.
+   */
+  suiteSetup(async function () {
+    this.timeout(50_000);
+    configurationName = await CommandUtils.setupTests();
+  });
+
+  /**
+   * Teardown function that runs after all tests in the suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+  });
+
+  /**
+   * Tests that there are no elements to remove when there are no cached values.
+   */
+  test("should not remove anything when no elements are there", async () => {
+    // first, remove the whole cache
+    await createDataViaUpdate(configurationName);
+    await removeWholeCache();
+
+    // then try to execute the command a second time
+    await LiquibaseGUITestUtils.startCommandExecution("Cache: Removes any values from the recently loaded elements");
+
+    assert.ok(await LiquibaseGUITestUtils.notificationExists("There are no elements stored to remove"));
+  });
+
+  /**
+   * Tests that the whole cache can be removed successfully.
+   */
+  test("should remove recently loaded values", async () => {
+    await createDataViaUpdate(configurationName);
+    await removeWholeCache();
+
+    assert.ok(await LiquibaseGUITestUtils.notificationExists("Successfully removed all recently loaded elements."));
+  });
+
+  /**
+   * Tests that the selected connections can be removed successfully.
+   */
+  test("should remove connections", async () => {
+    await createDataViaUpdate(configurationName);
+
+    const input = await LiquibaseGUITestUtils.startCommandExecution(
+      "Cache: Removes any values from the recently loaded elements"
+    );
+
+    await input.setText(RemoveCacheOptions.REMOVE_CONNECTION);
+    await input.confirm();
+
+    // select all connections
+    await input.toggleAllQuickPicks(true);
+    await input.confirm();
+
+    const modalDialog = new ModalDialog();
+    await modalDialog.pushButton("Delete");
+
+    // find a notification for successful removing an element
+    const notification = await LiquibaseGUITestUtils.notificationExists(
+      /Successfully removed .* from the recently loaded elements./
+    );
+    assert.ok(notification, "notification does exist");
+    assert.ok(
+      (await notification.getText()).includes(configurationName),
+      "notification has the name of the configuration inside its text"
+    );
+  });
+});
