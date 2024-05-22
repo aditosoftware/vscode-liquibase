@@ -69,7 +69,7 @@ export class LiquibaseGUITestUtils {
    */
   static async startCommandExecution(pCommand: string): Promise<InputBox> {
     if (CommandUtils.outputPanel && (await CommandUtils.outputPanel.isDisplayed())) {
-      await CommandUtils.outputPanel.clearText();
+      await CommandUtils.outputPanel.clearText(); //TODO maybe not needed anymore with the new clear output channel setting
     }
     const center = await LiquibaseGUITestUtils.clearNotifications();
 
@@ -122,7 +122,7 @@ export class LiquibaseGUITestUtils {
    * @param settingId - the id of the setting
    * @param value - the value that should be set for the setting
    */
-  static async setSetting(settingId: string, value: string): Promise<void> {
+  static async setSetting(settingId: string, value: string | boolean): Promise<void> {
     const settingsEditor = await new Workbench().openSettings();
 
     // wait a bit for the settings to initialize

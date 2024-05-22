@@ -58,7 +58,7 @@ export function executeJar(
         const childProcess = spawn(javaExecutable, argsArray);
 
         if (getClearOutputChannelOnStartSetting()) {
-          Logger.clear();
+          Logger.getLogger().clear();
         }
 
         Logger.getLogger().info({ message: `Liquibase command '${operation}' will be executed` });
