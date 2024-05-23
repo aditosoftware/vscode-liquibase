@@ -1,13 +1,18 @@
-import { CommandUtils, openAndSelectRMBItemFromChangelog, wait } from "../../CommandUtils";
+import {
+  CommandUtils,
+  openAndSelectRMBItemFromChangelog,
+  openAndSelectRMBItemFromChangelogFromExplorer,
+  wait,
+} from "../../CommandUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
-import path from "path";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import assert from "assert";
+import { randomUUID } from "crypto";
 
 /**
  * Test suite for the "Rollback to Tag" command in the Right Click Menu.
  */
-suite("Right Click Menu", function () {
+suite("rollback-to-tag: Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
@@ -22,95 +27,19 @@ suite("Right Click Menu", function () {
   });
 
   /**
-   * Test case for executing the "rollback-to-tag" command.
+   * Test case for executing the "rollback-to-tag" command from RMB in file.
    */
-  test("should execute 'rollback-to-tag' command", async function () {
+  test("should execute 'rollback-to-tag' command from RMB in file", async function () {
     this.timeout(80_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Rollback to Tag"));
+  });
 
-    const tagName = "test";
-
-    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-    await input.selectQuickPick(1);
-
-    await input.setText(CommandUtils.loadAllContext);
-    await input.confirm();
-
-    await wait();
-
-    await input.setText("foo");
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await wait();
-
-    // Set tag
-    await LiquibaseGUITestUtils.startCommandExecution("create tag");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(tagName);
-    await input.confirm();
-
-    // Update all datasets
-    await LiquibaseGUITestUtils.startCommandExecution("update");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-    await input.selectQuickPick(1);
-
-    await input.setText(CommandUtils.recentContext);
-    await input.confirm();
-
-    await wait();
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await wait();
-
-    await openAndSelectRMBItemFromChangelog("Rollback to Tag");
-    await wait();
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.loadAllContext);
-    await input.confirm();
-
-    await wait();
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await wait();
-
-    await input.setText(tagName);
-    await input.confirm();
-
-    await wait();
-
-    // Check if the message is popping up
-    assert.ok(
-      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
-    );
-    assert.ok(
-      (
-        await DockerTestUtils.executeMariaDBSQL(
-          CommandUtils.pool,
-          "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"
-        )
-      )?.length === 0,
-      "Rollback did not remove values from DB"
-    );
+  /**
+   * Test case for executing the "rollback-to-tag" command from RMB in file explorer.
+   */
+  test("should execute 'rollback-to-tag' command from RMB in file explorer", async function () {
+    this.timeout(80_000);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelogFromExplorer("Rollback to Tag"));
   });
 
   /**
@@ -120,3 +49,96 @@ suite("Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
+
+/**
+ * Executes the command.
+ * @param configurationName - the name of the configuration
+ * @param contextMenuFunction - the function to call the context menu
+ */
+async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
+  await CommandUtils.resetDB(CommandUtils.pool);
+
+  const tagName = randomUUID();
+
+  const input = await LiquibaseGUITestUtils.startCommandExecution("update");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(CommandUtils.CHANGELOG_FILE);
+  await input.selectQuickPick(1);
+
+  await input.setText(CommandUtils.loadAllContext);
+  await input.confirm();
+
+  await wait();
+
+  await input.setText("foo");
+  await input.toggleAllQuickPicks(true);
+  await input.confirm();
+
+  await wait();
+
+  // Set tag
+  await LiquibaseGUITestUtils.startCommandExecution("create tag");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(tagName);
+  await input.confirm();
+
+  // Update all datasets
+  await LiquibaseGUITestUtils.startCommandExecution("update");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(CommandUtils.CHANGELOG_FILE);
+  await input.selectQuickPick(1);
+
+  await input.setText(CommandUtils.recentContext);
+  await input.confirm();
+
+  await wait();
+
+  await input.toggleAllQuickPicks(true);
+  await input.confirm();
+
+  await wait();
+
+  await contextMenuFunction();
+  await wait();
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(CommandUtils.loadAllContext);
+  await input.confirm();
+
+  await wait();
+
+  await input.toggleAllQuickPicks(true);
+  await input.confirm();
+
+  await wait();
+
+  await input.setText(tagName);
+  await input.confirm();
+
+  await wait();
+
+  // Check if the message is popping up
+  assert.ok(
+    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
+  );
+  assert.ok(
+    (
+      await DockerTestUtils.executeMariaDBSQL(
+        CommandUtils.pool,
+        "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"
+      )
+    )?.length === 0,
+    "Rollback did not remove values from DB"
+  );
+}

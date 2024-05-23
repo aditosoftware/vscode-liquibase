@@ -24,7 +24,9 @@
         "setup-and-run",
         "${workspaceFolder}/out/test/e2e/**/*.test.js",
         "--mocha_config",
-        "${workspaceFolder}/src/test/e2e/.mocharc-debug.json"
+        "${workspaceFolder}/src/test/e2e/.mocharc-debug.json",
+        "--code_settings",
+        "${workspaceFolder}/src/test/e2e/settings.json"
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"

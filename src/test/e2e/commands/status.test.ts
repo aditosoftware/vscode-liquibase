@@ -33,7 +33,7 @@ suite("Status", function () {
       await input.setText(configurationName);
       await input.confirm();
 
-      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+      await input.setText(CommandUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
       if (option === CommandUtils.noContext) {

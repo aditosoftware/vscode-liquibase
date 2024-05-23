@@ -41,7 +41,7 @@ suite("diff", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(CommandUtils.loadAllContext);
@@ -60,7 +60,7 @@ suite("diff", function () {
     await input.setText(secondConfiguration);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
 
     //name of file, leave to default
     await input.confirm();
@@ -71,7 +71,7 @@ suite("diff", function () {
     await wait();
     await wait();
 
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "diff.txt")));
+    assert.ok(fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "diff.txt")));
   });
 
   /**
@@ -95,7 +95,7 @@ suite("diff", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(CommandUtils.loadAllContext);
@@ -114,7 +114,7 @@ suite("diff", function () {
     await input.setText(secondConfiguration);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
 
     await wait();
 
@@ -130,7 +130,7 @@ suite("diff", function () {
     await wait();
     await wait();
 
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "diff2.txt")));
+    assert.ok(fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "diff2.txt")));
   });
 
   /**

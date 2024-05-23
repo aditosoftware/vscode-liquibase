@@ -71,10 +71,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
 
       // check settings file
       const settings = JSON.parse(
-        fs.readFileSync(
-          path.join(process.cwd(), "out", "temp", "workspace", "data", "liquibase", "settings.json"),
-          "utf-8"
-        )
+        fs.readFileSync(path.join(CommandUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json"), "utf-8")
       );
       assert.strictEqual(
         Object.keys(settings).includes(configurationName),

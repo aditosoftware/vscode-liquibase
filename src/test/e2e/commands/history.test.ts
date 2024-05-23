@@ -33,7 +33,7 @@ suite("History", async function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
+    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
 
     await input.setText("Test2.txt");
     await input.confirm();
@@ -43,8 +43,10 @@ suite("History", async function () {
 
     await wait();
 
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "Test2.txt")));
+    assert.ok(fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "Test2.txt")));
   });
+
+  // todo beide methoden zusammenlegen?
 
   /**
    * Test the 'history' command with TEXT output format.
@@ -58,7 +60,7 @@ suite("History", async function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
+    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
 
     await input.setText("Test.txt");
     await input.confirm();
@@ -68,7 +70,7 @@ suite("History", async function () {
 
     await wait();
 
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "Test.txt")));
+    assert.ok(fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "Test.txt")));
   });
 
   /**

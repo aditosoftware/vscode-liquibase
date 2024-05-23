@@ -1,5 +1,10 @@
 import assert from "assert";
-import { CommandUtils, wait, openAndSelectRMBItemFromChangelog } from "../../CommandUtils";
+import {
+  CommandUtils,
+  wait,
+  openAndSelectRMBItemFromChangelog,
+  openAndSelectRMBItemFromChangelogFromExplorer,
+} from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { InputBox } from "vscode-extension-tester";
@@ -7,7 +12,7 @@ import { InputBox } from "vscode-extension-tester";
 /**
  * Test suite for the Right Click Menu functionality.
  */
-suite("Right Click Menu", function () {
+suite("changelog-sync: Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
@@ -22,31 +27,19 @@ suite("Right Click Menu", function () {
   });
 
   /**
-   * Test case for executing the 'changelog sync' command.
+   * Test case for executing the 'changelog sync' command via RMB in a file.
    */
-  test("should execute 'changelog sync' command", async function () {
+  test("should execute 'changelog sync' command from RMB in file", async function () {
     this.timeout(50_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Changelog Sync"));
+  });
 
-    await wait();
-    await openAndSelectRMBItemFromChangelog("Changelog Sync");
-    await wait();
-
-    const input = await InputBox.create(50000);
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.noContext);
-    await input.confirm();
-
-    await wait();
-
-    assert.ok(
-      await LiquibaseGUITestUtils.waitForCommandExecution(
-        "Liquibase command 'changelog-sync' was executed successfully."
-      )
-    );
+  /**
+   * Test case for executing the 'changelog sync' command via RMB in the file explorer.
+   */
+  test("should execute 'changelog sync' command from RMB in file explorer", async function () {
+    this.timeout(50_000);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelogFromExplorer("Changelog Sync"));
   });
 
   /**
@@ -56,3 +49,30 @@ suite("Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
+
+/**
+ * Executes the command.
+ * @param configurationName - the name of the configuration
+ * @param contextMenuFunction - the function to call the context menu
+ */
+async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
+  await CommandUtils.resetDB(CommandUtils.pool);
+
+  await wait();
+  await contextMenuFunction();
+  await wait();
+
+  const input = await InputBox.create(50000);
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(CommandUtils.noContext);
+  await input.confirm();
+
+  await wait();
+
+  assert.ok(
+    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'changelog-sync' was executed successfully.")
+  );
+}

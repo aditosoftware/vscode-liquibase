@@ -31,7 +31,7 @@ suite("db-doc", function () {
     // Extend the timeout to accommodate potentially long-running Liquibase operations.
     this.timeout(80_000);
 
-    const dbDocFolder = path.join(process.cwd(), "out", "temp", "workspace", "output", randomUUID());
+    const dbDocFolder = path.join(CommandUtils.WORKSPACE_PATH, "output", randomUUID());
     fs.mkdirSync(dbDocFolder);
 
     // Reset the temporary database to ensure a clean state.
@@ -44,7 +44,7 @@ suite("db-doc", function () {
     await input.confirm();
 
     // Set the path to the Liquibase changelog file.
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     // Set the output directory for the generated documentation.

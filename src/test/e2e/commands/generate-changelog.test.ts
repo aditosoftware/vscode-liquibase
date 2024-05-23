@@ -39,7 +39,7 @@ suite("generate changelog", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // todo dynamischer output
 
     // name of the changelog
     await input.confirm();
@@ -47,7 +47,7 @@ suite("generate changelog", function () {
     await wait(4000);
 
     assert.ok(
-      fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "changelog.xml")),
+      fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "changelog.xml")),
       "File does NOT exist"
     );
   });

@@ -7,7 +7,7 @@ import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 /**
  * Test suite for the Right Click Menu functionality.
  */
-suite("Right Click Menu", function () {
+suite("validate: Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
@@ -22,29 +22,23 @@ suite("Right Click Menu", function () {
   });
 
   /**
-   * Test case to execute the 'validate' command.
+   * Test case to execute the 'validate' command from RMB in file.
    * It resets the database, opens the Right Click Menu, selects the 'Validate' option,
    * enters the configuration name, and verifies the success notification.
    */
-  test("should execute 'validate' command", async function () {
+  test("should execute 'validate' command from RMB in file", async function () {
     this.timeout(50_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Validate"));
+  });
 
-    await openAndSelectRMBItemFromChangelog("Validate");
-
-    const input = await InputBox.create(50000);
-
-    await wait();
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await wait();
-
-    assert.ok(
-      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'validate' was executed successfully."),
-      "Notification did NOT show"
-    );
+  /**
+   * Test case to execute the 'validate' command from RMB in file explorer.
+   * It resets the database, opens the Right Click Menu, selects the 'Validate' option,
+   * enters the configuration name, and verifies the success notification.
+   */
+  test("should execute 'validate' command from RMB in file explorer", async function () {
+    this.timeout(50_000);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Validate"));
   });
 
   /**
@@ -54,3 +48,28 @@ suite("Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
+
+/**
+ * Executes the command.
+ * @param configurationName - the name of the configuration
+ * @param contextMenuFunction - the function to call the context menu
+ */
+async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
+  await CommandUtils.resetDB(CommandUtils.pool);
+
+  await contextMenuFunction();
+
+  const input = await InputBox.create(50000);
+
+  await wait();
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await wait();
+
+  assert.ok(
+    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'validate' was executed successfully."),
+    "Notification did NOT show"
+  );
+}

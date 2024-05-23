@@ -4,7 +4,9 @@ import {
   InputBox,
   ModalDialog,
   OutputView,
+  SideBarView,
   TextEditor,
+  TreeItem,
   VSBrowser,
 } from "vscode-extension-tester";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
@@ -18,6 +20,22 @@ import assert from "assert";
  * Utils for executing commands during the test.
  */
 export class CommandUtils {
+  /**
+   * The path to the workspace.
+   */
+  static readonly WORKSPACE_PATH = path.join(process.cwd(), "out", "temp", "workspace");
+
+  /**
+   * The path to the liquibase folder inside the workspace.
+   */
+  static readonly LIQUIBASE_FOLDER = path.join(this.WORKSPACE_PATH, ".liquibase");
+
+  /**
+   * The path to the changelog file inside the liquibase folder inside the workspace.
+   */
+  static readonly CHANGELOG_FILE = path.join(this.LIQUIBASE_FOLDER, "changelog.xml");
+
+  // TODO TSDOC
   // TODO duplicate values from existing variables!!
   static readonly noContext = "Do not use any contexts";
   static readonly loadAllContext: string = "Load all contexts from the changelog file";
@@ -52,7 +70,7 @@ export class CommandUtils {
    * Opens the workspace.
    */
   static async openWorkspace(): Promise<void> {
-    await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
+    await VSBrowser.instance.openResources(CommandUtils.WORKSPACE_PATH);
   }
 
   /**
@@ -167,13 +185,60 @@ export async function wait(timeout: number = 2000): Promise<void> {
  * @param action - the action that should be called
  */
 export async function openAndSelectRMBItemFromChangelog(action: string): Promise<void> {
-  await VSBrowser.instance.openResources(
-    path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml")
-  );
+  await VSBrowser.instance.openResources(CommandUtils.CHANGELOG_FILE);
 
   await wait();
 
   await openAndSelectRMBItemFromAlreadyOpenedFile(action);
+}
+
+/**
+ * Opens the Liquibase context menu in the explorer side bar on the changelog file and selects the given action.
+ * @param action - the name of the action
+ */
+export async function openAndSelectRMBItemFromChangelogFromExplorer(action: string): Promise<void> {
+  return openAndSelectRMBItemFromExplorer(action, ".liquibase", "changelog.xml");
+}
+
+/**
+ * Opens the explorer at a specific point and opens the context menu.
+ * @param action - the name of the action that should be executed
+ * @param topLevelItem - the name of the top level folder in the explorer
+ * @param children - all the children folders and the file that should be selected in the specific order
+ */
+export async function openAndSelectRMBItemFromExplorer(
+  action: string,
+  topLevelItem: string,
+  ...children: string[]
+): Promise<void> {
+  const explorer = await new SideBarView().getContent().getSection("workspace");
+
+  // find the topLevelItem and expand it
+  const topLevelNode = (await explorer.findItem(topLevelItem)) as TreeItem;
+  assert.ok(topLevelNode);
+  await topLevelNode.expand();
+
+  // find all children recursively and expand them
+  let lastChild: TreeItem | undefined;
+  for (const child of children) {
+    if (lastChild) {
+      lastChild = (await lastChild.findChildItem(child)) as TreeItem;
+    } else {
+      lastChild = (await topLevelNode.findChildItem(child)) as TreeItem;
+    }
+    assert.ok(lastChild);
+    await lastChild.expand();
+  }
+
+  assert.ok(lastChild);
+
+  // Open context menu on file in explorer
+  const menu = await lastChild.openContextMenu();
+  // open the liquibase submenu
+  const liquibaseContextMenu = await menu.select("Liquibase");
+  assert.ok(liquibaseContextMenu);
+  // and select the action
+  await liquibaseContextMenu.select(action);
 }
 
 /**
@@ -216,7 +281,7 @@ export async function createDataViaUpdate(configurationName: string): Promise<vo
   await input.setText(configurationName);
   await input.confirm();
 
-  await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+  await input.setText(CommandUtils.CHANGELOG_FILE);
   await input.selectQuickPick(1);
 
   await input.setText(CommandUtils.loadAllContext);

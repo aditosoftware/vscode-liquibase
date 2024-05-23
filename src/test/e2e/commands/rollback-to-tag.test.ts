@@ -36,7 +36,7 @@ suite("Rollback to Tag", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(CommandUtils.loadAllContext);
@@ -63,7 +63,7 @@ suite("Rollback to Tag", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(CommandUtils.recentContext);
@@ -82,7 +82,7 @@ suite("Rollback to Tag", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(CommandUtils.loadAllContext);

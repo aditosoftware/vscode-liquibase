@@ -33,7 +33,7 @@ suite("Update-sql", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(CommandUtils.loadAllContext);
@@ -53,7 +53,7 @@ suite("Update-sql", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(CommandUtils.loadAllContext);
@@ -64,7 +64,7 @@ suite("Update-sql", function () {
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
 
     await wait();
 
@@ -78,7 +78,7 @@ suite("Update-sql", function () {
       "Notification did NOT show up"
     );
     assert.ok(
-      fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "update.sql")),
+      fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "update.sql")),
       "Did NOT create a SQL File"
     );
   });

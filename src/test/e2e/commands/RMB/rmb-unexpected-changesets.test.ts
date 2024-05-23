@@ -7,7 +7,7 @@ import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 /**
  * Test suite for the Right Click Menu functionality.
  */
-suite("Right Click Menu", function () {
+suite("unexpected-changesets: Right Click Menu", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
@@ -22,30 +22,19 @@ suite("Right Click Menu", function () {
   });
 
   /**
-   * Test case for executing the 'Unexpected Changesets' command.
+   * Test case for executing the 'Unexpected Changesets' command from RMB in file.
    */
-  test("should execute 'Unexpected Changesets' command", async function () {
+  test("should execute 'Unexpected Changesets' command from RMB in file", async function () {
     this.timeout(50_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Unexpected Changesets"));
+  });
 
-    await openAndSelectRMBItemFromChangelog("Unexpected Changesets");
-
-    const input = await InputBox.create(50000);
-
-    await wait();
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.noContext);
-    await input.confirm();
-
-    assert.ok(
-      await LiquibaseGUITestUtils.waitForCommandExecution(
-        "Liquibase command 'unexpected-changesets' was executed successfully."
-      ),
-      "Notification did NOT show"
-    );
+  /**
+   * Test case for executing the 'Unexpected Changesets' command from RMB in file explorer.
+   */
+  test("should execute 'Unexpected Changesets' command from RMB in file explorer", async function () {
+    this.timeout(50_000);
+    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Unexpected Changesets"));
   });
 
   /**
@@ -55,3 +44,31 @@ suite("Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
+
+/**
+ * Executes the command.
+ * @param configurationName - the name of the configuration
+ * @param contextMenuFunction - the function to call the context menu
+ */
+async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
+  await CommandUtils.resetDB(CommandUtils.pool);
+
+  await contextMenuFunction();
+
+  const input = await InputBox.create(50000);
+
+  await wait();
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(CommandUtils.noContext);
+  await input.confirm();
+
+  assert.ok(
+    await LiquibaseGUITestUtils.waitForCommandExecution(
+      "Liquibase command 'unexpected-changesets' was executed successfully."
+    ),
+    "Notification did NOT show"
+  );
+}
