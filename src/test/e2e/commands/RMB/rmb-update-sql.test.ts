@@ -62,7 +62,7 @@ suite("update-sql: Right Click Menu", function () {
  * @param contextMenuFunction - the function to call the context menu
  */
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await CommandUtils.resetDB(CommandUtils.pool);
+  await DockerTestUtils.resetDB();
 
   const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 

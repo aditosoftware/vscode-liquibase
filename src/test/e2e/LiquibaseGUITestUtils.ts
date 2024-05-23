@@ -29,6 +29,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Checks if a notification exits.
+   * TODO besseres feedback wenn notification nicht da ist
    * @param text - the text that should be contained in the message
    * @returns the notification, if one was there with the text, or `undefined`, if no message was found
    */
@@ -36,7 +37,6 @@ export class LiquibaseGUITestUtils {
     const notifications = await new Workbench().getNotifications();
     for (const notification of notifications) {
       const message = await notification.getMessage();
-      console.log(message);
       if (typeof text === "string") {
         if (message.includes(text)) {
           return notification;

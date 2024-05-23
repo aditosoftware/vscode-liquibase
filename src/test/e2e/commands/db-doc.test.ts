@@ -35,7 +35,7 @@ suite("db-doc", function () {
     fs.mkdirSync(dbDocFolder);
 
     // Reset the temporary database to ensure a clean state.
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await DockerTestUtils.resetDB();
 
     // Prepare input for the command execution.
     const input = await LiquibaseGUITestUtils.startCommandExecution("Generate database documentation (db-doc)");

@@ -65,7 +65,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   const directoryForDbDoc = path.join(CommandUtils.WORKSPACE_PATH, "output", randomUUID());
   fs.mkdirSync(directoryForDbDoc, { recursive: true });
 
-  await CommandUtils.resetDB(CommandUtils.pool);
+  await DockerTestUtils.resetDB();
 
   await contextMenuFunction();
   await wait();

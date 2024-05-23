@@ -24,12 +24,12 @@ suite("Unexpected Changesets", function () {
   /**
    * Test function that executes the 'Unexpected Changesets' command with different context types.
    */
-  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+  CommandUtils.matrixExecution((option, exec, key) => {
     test(
       "should execute 'Unexpected Changesets' with context type '" + option + "' command with " + key,
       async function () {
         this.timeout(40_000);
-        await CommandUtils.resetDB(CommandUtils.pool);
+        await DockerTestUtils.resetDB();
 
         const input = await LiquibaseGUITestUtils.startCommandExecution("unexpected changesets");
 

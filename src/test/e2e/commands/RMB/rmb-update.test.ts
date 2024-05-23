@@ -57,7 +57,7 @@ suite("update: Right Click Menu", function () {
  * @param contextMenuFunction - the function to call the context menu
  */
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await CommandUtils.resetDB(CommandUtils.pool);
+  await DockerTestUtils.resetDB();
 
   await contextMenuFunction();
 
@@ -83,12 +83,8 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
     "Notification did NOT show"
   );
   assert.ok(
-    (
-      await DockerTestUtils.executeMariaDBSQL(
-        CommandUtils.pool,
-        "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
-      )
-    )?.length >= 1,
+    (await DockerTestUtils.executeMariaDBSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))
+      ?.length >= 1,
     "Table 'person' DOES NOT exist, while it should"
   );
 }

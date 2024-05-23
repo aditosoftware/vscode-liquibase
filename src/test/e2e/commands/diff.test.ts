@@ -28,9 +28,9 @@ suite("diff", function () {
    */
   test("should execute 'diff' command", async function () {
     this.timeout(80_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await DockerTestUtils.resetDB();
 
-    await DockerTestUtils.executeMariaDBSQL(CommandUtils.pool, "CREATE SCHEMA data2");
+    await DockerTestUtils.executeMariaDBSQL("CREATE SCHEMA data2");
 
     // for this test, we need a second configuration
     const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("MariaDB", 3310, "data2");
@@ -80,7 +80,7 @@ suite("diff", function () {
    */
   test("should execute 'diff' command for postgres", async function () {
     this.timeout(80_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await DockerTestUtils.resetDB();
 
     const postgresPort = 5435;
 

@@ -57,7 +57,7 @@ suite("rollback-to-tag: Right Click Menu", function () {
  * @param contextMenuFunction - the function to call the context menu
  */
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await CommandUtils.resetDB(CommandUtils.pool);
+  await DockerTestUtils.resetDB();
 
   const tagName = randomUUID();
 
@@ -134,12 +134,8 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
   );
   assert.ok(
-    (
-      await DockerTestUtils.executeMariaDBSQL(
-        CommandUtils.pool,
-        "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"
-      )
-    )?.length === 0,
+    (await DockerTestUtils.executeMariaDBSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"))
+      ?.length === 0,
     "Rollback did not remove values from DB"
   );
 }

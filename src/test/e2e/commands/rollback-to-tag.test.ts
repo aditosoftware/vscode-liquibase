@@ -26,7 +26,7 @@ suite("Rollback to Tag", function () {
    */
   test("should execute 'Rollback to Tag' command", async function () {
     this.timeout(80_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await DockerTestUtils.resetDB();
 
     const tagName = "test";
 
@@ -103,12 +103,8 @@ suite("Rollback to Tag", function () {
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
     );
     assert.ok(
-      (
-        await DockerTestUtils.executeMariaDBSQL(
-          CommandUtils.pool,
-          "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"
-        )
-      )?.length === 0,
+      (await DockerTestUtils.executeMariaDBSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"))
+        ?.length === 0,
       "Rollback did not remove values from DB"
     );
   });

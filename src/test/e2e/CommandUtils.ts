@@ -10,7 +10,6 @@ import {
   VSBrowser,
 } from "vscode-extension-tester";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
-import mariadb from "mariadb";
 import path from "path";
 import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
 import { ContextOptions, RemoveCacheOptions } from "../../constants";
@@ -45,36 +44,30 @@ export class CommandUtils {
    */
   static readonly CHANGELOG_FILE = path.join(this.LIQUIBASE_FOLDER, "changelog.xml");
 
-  // TODO TSDOC
-  // TODO duplicate values from existing variables!!
-
-  static readonly pool = CommandUtils.createPool();
+  /**
+   * The output panel where all command output is written.
+   */
   static outputPanel: OutputView;
-  static readonly contextOptions = [
-    ContextOptions.NO_CONTEXT,
-    ContextOptions.LOAD_ALL_CONTEXT,
-    ContextOptions.USE_RECENTLY_LOADED,
-  ];
-  static readonly contextFunctions = {
-    "all available contexts": CommandUtils.getAllContext,
-    "the first available context": CommandUtils.getFirstContext,
-    "no context": CommandUtils.getNoneContext,
-  };
 
   /**
    * Opens a temp workspace and closes all editors.
    */
   static async setupTests({ startContainer = true }: SetupTestType = {}): Promise<string> {
+    // start the container
     if (startContainer) {
       await DockerTestUtils.startContainer();
     }
 
+    // open the workspace
     await CommandUtils.openWorkspace();
 
+    // create a configuration
     const configurationName = await LiquibaseGUITestUtils.createConfiguration();
 
+    // and close all editors
     await new EditorView().closeAllEditors();
 
+    // open our output panel
     CommandUtils.outputPanel = await new BottomBarPanel().openOutputView();
     await CommandUtils.outputPanel.selectChannel("Liquibase");
 
@@ -120,30 +113,21 @@ export class CommandUtils {
   }
 
   /**
-   * Creates a pool for the database.
-   * @param database - the name of the database
-   * @returns the created pool
+   * Executes a callback function for a matrix of options.
+   *
+   * @param callback - The function to be executed. It takes three parameters:
+   *   - `option`: A string representing the current option.
+   *   - `exec`: A function that returns a promise and is executed for the current option.
+   *   - `key`: A string representing the key associated with the current option.
    */
-  static createPool(database?: string): mariadb.Pool {
-    return mariadb.createPool({
-      host: "localhost",
-      user: DockerTestUtils.username,
-      password: DockerTestUtils.password,
-      connectionLimit: 10,
-      port: 3310,
-      database: database,
-    });
-  }
+  static matrixExecution(callback: (option: string, exec: () => Promise<void>, key: string) => void): void {
+    const options = [ContextOptions.NO_CONTEXT, ContextOptions.LOAD_ALL_CONTEXT, ContextOptions.USE_RECENTLY_LOADED];
+    const execFunctions = {
+      "all available contexts": CommandUtils.getAllContext,
+      "the first available context": CommandUtils.getFirstContext,
+      "no context": CommandUtils.getNoneContext,
+    };
 
-  /**
-   * Cartesian Product thingy
-   * TODO tsdoc
-   */
-  static matrixExecution(
-    options: string[],
-    execFunctions: object,
-    callback: (option: string, exec: () => Promise<void>, key: string) => void
-  ): void {
     options.forEach((option) => {
       Object.entries(execFunctions).forEach(([key, exec]) => {
         callback(option, exec, key);
@@ -172,15 +156,6 @@ export class CommandUtils {
 
     // then confirm normally the dialog
     await input.confirm();
-  }
-
-  /**
-   * Resets the database by dropping and creating the schema.
-   * @param pool - the pool for the mariaDB database
-   */
-  static async resetDB(pool: mariadb.Pool): Promise<void> {
-    await DockerTestUtils.executeMariaDBSQL(pool, "DROP SCHEMA data");
-    await DockerTestUtils.executeMariaDBSQL(pool, "CREATE SCHEMA data");
   }
 }
 

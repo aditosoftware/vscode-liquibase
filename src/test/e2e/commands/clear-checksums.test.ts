@@ -25,10 +25,10 @@ suite("Clear Checksums", function () {
   /**
    * Test case for executing the "Clear Checksums" command with different context types and commands.
    */
-  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+  CommandUtils.matrixExecution((option, exec, key) => {
     test("should execute 'Clear Checksums' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
-      await CommandUtils.resetDB(CommandUtils.pool);
+      await DockerTestUtils.resetDB();
 
       const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 

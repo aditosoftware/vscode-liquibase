@@ -24,7 +24,7 @@ suite("Status", function () {
   /**
    * Test the 'status' command with different context types and options.
    */
-  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+  CommandUtils.matrixExecution((option, exec, key) => {
     test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
 
