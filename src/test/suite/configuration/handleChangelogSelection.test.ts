@@ -42,8 +42,7 @@ suite("handleChangelogSelection", () => {
         defaultDatabaseForConfiguration: "MariaDB",
         liquibaseDirectoryInProject: "",
       },
-      ConfigurationStatus.NEW,
-      ";"
+      ConfigurationStatus.NEW
     );
   });
 
@@ -90,7 +89,6 @@ suite("handleChangelogSelection", () => {
           const transferredData: LiquibaseConfigurationData = transferMessage.firstCall.args[1];
 
           assert.ok(transferredData.changelogFile.includes("changelog.xml"), transferredData.changelogFile);
-          assert.ok(!transferredData.classpath, `Classpath ${transferredData.classpath} should be empty`);
 
           done();
         })
@@ -116,12 +114,7 @@ suite("handleChangelogSelection", () => {
       chooseFileForChangelog(data)
         .then(() => {
           Sinon.assert.calledOnce(transferMessage);
-
-          const transferredData: LiquibaseConfigurationData = transferMessage.firstCall.args[1];
-
-          // only test that classpath has some value. Other tests happens in the method above
-          assert.ok(transferredData.classpath, `Classpath ${transferredData.classpath} should have some value`);
-
+          
           done();
         })
         .catch(done);

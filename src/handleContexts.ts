@@ -1,12 +1,12 @@
-import { readChangelogAndClasspathFile } from "./configuration/data/readFromProperties";
+import { readChangelog } from "./configuration/data/readFromProperties";
 import { loadContextsFromChangelogFile } from "./executeJar";
 import { DialogValues, LoadingQuickPick, QuickPick, QuickPickItems } from "@aditosoftware/vscode-input";
 import { PickPanelConfig } from "./registerLiquibaseCommand";
 import * as vscode from "vscode";
-import { getClasspathSeparator } from "./utilities/osUtilities";
 import path from "path";
 import { PROPERTY_FILE } from "./input/ConnectionType";
 import { cacheHandler } from "./extension";
+import { getLiquibaseFolder } from "./handleLiquibaseSettings";
 
 /**
  * The name of the pre selection dialog of the contexts.
@@ -231,21 +231,17 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
     return await loadContextsFromChangelogFile(currentResults.uri.fsPath, liquibasePropertiesPath);
   }
 
-  // Read Liquibase changelog  and classpath lines from properties file content
-  const classpathAndChangelogs = readChangelogAndClasspathFile(liquibasePropertiesPath, getClasspathSeparator());
+  // Read Liquibase changelog  lines from properties file content
+  const changelogs = readChangelog(liquibasePropertiesPath);
 
   const contextValues: vscode.QuickPickItem[] = [];
 
   // Process changelogFileLine if found
-  if (classpathAndChangelogs && classpathAndChangelogs.changelog && classpathAndChangelogs.classpath) {
-    const changelogFileLine = classpathAndChangelogs.changelog;
-
-    for (const classpath of classpathAndChangelogs.classpath) {
+  if (changelogs) {
       // Read and parse the specified XML file
-      const possibleFile = path.join(classpath, path.normalize(changelogFileLine.trim()));
+      const possibleFile = path.join(getLiquibaseFolder(), path.normalize(changelogs.trim()));
       const contexts = await loadContextsFromChangelogFile(possibleFile, liquibasePropertiesPath);
       contextValues.push(...contexts);
-    }
   }
 
   // Return an empty array if 'changelogFile:' line is not found

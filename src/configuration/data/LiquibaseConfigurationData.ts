@@ -3,13 +3,6 @@ import { DatabaseConnection } from "./DatabaseConnection";
 import { Driver } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
 import { LiquibaseSettings } from "./TransferSettings";
-import { ClasspathType } from "../../utilities/osUtilities";
-
-/**
- * The type for separating multiple classpath.
- * It is depending on OS. Use a Semicolon (`;`) on Windows. Use a colon (`:`) on Linux or MacOS.
- */
-type ClasspathSeparator = ";" | ":";
 
 /**
  * The type for additional configurations.
@@ -47,17 +40,6 @@ export class LiquibaseConfigurationData {
   name: string;
 
   /**
-   * Specifies the directories and JAR files to search for changelog files and custom extension classes.
-   */
-  classpath: string;
-
-  /**
-   * The separator for multiple classpath elements.
-   * To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
-   */
-  classpathSeparator: ClasspathSeparator;
-
-  /**
    * The file where the basic changelog.xml is located.
    */
   changelogFile: string;
@@ -88,8 +70,6 @@ export class LiquibaseConfigurationData {
     status: ConfigurationStatus,
     liquibaseSettings: LiquibaseSettings,
     name: string,
-    classpath: string,
-    classpathSeparator: ClasspathSeparator,
     changelogFile: string,
     databaseConnection: DatabaseConnection,
     additionalConfiguration: AdditionalConfiguration,
@@ -98,8 +78,6 @@ export class LiquibaseConfigurationData {
     this.status = status;
     this.liquibaseSettings = liquibaseSettings;
     this.name = name;
-    this.classpath = classpath;
-    this.classpathSeparator = classpathSeparator;
     this.changelogFile = changelogFile;
     this.databaseConnection = databaseConnection;
     this.referenceDatabaseConnection = referenceDatabaseConnection;
@@ -124,8 +102,6 @@ export class LiquibaseConfigurationData {
         liquibaseDirectoryInProject: dataToClone.liquibaseSettings.liquibaseDirectoryInProject,
       },
       dataToClone.name,
-      dataToClone.classpath,
-      dataToClone.classpathSeparator,
       dataToClone.changelogFile,
       DatabaseConnection.clone(dataToClone.databaseConnection),
       { ...dataToClone.additionalConfiguration },
@@ -139,20 +115,16 @@ export class LiquibaseConfigurationData {
    * Creates a default object.
    * @param liquibaseSettings  - the settings relevant for creating a new configuration
    * @param state - if this configuration is used as a new one or to edit an existing one
-   * @param classpathSeparator - if windows or linux/MacOs separators are used
    * @returns the created default object
    */
   static createDefaultData(
     liquibaseSettings: LiquibaseSettings,
     status: ConfigurationStatus,
-    classpathSeparator: ClasspathType
   ): LiquibaseConfigurationData {
     return new LiquibaseConfigurationData(
       status,
       liquibaseSettings,
       "",
-      "",
-      classpathSeparator,
       "",
       DatabaseConnection.createDefaultDatabaseConnection(liquibaseSettings.defaultDatabaseForConfiguration),
       {}
@@ -174,9 +146,6 @@ export class LiquibaseConfigurationData {
 
     if (normalizedKey === "changelogFile") {
       this.changelogFile = value;
-    } else if (normalizedKey === "classpath") {
-      // TODO handle special case, when file from different os was copied?
-      this.classpath = value.replaceAll(this.classpathSeparator, "\n");
     } else if (
       normalizedKey === "username" ||
       normalizedKey === "password" ||
@@ -243,10 +212,6 @@ export class LiquibaseConfigurationData {
       properties.insert("changelogFile", this.changelogFile);
     }
 
-    const classpathElements: string[] = this.classpath.split("\n");
-    // add the liquibase directory to the classpath
-    classpathElements.push(this.liquibaseSettings.liquibaseDirectoryInProject);
-
     if (this.databaseConnection.hasData()) {
       const result = this.databaseConnection.writeDataForConnection(
         properties,
@@ -254,7 +219,7 @@ export class LiquibaseConfigurationData {
         pBuildDriverPath,
         pDisguisePassword
       );
-      result && classpathElements.push(result);
+      result;
     }
 
     // and the reference properties
@@ -265,27 +230,10 @@ export class LiquibaseConfigurationData {
         pBuildDriverPath,
         pDisguisePassword
       );
-      result && classpathElements.push(result);
+      result;
     }
 
-    const joinedClasspath =
-      // make all elements in the classpath unique
-      Array.from(new Set(classpathElements))
-        // remove empty elements
-        .filter((pElement) => pElement.trim() !== "")
-        // remove all quotation marks
-        .map((pElement) => pElement.replaceAll('"', ""))
-        // and join them via the separator
-        .join(this.classpathSeparator);
-
-    if (joinedClasspath) {
-      properties.insertComment(
-        "Specifies the directories and JAR files to search for changelog files and custom extension classes.\nTo separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS."
-      );
-      properties.insert("classpath", joinedClasspath);
-    }
-
-    // add additional properties
+    // add advanced properties
     if (this.additionalConfiguration && Object.keys(this.additionalConfiguration).length !== 0) {
       properties.insertComment("additional configuration values");
       for (const key in this.additionalConfiguration) {

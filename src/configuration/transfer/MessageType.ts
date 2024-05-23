@@ -13,4 +13,6 @@ export enum MessageType {
   CHOOSE_CHANGELOG_RESULT = "CHOOSE_CHANGELOG_RESULT",
 
   LOG_MESSAGE = "LOG_MESSAGE",
+
+  HELP = "HELP",
 }

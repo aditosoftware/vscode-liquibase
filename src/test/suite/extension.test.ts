@@ -4,7 +4,6 @@ import Sinon from "sinon";
 import { TestUtils } from "./TestUtils";
 import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
-import { getClasspathSeparator } from "../../utilities/osUtilities";
 import { randomUUID } from "crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
 
@@ -58,12 +57,6 @@ suite("Extension Test Suite", () => {
     properties.insert("username", DockerTestUtils.username);
     properties.insert("password", DockerTestUtils.password);
     properties.insert("url", `jdbc:mariadb://localhost:3310/${DockerTestUtils.dbName}`);
-    properties.insert(
-      "classpath",
-      [path.join(TestUtils.resourcePath, "mariadb-java-client-2.5.3.jar"), path.join(workspacePath, "liquibase")].join(
-        getClasspathSeparator()
-      )
-    );
 
     fs.writeFileSync(propertiesFile, properties.format());
 

@@ -3,9 +3,6 @@ import {
   VSCodeButton,
   VSCodeDivider,
   VSCodeLink,
-  VSCodeRadio,
-  VSCodeRadioGroup,
-  VSCodeTextArea,
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import "./App.css";
@@ -28,8 +25,7 @@ function App(): JSX.Element {
     // The data will be updated shortly after the view is created.
     LiquibaseConfigurationData.createDefaultData(
       { defaultDatabaseForConfiguration: NO_PRE_CONFIGURED_DRIVER, liquibaseDirectoryInProject: "" },
-      ConfigurationStatus.NEW,
-      ";"
+      ConfigurationStatus.NEW
     )
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
@@ -90,7 +86,6 @@ function App(): JSX.Element {
   function handleChooseChangelogResult(pMessage: MessageData): void {
     updateData((draft) => {
       if (pMessage.configurationData) {
-        draft.classpath = pMessage.configurationData.classpath;
         draft.changelogFile = pMessage.configurationData.changelogFile;
       }
     });
@@ -153,43 +148,6 @@ function App(): JSX.Element {
                 </label>
               </section>
               <VSCodeDivider />
-              <section>
-                <VSCodeTextArea
-                  id="classpathInput"
-                  value={data.classpath}
-                  resize="vertical"
-                  rows={3}
-                  onBlur={handleChangeClasspath}>
-                  The classpath used for executing liquibase.
-                </VSCodeTextArea>
-                <label htmlFor="classpathInput" slot="label">
-                  These should be absolute paths. Each line is treated as one entry. These are connected automatically
-                  by the selected system separator. If you have a custom driver specified, then you need to put in the
-                  path to your driver here.
-                </label>
-                <VSCodeRadioGroup
-                  orientation="horizontal"
-                  value={data.classpathSeparator}
-                  onClick={(e) => {
-                    // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
-                    const value = e.target.value;
-                    updateData((draft) => {
-                      draft.classpathSeparator = value;
-                    });
-                  }}>
-                  <label slot="label">
-                    The separator for multiple classpaths. This is depending on your operating system
-                  </label>
-
-                  <VSCodeRadio id="classpathSeparatorWindows" value=";">
-                    Windows: semicolon (<code>;</code>)
-                  </VSCodeRadio>
-                  <VSCodeRadio id="classpathSeparatorUnix" value=":">
-                    Linux and MacOS: colon (<code>:</code>)
-                  </VSCodeRadio>
-                </VSCodeRadioGroup>
-              </section>
-
               <section>
                 <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange} id="changelogInput">
                   The basic changelog file for any command
@@ -368,16 +326,6 @@ function App(): JSX.Element {
    */
   function handleChooseChangelog(): void {
     vscodeApiWrapper.postMessage(new MessageData(MessageType.CHOOSE_CHANGELOG, data));
-  }
-
-  /**
-   * Handles the change of the classpath elements.
-   * @param event - the event which was triggered
-   */
-  function handleChangeClasspath(event: React.FocusEvent<HTMLInputElement>): void {
-    updateData((draft) => {
-      draft.classpath = event.target.value;
-    });
   }
 
   /**

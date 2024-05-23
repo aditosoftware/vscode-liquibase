@@ -2,11 +2,10 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { spawn, spawnSync } from "child_process";
 import { Logger } from "@aditosoftware/vscode-logging";
-import { buildClasspath, gson, liquibaseCore, picocli, snakeYaml } from "./prerequisites";
 import * as fs from "fs";
 import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
-import { getClearOutputChannelOnStartSetting } from "./handleLiquibaseSettings";
+import { getClearOutputChannelOnStartSetting, getLiquibaseFolder } from "./handleLiquibaseSettings";
 
 class CustomError extends Error {
   stdout?: string;
@@ -40,7 +39,9 @@ export function executeJar(
           return;
         }
 
-        const cp = [path.join(rootPath, "*")].join(getClasspathSeparator());
+        // classpath elements needed for execution of the jar
+        // the classpath is built from the root path and the workspace folder
+        const cp = [path.join(rootPath, "*"), getLiquibaseFolder()].join(getClasspathSeparator());
 
         const argsArray: string[] = [
           // force liquibase to use english locale, because other I18N are not good
@@ -132,18 +133,15 @@ export async function loadContextsFromChangelogFile(
       return [];
     }
 
-    // jar from lib directory
-    const extendedJar = path.join(libFolder, "liquibase-extended-cli.jar");
-
     // classpath elements needed for execution of the jar
-    const cp = [extendedJar, ...buildClasspath(resourcePath, picocli, liquibaseCore, snakeYaml, gson)];
+    const cp = [path.join(resourcePath, "*"), path.join(libFolder, "*"), getLiquibaseFolder()].join(getClasspathSeparator());
 
     // all arguments for the jar execution
     const args = [
       // set encoding to utf-8, because otherwise special characters will not be displayed correctly from liquibase
       "-Dfile.encoding=UTF-8",
       "-cp",
-      cp.join(getClasspathSeparator()),
+      cp,
       "de.adito.context.ContextResolver",
       changelogFile,
     ];

@@ -2,7 +2,6 @@ import { Disposable, Webview, WebviewPanel, window, Uri, ViewColumn } from "vsco
 import { getUri, getNonce } from "../utilities/webviewUtilities";
 import { createLiquibaseProperties } from "../configuration/handle/createAndAddConfiguration";
 import { MessageData, MessageType } from "../configuration/transfer";
-import { getClasspathSeparator } from "../utilities/osUtilities";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../configuration/data/LiquibaseConfigurationData";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { testLiquibaseConnection } from "../configuration/handle/testConfiguration";
@@ -85,8 +84,7 @@ export class LiquibaseConfigurationPanel {
               defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
               liquibaseDirectoryInProject: getLiquibaseFolder(),
             },
-            ConfigurationStatus.NEW,
-            getClasspathSeparator()
+            ConfigurationStatus.NEW
           )
     );
   }

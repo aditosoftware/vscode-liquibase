@@ -121,13 +121,3 @@ function getRequiredFiles(): Map<string, string> {
   });
   return requiredFiles;
 }
-
-/**
- * Builds the classpath by combining all desired jars into on array.
- * @param rootPath - the root path where all the classpath elements are downloaded
- * @param jars - the jar names that should be included in the path
- * @returns a combined array of all jar paths, starting with the root path
- */
-export function buildClasspath(rootPath: string, ...jars: string[]): string[] {
-  return jars.map((pJarName) => path.join(rootPath, pJarName));
-}
