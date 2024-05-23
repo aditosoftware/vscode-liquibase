@@ -62,6 +62,8 @@ suite("update-sql: Right Click Menu", function () {
  * @param contextMenuFunction - the function to call the context menu
  */
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
+  const temporaryFolder = CommandUtils.generateTemporaryFolder();
+
   await DockerTestUtils.resetDB();
 
   const input = await LiquibaseGUITestUtils.startCommandExecution("update");
@@ -97,7 +99,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.toggleAllQuickPicks(true);
   await input.confirm();
 
-  await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // todo dynamischer folder
+  await CommandUtils.selectFolder(input, temporaryFolder);
 
   await input.setText("update.sql");
   await input.confirm();
@@ -108,8 +110,5 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),
     "Notification did NOT show up"
   );
-  assert.ok(
-    fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "update.sql")),
-    "Did NOT create a SQL File"
-  );
+  assert.ok(fs.existsSync(path.join(temporaryFolder, "update.sql")), "Did NOT create a SQL File");
 }

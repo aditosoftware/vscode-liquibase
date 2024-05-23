@@ -14,6 +14,8 @@ import path from "path";
 import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
 import { ContextOptions, RemoveCacheOptions } from "../../constants";
 import assert from "assert";
+import { randomUUID } from "crypto";
+import * as fs from "fs";
 
 /**
  * Information regarding the setup of the tests.
@@ -72,6 +74,16 @@ export class CommandUtils {
     await CommandUtils.outputPanel.selectChannel("Liquibase");
 
     return configurationName;
+  }
+
+  /**
+   * Creates a temporary folder for the tests.
+   * @returns - the path to the temporary folder
+   */
+  static generateTemporaryFolder(): string {
+    const tempDir = path.join(CommandUtils.WORKSPACE_PATH, "output", randomUUID());
+    fs.mkdirSync(tempDir, { recursive: true });
+    return tempDir;
   }
 
   /**

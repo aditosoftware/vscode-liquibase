@@ -35,44 +35,7 @@ suite("diff", function () {
     // for this test, we need a second configuration
     const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("MariaDB", 3310, "data2");
 
-    await wait(500);
-
-    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
-
-    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-    await input.confirm();
-
-    await wait();
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await LiquibaseGUITestUtils.startCommandExecution("diff");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(secondConfiguration);
-    await input.confirm();
-
-    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
-
-    //name of file, leave to default
-    await input.confirm();
-
-    //available types, leave to default
-    await input.confirm();
-
-    await wait();
-    await wait();
-
-    assert.ok(fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "diff.txt")));
+    await executeCommand("diffMariaDb.txt", configurationName, secondConfiguration);
   });
 
   /**
@@ -89,49 +52,7 @@ suite("diff", function () {
 
     const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("PostgreSQL", postgresPort);
 
-    await wait();
-
-    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
-
-    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-    await input.confirm();
-
-    await wait();
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await LiquibaseGUITestUtils.startCommandExecution("diff");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(secondConfiguration);
-    await input.confirm();
-
-    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
-
-    await wait();
-
-    //name of file
-    await input.setText("diff2.txt");
-    await input.confirm();
-
-    await wait();
-
-    //available types
-    await input.confirm();
-
-    await wait();
-    await wait();
-
-    assert.ok(fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "diff2.txt")));
+    await executeCommand("diffPostgres.txt", configurationName, secondConfiguration);
   });
 
   /**
@@ -142,3 +63,57 @@ suite("diff", function () {
     await DockerTestUtils.stopAndRemoveContainer("postgres");
   });
 });
+
+/**
+ * Executes the diff command.
+ * @param fileName  - the file name where the diff should be written
+ * @param configurationName - the name of the first configuration
+ * @param secondConfiguration - the name of the second configuration
+ */
+async function executeCommand(fileName: string, configurationName: string, secondConfiguration: string): Promise<void> {
+  const temporaryFolder = CommandUtils.generateTemporaryFolder();
+
+  await wait();
+
+  const input = await LiquibaseGUITestUtils.startCommandExecution("update"); // FIXME update auslagern!
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(CommandUtils.CHANGELOG_FILE);
+  await input.selectQuickPick(1);
+
+  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
+  await input.confirm();
+
+  await wait();
+
+  await input.toggleAllQuickPicks(true);
+  await input.confirm();
+
+  await LiquibaseGUITestUtils.startCommandExecution("diff");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(secondConfiguration);
+  await input.confirm();
+
+  await CommandUtils.selectFolder(input, temporaryFolder);
+
+  await wait();
+
+  //name of file
+  await input.setText(fileName);
+  await input.confirm();
+
+  await wait();
+
+  //available types
+  await input.confirm();
+
+  await wait();
+  await wait();
+
+  assert.ok(fs.existsSync(path.join(temporaryFolder, fileName)));
+}

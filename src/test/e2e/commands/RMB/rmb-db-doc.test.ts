@@ -10,7 +10,6 @@ import {
 } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
-import { randomUUID } from "crypto";
 import { ContextOptions } from "../../../../constants";
 
 /**
@@ -62,9 +61,7 @@ suite("db-doc: Right Click Menu", function () {
  * @param contextMenuFunction - the function to call the context menu
  */
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  const directoryForDbDoc = path.join(CommandUtils.WORKSPACE_PATH, "output", randomUUID());
-  fs.mkdirSync(directoryForDbDoc, { recursive: true });
-
+  const directoryForDbDoc = CommandUtils.generateTemporaryFolder();
   await DockerTestUtils.resetDB();
 
   await contextMenuFunction();

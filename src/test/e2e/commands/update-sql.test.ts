@@ -29,6 +29,8 @@ suite("Update-sql", function () {
   test("should execute 'Update SQL' command", async function () {
     this.timeout(80_000);
 
+    const temporaryFolder = CommandUtils.generateTemporaryFolder();
+
     const input = await LiquibaseGUITestUtils.startCommandExecution("update");
 
     await input.setText(configurationName);
@@ -65,8 +67,7 @@ suite("Update-sql", function () {
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // TODO dynamischer output
-
+    await CommandUtils.selectFolder(input, temporaryFolder);
     await wait();
 
     await input.setText("update.sql");
@@ -78,10 +79,7 @@ suite("Update-sql", function () {
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),
       "Notification did NOT show up"
     );
-    assert.ok(
-      fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "update.sql")),
-      "Did NOT create a SQL File"
-    );
+    assert.ok(fs.existsSync(path.join(temporaryFolder, "update.sql")), "Did NOT create a SQL File");
   });
 
   /**

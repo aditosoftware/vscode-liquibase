@@ -29,6 +29,8 @@ suite("generate changelog", function () {
     this.timeout(80_000);
     await DockerTestUtils.resetDB();
 
+    const temporaryFolder = CommandUtils.generateTemporaryFolder();
+
     await DockerTestUtils.executeMariaDBSQL(
       "CREATE TABLE test_table (column1 char(36), column2 varchar(255))",
       DockerTestUtils.createPool("data")
@@ -39,17 +41,14 @@ suite("generate changelog", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(CommandUtils.WORKSPACE_PATH, "myFolder")); // todo dynamischer output
+    await CommandUtils.selectFolder(input, temporaryFolder);
 
-    // name of the changelog
+    // name of the changelog, just use the default
     await input.confirm();
 
     await wait(4000);
 
-    assert.ok(
-      fs.existsSync(path.join(CommandUtils.WORKSPACE_PATH, "myFolder", "changelog.xml")),
-      "File does NOT exist"
-    );
+    assert.ok(fs.existsSync(path.join(temporaryFolder, "changelog.xml")), "File does NOT exist");
   });
 
   /**
