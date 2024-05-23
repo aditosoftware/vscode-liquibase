@@ -88,7 +88,8 @@ export function getDefaultDatabaseForConfiguration(): string {
 }
 
 /**
- * 
+ * Returns the setting if the output channel should be cleared on start.
+ * @returns `true` when the output channel should be cleared on start, otherwise `false`
  */
 export function getClearOutputChannelOnStartSetting(): boolean {
   const configuration = vscode.workspace.getConfiguration(configurationName);
