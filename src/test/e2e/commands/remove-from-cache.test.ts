@@ -1,7 +1,7 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, createDataViaUpdate, removeWholeCache } from "../CommandUtils";
-import { RemoveCacheOptions } from "../../../constants";
+import { CommandUtils } from "../CommandUtils";
+import { ContextOptions, RemoveCacheOptions } from "../../../constants";
 import { ModalDialog } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
@@ -34,8 +34,8 @@ suite("Removes any values from the recently loaded elements", () => {
    */
   test("should not remove anything when no elements are there", async () => {
     // first, remove the whole cache
-    await createDataViaUpdate(configurationName);
-    await removeWholeCache();
+    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+    await CommandUtils.removeWholeCache();
 
     // then try to execute the command a second time
     await LiquibaseGUITestUtils.startCommandExecution("Cache: Removes any values from the recently loaded elements");
@@ -47,8 +47,8 @@ suite("Removes any values from the recently loaded elements", () => {
    * Tests that the whole cache can be removed successfully.
    */
   test("should remove recently loaded values", async () => {
-    await createDataViaUpdate(configurationName);
-    await removeWholeCache();
+    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+    await CommandUtils.removeWholeCache();
 
     assert.ok(await LiquibaseGUITestUtils.notificationExists("Successfully removed all recently loaded elements."));
   });
@@ -57,7 +57,7 @@ suite("Removes any values from the recently loaded elements", () => {
    * Tests that the selected connections can be removed successfully.
    */
   test("should remove connections", async () => {
-    await createDataViaUpdate(configurationName);
+    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution(
       "Cache: Removes any values from the recently loaded elements"

@@ -1,12 +1,7 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
-import {
-  CommandUtils,
-  openAndSelectRMBItemFromChangelog,
-  openAndSelectRMBItemFromChangelogFromExplorer,
-  wait,
-} from "../../CommandUtils";
+import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../../constants";
 
@@ -32,7 +27,7 @@ suite("status: Right Click Menu", function () {
    */
   test("should execute 'status' command from RMB in file", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Status"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Status"));
   });
 
   /**
@@ -40,7 +35,7 @@ suite("status: Right Click Menu", function () {
    */
   test("should execute 'status' command from RMB in file explorer", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelogFromExplorer("Status"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Status"));
   });
 
   /**

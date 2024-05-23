@@ -31,53 +31,16 @@ suite("Rollback to Tag", function () {
     const tagName = "test";
 
     // Execute only one changeset to roll back to
-    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
-
-    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-    await input.confirm();
-
-    await wait();
-
-    await input.setText("foo");
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
+    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
     // Set tag
-    await LiquibaseGUITestUtils.startCommandExecution("create tag");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(tagName);
-    await input.confirm();
+    await CommandUtils.executeCreateTag(configurationName, tagName);
 
     // Update all datasets
-    await LiquibaseGUITestUtils.startCommandExecution("update");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
-
-    await input.setText(ContextOptions.USE_RECENTLY_LOADED);
-    await input.confirm();
-
-    await wait();
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await wait();
+    await CommandUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
 
     // Rollback time
-    await LiquibaseGUITestUtils.startCommandExecution("Rollback to Tag");
+    const input = await LiquibaseGUITestUtils.startCommandExecution("Rollback to Tag");
 
     await input.setText(configurationName);
     await input.confirm();

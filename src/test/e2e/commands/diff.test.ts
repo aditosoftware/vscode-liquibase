@@ -3,7 +3,7 @@ import assert from "assert";
 import fs from "fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
+import { CommandUtils,  wait } from "../CommandUtils";
 import { ContextOptions } from "../../../constants";
 
 /**
@@ -75,23 +75,9 @@ async function executeCommand(fileName: string, configurationName: string, secon
 
   await wait();
 
-  const input = await LiquibaseGUITestUtils.startCommandExecution("update"); // FIXME update auslagern!
+  await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(CommandUtils.CHANGELOG_FILE);
-  await input.selectQuickPick(1);
-
-  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-  await input.confirm();
-
-  await wait();
-
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  await LiquibaseGUITestUtils.startCommandExecution("diff");
+  const input = await LiquibaseGUITestUtils.startCommandExecution("diff");
 
   await input.setText(configurationName);
   await input.confirm();

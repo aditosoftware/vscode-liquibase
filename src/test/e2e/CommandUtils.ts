@@ -169,6 +169,152 @@ export class CommandUtils {
     // then confirm normally the dialog
     await input.confirm();
   }
+
+  /**
+   * Opens the Liquibase context menu and selects the given action.
+   *
+   * This method will open an changelog before executing the action.
+   *
+   * @param action - the action that should be called
+   */
+  static async openAndSelectRMBItemFromChangelog(action: string): Promise<void> {
+    await VSBrowser.instance.openResources(CommandUtils.CHANGELOG_FILE);
+
+    await wait();
+
+    await CommandUtils.openAndSelectRMBItemFromAlreadyOpenedFile(action);
+  }
+
+  /**
+   * Opens the Liquibase context menu in the explorer side bar on the changelog file and selects the given action.
+   * @param action - the name of the action
+   */
+  static async openAndSelectRMBItemFromChangelogFromExplorer(action: string): Promise<void> {
+    return CommandUtils.openAndSelectRMBItemFromExplorer(action, ".liquibase", "changelog.xml");
+  }
+
+  /**
+   * Opens the explorer at a specific point and opens the context menu.
+   * @param action - the name of the action that should be executed
+   * @param topLevelItem - the name of the top level folder in the explorer
+   * @param children - all the children folders and the file that should be selected in the specific order
+   */
+  static async openAndSelectRMBItemFromExplorer(
+    action: string,
+    topLevelItem: string,
+    ...children: string[]
+  ): Promise<void> {
+    const explorer = await new SideBarView().getContent().getSection("workspace");
+
+    // find the topLevelItem and expand it
+    const topLevelNode = (await explorer.findItem(topLevelItem)) as TreeItem;
+    assert.ok(topLevelNode);
+    await topLevelNode.expand();
+
+    // find all children recursively and expand them
+    let lastChild: TreeItem | undefined;
+    for (const child of children) {
+      if (lastChild) {
+        lastChild = (await lastChild.findChildItem(child)) as TreeItem;
+      } else {
+        lastChild = (await topLevelNode.findChildItem(child)) as TreeItem;
+      }
+      assert.ok(lastChild);
+      await lastChild.expand();
+    }
+
+    assert.ok(lastChild);
+
+    // Open context menu on file in explorer
+    const menu = await lastChild.openContextMenu();
+    // open the liquibase submenu
+    const liquibaseContextMenu = await menu.select("Liquibase");
+    assert.ok(liquibaseContextMenu);
+    // and select the action
+    await liquibaseContextMenu.select(action);
+  }
+
+  /**
+   * Opens the Liquibase context menu and selects the given action.
+   *
+   * @param action - the action that should be called
+   */
+  static async openAndSelectRMBItemFromAlreadyOpenedFile(action: string): Promise<void> {
+    const editor = new TextEditor();
+    const menu = await editor.openContextMenu();
+    const liquibaseMenu = await menu.select("Liquibase");
+    await liquibaseMenu?.select(action);
+  }
+
+  /**
+   * Removes the whole cache.
+   */
+  static async removeWholeCache(): Promise<void> {
+    const input = await LiquibaseGUITestUtils.startCommandExecution(
+      "Cache: Removes any values from the recently loaded elements"
+    );
+
+    await input.setText(RemoveCacheOptions.WHOLE_CACHE);
+    await input.confirm();
+
+    const modalDialog = new ModalDialog();
+    await modalDialog.pushButton("Delete");
+  }
+
+  /**
+   * Executes the update command while selecting a number of contexts.
+   *
+   * @param configurationName - the name of the current configuration
+   * @param contextOption - the option how to load the contexts
+   * @param filterTextForContexts - the text for which the contexts should be filtered before selecting all of them
+   */
+  static async executeUpdate(
+    configurationName: string,
+    contextOption: ContextOptions.LOAD_ALL_CONTEXT | ContextOptions.USE_RECENTLY_LOADED,
+    filterTextForContexts?: string
+  ): Promise<void> {
+    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
+
+    await input.setText(configurationName);
+    await input.confirm();
+
+    await input.setText(CommandUtils.CHANGELOG_FILE);
+    await input.selectQuickPick(1);
+
+    await input.setText(contextOption);
+    await input.confirm();
+
+    await wait();
+
+    if (filterTextForContexts) {
+      await input.setText(filterTextForContexts);
+    }
+
+    await input.toggleAllQuickPicks(true);
+    await input.confirm();
+
+    assert.ok(
+      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully")
+    );
+  }
+
+  /**
+   * Executes the "Create Tag" command.
+   *
+   * @param configurationName - the name of the configuration
+   * @param tagName - the name of the tag that should be created
+   */
+  static async executeCreateTag(configurationName: string, tagName: string): Promise<void> {
+    const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
+
+    await input.setText(configurationName);
+    await input.confirm();
+
+    await input.setText(tagName);
+    await input.confirm();
+
+    await wait();
+  }
 }
 
 /**
@@ -177,124 +323,4 @@ export class CommandUtils {
  */
 export async function wait(timeout: number = 2000): Promise<void> {
   await new Promise((r) => setTimeout(r, timeout));
-}
-
-/**
- * Opens the Liquibase context menu and selects the given action.
- *
- * This method will open an changelog before executing the action.
- *
- * @param action - the action that should be called
- */
-export async function openAndSelectRMBItemFromChangelog(action: string): Promise<void> {
-  await VSBrowser.instance.openResources(CommandUtils.CHANGELOG_FILE);
-
-  await wait();
-
-  await openAndSelectRMBItemFromAlreadyOpenedFile(action);
-}
-
-/**
- * Opens the Liquibase context menu in the explorer side bar on the changelog file and selects the given action.
- * @param action - the name of the action
- */
-export async function openAndSelectRMBItemFromChangelogFromExplorer(action: string): Promise<void> {
-  return openAndSelectRMBItemFromExplorer(action, ".liquibase", "changelog.xml");
-}
-
-/**
- * Opens the explorer at a specific point and opens the context menu.
- * @param action - the name of the action that should be executed
- * @param topLevelItem - the name of the top level folder in the explorer
- * @param children - all the children folders and the file that should be selected in the specific order
- */
-export async function openAndSelectRMBItemFromExplorer(
-  action: string,
-  topLevelItem: string,
-  ...children: string[]
-): Promise<void> {
-  const explorer = await new SideBarView().getContent().getSection("workspace");
-
-  // find the topLevelItem and expand it
-  const topLevelNode = (await explorer.findItem(topLevelItem)) as TreeItem;
-  assert.ok(topLevelNode);
-  await topLevelNode.expand();
-
-  // find all children recursively and expand them
-  let lastChild: TreeItem | undefined;
-  for (const child of children) {
-    if (lastChild) {
-      lastChild = (await lastChild.findChildItem(child)) as TreeItem;
-    } else {
-      lastChild = (await topLevelNode.findChildItem(child)) as TreeItem;
-    }
-    assert.ok(lastChild);
-    await lastChild.expand();
-  }
-
-  assert.ok(lastChild);
-
-  // Open context menu on file in explorer
-  const menu = await lastChild.openContextMenu();
-  // open the liquibase submenu
-  const liquibaseContextMenu = await menu.select("Liquibase");
-  assert.ok(liquibaseContextMenu);
-  // and select the action
-  await liquibaseContextMenu.select(action);
-}
-
-/**
- * Opens the Liquibase context menu and selects the given action.
- *
- * @param action - the action that should be called
- */
-export async function openAndSelectRMBItemFromAlreadyOpenedFile(action: string): Promise<void> {
-  const editor = new TextEditor();
-  const menu = await editor.openContextMenu();
-  const liquibaseMenu = await menu.select("Liquibase");
-  await liquibaseMenu?.select(action);
-}
-
-/**
- * Removes the whole cache.
- */
-export async function removeWholeCache(): Promise<void> {
-  const input = await LiquibaseGUITestUtils.startCommandExecution(
-    "Cache: Removes any values from the recently loaded elements"
-  );
-
-  await input.setText(RemoveCacheOptions.WHOLE_CACHE);
-  await input.confirm();
-
-  const modalDialog = new ModalDialog();
-  await modalDialog.pushButton("Delete");
-}
-
-/**
- * Creates some data for the cache via the update command.
- *
- * TODO allgemeiner auslagern?
- *
- * @param configurationName - the name of the current configuration
- */
-export async function createDataViaUpdate(configurationName: string): Promise<void> {
-  const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(CommandUtils.CHANGELOG_FILE);
-  await input.selectQuickPick(1);
-
-  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-  await input.confirm();
-
-  await wait();
-
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully")
-  );
 }

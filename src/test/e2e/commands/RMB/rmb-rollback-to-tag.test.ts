@@ -1,14 +1,10 @@
-import {
-  CommandUtils,
-  openAndSelectRMBItemFromChangelog,
-  openAndSelectRMBItemFromChangelogFromExplorer,
-  wait,
-} from "../../CommandUtils";
+import { CommandUtils, wait } from "../../CommandUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import assert from "assert";
 import { randomUUID } from "crypto";
 import { ContextOptions } from "../../../../constants";
+import { InputBox } from "vscode-extension-tester";
 
 /**
  * Test suite for the "Rollback to Tag" command in the Right Click Menu.
@@ -32,7 +28,7 @@ suite("rollback-to-tag: Right Click Menu", function () {
    */
   test("should execute 'rollback-to-tag' command from RMB in file", async function () {
     this.timeout(80_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Rollback to Tag"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Rollback to Tag"));
   });
 
   /**
@@ -40,7 +36,9 @@ suite("rollback-to-tag: Right Click Menu", function () {
    */
   test("should execute 'rollback-to-tag' command from RMB in file explorer", async function () {
     this.timeout(80_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelogFromExplorer("Rollback to Tag"));
+    await executeCommand(configurationName, () =>
+      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Rollback to Tag")
+    );
   });
 
   /**
@@ -61,55 +59,20 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
 
   const tagName = randomUUID();
 
-  const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(CommandUtils.CHANGELOG_FILE);
-  await input.selectQuickPick(1);
-
-  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-  await input.confirm();
-
-  await wait();
-
-  await input.setText("foo");
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  await wait();
+  // update one dataset
+  await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
   // Set tag
-  await LiquibaseGUITestUtils.startCommandExecution("create tag");
 
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(tagName);
-  await input.confirm();
+  await CommandUtils.executeCreateTag(configurationName, tagName);
 
   // Update all datasets
-  await LiquibaseGUITestUtils.startCommandExecution("update");
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(CommandUtils.CHANGELOG_FILE);
-  await input.selectQuickPick(1);
-
-  await input.setText(ContextOptions.USE_RECENTLY_LOADED);
-  await input.confirm();
-
-  await wait();
-
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  await wait();
+  await CommandUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
 
   await contextMenuFunction();
   await wait();
+
+  const input = new InputBox();
 
   await input.setText(configurationName);
   await input.confirm();

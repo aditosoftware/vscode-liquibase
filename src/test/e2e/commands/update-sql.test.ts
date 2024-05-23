@@ -31,27 +31,11 @@ suite("Update-sql", function () {
 
     const temporaryFolder = CommandUtils.generateTemporaryFolder();
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
+    // execute update to have some changes
+    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(CommandUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
-
-    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-    await input.confirm();
-
-    await wait();
-
-    await input.setText("foo");
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await wait();
-
-    // Execute only one changeset to roll back to
-    await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
+    // execute the update-sql command
+    const input = await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
 
     await input.setText(configurationName);
     await input.confirm();

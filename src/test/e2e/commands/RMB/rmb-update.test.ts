@@ -3,8 +3,6 @@ import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import {
   CommandUtils,
-  openAndSelectRMBItemFromChangelog,
-  openAndSelectRMBItemFromChangelogFromExplorer,
   wait,
 } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
@@ -32,7 +30,7 @@ suite("update: Right Click Menu", function () {
    */
   test("should execute 'update' command from RMB in file", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Update"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Update"));
   });
 
   /**
@@ -40,7 +38,7 @@ suite("update: Right Click Menu", function () {
    */
   test("should execute 'update' command from RMB in file explorer", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelogFromExplorer("Update"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Update"));
   });
 
   /**

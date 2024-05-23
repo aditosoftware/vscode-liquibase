@@ -1,10 +1,10 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { CommandUtils, createDataViaUpdate } from "../CommandUtils";
+import { CommandUtils } from "../CommandUtils";
 import { ModalDialog, TextEditor } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { RemoveConfigurationOptions } from "../../../constants";
+import { ContextOptions, RemoveConfigurationOptions } from "../../../constants";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -40,7 +40,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
     { removeOption: RemoveConfigurationOptions.DELETE_ALL, settingsThere: false, propertiesFileThere: false },
   ].forEach((pArgument) => {
     test(`should remove a liquibase.properties with remove option ${pArgument.removeOption}`, async function () {
-      await createDataViaUpdate(configurationName);
+      await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
       const input = await LiquibaseGUITestUtils.startCommandExecution(
         "Remove existing liquibase.properties from the configuration"

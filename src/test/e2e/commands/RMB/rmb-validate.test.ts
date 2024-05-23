@@ -1,6 +1,6 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
-import { CommandUtils, openAndSelectRMBItemFromChangelog, wait } from "../../CommandUtils";
+import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
@@ -35,7 +35,7 @@ suite("validate: Right Click Menu", function () {
    */
   test("should execute 'validate' command from RMB in file", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Validate"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Validate"));
   });
 
   /**
@@ -45,7 +45,7 @@ suite("validate: Right Click Menu", function () {
    */
   test("should execute 'validate' command from RMB in file explorer", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Validate"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Validate"));
   });
 });
 

@@ -1,6 +1,6 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
+import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -28,17 +28,9 @@ suite("Tag Exist", function () {
 
     const tagName = "test";
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
+    await CommandUtils.executeCreateTag(configurationName, tagName);
 
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(tagName);
-    await input.confirm();
-
-    await wait();
-
-    await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
+    const input = await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
 
     await input.setText(configurationName);
     await input.confirm();

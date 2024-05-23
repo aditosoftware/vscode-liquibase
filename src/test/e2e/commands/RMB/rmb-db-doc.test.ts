@@ -2,12 +2,7 @@ import path from "path";
 import assert from "assert";
 import fs from "fs";
 import { InputBox } from "vscode-extension-tester";
-import {
-  CommandUtils,
-  openAndSelectRMBItemFromChangelog,
-  openAndSelectRMBItemFromChangelogFromExplorer,
-  wait,
-} from "../../CommandUtils";
+import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -34,7 +29,7 @@ suite("db-doc: Right Click Menu", function () {
    */
   test("should execute 'db-doc' command from RMB in file", async function () {
     await executeCommand(configurationName, () =>
-      openAndSelectRMBItemFromChangelog("Generate database documentation (db-doc)")
+      CommandUtils.openAndSelectRMBItemFromChangelog("Generate database documentation (db-doc)")
     );
   });
 
@@ -43,7 +38,7 @@ suite("db-doc: Right Click Menu", function () {
    */
   test("should execute 'db-doc' command from RMB in file explorer", async function () {
     await executeCommand(configurationName, () =>
-      openAndSelectRMBItemFromChangelogFromExplorer("Generate database documentation (db-doc)")
+      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate database documentation (db-doc)")
     );
   });
 

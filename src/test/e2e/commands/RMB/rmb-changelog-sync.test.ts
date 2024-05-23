@@ -1,10 +1,5 @@
 import assert from "assert";
-import {
-  CommandUtils,
-  wait,
-  openAndSelectRMBItemFromChangelog,
-  openAndSelectRMBItemFromChangelogFromExplorer,
-} from "../../CommandUtils";
+import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { InputBox } from "vscode-extension-tester";
@@ -32,7 +27,7 @@ suite("changelog-sync: Right Click Menu", function () {
    */
   test("should execute 'changelog sync' command from RMB in file", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Changelog Sync"));
+    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Changelog Sync"));
   });
 
   /**
@@ -40,7 +35,9 @@ suite("changelog-sync: Right Click Menu", function () {
    */
   test("should execute 'changelog sync' command from RMB in file explorer", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelogFromExplorer("Changelog Sync"));
+    await executeCommand(configurationName, () =>
+      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Changelog Sync")
+    );
   });
 
   /**

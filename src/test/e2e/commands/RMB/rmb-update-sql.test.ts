@@ -1,15 +1,11 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import {
-  CommandUtils,
-  wait,
-  openAndSelectRMBItemFromChangelog,
-  openAndSelectRMBItemFromChangelogFromExplorer,
-} from "../../CommandUtils";
+import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
+import { InputBox } from "vscode-extension-tester";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -34,7 +30,7 @@ suite("update-sql: Right Click Menu", function () {
   test("should execute 'update-sql' command from RMB in file", async function () {
     this.timeout(80_000);
     await executeCommand(configurationName, () =>
-      openAndSelectRMBItemFromChangelog("Generate SQL File for incoming changes")
+      CommandUtils.openAndSelectRMBItemFromChangelog("Generate SQL File for incoming changes")
     );
   });
 
@@ -44,7 +40,7 @@ suite("update-sql: Right Click Menu", function () {
   test("should execute 'update-sql' command from RMB in file explorer", async function () {
     this.timeout(80_000);
     await executeCommand(configurationName, () =>
-      openAndSelectRMBItemFromChangelogFromExplorer("Generate SQL File for incoming changes")
+      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate SQL File for incoming changes")
     );
   });
 
@@ -66,27 +62,12 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
 
   await DockerTestUtils.resetDB();
 
-  const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(CommandUtils.CHANGELOG_FILE);
-  await input.selectQuickPick(1);
-
-  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-  await input.confirm();
-
-  await wait();
-
-  await input.setText("foo");
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  await wait();
+  await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
   await contextMenuFunction();
   await wait();
+
+  const input = new InputBox();
 
   await input.setText(configurationName);
   await input.confirm();
