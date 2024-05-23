@@ -1,8 +1,8 @@
-import path from "path";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for testing unexpected changesets.
@@ -24,22 +24,22 @@ suite("Unexpected Changesets", function () {
   /**
    * Test function that executes the 'Unexpected Changesets' command with different context types.
    */
-  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+  CommandUtils.matrixExecution((option, exec, key) => {
     test(
       "should execute 'Unexpected Changesets' with context type '" + option + "' command with " + key,
       async function () {
         this.timeout(40_000);
-        await CommandUtils.resetDB(CommandUtils.pool);
+        await DockerTestUtils.resetDB();
 
         const input = await LiquibaseGUITestUtils.startCommandExecution("unexpected changesets");
 
         await input.setText(configurationName);
         await input.confirm();
 
-        await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+        await input.setText(CommandUtils.CHANGELOG_FILE);
         await input.selectQuickPick(1);
 
-        if (option === CommandUtils.noContext) {
+        if (option === ContextOptions.NO_CONTEXT) {
           await input.setText(option);
           await input.confirm();
         } else {

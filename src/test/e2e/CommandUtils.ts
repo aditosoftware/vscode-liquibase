@@ -4,44 +4,72 @@ import {
   InputBox,
   ModalDialog,
   OutputView,
+  SideBarView,
   TextEditor,
+  TreeItem,
   VSBrowser,
 } from "vscode-extension-tester";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
-import mariadb from "mariadb";
 import path from "path";
 import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
-import { RemoveCacheOptions } from "../../constants";
+import { ContextOptions, RemoveCacheOptions } from "../../constants";
 import assert from "assert";
+import { randomUUID } from "crypto";
+import * as fs from "fs";
+
+/**
+ * Information regarding the setup of the tests.
+ */
+type SetupTestType = {
+  /**
+   * If the container should be started.
+   */
+  startContainer?: boolean;
+};
 
 /**
  * Utils for executing commands during the test.
  */
 export class CommandUtils {
-  // TODO duplicate values from existing variables!!
-  static readonly noContext = "Do not use any contexts";
-  static readonly loadAllContext: string = "Load all contexts from the changelog file";
-  static readonly recentContext: string = "Use any of the recently loaded contexts";
-  static readonly pool = CommandUtils.createPool();
+  /**
+   * The path to the workspace.
+   */
+  static readonly WORKSPACE_PATH = path.join(process.cwd(), "out", "temp", "workspace");
+
+  /**
+   * The path to the liquibase folder inside the workspace.
+   */
+  static readonly LIQUIBASE_FOLDER = path.join(this.WORKSPACE_PATH, ".liquibase");
+
+  /**
+   * The path to the changelog file inside the liquibase folder inside the workspace.
+   */
+  static readonly CHANGELOG_FILE = path.join(this.LIQUIBASE_FOLDER, "changelog.xml");
+
+  /**
+   * The output panel where all command output is written.
+   */
   static outputPanel: OutputView;
-  static readonly contextOptions = [CommandUtils.noContext, CommandUtils.loadAllContext, CommandUtils.recentContext];
-  static readonly contextFunctions = {
-    "all available contexts": CommandUtils.getAllContext,
-    "the first available context": CommandUtils.getFirstContext,
-    "no context": CommandUtils.getNoneContext,
-  };
 
   /**
    * Opens a temp workspace and closes all editors.
    */
-  static async setupTests(): Promise<string> {
-    await DockerTestUtils.startContainer();
+  static async setupTests({ startContainer = true }: SetupTestType = {}): Promise<string> {
+    // start the container
+    if (startContainer) {
+      await DockerTestUtils.startContainer();
+    }
+
+    // open the workspace
     await CommandUtils.openWorkspace();
 
+    // create a configuration
     const configurationName = await LiquibaseGUITestUtils.createConfiguration();
 
+    // and close all editors
     await new EditorView().closeAllEditors();
 
+    // open our output panel
     CommandUtils.outputPanel = await new BottomBarPanel().openOutputView();
     await CommandUtils.outputPanel.selectChannel("Liquibase");
 
@@ -49,10 +77,20 @@ export class CommandUtils {
   }
 
   /**
+   * Creates a temporary folder for the tests.
+   * @returns - the path to the temporary folder
+   */
+  static generateTemporaryFolder(): string {
+    const tempDir = path.join(CommandUtils.WORKSPACE_PATH, "output", randomUUID());
+    fs.mkdirSync(tempDir, { recursive: true });
+    return tempDir;
+  }
+
+  /**
    * Opens the workspace.
    */
   static async openWorkspace(): Promise<void> {
-    await VSBrowser.instance.openResources(path.join(process.cwd(), "out", "temp", "workspace"));
+    await VSBrowser.instance.openResources(CommandUtils.WORKSPACE_PATH);
   }
 
   /**
@@ -87,30 +125,21 @@ export class CommandUtils {
   }
 
   /**
-   * Creates a pool for the database.
-   * @param database - the name of the database
-   * @returns the created pool
+   * Executes a callback function for a matrix of options.
+   *
+   * @param callback - The function to be executed. It takes three parameters:
+   *   - `option`: A string representing the current option.
+   *   - `exec`: A function that returns a promise and is executed for the current option.
+   *   - `key`: A string representing the key associated with the current option.
    */
-  static createPool(database?: string): mariadb.Pool {
-    return mariadb.createPool({
-      host: "localhost",
-      user: DockerTestUtils.username,
-      password: DockerTestUtils.password,
-      connectionLimit: 10,
-      port: 3310,
-      database: database,
-    });
-  }
+  static matrixExecution(callback: (option: string, exec: () => Promise<void>, key: string) => void): void {
+    const options = [ContextOptions.NO_CONTEXT, ContextOptions.LOAD_ALL_CONTEXT, ContextOptions.USE_RECENTLY_LOADED];
+    const execFunctions = {
+      "all available contexts": CommandUtils.getAllContext,
+      "the first available context": CommandUtils.getFirstContext,
+      "no context": CommandUtils.getNoneContext,
+    };
 
-  /**
-   * Cartesian Product thingy
-   * TODO tsdoc
-   */
-  static matrixExecution(
-    options: string[],
-    execFunctions: object,
-    callback: (option: string, exec: () => Promise<void>, key: string) => void
-  ): void {
     options.forEach((option) => {
       Object.entries(execFunctions).forEach(([key, exec]) => {
         callback(option, exec, key);
@@ -142,12 +171,149 @@ export class CommandUtils {
   }
 
   /**
-   * Resets the database by dropping and creating the schema.
-   * @param pool - the pool for the mariaDB database
+   * Opens the Liquibase context menu and selects the given action.
+   *
+   * This method will open an changelog before executing the action.
+   *
+   * @param action - the action that should be called
    */
-  static async resetDB(pool: mariadb.Pool): Promise<void> {
-    await DockerTestUtils.executeMariaDBSQL(pool, "DROP SCHEMA data");
-    await DockerTestUtils.executeMariaDBSQL(pool, "CREATE SCHEMA data");
+  static async openAndSelectRMBItemFromChangelog(action: string): Promise<void> {
+    await VSBrowser.instance.openResources(CommandUtils.CHANGELOG_FILE);
+
+    await wait();
+
+    await CommandUtils.openAndSelectRMBItemFromAlreadyOpenedFile(action);
+  }
+
+  /**
+   * Opens the Liquibase context menu in the explorer side bar on the changelog file and selects the given action.
+   * @param action - the name of the action
+   */
+  static async openAndSelectRMBItemFromChangelogFromExplorer(action: string): Promise<void> {
+    return CommandUtils.openAndSelectRMBItemFromExplorer(action, ".liquibase", "changelog.xml");
+  }
+
+  /**
+   * Opens the explorer at a specific point and opens the context menu.
+   * @param action - the name of the action that should be executed
+   * @param topLevelItem - the name of the top level folder in the explorer
+   * @param children - all the children folders and the file that should be selected in the specific order
+   */
+  static async openAndSelectRMBItemFromExplorer(
+    action: string,
+    topLevelItem: string,
+    ...children: string[]
+  ): Promise<void> {
+    const explorer = await new SideBarView().getContent().getSection("workspace");
+
+    // find the topLevelItem and expand it
+    const topLevelNode = (await explorer.findItem(topLevelItem)) as TreeItem;
+    assert.ok(topLevelNode);
+    await topLevelNode.expand();
+
+    // find all children recursively and expand them
+    let lastChild: TreeItem | undefined;
+    for (const child of children) {
+      if (lastChild) {
+        lastChild = (await lastChild.findChildItem(child)) as TreeItem;
+      } else {
+        lastChild = (await topLevelNode.findChildItem(child)) as TreeItem;
+      }
+      assert.ok(lastChild);
+      await lastChild.expand();
+    }
+
+    assert.ok(lastChild);
+
+    // Open context menu on file in explorer
+    const menu = await lastChild.openContextMenu();
+    // open the liquibase submenu
+    const liquibaseContextMenu = await menu.select("Liquibase");
+    assert.ok(liquibaseContextMenu);
+    // and select the action
+    await liquibaseContextMenu.select(action);
+  }
+
+  /**
+   * Opens the Liquibase context menu and selects the given action.
+   *
+   * @param action - the action that should be called
+   */
+  static async openAndSelectRMBItemFromAlreadyOpenedFile(action: string): Promise<void> {
+    const editor = new TextEditor();
+    const menu = await editor.openContextMenu();
+    const liquibaseMenu = await menu.select("Liquibase");
+    await liquibaseMenu?.select(action);
+  }
+
+  /**
+   * Removes the whole cache.
+   */
+  static async removeWholeCache(): Promise<void> {
+    const input = await LiquibaseGUITestUtils.startCommandExecution(
+      "Cache: Removes any values from the recently loaded elements"
+    );
+
+    await input.setText(RemoveCacheOptions.WHOLE_CACHE);
+    await input.confirm();
+
+    const modalDialog = new ModalDialog();
+    await modalDialog.pushButton("Delete");
+  }
+
+  /**
+   * Executes the update command while selecting a number of contexts.
+   *
+   * @param configurationName - the name of the current configuration
+   * @param contextOption - the option how to load the contexts
+   * @param filterTextForContexts - the text for which the contexts should be filtered before selecting all of them
+   */
+  static async executeUpdate(
+    configurationName: string,
+    contextOption: ContextOptions.LOAD_ALL_CONTEXT | ContextOptions.USE_RECENTLY_LOADED,
+    filterTextForContexts?: string
+  ): Promise<void> {
+    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
+
+    await input.setText(configurationName);
+    await input.confirm();
+
+    await input.setText(CommandUtils.CHANGELOG_FILE);
+    await input.selectQuickPick(1);
+
+    await input.setText(contextOption);
+    await input.confirm();
+
+    await wait();
+
+    if (filterTextForContexts) {
+      await input.setText(filterTextForContexts);
+    }
+
+    await input.toggleAllQuickPicks(true);
+    await input.confirm();
+
+    assert.ok(
+      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully")
+    );
+  }
+
+  /**
+   * Executes the "Create Tag" command.
+   *
+   * @param configurationName - the name of the configuration
+   * @param tagName - the name of the tag that should be created
+   */
+  static async executeCreateTag(configurationName: string, tagName: string): Promise<void> {
+    const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
+
+    await input.setText(configurationName);
+    await input.confirm();
+
+    await input.setText(tagName);
+    await input.confirm();
+
+    await wait();
   }
 }
 
@@ -157,77 +323,4 @@ export class CommandUtils {
  */
 export async function wait(timeout: number = 2000): Promise<void> {
   await new Promise((r) => setTimeout(r, timeout));
-}
-
-/**
- * Opens the Liquibase context menu and selects the given action.
- *
- * This method will open an changelog before executing the action.
- *
- * @param action - the action that should be called
- */
-export async function openAndSelectRMBItemFromChangelog(action: string): Promise<void> {
-  await VSBrowser.instance.openResources(
-    path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml")
-  );
-
-  await wait();
-
-  await openAndSelectRMBItemFromAlreadyOpenedFile(action);
-}
-
-/**
- * Opens the Liquibase context menu and selects the given action.
- *
- * @param action - the action that should be called
- */
-export async function openAndSelectRMBItemFromAlreadyOpenedFile(action: string): Promise<void> {
-  const editor = new TextEditor();
-  const menu = await editor.openContextMenu();
-  const liquibaseMenu = await menu.select("Liquibase");
-  await liquibaseMenu?.select(action);
-}
-
-/**
- * Removes the whole cache.
- */
-export async function removeWholeCache(): Promise<void> {
-  const input = await LiquibaseGUITestUtils.startCommandExecution(
-    "Cache: Removes any values from the recently loaded elements"
-  );
-
-  await input.setText(RemoveCacheOptions.WHOLE_CACHE);
-  await input.confirm();
-
-  const modalDialog = new ModalDialog();
-  await modalDialog.pushButton("Delete");
-}
-
-/**
- * Creates some data for the cache via the update command.
- *
- * TODO allgemeiner auslagern?
- *
- * @param configurationName - the name of the current configuration
- */
-export async function createDataViaUpdate(configurationName: string): Promise<void> {
-  const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-  await input.selectQuickPick(1);
-
-  await input.setText(CommandUtils.loadAllContext);
-  await input.confirm();
-
-  await wait();
-
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully")
-  );
 }

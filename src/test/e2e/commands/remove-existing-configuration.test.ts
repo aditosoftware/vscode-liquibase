@@ -1,11 +1,11 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { CommandUtils, createDataViaUpdate } from "../CommandUtils";
-import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { CommandUtils } from "../CommandUtils";
 import { ModalDialog, TextEditor } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { RemoveConfigurationOptions } from "../../../constants";
+import { ContextOptions, RemoveConfigurationOptions } from "../../../constants";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
  * Test suite for adding an removing an existing liquibase.properties file from the configuration.
@@ -25,9 +25,9 @@ suite("Remove existing liquibase.properties from the configuration", function ()
   });
 
   /**
-   * Tear down the test suite.
+   * Teardown function that runs after the test suite.
    */
-  teardown(async function () {
+  teardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 
@@ -40,7 +40,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
     { removeOption: RemoveConfigurationOptions.DELETE_ALL, settingsThere: false, propertiesFileThere: false },
   ].forEach((pArgument) => {
     test(`should remove a liquibase.properties with remove option ${pArgument.removeOption}`, async function () {
-      await createDataViaUpdate(configurationName);
+      await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
       const input = await LiquibaseGUITestUtils.startCommandExecution(
         "Remove existing liquibase.properties from the configuration"
@@ -71,10 +71,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
 
       // check settings file
       const settings = JSON.parse(
-        fs.readFileSync(
-          path.join(process.cwd(), "out", "temp", "workspace", "data", "liquibase", "settings.json"),
-          "utf-8"
-        )
+        fs.readFileSync(path.join(CommandUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json"), "utf-8")
       );
       assert.strictEqual(
         Object.keys(settings).includes(configurationName),

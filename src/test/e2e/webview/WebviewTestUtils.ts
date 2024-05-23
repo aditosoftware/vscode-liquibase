@@ -1,8 +1,7 @@
 import assert from "assert";
 import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester";
-import { wait } from "../CommandUtils";
+import { CommandUtils, wait } from "../CommandUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import path from "path";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { randomUUID } from "crypto";
 
@@ -139,7 +138,7 @@ export class WebviewTestUtils {
         await webView.switchBack();
 
         const input = new InputBox();
-        await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+        await input.setText(CommandUtils.CHANGELOG_FILE);
         await input.selectQuickPick(1);
 
         // swap back to the webview

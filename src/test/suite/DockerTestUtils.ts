@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 import { isWindows } from "../../utilities/osUtilities";
-import mariadb from 'mariadb';
+import mariadb from "mariadb";
 
 /**
  * Creates and manages a maria docker container for tests.
@@ -36,10 +36,15 @@ export class DockerTestUtils {
   private static readonly docker = `${isWindows() ? "wsl" : ""} docker`;
 
   /**
+   * The connection pool to the mariaDB without any database.
+   */
+  private static readonly pool = this.createPool();
+
+  /**
    * Starts a docker container.
    *
    * You want to check the status of the container with `checkContainerStatus` afterwards.
-   * 
+   *
    * @param containerName - The container that should be started
    *
    * @returns the id of the started container
@@ -48,24 +53,31 @@ export class DockerTestUtils {
     let command: string = "";
     switch (containerName) {
       case "mariadb":
-        command = `${this.docker} run -d -p ${exposedPort}:3306 --name ${this.containerNamePrefix + containerName} -e MYSQL_ROOT_PASSWORD=${this.password} -e MYSQL_USER=${this.username} -e MYSQL_DATABASE=${this.dbName} mariadb`;
+        command = `${this.docker} run -d -p ${exposedPort}:3306 --name ${
+          this.containerNamePrefix + containerName
+        } -e MYSQL_ROOT_PASSWORD=${this.password} -e MYSQL_USER=${this.username} -e MYSQL_DATABASE=${
+          this.dbName
+        } mariadb`;
         break;
 
       case "postgres":
-        command = `${this.docker} run -d -p ${exposedPort}:5432 --name ${this.containerNamePrefix + containerName} -e POSTGRES_PASSWORD=${this.password} -e POSTGRES_USER=${this.username} -e POSTGRES_DB=${this.dbName} postgres`;
+        command = `${this.docker} run -d -p ${exposedPort}:5432 --name ${
+          this.containerNamePrefix + containerName
+        } -e POSTGRES_PASSWORD=${this.password} -e POSTGRES_USER=${this.username} -e POSTGRES_DB=${
+          this.dbName
+        } postgres`;
         break;
 
       default:
         break;
     }
 
-
     return this.executeCommand(command);
   }
 
   /**
    * Stops and removes the docker container.
-   * 
+   *
    * @param containerName - Container that should be removed
    *
    * @returns The id of the removed container
@@ -78,31 +90,39 @@ export class DockerTestUtils {
 
   /**
    * Checks the status of the specified container and the availability of the database within it.
-   * 
+   *
    * @param containerName - The name of the container to check.
    * @param dbExecutable - The executable for the database client.
    * @returns A Promise that resolves when the container status and database availability are checked.
    */
-  static async checkContainerStatus(containerName: string = "mariadb", dbExecutable: string = "mysql-client"): Promise<void> {
+  static async checkContainerStatus(
+    containerName: string = "mariadb",
+    dbExecutable: string = "mysql-client"
+  ): Promise<void> {
     // check if container is running
-    const running = await this.repeatCommand(`${this.docker} inspect -f '{{.State.Running}}' ${this.containerNamePrefix + containerName}`);
+    const running = await this.repeatCommand(
+      `${this.docker} inspect -f '{{.State.Running}}' ${this.containerNamePrefix + containerName}`
+    );
 
     if (running && running.trim() === "true") {
-      
       switch (containerName) {
         case "mariadb":
           // install mysql to the container
           await this.executeCommand(
-            `${this.docker} exec ${this.containerNamePrefix + containerName} sh -c "apt-get update && apt-get install -y ${dbExecutable}"`
+            `${this.docker} exec ${
+              this.containerNamePrefix + containerName
+            } sh -c "apt-get update && apt-get install -y ${dbExecutable}"`
           );
 
           // check if database is available
           await this.repeatCommand(
-            `${this.docker} exec ${this.containerNamePrefix + containerName} mysql -u${this.username} -p${this.password} -e "SELECT 1;"`
+            `${this.docker} exec ${this.containerNamePrefix + containerName} mysql -u${this.username} -p${
+              this.password
+            } -e "SELECT 1;"`
           );
           break;
 
-          // check if database is available
+        // check if database is available
         case "postgres":
           await this.repeatCommand(
             `${this.docker} exec ${this.containerNamePrefix + containerName} psql ${this.dbName} -c "SELECT 1;"`
@@ -110,7 +130,9 @@ export class DockerTestUtils {
 
           //
           await this.executeCommand(
-            `${this.docker} exec ${this.containerNamePrefix + containerName} psql ${this.dbName} -c "CREATE SCHEMA ${this.dbName};"`
+            `${this.docker} exec ${this.containerNamePrefix + containerName} psql ${this.dbName} -c "CREATE SCHEMA ${
+              this.dbName
+            };"`
           );
           break;
 
@@ -165,26 +187,50 @@ export class DockerTestUtils {
   }
 
   /**
-  * Executes an SQL command on a MariaDB pool.
-  * 
-  * @param pool - The MariaDB pool to execute the command on.
-  * @param command - The SQL command to execute.
-  * @returns A Promise resolving to the result of the SQL command execution.
-  */
-  static async executeMariaDBSQL(pool: mariadb.Pool, command: string): Promise<string> {
+   * Executes an SQL command on a MariaDB pool.
+   *
+   * @param command - The SQL command to execute.
+   * @param pool - The MariaDB pool to execute the command on.
+   * @returns A Promise resolving to the result of the SQL command execution.
+   */
+  static async executeMariaDBSQL(command: string, pool?: mariadb.Pool): Promise<string> {
+    const usedPool = pool || this.pool;
+
     let conn;
     try {
-      conn = await pool.getConnection();
+      conn = await usedPool.getConnection();
       const res = await conn.query(command);
       return res;
-    }
-    catch (e) {
+    } catch (e) {
       conn?.destroy();
       console.error(e);
       return "";
-    }
-    finally {
+    } finally {
       conn?.destroy();
     }
+  }
+
+  /**
+   * Creates a pool for the database.
+   * @param database - the name of the database
+   * @returns the created pool
+   */
+  static createPool(database?: string): mariadb.Pool {
+    return mariadb.createPool({
+      host: "localhost",
+      user: DockerTestUtils.username,
+      password: DockerTestUtils.password,
+      connectionLimit: 10,
+      port: 3310,
+      database: database,
+    });
+  }
+
+  /**
+   * Resets the database by dropping and creating the schema.
+   */
+  static async resetDB(): Promise<void> {
+    await DockerTestUtils.executeMariaDBSQL("DROP SCHEMA data", this.pool);
+    await DockerTestUtils.executeMariaDBSQL("CREATE SCHEMA data", this.pool);
   }
 }

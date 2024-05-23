@@ -14,6 +14,8 @@ suite("History", async function () {
    */
   let configurationName: string;
 
+  const temporaryFolder = CommandUtils.generateTemporaryFolder();
+
   /**
    * Set up the test suite.
    */
@@ -23,52 +25,31 @@ suite("History", async function () {
   });
 
   /**
-   * Test the 'history' command with TABULAR output format.
+   * Test the 'history' command with TABULAR and TEXT output format.
    */
-  test("should execute 'history' command as TABULAR", async function () {
-    this.timeout(40_000);
+  ["TABULAR", "TEXT"].forEach((pHistoryOption) => {
+    test(`should execute 'history' command as ${pHistoryOption}`, async function () {
+      this.timeout(40_000);
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("history");
+      const fileName = `history_${pHistoryOption}.txt`;
 
-    await input.setText(configurationName);
-    await input.confirm();
+      const input = await LiquibaseGUITestUtils.startCommandExecution("history");
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
+      await input.setText(configurationName);
+      await input.confirm();
 
-    await input.setText("Test2.txt");
-    await input.confirm();
+      await CommandUtils.selectFolder(input, temporaryFolder);
 
-    await input.setText("TABULAR");
-    await input.confirm();
+      await input.setText(fileName);
+      await input.confirm();
 
-    await wait();
+      await input.setText(pHistoryOption);
+      await input.confirm();
 
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "Test2.txt")));
-  });
+      await wait();
 
-  /**
-   * Test the 'history' command with TEXT output format.
-   */
-  test("should execute 'history' command as TEXT", async function () {
-    this.timeout(40_000);
-    await wait();
-
-    const input = await LiquibaseGUITestUtils.startCommandExecution("history");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "liquibase"));
-
-    await input.setText("Test.txt");
-    await input.confirm();
-
-    await input.setText("TEXT");
-    await input.confirm();
-
-    await wait();
-
-    assert.ok(fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "Test.txt")));
+      assert.ok(fs.existsSync(path.join(temporaryFolder, fileName)));
+    });
   });
 
   /**

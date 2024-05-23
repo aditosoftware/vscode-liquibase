@@ -1,8 +1,8 @@
-import path from "path";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the 'Changelog Sync' functionality.
@@ -24,23 +24,23 @@ suite("Changelog Sync", function () {
   /**
    * Executes the 'Changelog Sync' command with different context types and options.
    */
-  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+  CommandUtils.matrixExecution((option, exec, key) => {
     /**
      * Test case for executing the 'Changelog Sync' command with a specific context type and option.
      */
     test("should execute 'Changelog Sync' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
-      await CommandUtils.resetDB(CommandUtils.pool);
+      await DockerTestUtils.resetDB();
 
       const input = await LiquibaseGUITestUtils.startCommandExecution("Changelog Sync");
 
       await input.setText(configurationName);
       await input.confirm();
 
-      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+      await input.setText(CommandUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
-      if (option === CommandUtils.noContext) {
+      if (option === ContextOptions.NO_CONTEXT) {
         await input.setText(option);
         await input.confirm();
       } else {

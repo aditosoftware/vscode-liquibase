@@ -1,4 +1,3 @@
-import path from "path";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils } from "../CommandUtils";
@@ -32,7 +31,7 @@ suite("Validate", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     assert.ok(

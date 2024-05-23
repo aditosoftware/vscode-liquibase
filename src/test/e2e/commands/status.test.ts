@@ -1,8 +1,8 @@
-import path from "path";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the 'status' command.
@@ -24,7 +24,7 @@ suite("Status", function () {
   /**
    * Test the 'status' command with different context types and options.
    */
-  CommandUtils.matrixExecution(CommandUtils.contextOptions, CommandUtils.contextFunctions, (option, exec, key) => {
+  CommandUtils.matrixExecution((option, exec, key) => {
     test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
 
@@ -33,10 +33,10 @@ suite("Status", function () {
       await input.setText(configurationName);
       await input.confirm();
 
-      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+      await input.setText(CommandUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
-      if (option === CommandUtils.noContext) {
+      if (option === ContextOptions.NO_CONTEXT) {
         await input.setText(option);
         await input.confirm();
       } else {

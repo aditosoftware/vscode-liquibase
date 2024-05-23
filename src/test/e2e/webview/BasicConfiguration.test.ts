@@ -45,7 +45,7 @@ suite("Basic webview tests", () => {
       await webView.switchBack();
 
       const input = new InputBox();
-      await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+      await input.setText(CommandUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
       // swap back to the webview
@@ -55,7 +55,7 @@ suite("Basic webview tests", () => {
 
       const changelogValue = await changelogInput.getAttribute("value");
 
-      assert.strictEqual(changelogValue, path.join("liquibase", "changelog.xml"));
+      assert.strictEqual(changelogValue, path.join(".liquibase", "changelog.xml"));
     });
   });
 });

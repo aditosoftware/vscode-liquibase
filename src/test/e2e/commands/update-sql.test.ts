@@ -4,6 +4,7 @@ import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the 'update-sql' command.
@@ -28,35 +29,21 @@ suite("Update-sql", function () {
   test("should execute 'Update SQL' command", async function () {
     this.timeout(80_000);
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
+    const temporaryFolder = CommandUtils.generateTemporaryFolder();
+
+    // execute update to have some changes
+    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
+
+    // execute the update-sql command
+    const input = await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
 
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
+    await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.loadAllContext);
-    await input.confirm();
-
-    await wait();
-
-    await input.setText("foo");
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await wait();
-
-    // Execute only one changeset to roll back to
-    await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", "liquibase", "changelog.xml"));
-    await input.selectQuickPick(1);
-
-    await input.setText(CommandUtils.loadAllContext);
+    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
 
     await wait();
@@ -64,8 +51,7 @@ suite("Update-sql", function () {
     await input.toggleAllQuickPicks(true);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
-
+    await CommandUtils.selectFolder(input, temporaryFolder);
     await wait();
 
     await input.setText("update.sql");
@@ -77,10 +63,7 @@ suite("Update-sql", function () {
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),
       "Notification did NOT show up"
     );
-    assert.ok(
-      fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "update.sql")),
-      "Did NOT create a SQL File"
-    );
+    assert.ok(fs.existsSync(path.join(temporaryFolder, "update.sql")), "Did NOT create a SQL File");
   });
 
   /**

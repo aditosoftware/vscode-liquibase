@@ -2,7 +2,6 @@ import path from "path";
 import fs from "fs";
 import assert from "assert";
 import { CommandUtils, wait } from "../CommandUtils";
-import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { By, InputBox, StatusBar, Workbench } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 
@@ -55,14 +54,14 @@ suite("Add existing liquibase.properties to the configuration", function () {
     await input.confirm();
 
     // Select the folder
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace"));
+    await CommandUtils.selectFolder(input, CommandUtils.WORKSPACE_PATH);
 
     // Select the properties file
     await input.findElement(By.linkText(propertiesFileName)).click();
 
     await wait();
 
-    const settingsFile = path.join(process.cwd(), "out", "temp", "workspace", "data", "liquibase", "settings.json");
+    const settingsFile = path.join(CommandUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json");
     assert.ok(fs.existsSync(settingsFile));
 
     // Get the content of the settings file
@@ -73,14 +72,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
     assert.ok(dataForName);
     assert.strictEqual(
       dataForName.toLowerCase(),
-      path.join(process.cwd(), "out", "temp", "workspace", propertiesFileName).toLowerCase()
+      path.join(CommandUtils.WORKSPACE_PATH, propertiesFileName).toLowerCase()
     );
-  });
-
-  /**
-   * Tear down the test suite.
-   */
-  suiteTeardown(async function () {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

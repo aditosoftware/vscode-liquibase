@@ -27,11 +27,13 @@ suite("generate changelog", function () {
    */
   test("should execute 'generate changelog' command", async function () {
     this.timeout(80_000);
-    await CommandUtils.resetDB(CommandUtils.pool);
+    await DockerTestUtils.resetDB();
+
+    const temporaryFolder = CommandUtils.generateTemporaryFolder();
 
     await DockerTestUtils.executeMariaDBSQL(
-      CommandUtils.createPool("data"),
-      "CREATE TABLE test_table (column1 char(36), column2 varchar(255))"
+      "CREATE TABLE test_table (column1 char(36), column2 varchar(255))",
+      DockerTestUtils.createPool("data")
     );
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("generate changelog");
@@ -39,17 +41,14 @@ suite("generate changelog", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, path.join(process.cwd(), "out", "temp", "workspace", "myFolder"));
+    await CommandUtils.selectFolder(input, temporaryFolder);
 
-    // name of the changelog
+    // name of the changelog, just use the default
     await input.confirm();
 
     await wait(4000);
 
-    assert.ok(
-      fs.existsSync(path.join(process.cwd(), "out", "temp", "workspace", "myFolder", "changelog.xml")),
-      "File does NOT exist"
-    );
+    assert.ok(fs.existsSync(path.join(temporaryFolder, "changelog.xml")), "File does NOT exist");
   });
 
   /**
