@@ -1,8 +1,8 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
-import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { CommandUtils, openAndSelectRMBItemFromChangelog, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
+import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -19,6 +19,13 @@ suite("validate: Right Click Menu", function () {
   suiteSetup(async function () {
     this.timeout(50_000);
     configurationName = await CommandUtils.setupTests();
+  });
+
+  /**
+   * Teardown function that runs after the test suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 
   /**
@@ -39,13 +46,6 @@ suite("validate: Right Click Menu", function () {
   test("should execute 'validate' command from RMB in file explorer", async function () {
     this.timeout(50_000);
     await executeCommand(configurationName, () => openAndSelectRMBItemFromChangelog("Validate"));
-  });
-
-  /**
-   * Cleans up the test suite by stopping and removing the Docker container.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });
 

@@ -4,6 +4,7 @@ import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the 'update-sql' command.
@@ -36,7 +37,7 @@ suite("Update-sql", function () {
     await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.loadAllContext);
+    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
 
     await wait();
@@ -56,7 +57,7 @@ suite("Update-sql", function () {
     await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.loadAllContext);
+    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
 
     await wait();

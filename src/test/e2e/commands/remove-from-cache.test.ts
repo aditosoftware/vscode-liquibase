@@ -1,9 +1,9 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { CommandUtils, createDataViaUpdate, removeWholeCache } from "../CommandUtils";
 import { RemoveCacheOptions } from "../../../constants";
 import { ModalDialog } from "vscode-extension-tester";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
  * Tests the removing of the cache values.
@@ -23,7 +23,7 @@ suite("Removes any values from the recently loaded elements", () => {
   });
 
   /**
-   * Teardown function that runs after all tests in the suite.
+   * Teardown function that runs after the test suite.
    */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();

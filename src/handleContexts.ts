@@ -7,26 +7,12 @@ import { getClasspathSeparator } from "./utilities/osUtilities";
 import path from "path";
 import { PROPERTY_FILE } from "./input/ConnectionType";
 import { cacheHandler } from "./extension";
+import { ContextOptions } from "./constants";
 
 /**
  * The name of the pre selection dialog of the contexts.
  */
 const contextPreDialog = "contextPre";
-
-/**
- * Option of the `contextPreDialog` to not use any contexts.
- */
-const noContext = "Do not use any contexts";
-
-/**
- * Option of the `contextPreDialog` to load the contexts from the root changelog file.
- */
-const loadContext = "Load all contexts from the changelog file";
-
-/**
- * Option of the `contextPreDialog` to load the contexts from the cache.
- */
-const useRecentlyLoaded = "Use any of the recently loaded contexts";
 
 /**
  * Indicator in any context command argument to not use any context.
@@ -57,12 +43,12 @@ export function generateContextInputs(): PickPanelConfig[] {
 
           const items: vscode.QuickPickItem[] = [
             {
-              label: noContext,
+              label: ContextOptions.NO_CONTEXT,
               detail: "This will only execute any changeset that does not have any context",
               iconPath: new vscode.ThemeIcon("search-remove"),
             },
             {
-              label: loadContext,
+              label: ContextOptions.LOAD_ALL_CONTEXT,
               detail: "The loading might take a while.",
               iconPath: new vscode.ThemeIcon("sync"),
             },
@@ -70,7 +56,7 @@ export function generateContextInputs(): PickPanelConfig[] {
 
           if (cachedContexts) {
             items.push({
-              label: useRecentlyLoaded,
+              label: ContextOptions.USE_RECENTLY_LOADED,
               detail: cachedContexts,
               iconPath: new vscode.ThemeIcon("list-selection"),
             });
@@ -107,7 +93,7 @@ export function generateContextInputs(): PickPanelConfig[] {
 function generateCmdArgsForPreContextSelection(dialogValues: DialogValues): string[] | undefined {
   const selected = dialogValues.inputValues.get(contextPreDialog);
   if (selected && selected[0]) {
-    if (selected[0] === noContext) {
+    if (selected[0] === ContextOptions.NO_CONTEXT) {
       return [`--contexts=${NO_CONTEXT_USED}`];
     }
   }
@@ -164,7 +150,7 @@ function showContextSelection(dialogValues: DialogValues): boolean {
   const result = dialogValues.inputValues.get(contextPreDialog);
 
   if (result && result[0]) {
-    return result[0] !== noContext;
+    return result[0] !== ContextOptions.NO_CONTEXT;
   }
 
   return false;
@@ -183,7 +169,7 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
   const result = dialogValues.inputValues.get(contextPreDialog);
 
   if (result && result[0]) {
-    if (result[0] === useRecentlyLoaded) {
+    if (result[0] === ContextOptions.USE_RECENTLY_LOADED) {
       return {
         items: cache.map((pCache) => {
           return {
@@ -192,7 +178,7 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
         }),
         additionalTitle: "from recently loaded elements",
       };
-    } else if (result[0] === loadContext) {
+    } else if (result[0] === ContextOptions.LOAD_ALL_CONTEXT) {
       return await loadContextsFromChangelog(dialogValues);
     }
   }

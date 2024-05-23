@@ -11,6 +11,7 @@ import {
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { randomUUID } from "crypto";
+import { ContextOptions } from "../../../../constants";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -74,7 +75,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(configurationName);
   await input.confirm();
 
-  await input.setText(CommandUtils.noContext);
+  await input.setText(ContextOptions.NO_CONTEXT);
   await input.confirm();
 
   // Set the output directory for the generated documentation.

@@ -8,6 +8,7 @@ import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import assert from "assert";
 import { randomUUID } from "crypto";
+import { ContextOptions } from "../../../../constants";
 
 /**
  * Test suite for the "Rollback to Tag" command in the Right Click Menu.
@@ -68,7 +69,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(CommandUtils.CHANGELOG_FILE);
   await input.selectQuickPick(1);
 
-  await input.setText(CommandUtils.loadAllContext);
+  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
 
   await wait();
@@ -97,7 +98,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(CommandUtils.CHANGELOG_FILE);
   await input.selectQuickPick(1);
 
-  await input.setText(CommandUtils.recentContext);
+  await input.setText(ContextOptions.USE_RECENTLY_LOADED);
   await input.confirm();
 
   await wait();
@@ -113,7 +114,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(configurationName);
   await input.confirm();
 
-  await input.setText(CommandUtils.loadAllContext);
+  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
 
   await wait();

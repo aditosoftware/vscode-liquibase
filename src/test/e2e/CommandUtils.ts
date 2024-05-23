@@ -13,8 +13,18 @@ import { DockerTestUtils } from "../suite/DockerTestUtils";
 import mariadb from "mariadb";
 import path from "path";
 import { LiquibaseGUITestUtils } from "./LiquibaseGUITestUtils";
-import { RemoveCacheOptions } from "../../constants";
+import { ContextOptions, RemoveCacheOptions } from "../../constants";
 import assert from "assert";
+
+/**
+ * Information regarding the setup of the tests.
+ */
+type SetupTestType = {
+  /**
+   * If the container should be started.
+   */
+  startContainer?: boolean;
+};
 
 /**
  * Utils for executing commands during the test.
@@ -37,12 +47,14 @@ export class CommandUtils {
 
   // TODO TSDOC
   // TODO duplicate values from existing variables!!
-  static readonly noContext = "Do not use any contexts";
-  static readonly loadAllContext: string = "Load all contexts from the changelog file";
-  static readonly recentContext: string = "Use any of the recently loaded contexts";
+
   static readonly pool = CommandUtils.createPool();
   static outputPanel: OutputView;
-  static readonly contextOptions = [CommandUtils.noContext, CommandUtils.loadAllContext, CommandUtils.recentContext];
+  static readonly contextOptions = [
+    ContextOptions.NO_CONTEXT,
+    ContextOptions.LOAD_ALL_CONTEXT,
+    ContextOptions.USE_RECENTLY_LOADED,
+  ];
   static readonly contextFunctions = {
     "all available contexts": CommandUtils.getAllContext,
     "the first available context": CommandUtils.getFirstContext,
@@ -52,8 +64,11 @@ export class CommandUtils {
   /**
    * Opens a temp workspace and closes all editors.
    */
-  static async setupTests(): Promise<string> {
-    await DockerTestUtils.startContainer();
+  static async setupTests({ startContainer = true }: SetupTestType = {}): Promise<string> {
+    if (startContainer) {
+      await DockerTestUtils.startContainer();
+    }
+
     await CommandUtils.openWorkspace();
 
     const configurationName = await LiquibaseGUITestUtils.createConfiguration();
@@ -284,7 +299,7 @@ export async function createDataViaUpdate(configurationName: string): Promise<vo
   await input.setText(CommandUtils.CHANGELOG_FILE);
   await input.selectQuickPick(1);
 
-  await input.setText(CommandUtils.loadAllContext);
+  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
 
   await wait();

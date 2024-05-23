@@ -1,8 +1,8 @@
-import path from "path";
 import assert from "assert";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the "Rollback to Tag" command.
@@ -39,7 +39,7 @@ suite("Rollback to Tag", function () {
     await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.loadAllContext);
+    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
 
     await wait();
@@ -66,7 +66,7 @@ suite("Rollback to Tag", function () {
     await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.recentContext);
+    await input.setText(ContextOptions.USE_RECENTLY_LOADED);
     await input.confirm();
 
     await wait();
@@ -85,7 +85,7 @@ suite("Rollback to Tag", function () {
     await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.loadAllContext);
+    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
 
     await wait();

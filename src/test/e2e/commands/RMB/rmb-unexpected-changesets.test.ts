@@ -3,6 +3,7 @@ import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { CommandUtils, openAndSelectRMBItemFromChangelog, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
+import { ContextOptions } from "../../../../constants";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -62,7 +63,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(configurationName);
   await input.confirm();
 
-  await input.setText(CommandUtils.noContext);
+  await input.setText(ContextOptions.NO_CONTEXT);
   await input.confirm();
 
   assert.ok(

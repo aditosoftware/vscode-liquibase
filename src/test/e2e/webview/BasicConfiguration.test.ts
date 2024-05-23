@@ -84,7 +84,7 @@ suite("Basic webview tests", () => {
 
       const changelogValue = await changelogInput.getAttribute("value");
 
-      assert.strictEqual(changelogValue, path.join("liquibase", "changelog.xml"));
+      assert.strictEqual(changelogValue, path.join(".liquibase", "changelog.xml"));
     });
   });
 });

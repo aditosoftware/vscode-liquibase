@@ -4,6 +4,7 @@ import fs from "fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the 'diff' command.
@@ -44,7 +45,7 @@ suite("diff", function () {
     await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.loadAllContext);
+    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
 
     await wait();
@@ -98,7 +99,7 @@ suite("diff", function () {
     await input.setText(CommandUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
-    await input.setText(CommandUtils.loadAllContext);
+    await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
 
     await wait();

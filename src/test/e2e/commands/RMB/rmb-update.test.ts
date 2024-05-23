@@ -8,6 +8,7 @@ import {
   wait,
 } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
+import { ContextOptions } from "../../../../constants";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -67,7 +68,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(configurationName);
   await input.confirm();
 
-  await input.setText(CommandUtils.loadAllContext);
+  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
 
   await wait();

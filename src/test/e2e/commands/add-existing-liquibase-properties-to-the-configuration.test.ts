@@ -2,7 +2,6 @@ import path from "path";
 import fs from "fs";
 import assert from "assert";
 import { CommandUtils, wait } from "../CommandUtils";
-import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { By, InputBox, StatusBar, Workbench } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 
@@ -75,12 +74,5 @@ suite("Add existing liquibase.properties to the configuration", function () {
       dataForName.toLowerCase(),
       path.join(CommandUtils.WORKSPACE_PATH, propertiesFileName).toLowerCase()
     );
-  });
-
-  /**
-   * Tear down the test suite.
-   */
-  suiteTeardown(async function () {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

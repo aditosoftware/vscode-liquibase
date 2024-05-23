@@ -2,10 +2,10 @@ import path from "path";
 import fs from "fs";
 import assert from "assert";
 import { CommandUtils, createDataViaUpdate } from "../CommandUtils";
-import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ModalDialog, TextEditor } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { RemoveConfigurationOptions } from "../../../constants";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
  * Test suite for adding an removing an existing liquibase.properties file from the configuration.
@@ -25,9 +25,9 @@ suite("Remove existing liquibase.properties from the configuration", function ()
   });
 
   /**
-   * Tear down the test suite.
+   * Teardown function that runs after the test suite.
    */
-  teardown(async function () {
+  teardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 

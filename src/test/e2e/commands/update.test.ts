@@ -1,8 +1,8 @@
-import path from "path";
 import assert from "assert";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { CommandUtils, wait } from "../CommandUtils";
+import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the 'update' command.
@@ -37,7 +37,7 @@ suite("Update", function () {
       await input.setText(CommandUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
-      if (option === CommandUtils.noContext) {
+      if (option === ContextOptions.NO_CONTEXT) {
         await input.setText(option);
         await input.confirm();
 

@@ -9,6 +9,7 @@ import {
 } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
+import { ContextOptions } from "../../../../constants";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -71,7 +72,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(CommandUtils.CHANGELOG_FILE);
   await input.selectQuickPick(1);
 
-  await input.setText(CommandUtils.loadAllContext);
+  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
 
   await wait();
@@ -88,7 +89,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.setText(configurationName);
   await input.confirm();
 
-  await input.setText(CommandUtils.loadAllContext);
+  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
 
   await wait();

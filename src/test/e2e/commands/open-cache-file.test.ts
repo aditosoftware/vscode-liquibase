@@ -1,8 +1,8 @@
 import assert from "assert";
 import { CommandUtils, createDataViaUpdate, removeWholeCache } from "../CommandUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { TextEditor } from "vscode-extension-tester";
+import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
  * Tests the opening of the cache.
@@ -22,7 +22,7 @@ suite("open cache", () => {
   });
 
   /**
-   * Teardown function that runs after all tests in the suite.
+   * Teardown function that runs after the test suite.
    */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
