@@ -8,7 +8,7 @@ import {
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { vscodeApiWrapper } from "../utilities/vscodeApiWrapper";
-import { MessageType } from "../../../src/configuration/transfer";
+import { MessageData, MessageType } from "../../../src/configuration/transfer";
 
 /**
  * The properties for the additional element tag.
@@ -148,7 +148,18 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
   }
 
   function handleHelpButtonClick(): void {
-    window.open("https://docs.liquibase.com/concepts/connections/creating-config-properties.html");
+    try{
+      window.open("https://docs.liquibase.com/concepts/connections/creating-config-properties.html");
+    }
+    catch(e: unknown){
+      vscodeApiWrapper.postMessage(
+        new MessageData(MessageType.LOG_MESSAGE, {
+          level: "error",
+          message: "Could not open the link",
+          notifyUser: true,
+        })
+      );
+    }
   }
 
   /**
@@ -157,26 +168,34 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
    * @returns true if the key is acceptable, false otherwise
    */
   function isKeyAcceptable(key: string): boolean {
-    const invalidKeys = ["changelog", 
-      "driver", 
-      "url", 
-      "username", 
-      "password", 
-      "schemas", 
-      "referenceDatabase", 
-      "referenceDriver", 
-      "referenceUrl", 
-      "referenceUsername", 
-      "referencePassword"];
+    //TODO: maybe get the invalid keys from the extension? Or from the liquibase documentation? Or from the liquibase code? who knows, who knows...
+    const invalidKeys = [
+      "changelog",
+      "driver",
+      "url",
+      "username",
+      "password",
+      "schemas",
+      "referenceDatabase",
+      "referenceDriver",
+      "referenceUrl",
+      "referenceUsername",
+      "referencePassword",
+    ];
     return !invalidKeys.includes(key);
   }
 
   return (
     <div>
       <fieldset>
-        <legend>Advanced elements
-          <VSCodeButton id="helpButton" onClick={() => handleHelpButtonClick()} appearance="icon" formnovalidate={true} 
-              title="External link to all possible values a liquibase.properties file can have">
+        <legend>
+          Advanced elements
+          <VSCodeButton
+            id="helpButton"
+            onClick={() => handleHelpButtonClick()}
+            appearance="icon"
+            formnovalidate={true}
+            title="External link to all possible values a liquibase.properties file can have">
             <span className="codicon codicon-question"></span>
           </VSCodeButton>
         </legend>
@@ -204,10 +223,14 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
                   if (isKeyAcceptable(enteredKey)) {
                     setKey(enteredKey);
                   } else {
-                    // Display an error message or handle the invalid key input
-                    // For example, you can show a toast message or disable the add button
-                    console.error("Invalid key input");
-                    setKey("");
+                    setKey(""); //it does NOT (and Idk why) set the value to an empty string, only if you click on another field and use it uses the onblur event
+                    vscodeApiWrapper.postMessage(
+                      new MessageData(MessageType.LOG_MESSAGE, {
+                        level: "error",
+                        message: "Invalid key input",
+                        notifyUser: true,
+                      })
+                    );
                   }
                 }}
               />
@@ -220,7 +243,12 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
               />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-              <VSCodeButton id="addButton" onClick={() => createNewRow()} appearance="icon" formnovalidate={true} title="Add">
+              <VSCodeButton
+                id="addButton"
+                onClick={() => createNewRow()}
+                appearance="icon"
+                formnovalidate={true}
+                title="Add">
                 <span className="codicon codicon-add"></span>
               </VSCodeButton>
             </VSCodeDataGridCell>
