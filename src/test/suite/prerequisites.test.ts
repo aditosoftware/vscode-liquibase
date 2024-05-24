@@ -1,6 +1,5 @@
 import assert from "assert";
-import path from "path";
-import { buildClasspath, prerequisites } from "../../prerequisites";
+import { prerequisites } from "../../prerequisites";
 import { TestUtils } from "./TestUtils";
 import * as vscode from "vscode";
 import * as fs from "fs";
@@ -75,11 +74,4 @@ suite("prerequisites", () => {
       })
       .catch(done);
   }).timeout(10_000);
-
-  /**
-   * Tests the method `buildClasspath`.
-   */
-  test("should buildClasspath", () => {
-    assert.deepStrictEqual([path.join("foo", "bar"), path.join("foo", "baz")], buildClasspath("foo", "bar", "baz"));
-  });
 });

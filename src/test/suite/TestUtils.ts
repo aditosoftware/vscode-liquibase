@@ -109,8 +109,7 @@ export class TestUtils {
         defaultDatabaseForConfiguration: "MariaDB",
         liquibaseDirectoryInProject: "",
       },
-      ConfigurationStatus.NEW,
-      ";"
+      ConfigurationStatus.NEW
     );
   }
 }

@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { addToLiquibaseConfiguration } from "../configuration/handle/createAndAddConfiguration";
 import { LiquibaseConfigurationPanel } from "../panels/LiquibaseConfigurationPanel";
-import { getClasspathSeparator } from "../utilities/osUtilities";
 import * as path from "path";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
@@ -56,8 +55,7 @@ export async function editExistingLiquibaseConfiguration(
       {
         defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
         liquibaseDirectoryInProject: getLiquibaseFolder(),
-      },
-      getClasspathSeparator()
+      }
     );
     // and renders the panel with the data
     LiquibaseConfigurationPanel.render(context.extensionUri, data);

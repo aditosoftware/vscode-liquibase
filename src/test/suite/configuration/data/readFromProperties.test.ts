@@ -5,7 +5,6 @@ import { randomUUID } from "crypto";
 import * as fs from "fs";
 import {
   readChangelog,
-  readChangelogAndClasspathFile,
   readFullValues,
   readUrl,
 } from "../../../../configuration/data/readFromProperties";
@@ -26,34 +25,6 @@ suite("readFromProperties", () => {
 
   setup("create temp file name", () => {
     fileName = path.join(tempPath, `${randomUUID()}.liquibase.properties`);
-  });
-
-  /**
-   * Tests the function `readChangelogAndClasspathFile`.
-   */
-  suite("readChangelogAndClasspathFile", () => {
-    /**
-     * Tests that the reading of changelog and classpath works.
-     */
-    test("should readChangelogAndClasspathFile from filled file", () => {
-      fs.writeFileSync(fileName, "changelogFile: myChangelogFile.xml\nclasspath= path1;path2", "utf-8");
-
-      assert.deepStrictEqual(readChangelogAndClasspathFile(fileName, ";"), {
-        classpath: ["path1", "path2"],
-        changelog: "myChangelogFile.xml",
-      });
-    });
-    /**
-     * Tests that the reading of changelog and classpath from an empty file works.
-     */
-    test("should readChangelogAndClasspathFile from empty file", () => {
-      fs.writeFileSync(fileName, "", "utf-8");
-
-      assert.deepStrictEqual(readChangelogAndClasspathFile(fileName, ";"), {
-        classpath: undefined,
-        changelog: undefined,
-      });
-    });
   });
 
   /**
@@ -118,7 +89,7 @@ suite("readFromProperties", () => {
      * Creates the basic expected data for the tests.
      */
     setup("create expected", () => {
-      expected = LiquibaseConfigurationData.createDefaultData(liquibaseSettings, ConfigurationStatus.EDIT, ";");
+      expected = LiquibaseConfigurationData.createDefaultData(liquibaseSettings, ConfigurationStatus.EDIT);
       expected.name = name;
     });
 
@@ -128,7 +99,7 @@ suite("readFromProperties", () => {
     test("should read nothing from not existing file", () => {
       assert.ok(!fs.existsSync(fileName), "file should not exist");
 
-      assert.deepStrictEqual(readFullValues(name, fileName, liquibaseSettings, ";"), expected);
+      assert.deepStrictEqual(readFullValues(name, fileName, liquibaseSettings), expected);
     });
 
     /**
@@ -149,9 +120,6 @@ referenceUsername = john
 referencePassword = johnsPassword
 referenceUrl = jdbc:postgresql://localhost:5432/data
 referenceDriver = org.postgresql.Driver
-# Specifies the directories and JAR files to search for changelog files and custom extension classes.
-# To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
-classpath = path1;path2
 # additional configuration values
 lorem = ipsum
 `,
@@ -159,7 +127,6 @@ lorem = ipsum
       );
 
       expected.changelogFile = "changelog.xml";
-      expected.classpath = "path1\npath2";
       expected.additionalConfiguration["lorem"] = "ipsum";
 
       expected.databaseConnection.username = "jane";
@@ -173,7 +140,7 @@ lorem = ipsum
       expected.referenceDatabaseConnection.url = "jdbc:postgresql://localhost:5432/data";
       expected.referenceDatabaseConnection.databaseType = "PostgreSQL";
 
-      assert.deepStrictEqual(readFullValues(name, fileName, liquibaseSettings, ";"), expected);
+      assert.deepStrictEqual(readFullValues(name, fileName, liquibaseSettings), expected);
     });
   });
 });

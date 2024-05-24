@@ -147,12 +147,40 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
     pProperties.onValueChange(newElementValues);
   }
 
+  function handleHelpButtonClick(): void {
+    window.open("https://docs.liquibase.com/concepts/connections/creating-config-properties.html");
+  }
+
+  /**
+   * Checks if the entered key is acceptable.
+   * @param key - the key to check
+   * @returns true if the key is acceptable, false otherwise
+   */
+  function isKeyAcceptable(key: string): boolean {
+    const invalidKeys = ["changelog", 
+      "driver", 
+      "url", 
+      "username", 
+      "password", 
+      "schemas", 
+      "referenceDatabase", 
+      "referenceDriver", 
+      "referenceUrl", 
+      "referenceUsername", 
+      "referencePassword"];
+    return !invalidKeys.includes(key);
+  }
+
   return (
     <div>
       <fieldset>
-        <legend>Additional elements</legend>
+        <legend>Advanced elements
+          <VSCodeButton id="helpButton" onClick={() => handleHelpButtonClick()} appearance="icon" formnovalidate={true} 
+              title="External link to all possible values a liquibase.properties file can have">
+            <span className="codicon codicon-question"></span>
+          </VSCodeButton>
+        </legend>
         <p>To edit an row, click on it.</p>
-
         <VSCodeDataGrid aria-label="Default">
           <VSCodeDataGridRow row-type="header">
             <VSCodeDataGridCell cell-type="columnheader" grid-column="1">
@@ -171,7 +199,17 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
               <VSCodeTextField
                 id="keyInput"
                 value={key}
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) => setKey(e.target.value)}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  const enteredKey = e.target.value;
+                  if (isKeyAcceptable(enteredKey)) {
+                    setKey(enteredKey);
+                  } else {
+                    // Display an error message or handle the invalid key input
+                    // For example, you can show a toast message or disable the add button
+                    console.error("Invalid key input");
+                    setKey("");
+                  }
+                }}
               />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="2">
@@ -182,7 +220,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
               />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-              <VSCodeButton id="addButton" onClick={() => createNewRow()} appearance="icon" formnovalidate={true}>
+              <VSCodeButton id="addButton" onClick={() => createNewRow()} appearance="icon" formnovalidate={true} title="Add">
                 <span className="codicon codicon-add"></span>
               </VSCodeButton>
             </VSCodeDataGridCell>
@@ -207,7 +245,8 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
                   id={"delete" + separator + key + separator + value}
                   onClick={() => handleDeleteRow(key)}
                   appearance="icon"
-                  formnovalidate={true}>
+                  formnovalidate={true}
+                  title="Delete">
                   <span className="codicon codicon-trash"></span>
                 </VSCodeButton>
               </VSCodeDataGridCell>

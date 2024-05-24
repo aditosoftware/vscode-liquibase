@@ -41,7 +41,6 @@ suite("handleContexts", () => {
         propertyFile,
         `
 changelogFile: changelog.xml
-classpath: ${tempDir.replaceAll("\\", "\\\\")}
       `,
         { encoding: "utf-8" }
       );
