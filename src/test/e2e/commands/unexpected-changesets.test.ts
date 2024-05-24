@@ -1,6 +1,5 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
 
@@ -18,13 +17,13 @@ suite("Unexpected Changesets", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
    * Test function that executes the 'Unexpected Changesets' command with different context types.
    */
-  CommandUtils.matrixExecution((option, exec, key) => {
+  LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test(
       "should execute 'Unexpected Changesets' with context type '" + option + "' command with " + key,
       async function () {
@@ -36,9 +35,10 @@ suite("Unexpected Changesets", function () {
         await input.setText(configurationName);
         await input.confirm();
 
-        await input.setText(CommandUtils.CHANGELOG_FILE);
+        await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
         await input.selectQuickPick(1);
 
+        // todo auslagern?
         if (option === ContextOptions.NO_CONTEXT) {
           await input.setText(option);
           await input.confirm();
@@ -48,10 +48,6 @@ suite("Unexpected Changesets", function () {
 
           await exec();
         }
-
-        await wait();
-        await wait();
-        await wait();
 
         //TODO: SQL query to check if it was right
         assert.ok(

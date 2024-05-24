@@ -1,6 +1,5 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
 
@@ -18,13 +17,13 @@ suite("Changelog Sync", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
    * Executes the 'Changelog Sync' command with different context types and options.
    */
-  CommandUtils.matrixExecution((option, exec, key) => {
+  LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     /**
      * Test case for executing the 'Changelog Sync' command with a specific context type and option.
      */
@@ -37,9 +36,10 @@ suite("Changelog Sync", function () {
       await input.setText(configurationName);
       await input.confirm();
 
-      await input.setText(CommandUtils.CHANGELOG_FILE);
+      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
+      // todo auslagern?
       if (option === ContextOptions.NO_CONTEXT) {
         await input.setText(option);
         await input.confirm();
@@ -49,8 +49,6 @@ suite("Changelog Sync", function () {
 
         await exec();
       }
-
-      await wait();
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution(

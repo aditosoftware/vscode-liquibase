@@ -1,6 +1,5 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -17,7 +16,7 @@ suite("Tag Exist", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -28,7 +27,7 @@ suite("Tag Exist", function () {
 
     const tagName = "test";
 
-    await CommandUtils.executeCreateTag(configurationName, tagName);
+    await LiquibaseGUITestUtils.executeCreateTag(configurationName, tagName);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
 
@@ -42,7 +41,7 @@ suite("Tag Exist", function () {
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag-exists' was executed successfully.")
     );
     assert.ok(
-      (await CommandUtils.outputPanel.getText()).includes("The tag 'test' already exists in"),
+      (await LiquibaseGUITestUtils.outputPanel.getText()).includes("The tag 'test' already exists in"),
       "Tag does NOT exist"
     );
   });
@@ -64,7 +63,7 @@ suite("Tag Exist", function () {
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag-exists' was executed successfully.")
     );
-    assert.ok((await CommandUtils.outputPanel.getText()).includes("does NOT exist"), "The tag DOES exist");
+    assert.ok((await LiquibaseGUITestUtils.outputPanel.getText()).includes("does NOT exist"), "The tag DOES exist");
   });
 
   /**

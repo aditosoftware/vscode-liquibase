@@ -1,5 +1,4 @@
 import assert from "assert";
-import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { InputBox } from "vscode-extension-tester";
@@ -19,7 +18,7 @@ suite("changelog-sync: Right Click Menu", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -27,7 +26,9 @@ suite("changelog-sync: Right Click Menu", function () {
    */
   test("should execute 'changelog sync' command from RMB in file", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Changelog Sync"));
+    await executeCommand(configurationName, () =>
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Changelog Sync")
+    );
   });
 
   /**
@@ -36,7 +37,7 @@ suite("changelog-sync: Right Click Menu", function () {
   test("should execute 'changelog sync' command from RMB in file explorer", async function () {
     this.timeout(50_000);
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Changelog Sync")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Changelog Sync")
     );
   });
 
@@ -56,19 +57,15 @@ suite("changelog-sync: Right Click Menu", function () {
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
   await DockerTestUtils.resetDB();
 
-  await wait();
   await contextMenuFunction();
-  await wait();
 
-  const input = await InputBox.create(50000);
+  const input = new InputBox();
 
   await input.setText(configurationName);
   await input.confirm();
 
   await input.setText(ContextOptions.NO_CONTEXT);
   await input.confirm();
-
-  await wait();
 
   assert.ok(
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'changelog-sync' was executed successfully.")

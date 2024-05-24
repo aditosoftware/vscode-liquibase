@@ -1,6 +1,5 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
 
@@ -18,13 +17,13 @@ suite("Status", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
    * Test the 'status' command with different context types and options.
    */
-  CommandUtils.matrixExecution((option, exec, key) => {
+  LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
 
@@ -33,7 +32,7 @@ suite("Status", function () {
       await input.setText(configurationName);
       await input.confirm();
 
-      await input.setText(CommandUtils.CHANGELOG_FILE);
+      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
       if (option === ContextOptions.NO_CONTEXT) {

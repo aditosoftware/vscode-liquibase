@@ -1,7 +1,6 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
-import { CommandUtils,  wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../../constants";
 
@@ -19,7 +18,7 @@ suite("unexpected-changesets: Right Click Menu", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -28,7 +27,7 @@ suite("unexpected-changesets: Right Click Menu", function () {
   test("should execute 'Unexpected Changesets' command from RMB in file", async function () {
     this.timeout(50_000);
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
     );
   });
 
@@ -38,7 +37,7 @@ suite("unexpected-changesets: Right Click Menu", function () {
   test("should execute 'Unexpected Changesets' command from RMB in file explorer", async function () {
     this.timeout(50_000);
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
     );
   });
 
@@ -60,9 +59,7 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
 
   await contextMenuFunction();
 
-  const input = await InputBox.create(50000);
-
-  await wait();
+  const input = new InputBox();
 
   await input.setText(configurationName);
   await input.confirm();

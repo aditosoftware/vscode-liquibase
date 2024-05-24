@@ -1,7 +1,6 @@
 import assert from "assert";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 import { ContextOptions } from "../../../constants";
 
 /**
@@ -18,7 +17,7 @@ suite("Rollback to Tag", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -31,13 +30,13 @@ suite("Rollback to Tag", function () {
     const tagName = "test";
 
     // Execute only one changeset to roll back to
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
     // Set tag
-    await CommandUtils.executeCreateTag(configurationName, tagName);
+    await LiquibaseGUITestUtils.executeCreateTag(configurationName, tagName);
 
     // Update all datasets
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
 
     // Rollback time
     const input = await LiquibaseGUITestUtils.startCommandExecution("Rollback to Tag");
@@ -45,21 +44,15 @@ suite("Rollback to Tag", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(CommandUtils.CHANGELOG_FILE);
+    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
-
-    await wait();
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
+    await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
     await input.setText(tagName);
     await input.confirm();
-
-    await wait();
 
     // Check if the message is popping up
     assert.ok(

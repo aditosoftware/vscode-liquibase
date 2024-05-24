@@ -2,7 +2,7 @@ import assert from "assert";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import { By, InputBox } from "vscode-extension-tester";
 import path from "path";
-import { CommandUtils } from "../CommandUtils";
+import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
 /**
  * Tests basic functionality from the webview.
@@ -34,7 +34,7 @@ suite("Basic webview tests", () => {
    * Tests that the changelog can be selected from the folder selection button.
    */
   test("should be able to select changelog", async () => {
-    await CommandUtils.openWorkspace();
+    await LiquibaseGUITestUtils.openWorkspace();
 
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
       const changelogSelection = await webView.findWebElement(By.id("changelogSelection"));
@@ -45,7 +45,7 @@ suite("Basic webview tests", () => {
       await webView.switchBack();
 
       const input = new InputBox();
-      await input.setText(CommandUtils.CHANGELOG_FILE);
+      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
       // swap back to the webview

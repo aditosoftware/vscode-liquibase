@@ -1,6 +1,5 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -17,7 +16,7 @@ suite("Validate", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -31,7 +30,7 @@ suite("Validate", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(CommandUtils.CHANGELOG_FILE);
+    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     assert.ok(

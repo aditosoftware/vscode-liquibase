@@ -2,7 +2,6 @@ import path from "path";
 import assert from "assert";
 import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
 
@@ -20,7 +19,7 @@ suite("Update-sql", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -29,10 +28,10 @@ suite("Update-sql", function () {
   test("should execute 'Update SQL' command", async function () {
     this.timeout(80_000);
 
-    const temporaryFolder = CommandUtils.generateTemporaryFolder();
+    const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
     // execute update to have some changes
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
     // execute the update-sql command
     const input = await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
@@ -40,24 +39,17 @@ suite("Update-sql", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await input.setText(CommandUtils.CHANGELOG_FILE);
+    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();
+    await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
-    await wait();
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-
-    await CommandUtils.selectFolder(input, temporaryFolder);
-    await wait();
+    await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 
     await input.setText("update.sql");
     await input.confirm();
-
-    await wait();
 
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),

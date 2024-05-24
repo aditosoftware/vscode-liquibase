@@ -3,7 +3,7 @@ import { WebviewTestUtils } from "./WebviewTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import assert from "assert";
 import { randomUUID } from "crypto";
-import { CommandUtils, wait } from "../CommandUtils";
+import {  wait } from "../CommandUtils";
 import path from "path";
 
 /**
@@ -14,7 +14,7 @@ suite("save configuration", () => {
    * Opens the workspace before all tests.
    */
   suiteSetup("open workspace", async () => {
-    await CommandUtils.openWorkspace();
+    await LiquibaseGUITestUtils.openWorkspace();
   });
 
   /**

@@ -2,7 +2,6 @@ import path from "path";
 import assert from "assert";
 import fs from "fs";
 import { InputBox } from "vscode-extension-tester";
-import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -21,7 +20,7 @@ suite("db-doc: Right Click Menu", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -29,7 +28,7 @@ suite("db-doc: Right Click Menu", function () {
    */
   test("should execute 'db-doc' command from RMB in file", async function () {
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelog("Generate database documentation (db-doc)")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Generate database documentation (db-doc)")
     );
   });
 
@@ -38,7 +37,7 @@ suite("db-doc: Right Click Menu", function () {
    */
   test("should execute 'db-doc' command from RMB in file explorer", async function () {
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate database documentation (db-doc)")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate database documentation (db-doc)")
     );
   });
 
@@ -56,13 +55,12 @@ suite("db-doc: Right Click Menu", function () {
  * @param contextMenuFunction - the function to call the context menu
  */
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  const directoryForDbDoc = CommandUtils.generateTemporaryFolder();
+  const directoryForDbDoc = LiquibaseGUITestUtils.generateTemporaryFolder();
   await DockerTestUtils.resetDB();
 
   await contextMenuFunction();
-  await wait();
 
-  const input = await InputBox.create();
+  const input = new InputBox();
 
   await input.setText(configurationName);
   await input.confirm();
@@ -71,12 +69,14 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await input.confirm();
 
   // Set the output directory for the generated documentation.
-  await CommandUtils.selectFolder(input, directoryForDbDoc);
-
-  await wait();
+  await LiquibaseGUITestUtils.selectFolder(input, directoryForDbDoc);
 
   assert.ok(
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'db-doc' was executed successfully.")
   );
-  assert.ok(fs.existsSync(path.join(directoryForDbDoc, "index.html")), "Did NOT create a DB-DOC Files");
+
+  assert.ok(
+    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(path.join(directoryForDbDoc, "index.html"))),
+    "Did NOT create a DB-DOC Files"
+  );
 }

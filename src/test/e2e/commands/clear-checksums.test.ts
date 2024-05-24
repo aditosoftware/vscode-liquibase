@@ -1,6 +1,5 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
 import { suiteTeardown } from "mocha";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
@@ -19,13 +18,13 @@ suite("Clear Checksums", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
    * Test case for executing the "Clear Checksums" command with different context types and commands.
    */
-  CommandUtils.matrixExecution((option, exec, key) => {
+  LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test("should execute 'Clear Checksums' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
       await DockerTestUtils.resetDB();
@@ -35,7 +34,7 @@ suite("Clear Checksums", function () {
       await input.setText(configurationName);
       await input.confirm();
 
-      await input.setText(CommandUtils.CHANGELOG_FILE);
+      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
       if (option === ContextOptions.NO_CONTEXT) {

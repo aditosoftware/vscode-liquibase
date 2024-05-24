@@ -1,7 +1,6 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { CommandUtils, wait } from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -21,7 +20,7 @@ suite("update-sql: Right Click Menu", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -30,7 +29,7 @@ suite("update-sql: Right Click Menu", function () {
   test("should execute 'update-sql' command from RMB in file", async function () {
     this.timeout(80_000);
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelog("Generate SQL File for incoming changes")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Generate SQL File for incoming changes")
     );
   });
 
@@ -40,7 +39,7 @@ suite("update-sql: Right Click Menu", function () {
   test("should execute 'update-sql' command from RMB in file explorer", async function () {
     this.timeout(80_000);
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate SQL File for incoming changes")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate SQL File for incoming changes")
     );
   });
 
@@ -58,14 +57,13 @@ suite("update-sql: Right Click Menu", function () {
  * @param contextMenuFunction - the function to call the context menu
  */
 async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  const temporaryFolder = CommandUtils.generateTemporaryFolder();
+  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
   await DockerTestUtils.resetDB();
 
-  await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
+  await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
   await contextMenuFunction();
-  await wait();
 
   const input = new InputBox();
 
@@ -74,18 +72,12 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
 
   await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
+  await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
-  await wait();
-
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  await CommandUtils.selectFolder(input, temporaryFolder);
+  await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 
   await input.setText("update.sql");
   await input.confirm();
-
-  await wait();
 
   assert.ok(
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),

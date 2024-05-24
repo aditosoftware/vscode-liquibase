@@ -1,7 +1,6 @@
 import assert from "assert";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 import { ContextOptions } from "../../../constants";
 
 /**
@@ -18,13 +17,13 @@ suite("Update", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
    * Test case for executing the 'update' command with different context types.
    */
-  CommandUtils.matrixExecution((option, exec, key) => {
+  LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test("should execute 'update' with context type '" + option + "' command with " + key, async function () {
       this.timeout(40_000);
       await DockerTestUtils.resetDB();
@@ -34,14 +33,15 @@ suite("Update", function () {
       await input.setText(configurationName);
       await input.confirm();
 
-      await input.setText(CommandUtils.CHANGELOG_FILE);
+      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
+      // todo auslagern? umstrukturieren?
       if (option === ContextOptions.NO_CONTEXT) {
         await input.setText(option);
         await input.confirm();
 
-        await wait();
+        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully");
 
         assert.ok(
           (
@@ -57,7 +57,7 @@ suite("Update", function () {
 
         await exec();
 
-        await wait();
+        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully");
 
         if (key === "all available contexts" || key === "the first available context") {
           assert.ok(
@@ -79,10 +79,6 @@ suite("Update", function () {
           );
         }
       }
-
-      assert.ok(
-        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully.")
-      );
     });
   });
 

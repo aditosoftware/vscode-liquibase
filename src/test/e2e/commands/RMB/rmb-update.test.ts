@@ -1,10 +1,6 @@
 import assert from "assert";
 import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
-import {
-  CommandUtils,
-  wait,
-} from "../../CommandUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../../constants";
 
@@ -22,7 +18,7 @@ suite("update: Right Click Menu", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -30,7 +26,7 @@ suite("update: Right Click Menu", function () {
    */
   test("should execute 'update' command from RMB in file", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Update"));
+    await executeCommand(configurationName, () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Update"));
   });
 
   /**
@@ -38,7 +34,9 @@ suite("update: Right Click Menu", function () {
    */
   test("should execute 'update' command from RMB in file explorer", async function () {
     this.timeout(50_000);
-    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Update"));
+    await executeCommand(configurationName, () =>
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Update")
+    );
   });
 
   /**
@@ -59,22 +57,14 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
 
   await contextMenuFunction();
 
-  const input = await InputBox.create(50000);
-
-  await wait();
+  const input = new InputBox();
 
   await input.setText(configurationName);
   await input.confirm();
 
   await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
-
-  await wait();
-
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  await wait();
+  await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
   assert.ok(
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."),

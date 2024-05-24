@@ -1,5 +1,4 @@
 import assert from "assert";
-import { CommandUtils } from "../CommandUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { TextEditor } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
@@ -19,7 +18,7 @@ suite("open cache", () => {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -34,8 +33,8 @@ suite("open cache", () => {
    */
   test("should fail open cache file", async () => {
     // create some data and remove them
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
-    await CommandUtils.removeWholeCache();
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+    await LiquibaseGUITestUtils.removeWholeCache();
 
     // try to execute the command
     await LiquibaseGUITestUtils.startCommandExecution("Cache: Opens the file with the recently loaded elements");
@@ -51,7 +50,7 @@ suite("open cache", () => {
    */
   test("should open cache file", async () => {
     // create some data for the cache
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
     // open the cache file
     await LiquibaseGUITestUtils.startCommandExecution("Cache: Opens the file with the recently loaded elements");

@@ -1,7 +1,7 @@
 import assert from "assert";
 import { InputBox, ModalDialog, StatusBar } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
+import { wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -18,7 +18,7 @@ suite("Clear Output Channel On Start", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -33,10 +33,10 @@ suite("Clear Output Channel On Start", function () {
     const prompt = await center.openCommandPrompt();
     const input = await InputBox.create();
 
-    await prompt.setText(">Liquibase: " + "drop-all");
-    await wait(2_000);
+    await prompt.setText(">Liquibase: drop-all");
     await prompt.confirm();
 
+    // TODO doppelt!
     for (let i = 0; i < 10; i++) {
       const activateProgress = await new StatusBar().getItem("Activating Extensions...");
       if (activateProgress) {
@@ -59,7 +59,7 @@ suite("Clear Output Channel On Start", function () {
     await wait();
 
     // execute our command
-    await prompt.setText(">Liquibase: " + "create tag");
+    await prompt.setText(">Liquibase: create tag");
     await prompt.confirm();
 
     await input.setText(configurationName);
@@ -71,17 +71,19 @@ suite("Clear Output Channel On Start", function () {
     await wait();
 
     assert.ok(
-      (await CommandUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' will be executed"), "Output channel should be empty after 'drop-all' command"
+      (await LiquibaseGUITestUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' will be executed"),
+      "Output channel should be empty after 'drop-all' command"
     );
-
   });
+
+  // todo schauen, was man zusammenlegen kann
 
   /**
    * Test case for clearing the output after the 'drop-all' command.
    */
   test("should clear output after 'drop-all' command", async function () {
     this.timeout(40_000);
-    
+
     await LiquibaseGUITestUtils.setSetting("liquibase.clearOutputChannelOnStart", true);
 
     const center = await LiquibaseGUITestUtils.clearNotifications();
@@ -90,8 +92,9 @@ suite("Clear Output Channel On Start", function () {
 
     // execute our command
     await prompt.setText(">Liquibase: " + "drop-all");
-    await wait(2_000);
     await prompt.confirm();
+
+    // TODO doppelt
 
     // then wait until the Activating Extensions from the status bar disappears
     for (let i = 0; i < 10; i++) {
@@ -120,7 +123,6 @@ suite("Clear Output Channel On Start", function () {
     await wait(2_000);
     await prompt.confirm();
 
-
     await input.setText(configurationName);
     await input.confirm();
 
@@ -130,7 +132,8 @@ suite("Clear Output Channel On Start", function () {
     await wait();
 
     assert.ok(
-      !(await CommandUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' will be executed"), "Output channel should be empty after 'drop-all' command"
+      !(await LiquibaseGUITestUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' will be executed"),
+      "Output channel should be empty after 'drop-all' command"
     );
   });
 

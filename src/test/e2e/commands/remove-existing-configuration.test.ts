@@ -1,7 +1,6 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { CommandUtils } from "../CommandUtils";
 import { ModalDialog, TextEditor } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ContextOptions, RemoveConfigurationOptions } from "../../../constants";
@@ -21,7 +20,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
    */
   setup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -40,7 +39,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
     { removeOption: RemoveConfigurationOptions.DELETE_ALL, settingsThere: false, propertiesFileThere: false },
   ].forEach((pArgument) => {
     test(`should remove a liquibase.properties with remove option ${pArgument.removeOption}`, async function () {
-      await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+      await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
       const input = await LiquibaseGUITestUtils.startCommandExecution(
         "Remove existing liquibase.properties from the configuration"
@@ -71,7 +70,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
 
       // check settings file
       const settings = JSON.parse(
-        fs.readFileSync(path.join(CommandUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json"), "utf-8")
+        fs.readFileSync(path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json"), "utf-8")
       );
       assert.strictEqual(
         Object.keys(settings).includes(configurationName),

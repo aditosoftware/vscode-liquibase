@@ -2,7 +2,6 @@ import { WebviewTestUtils } from "./WebviewTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import assert from "assert";
 import { randomUUID } from "crypto";
-import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -14,7 +13,7 @@ suite("Configuration of the Webview", () => {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    await CommandUtils.setupTests();
+    await LiquibaseGUITestUtils.setupTests();
   });
 
   /**

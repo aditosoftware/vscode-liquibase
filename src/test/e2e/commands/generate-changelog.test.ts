@@ -3,7 +3,6 @@ import assert from "assert";
 import fs from "fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 
 /**
  * Test suite for the "generate changelog" command.
@@ -19,7 +18,7 @@ suite("generate changelog", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -29,7 +28,7 @@ suite("generate changelog", function () {
     this.timeout(80_000);
     await DockerTestUtils.resetDB();
 
-    const temporaryFolder = CommandUtils.generateTemporaryFolder();
+    const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
     await DockerTestUtils.executeMariaDBSQL(
       "CREATE TABLE test_table (column1 char(36), column2 varchar(255))",
@@ -41,13 +40,14 @@ suite("generate changelog", function () {
     await input.setText(configurationName);
     await input.confirm();
 
-    await CommandUtils.selectFolder(input, temporaryFolder);
+    await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 
     // name of the changelog, just use the default
     await input.confirm();
 
-    await wait(4000);
-
+    await LiquibaseGUITestUtils.waitForCommandExecution(
+      "Liquibase command 'generate-changelog' was executed successfully"
+    );
     assert.ok(fs.existsSync(path.join(temporaryFolder, "changelog.xml")), "File does NOT exist");
   });
 

@@ -3,7 +3,6 @@ import assert from "assert";
 import fs from "fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils,  wait } from "../CommandUtils";
 import { ContextOptions } from "../../../constants";
 
 /**
@@ -15,12 +14,17 @@ suite("diff", function () {
    */
   let configurationName: string;
 
+  const postgresPort = 5435;
+
   /**
    * Set up the test suite.
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
+
+    await DockerTestUtils.startContainer("postgres", postgresPort);
+    await DockerTestUtils.checkContainerStatus("postgres");
   });
 
   /**
@@ -45,11 +49,6 @@ suite("diff", function () {
     this.timeout(80_000);
     await DockerTestUtils.resetDB();
 
-    const postgresPort = 5435;
-
-    await DockerTestUtils.startContainer("postgres", postgresPort);
-    await DockerTestUtils.checkContainerStatus("postgres");
-
     const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("PostgreSQL", postgresPort);
 
     await executeCommand("diffPostgres.txt", configurationName, secondConfiguration);
@@ -71,11 +70,9 @@ suite("diff", function () {
  * @param secondConfiguration - the name of the second configuration
  */
 async function executeCommand(fileName: string, configurationName: string, secondConfiguration: string): Promise<void> {
-  const temporaryFolder = CommandUtils.generateTemporaryFolder();
+  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
-  await wait();
-
-  await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+  await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
   const input = await LiquibaseGUITestUtils.startCommandExecution("diff");
 
@@ -85,21 +82,18 @@ async function executeCommand(fileName: string, configurationName: string, secon
   await input.setText(secondConfiguration);
   await input.confirm();
 
-  await CommandUtils.selectFolder(input, temporaryFolder);
-
-  await wait();
+  await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 
   //name of file
   await input.setText(fileName);
   await input.confirm();
 
-  await wait();
-
   //available types
   await input.confirm();
 
-  await wait();
-  await wait();
-
-  assert.ok(fs.existsSync(path.join(temporaryFolder, fileName)));
+  assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'diff' was executed successfully"));
+  assert.ok(
+    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(path.join(temporaryFolder, fileName))),
+    "file for diff should exist"
+  );
 }

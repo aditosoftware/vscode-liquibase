@@ -1,7 +1,7 @@
 import assert from "assert";
 import { InputBox, ModalDialog, StatusBar } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
+import { wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -18,7 +18,7 @@ suite("Clear Output Channel On Start", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -53,11 +53,10 @@ suite("Clear Output Channel On Start", function () {
     await wait();
 
     assert.ok(
-      (await CommandUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' finished in"), "Output channel should show execution time"
+      (await LiquibaseGUITestUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' finished in"),
+      "Output channel should show execution time"
     );
-
   });
-
 
   /**
    * Cleans up the test suite after running all tests.

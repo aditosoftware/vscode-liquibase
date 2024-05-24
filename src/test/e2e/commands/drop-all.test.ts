@@ -1,7 +1,6 @@
 import assert from "assert";
 import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -18,7 +17,7 @@ suite("Drop-all", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -26,8 +25,6 @@ suite("Drop-all", function () {
    */
   test("should execute 'drop-all' command", async function () {
     this.timeout(40_000);
-
-    await wait();
 
     const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
 
@@ -43,6 +40,8 @@ suite("Drop-all", function () {
 
     //TODO: add comparison to db to check if everything was removed
   });
+
+  // TODO Methoden zusammenlegen?
 
   /**
    * Test case for cancelling the execution of the 'drop-all' command.

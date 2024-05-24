@@ -2,7 +2,6 @@ import path from "path";
 import assert from "assert";
 import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { randomUUID } from "crypto";
 
@@ -20,7 +19,7 @@ suite("db-doc", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -31,7 +30,7 @@ suite("db-doc", function () {
     // Extend the timeout to accommodate potentially long-running Liquibase operations.
     this.timeout(80_000);
 
-    const dbDocFolder = path.join(CommandUtils.WORKSPACE_PATH, "output", randomUUID());
+    const dbDocFolder = path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "output", randomUUID());
     fs.mkdirSync(dbDocFolder);
 
     // Reset the temporary database to ensure a clean state.
@@ -44,11 +43,11 @@ suite("db-doc", function () {
     await input.confirm();
 
     // Set the path to the Liquibase changelog file.
-    await input.setText(CommandUtils.CHANGELOG_FILE);
+    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
     await input.selectQuickPick(1);
 
     // Set the output directory for the generated documentation.
-    await CommandUtils.selectFolder(input, dbDocFolder);
+    await LiquibaseGUITestUtils.selectFolder(input, dbDocFolder);
 
     // Assert that the 'db-doc' command was executed successfully.
     assert.ok(

@@ -1,6 +1,5 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils } from "../CommandUtils";
 import { ContextOptions, RemoveCacheOptions } from "../../../constants";
 import { ModalDialog } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
@@ -19,7 +18,7 @@ suite("Removes any values from the recently loaded elements", () => {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -34,8 +33,8 @@ suite("Removes any values from the recently loaded elements", () => {
    */
   test("should not remove anything when no elements are there", async () => {
     // first, remove the whole cache
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
-    await CommandUtils.removeWholeCache();
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+    await LiquibaseGUITestUtils.removeWholeCache();
 
     // then try to execute the command a second time
     await LiquibaseGUITestUtils.startCommandExecution("Cache: Removes any values from the recently loaded elements");
@@ -47,8 +46,8 @@ suite("Removes any values from the recently loaded elements", () => {
    * Tests that the whole cache can be removed successfully.
    */
   test("should remove recently loaded values", async () => {
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
-    await CommandUtils.removeWholeCache();
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+    await LiquibaseGUITestUtils.removeWholeCache();
 
     assert.ok(
       await LiquibaseGUITestUtils.assertIfNotificationExists("Successfully removed all recently loaded elements.")
@@ -59,7 +58,7 @@ suite("Removes any values from the recently loaded elements", () => {
    * Tests that the selected connections can be removed successfully.
    */
   test("should remove connections", async () => {
-    await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
+    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution(
       "Cache: Removes any values from the recently loaded elements"

@@ -2,7 +2,6 @@ import path from "path";
 import fs from "fs";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { CommandUtils, wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
@@ -14,14 +13,14 @@ suite("History", async function () {
    */
   let configurationName: string;
 
-  const temporaryFolder = CommandUtils.generateTemporaryFolder();
+  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
   /**
    * Set up the test suite.
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -38,7 +37,7 @@ suite("History", async function () {
       await input.setText(configurationName);
       await input.confirm();
 
-      await CommandUtils.selectFolder(input, temporaryFolder);
+      await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 
       await input.setText(fileName);
       await input.confirm();
@@ -46,7 +45,7 @@ suite("History", async function () {
       await input.setText(pHistoryOption);
       await input.confirm();
 
-      await wait();
+      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'history' was executed successfully");
 
       assert.ok(fs.existsSync(path.join(temporaryFolder, fileName)));
     });

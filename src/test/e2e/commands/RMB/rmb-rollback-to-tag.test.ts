@@ -1,4 +1,3 @@
-import { CommandUtils, wait } from "../../CommandUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import assert from "assert";
@@ -20,7 +19,7 @@ suite("rollback-to-tag: Right Click Menu", function () {
    */
   suiteSetup(async function () {
     this.timeout(50_000);
-    configurationName = await CommandUtils.setupTests();
+    configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
   /**
@@ -28,7 +27,9 @@ suite("rollback-to-tag: Right Click Menu", function () {
    */
   test("should execute 'rollback-to-tag' command from RMB in file", async function () {
     this.timeout(80_000);
-    await executeCommand(configurationName, () => CommandUtils.openAndSelectRMBItemFromChangelog("Rollback to Tag"));
+    await executeCommand(configurationName, () =>
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Rollback to Tag")
+    );
   });
 
   /**
@@ -37,7 +38,7 @@ suite("rollback-to-tag: Right Click Menu", function () {
   test("should execute 'rollback-to-tag' command from RMB in file explorer", async function () {
     this.timeout(80_000);
     await executeCommand(configurationName, () =>
-      CommandUtils.openAndSelectRMBItemFromChangelogFromExplorer("Rollback to Tag")
+      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Rollback to Tag")
     );
   });
 
@@ -60,16 +61,15 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   const tagName = randomUUID();
 
   // update one dataset
-  await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
+  await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
   // Set tag
-  await CommandUtils.executeCreateTag(configurationName, tagName);
+  await LiquibaseGUITestUtils.executeCreateTag(configurationName, tagName);
 
   // Update all datasets
-  await CommandUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
+  await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
 
   await contextMenuFunction();
-  await wait();
 
   const input = new InputBox();
 
@@ -78,18 +78,10 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
 
   await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
   await input.confirm();
-
-  await wait();
-
-  await input.toggleAllQuickPicks(true);
-  await input.confirm();
-
-  await wait();
+  await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
   await input.setText(tagName);
   await input.confirm();
-
-  await wait();
 
   // Check if the message is popping up
   assert.ok(

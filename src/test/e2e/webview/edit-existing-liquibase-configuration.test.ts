@@ -1,5 +1,4 @@
 import { By, EditorView, Key, TextEditor, WebView, Workbench } from "vscode-extension-tester";
-import { CommandUtils } from "../CommandUtils";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
@@ -22,7 +21,7 @@ suite("editExistingLiquibaseConfiguration", () => {
    * Opens the workspace before all tests.
    */
   suiteSetup(async () => {
-    await CommandUtils.openWorkspace();
+    await LiquibaseGUITestUtils.openWorkspace();
   });
 
   /**
@@ -43,7 +42,7 @@ suite("editExistingLiquibaseConfiguration", () => {
     const prompt = await new Workbench().openCommandPrompt();
     await prompt.setText(propertiesFile);
     await prompt.confirm();
-    await CommandUtils.openAndSelectRMBItemFromAlreadyOpenedFile("Edit existing Liquibase Configuration");
+    await LiquibaseGUITestUtils.openAndSelectRMBItemFromAlreadyOpenedFile("Edit existing Liquibase Configuration");
 
     await shouldEditExistingConfiguration();
   });
@@ -52,7 +51,7 @@ suite("editExistingLiquibaseConfiguration", () => {
    * Tests that the configuration can be edited by RMB in the file explorer.
    */
   test("should be able to edit existing configuration via RMB from file explorer", async () => {
-    await CommandUtils.openAndSelectRMBItemFromExplorer(
+    await LiquibaseGUITestUtils.openAndSelectRMBItemFromExplorer(
       "Edit existing Liquibase Configuration",
       "data",
       "liquibase",
