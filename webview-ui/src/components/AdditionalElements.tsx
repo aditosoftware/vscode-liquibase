@@ -227,7 +227,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
                     vscodeApiWrapper.postMessage(
                       new MessageData(MessageType.LOG_MESSAGE, {
                         level: "error",
-                        message: "Invalid key input",
+                        message: "Invalid key input: " + enteredKey,
                         notifyUser: true,
                       })
                     );

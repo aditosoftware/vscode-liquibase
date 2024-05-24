@@ -1,5 +1,6 @@
 import { By, Key, WebView } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
+import assert from "assert";
 
 /**
  * Tests the additional elements from the webview.
@@ -60,6 +61,38 @@ suite("AdditionalElements", () => {
       await value.sendKeys("_dolor", Key.TAB);
 
       await WebviewTestUtils.assertMatchPreview(webView, /lorem = ipsum_dolor/);
+    });
+  });
+
+  /**
+   * Tests that an additional element can not be added with an unacceptable key.
+   */
+  test("should not add an element with an unacceptable key", async function () {
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+
+      const keyInput = await webView.findWebElement(By.id("keyInput"));
+      await keyInput.sendKeys("driver", Key.TAB);
+
+      const valueInput = await webView.findWebElement(By.id("valueInput"));
+      await valueInput.sendKeys("lorem", Key.TAB);
+
+      const addButton = await webView.findWebElement(By.id("addButton"));
+      await addButton.click();
+
+      await WebviewTestUtils.assertEqualsPreview(webView, "");
+      assert.ok(await keyInput.getText() === "", "The key input should be empty");
+    });
+  });
+
+  /**
+   * Tests that the help website can be opened.
+   */
+  test("should open the help website", async function () {
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+      const helpButton = await webView.findWebElement(By.id("helpButton"));
+      await helpButton.click();
+
+      //TODO: check if the help website was opened
     });
   });
 });
