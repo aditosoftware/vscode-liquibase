@@ -42,7 +42,7 @@ suite("open cache", () => {
 
     // check that the cache is not there and the user is notified about it
     assert.ok(
-      LiquibaseGUITestUtils.notificationExists(/File .*cache\.json could not be opened, because it does not exist./)
+      LiquibaseGUITestUtils.assertIfNotificationExists(/File .*cache\.json could not be opened, because it does not exist./)
     );
   });
 

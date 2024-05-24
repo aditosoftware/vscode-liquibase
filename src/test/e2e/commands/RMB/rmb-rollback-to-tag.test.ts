@@ -63,7 +63,6 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
   await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
   // Set tag
-
   await CommandUtils.executeCreateTag(configurationName, tagName);
 
   // Update all datasets

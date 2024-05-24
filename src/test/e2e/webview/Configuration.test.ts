@@ -59,6 +59,8 @@ suite("Configuration of the Webview", () => {
       addChangelog: true,
     });
 
-    assert.ok(await LiquibaseGUITestUtils.notificationExists(`Configuration for ${name} was successfully saved.`));
+    assert.ok(
+      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
+    );
   });
 });

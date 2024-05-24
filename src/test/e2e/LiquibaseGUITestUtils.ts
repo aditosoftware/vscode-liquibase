@@ -12,54 +12,90 @@ export class LiquibaseGUITestUtils {
   /**
    * Example wait condition for WebDriver. Wait for a notification with given text to appear.
    * Wait conditions resolve when the first truthy value is returned.
-   * In this case we choose to return the first matching notification object we find,
-   * or undefined if no such notification is found.
+   * @param text - the text that should be in any notification
+   * @param failOnWaitExceeded - if the method should fail, when no message with the given text was in the notifications. Default behavior is `true`.
+   * @returns `true`, when the text was matched
+   * @throws `AssertionError` - when after the wait time of 10.000 ms no notification with the given text was found
    */
-  static async waitForCommandExecution(text: string): Promise<boolean> {
-    await wait();
+  static async waitForCommandExecution(text: string | RegExp, failOnWaitExceeded: boolean = true): Promise<boolean> {
+    const messages = new Set<string>();
+
     try {
       return await VSBrowser.instance.driver.wait(async () => {
-        return typeof (await LiquibaseGUITestUtils.notificationExists(text)) !== "undefined";
-      }, 5000);
+        try {
+          const notifications = await LiquibaseGUITestUtils.notificationExists(text);
+          if (notifications.notification) {
+            return true;
+          } else if (notifications.otherNotification) {
+            notifications.otherNotification.forEach((pNotification) => messages.add(pNotification));
+          }
+          return false;
+        } catch (error) {
+          console.error(error);
+          return false;
+        }
+      }, 10_000);
     } catch (err) {
       console.error(err);
-      return false;
-    }
-  }
-
-  /**
-   * Checks if a notification exits.
-   * TODO besseres feedback wenn notification nicht da ist
-   * @param text - the text that should be contained in the message
-   * @returns the notification, if one was there with the text, or `undefined`, if no message was found
-   */
-  static async notificationExists(text: string | RegExp): Promise<Notification | undefined> {
-    const notifications = await new Workbench().getNotifications();
-    for (const notification of notifications) {
-      const message = await notification.getMessage();
-      if (typeof text === "string") {
-        if (message.includes(text)) {
-          return notification;
-        }
-      } else if (message.match(text)) {
-        return notification;
+      if (failOnWaitExceeded) {
+        const messageResult = Array.from(messages).join("; ");
+        assert.fail(
+          `Expected notification "${text}" be among the given notifications, but they were only the following notifications: ${messageResult}`
+        );
+      } else {
+        return false;
       }
     }
   }
 
   /**
-   * Gets all messages from the notifications.
-   * @returns all messages
+   * Checks if a notification exists.
+   * @param text - the text that should be in any notification
+   * @returns the found notification, if it exists
+   * @throws `AssertionError` - when no notification with the given text was found
    */
-  static async getResultingNotifications(): Promise<string[]> {
-    // get all notifications
-    const center = await new Workbench().getNotifications();
+  static async assertIfNotificationExists(text: string | RegExp): Promise<Notification | undefined> {
+    const notification = await this.notificationExists(text);
+
+    if (notification.notification) {
+      return notification.notification;
+    } else {
+      assert.fail(
+        `Expected notification ${text} be among the given notifications, but they were only ${notification.otherNotification}`
+      );
+    }
+  }
+
+  /**
+   * Checks if a notification exits.
+   *
+   * @param text - the text that should be contained in the message
+   * @returns the notification, if one was there with the text, or an array of all other notifications, if no notification with the given name was found
+   */
+  private static async notificationExists(
+    text: string | RegExp
+  ): Promise<{ notification?: Notification; otherNotification?: string[] }> {
     const messages: string[] = [];
-    for (const notification of center) {
-      messages.push(await notification.getMessage());
+
+    const center = await new Workbench().openNotificationsCenter();
+    const notificationFromCenter = await center.getNotifications(NotificationType.Any);
+    const notificationsFromWorkbench = await new Workbench().getNotifications();
+
+    for (const notification of [...notificationFromCenter, ...notificationsFromWorkbench]) {
+      const message = await notification.getMessage();
+      messages.push(message);
+
+      if (typeof text === "string") {
+        if (message.includes(text)) {
+          return { notification };
+        }
+      } else if (message.match(text)) {
+        return { notification };
+      }
     }
 
-    return messages;
+    // if no match, return the other notifications
+    return { otherNotification: messages };
   }
 
   /**

@@ -40,7 +40,7 @@ suite("Removes any values from the recently loaded elements", () => {
     // then try to execute the command a second time
     await LiquibaseGUITestUtils.startCommandExecution("Cache: Removes any values from the recently loaded elements");
 
-    assert.ok(await LiquibaseGUITestUtils.notificationExists("There are no elements stored to remove"));
+    assert.ok(await LiquibaseGUITestUtils.assertIfNotificationExists("There are no elements stored to remove"));
   });
 
   /**
@@ -50,7 +50,9 @@ suite("Removes any values from the recently loaded elements", () => {
     await CommandUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
     await CommandUtils.removeWholeCache();
 
-    assert.ok(await LiquibaseGUITestUtils.notificationExists("Successfully removed all recently loaded elements."));
+    assert.ok(
+      await LiquibaseGUITestUtils.assertIfNotificationExists("Successfully removed all recently loaded elements.")
+    );
   });
 
   /**
@@ -74,7 +76,7 @@ suite("Removes any values from the recently loaded elements", () => {
     await modalDialog.pushButton("Delete");
 
     // find a notification for successful removing an element
-    const notification = await LiquibaseGUITestUtils.notificationExists(
+    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(
       /Successfully removed .* from the recently loaded elements./
     );
     assert.ok(notification, "notification does exist");

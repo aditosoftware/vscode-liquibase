@@ -59,7 +59,10 @@ suite("Drop-all", function () {
     await modelDialog.pushButton("Cancel");
 
     assert.ok(
-      !(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully."))
+      !(await LiquibaseGUITestUtils.waitForCommandExecution(
+        "Liquibase command 'drop-all' was executed successfully.",
+        false
+      ))
     );
   });
 
