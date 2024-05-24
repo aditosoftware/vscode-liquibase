@@ -1,5 +1,5 @@
 import { InputBox, Notification, NotificationType, StatusBar, VSBrowser, Workbench } from "vscode-extension-tester";
-import { CommandUtils, wait } from "./CommandUtils";
+import { wait } from "./CommandUtils";
 import assert from "assert";
 import { randomUUID } from "crypto";
 import { WebviewTestUtils } from "./webview/WebviewTestUtils";
@@ -104,9 +104,6 @@ export class LiquibaseGUITestUtils {
    * @returns the input box for the commands
    */
   static async startCommandExecution(pCommand: string): Promise<InputBox> {
-    if (CommandUtils.outputPanel && (await CommandUtils.outputPanel.isDisplayed())) {
-      await CommandUtils.outputPanel.clearText(); //TODO maybe not needed anymore with the new clear output channel setting
-    }
     const center = await LiquibaseGUITestUtils.clearNotifications();
 
     // we need an input box to open
@@ -120,7 +117,6 @@ export class LiquibaseGUITestUtils {
 
     // execute our command
     await prompt.setText(">Liquibase: " + pCommand);
-    await wait(2_000);
     await prompt.confirm();
 
     // then wait until the Activating Extensions from the status bar disappears

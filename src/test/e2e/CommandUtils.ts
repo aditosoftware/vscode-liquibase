@@ -94,34 +94,32 @@ export class CommandUtils {
   }
 
   /**
-   * When called, will select everything in the InputBox and simply continue the process
+   * Selects the context based on the provided options.
+   *
+   * @param options - The options for selecting the context.
+   * - `toggleAll` - Flag indicating whether to toggle all contexts.
+   * - filterForInput - The filtering that should happen before the toggle all
+   * - `input` - The input box on which the filtering and toggling should be executed.
    */
-  static async getAllContext(): Promise<void> {
-    const input = await InputBox.create();
-    await wait();
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-  }
+  static async selectContext({
+    toggleAll,
+    filterForInput,
+    input,
+  }: {
+    toggleAll: boolean;
+    filterForInput?: string;
+    input?: InputBox;
+  }): Promise<void> {
+    const inputBox = input || new InputBox();
 
-  /**
-   * When called, will select the first possible value in the InputBox and simply continue the process
-   */
-  static async getFirstContext(): Promise<void> {
-    const input = await InputBox.create();
+    // wait for the inputs to load?
     await wait();
-    await input.setText("foo");
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
-  }
 
-  /**
-   * When called, will not input anything in the InputBox and simply continue the process
-   */
-  static async getNoneContext(): Promise<void> {
-    const input = await InputBox.create();
-    await wait();
-    await input.toggleAllQuickPicks(false);
-    await input.confirm();
+    if (filterForInput) {
+      await inputBox.setText(filterForInput);
+    }
+    await inputBox.toggleAllQuickPicks(toggleAll);
+    await inputBox.confirm();
   }
 
   /**
@@ -135,9 +133,9 @@ export class CommandUtils {
   static matrixExecution(callback: (option: string, exec: () => Promise<void>, key: string) => void): void {
     const options = [ContextOptions.NO_CONTEXT, ContextOptions.LOAD_ALL_CONTEXT, ContextOptions.USE_RECENTLY_LOADED];
     const execFunctions = {
-      "all available contexts": CommandUtils.getAllContext,
-      "the first available context": CommandUtils.getFirstContext,
-      "no context": CommandUtils.getNoneContext,
+      "all available contexts": () => this.selectContext({ toggleAll: true }),
+      "the first available context": () => this.selectContext({ toggleAll: true, filterForInput: "foo" }),
+      "no context": () => this.selectContext({ toggleAll: false }),
     };
 
     options.forEach((option) => {
@@ -284,14 +282,7 @@ export class CommandUtils {
     await input.setText(contextOption);
     await input.confirm();
 
-    await wait();
-
-    if (filterTextForContexts) {
-      await input.setText(filterTextForContexts);
-    }
-
-    await input.toggleAllQuickPicks(true);
-    await input.confirm();
+    await CommandUtils.selectContext({ toggleAll: true, filterForInput: filterTextForContexts, input });
 
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully")
@@ -313,7 +304,7 @@ export class CommandUtils {
     await input.setText(tagName);
     await input.confirm();
 
-    await wait();
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag' was executed successfully"));
   }
 }
 
