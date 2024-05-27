@@ -4,6 +4,7 @@ import {
   VSCodeDataGrid,
   VSCodeDataGridCell,
   VSCodeDataGridRow,
+  VSCodeLink,
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
@@ -102,7 +103,19 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
       const newAdditionalValues = new Map(additionalElementValues);
 
-      if (indicator === keyIndicator) {
+      if(indicator === keyIndicator && !isKeyAcceptable(newCellValue)) {  
+        vscodeApiWrapper.postMessage(
+          new MessageData(MessageType.LOG_MESSAGE, {
+            level: "error",
+            message: "Invalid key input: " + newCellValue,
+            notifyUser: true,
+          })
+        );
+
+        //set content to old value
+        cell.innerText = oldKey;
+        return;
+      } else if (indicator === keyIndicator) {
         // if the key has changed delete the old entry and add one with the new key
         newAdditionalValues.delete(oldKey);
         newAdditionalValues.set(newCellValue, oldValue);
@@ -124,7 +137,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
    * Creates a new row, when the plus button was pressed and both key and value where given.
    */
   function createNewRow(): void {
-    if (key && value) {
+    if (key && value && isKeyAcceptable(key)) {
       setAdditionalElementValues(additionalElementValues.set(key, value));
 
       setKey("");
@@ -147,20 +160,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
     pProperties.onValueChange(newElementValues);
   }
 
-  function handleHelpButtonClick(): void {
-    try{
-      window.open("https://docs.liquibase.com/concepts/connections/creating-config-properties.html");
-    }
-    catch(e: unknown){
-      vscodeApiWrapper.postMessage(
-        new MessageData(MessageType.LOG_MESSAGE, {
-          level: "error",
-          message: "Could not open the link",
-          notifyUser: true,
-        })
-      );
-    }
-  }
+
 
   /**
    * Checks if the entered key is acceptable.
@@ -170,12 +170,11 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
   function isKeyAcceptable(key: string): boolean {
     //TODO: maybe get the invalid keys from the extension? Or from the liquibase documentation? Or from the liquibase code? who knows, who knows...
     const invalidKeys = [
-      "changelog",
+      "changelogFile",
       "driver",
       "url",
       "username",
       "password",
-      "schemas",
       "referenceDatabase",
       "referenceDriver",
       "referenceUrl",
@@ -189,15 +188,10 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
     <div>
       <fieldset>
         <legend>
-          Advanced elements
-          <VSCodeButton
-            id="helpButton"
-            onClick={() => handleHelpButtonClick()}
-            appearance="icon"
-            formnovalidate={true}
-            title="External link to all possible values a liquibase.properties file can have">
-            <span className="codicon codicon-question"></span>
-          </VSCodeButton>
+          Advanced properties      
+          <VSCodeLink 
+          id="helpLink"
+          href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html"><span className="codicon codicon-question"> </span></VSCodeLink>
         </legend>
         <p>To edit an row, click on it.</p>
         <VSCodeDataGrid aria-label="Default">
@@ -223,7 +217,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
                   if (isKeyAcceptable(enteredKey)) {
                     setKey(enteredKey);
                   } else {
-                    setKey(""); //it does NOT (and Idk why) set the value to an empty string, only if you click on another field and use it uses the onblur event
+                    setKey(enteredKey);
                     vscodeApiWrapper.postMessage(
                       new MessageData(MessageType.LOG_MESSAGE, {
                         level: "error",

@@ -14,7 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Reload option for all loading dialogs
 - Setting to clear the output "clearOutputChannelOnStart" was added
 - Added execution time for commands
-- Added a "help"-button to the "Advanced Elements" inside the visual Liquibase configurator
+- Added a "help"-button to the "Advanced properties" inside the visual Liquibase configurator
 
 ### Changed
 
@@ -24,14 +24,14 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Moved logging into extra dependency
 - database url can be inputted in parts
 - removed "Classpath" from the visual Liquibase configurator 
-- changed "Additional Elements" to "Advanced Elements"
+- changed "Additional Elements" to "Advanced properties"
 
 ### Fixed
 
 - Fixed a typo in the settings
 - Removed a false second changelog selection at the generate changelog command
 - Parameters for changelogPath and searchPath were alternated to be based off of the opened workspace
-- "Advanced Elements" now only allows key that are not included in the visual Liquibase configurator
+- "Advanced properties" now only allows key that are not included in the visual Liquibase configurator
 
 ## 0.0.4
 

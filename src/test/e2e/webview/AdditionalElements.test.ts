@@ -1,6 +1,7 @@
 import { By, Key, WebView } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import assert from "assert";
+import { wait } from "../CommandUtils";
 
 /**
  * Tests the additional elements from the webview.
@@ -79,20 +80,45 @@ suite("AdditionalElements", () => {
       const addButton = await webView.findWebElement(By.id("addButton"));
       await addButton.click();
 
-      await WebviewTestUtils.assertEqualsPreview(webView, "");
-      assert.ok(await keyInput.getText() === "", "The key input should be empty");
+      await wait();
+      await wait();
+
+      await WebviewTestUtils.assertEqualsPreview(webView, ""); //should not add the key-value pair
     });
   });
 
   /**
-   * Tests that the help website can be opened.
+   * Tests that the link of help button is correct.
    */
-  test("should open the help website", async function () {
+  test("should validate the link of the help button", async function () {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
-      const helpButton = await webView.findWebElement(By.id("helpButton"));
-      await helpButton.click();
+      const link = await webView.findWebElement(By.id("helpLink"));
+      const href = await link.getAttribute("href");
 
-      //TODO: check if the help website was opened
+      assert.strictEqual(href, "https://docs.liquibase.com/concepts/connections/creating-config-properties.html");
+    });
+  });
+
+  /**
+   * Tests that an additional element will be reverted to the old value if the key was an unacceptable key.
+   */
+  test("should return old value when editing an element with an unacceptable key", async function () {
+    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+
+      const keyInput = await webView.findWebElement(By.id("keyInput"));
+      await keyInput.sendKeys("driver2", Key.TAB);
+
+      const valueInput = await webView.findWebElement(By.id("valueInput"));
+      await valueInput.sendKeys("lorem", Key.TAB);
+
+      const addButton = await webView.findWebElement(By.id("addButton"));
+      await addButton.click();
+
+      const value = await webView.findWebElement(By.id("key;;;driver2;;;lorem"));
+      await value.click();
+      await value.sendKeys(Key.chord(Key.CONTROL, "a"), Key.BACK_SPACE, "driver", Key.TAB);
+
+      await WebviewTestUtils.assertMatchPreview(webView, /driver2 = lorem/); //should not edit the first inserted key-value pair
     });
   });
 });
