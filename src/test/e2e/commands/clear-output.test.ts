@@ -1,8 +1,8 @@
 import assert from "assert";
-import { InputBox, ModalDialog, StatusBar } from "vscode-extension-tester";
+import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { randomUUID } from "crypto";
 
 /**
  * Test suite for the 'clear' functionality and setting.
@@ -29,54 +29,16 @@ suite("Clear Output Channel On Start", function () {
 
     await LiquibaseGUITestUtils.setSetting("liquibase.clearOutputChannelOnStart", false);
 
-    const center = await LiquibaseGUITestUtils.clearNotifications();
-    const prompt = await center.openCommandPrompt();
-    const input = await InputBox.create();
+    // execute a first command
+    await executeDropAll(configurationName);
 
-    await prompt.setText(">Liquibase: drop-all");
-    await prompt.confirm();
+    // execute a second command
+    await executeCreateTag(configurationName);
 
-    // TODO doppelt!
-    for (let i = 0; i < 10; i++) {
-      const activateProgress = await new StatusBar().getItem("Activating Extensions...");
-      if (activateProgress) {
-        await wait(1_000);
-      } else {
-        break;
-      }
-    }
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    const modalDialog = new ModalDialog();
-    await modalDialog.pushButton("Drop-all");
-
-    await wait();
-
-    await center.openCommandPrompt();
-
-    await wait();
-
-    // execute our command
-    await prompt.setText(">Liquibase: create tag");
-    await prompt.confirm();
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText("test");
-    await input.confirm();
-
-    await wait();
-
-    assert.ok(
-      (await LiquibaseGUITestUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' will be executed"),
-      "Output channel should be empty after 'drop-all' command"
-    );
+    // check that the text is still in the output from the first command.
+    const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
+    assert.match(outputPanelText, /Liquibase command 'drop-all' will be executed/);
   });
-
-  // todo schauen, was man zusammenlegen kann
 
   /**
    * Test case for clearing the output after the 'drop-all' command.
@@ -86,55 +48,15 @@ suite("Clear Output Channel On Start", function () {
 
     await LiquibaseGUITestUtils.setSetting("liquibase.clearOutputChannelOnStart", true);
 
-    const center = await LiquibaseGUITestUtils.clearNotifications();
-    const prompt = await center.openCommandPrompt();
-    const input = await InputBox.create();
+    // execute a first command
+    await executeDropAll(configurationName);
 
-    // execute our command
-    await prompt.setText(">Liquibase: " + "drop-all");
-    await prompt.confirm();
+    // execute a second command
+    await executeCreateTag(configurationName);
 
-    // TODO doppelt
-
-    // then wait until the Activating Extensions from the status bar disappears
-    for (let i = 0; i < 10; i++) {
-      const activateProgress = await new StatusBar().getItem("Activating Extensions...");
-      if (activateProgress) {
-        await wait(1_000);
-      } else {
-        break;
-      }
-    }
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    const modalDialog = new ModalDialog();
-    await modalDialog.pushButton("Drop-all");
-
-    await wait();
-
-    await center.openCommandPrompt();
-
-    await wait();
-
-    // execute our command
-    await prompt.setText(">Liquibase: " + "create tag");
-    await wait(2_000);
-    await prompt.confirm();
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText("test");
-    await input.confirm();
-
-    await wait();
-
-    assert.ok(
-      !(await LiquibaseGUITestUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' will be executed"),
-      "Output channel should be empty after 'drop-all' command"
-    );
+    // check that there is no text of the first command in the output
+    const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
+    assert.doesNotMatch(outputPanelText, /Liquibase command 'drop-all' will be executed/);
   });
 
   /**
@@ -145,3 +67,37 @@ suite("Clear Output Channel On Start", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
+
+/**
+ * Executes a 'drop-all' command.
+ * @param configurationName - the name of the configuration
+ */
+async function executeDropAll(configurationName: string): Promise<void> {
+  const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  const modalDialog = new ModalDialog();
+  await modalDialog.pushButton("Drop-all");
+
+  assert.ok(
+    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully.")
+  );
+}
+
+/**
+ * Executes a 'tag' command.
+ * @param configurationName - the name of the configuration
+ */
+async function executeCreateTag(configurationName: string): Promise<void> {
+  const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  await input.setText(randomUUID());
+  await input.confirm();
+
+  assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag' was executed successfully."));
+}

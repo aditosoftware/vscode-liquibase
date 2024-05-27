@@ -3,7 +3,6 @@ import { WebviewTestUtils } from "./WebviewTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import assert from "assert";
 import { randomUUID } from "crypto";
-import {  wait } from "../CommandUtils";
 import path from "path";
 
 /**
@@ -83,12 +82,8 @@ suite("save configuration", () => {
     assert.strictEqual(yesAction, "Yes");
     await notification.takeAction(yesAction);
 
-    await wait(500);
-
     // and check that it was successfully saved
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
-    );
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${name} was successfully saved.`));
   });
 
   /**
@@ -121,10 +116,8 @@ suite("save configuration", () => {
     assert.strictEqual(noAction, "No");
     await notification.takeAction(noAction);
 
-    await wait(500);
-
     // and check that it was cancelled
-    assert.ok(await LiquibaseGUITestUtils.assertIfNotificationExists(`Saving cancelled`));
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Saving cancelled`));
   });
 });
 
@@ -142,7 +135,4 @@ async function saveSimpleConnection(name: string): Promise<void> {
 
     await saveButton.click();
   });
-
-  // wait a bit to have the save executed
-  await wait(500);
 }

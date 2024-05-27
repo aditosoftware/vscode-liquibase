@@ -1,13 +1,12 @@
 import assert from "assert";
-import { InputBox, ModalDialog, StatusBar } from "vscode-extension-tester";
+import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { wait } from "../CommandUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**
  * Test suite for the execution time functionality.
  */
-suite("Clear Output Channel On Start", function () {
+suite("Execution time", function () {
   /**
    * The name of the configuration that was created during the setup.
    */
@@ -24,25 +23,10 @@ suite("Clear Output Channel On Start", function () {
   /**
    * Test case showing the execution time after the 'drop-all' command.
    */
-  test("should not clear output after 'drop-all' command", async function () {
+  test("should show execution time after command execution", async function () {
     this.timeout(40_000);
 
-    const center = await LiquibaseGUITestUtils.clearNotifications();
-    const prompt = await center.openCommandPrompt();
-    const input = await InputBox.create();
-
-    await prompt.setText(">Liquibase: " + "drop-all");
-    await wait(2_000);
-    await prompt.confirm();
-
-    for (let i = 0; i < 10; i++) {
-      const activateProgress = await new StatusBar().getItem("Activating Extensions...");
-      if (activateProgress) {
-        await wait(1_000);
-      } else {
-        break;
-      }
-    }
+    const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
 
     await input.setText(configurationName);
     await input.confirm();
@@ -50,12 +34,12 @@ suite("Clear Output Channel On Start", function () {
     const modalDialog = new ModalDialog();
     await modalDialog.pushButton("Drop-all");
 
-    await wait();
-
     assert.ok(
-      (await LiquibaseGUITestUtils.outputPanel.getText()).includes("Liquibase command 'drop-all' finished in"),
-      "Output channel should show execution time"
+      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully.")
     );
+
+    const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
+    assert.match(outputPanelText, /Liquibase command 'drop-all' finished in \d{2}:\d{2}:\d{3} min/);
   });
 
   /**

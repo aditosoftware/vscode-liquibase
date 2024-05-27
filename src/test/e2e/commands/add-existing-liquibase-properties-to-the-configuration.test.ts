@@ -50,17 +50,22 @@ suite("Add existing liquibase.properties to the configuration", function () {
 
     const settingsFile = path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json");
 
-    // wait until there is a settings file
-    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(settingsFile));
+    // wait until there is a settings file with the content
+    await LiquibaseGUITestUtils.waitUntil(() => {
+      if (fs.existsSync(settingsFile)) {
+        const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
+        return data[configName];
+      }
+    });
 
-    assert.ok(fs.existsSync(settingsFile));
+    assert.ok(fs.existsSync(settingsFile), "settings file does exist");
 
     // Get the content of the settings file
     const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
     const dataForName = data[configName];
 
     // Check that the config is inside the settings file
-    assert.ok(dataForName);
+    assert.ok(dataForName, JSON.stringify(data));
     assert.strictEqual(
       dataForName.toLowerCase(),
       path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, propertiesFileName).toLowerCase()
