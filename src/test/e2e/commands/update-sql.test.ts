@@ -18,7 +18,6 @@ suite("Update-sql", function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -26,8 +25,6 @@ suite("Update-sql", function () {
    * Test the execution of the 'Update SQL' command.
    */
   test("should execute 'Update SQL' command", async function () {
-    this.timeout(80_000);
-
     const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
     // execute update to have some changes

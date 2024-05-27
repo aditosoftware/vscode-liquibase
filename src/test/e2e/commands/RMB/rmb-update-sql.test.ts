@@ -19,7 +19,6 @@ suite("update-sql: Right Click Menu", function () {
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -27,7 +26,6 @@ suite("update-sql: Right Click Menu", function () {
    * Test case to execute the 'update-sql' command from RMB in file.
    */
   test("should execute 'update-sql' command from RMB in file", async function () {
-    this.timeout(80_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Generate SQL File for incoming changes")
     );
@@ -37,7 +35,6 @@ suite("update-sql: Right Click Menu", function () {
    * Test case to execute the 'update-sql' command from RMB in file explorer.
    */
   test("should execute 'update-sql' command from RMB in file explorer", async function () {
-    this.timeout(80_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate SQL File for incoming changes")
     );

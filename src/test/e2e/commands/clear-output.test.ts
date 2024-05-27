@@ -17,7 +17,6 @@ suite("Clear Output Channel On Start", function () {
    * Sets up the test suite before running any tests.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -25,8 +24,6 @@ suite("Clear Output Channel On Start", function () {
    * Test case for not clearing the output after the 'drop-all' command.
    */
   test("should not clear output after 'drop-all' command", async function () {
-    this.timeout(40_000);
-
     await LiquibaseGUITestUtils.setSetting("liquibase.clearOutputChannelOnStart", false);
 
     // execute a first command
@@ -44,8 +41,6 @@ suite("Clear Output Channel On Start", function () {
    * Test case for clearing the output after the 'drop-all' command.
    */
   test("should clear output after 'drop-all' command", async function () {
-    this.timeout(40_000);
-
     await LiquibaseGUITestUtils.setSetting("liquibase.clearOutputChannelOnStart", true);
 
     // execute a first command

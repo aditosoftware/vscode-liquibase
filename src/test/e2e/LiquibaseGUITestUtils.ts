@@ -319,10 +319,10 @@ export class LiquibaseGUITestUtils {
    *
    * @param callback - The function to be executed. It takes three parameters:
    *   - `option`: A string representing the current option.
-   *   - `exec`: A function that returns a promise and is executed for the current option.
+   *   - `toggleContexts`: A function that toggles the contexts
    *   - `key`: A string representing the key associated with the current option.
    */
-  static matrixExecution(callback: (option: string, exec: () => Promise<void>, key: string) => void): void {
+  static matrixExecution(callback: (option: string, toggleContexts: () => Promise<void>, key: string) => void): void {
     const options = [ContextOptions.NO_CONTEXT, ContextOptions.LOAD_ALL_CONTEXT, ContextOptions.USE_RECENTLY_LOADED];
 
     const execFunctions = {
@@ -336,6 +336,25 @@ export class LiquibaseGUITestUtils {
         callback(option, exec, key);
       });
     });
+  }
+
+  /**
+   * Selects the what type of context and the contexts itself in the matrixExecution.
+   * @param input - the inputBox on which the elements should be put into
+   * @param option - the option what type of context should be used
+   * @param toggleContexts - the function to toggle the contexts
+   */
+  static async selectContextsInMatrixExecution(
+    input: InputBox,
+    option: string,
+    toggleContexts: () => Promise<void>
+  ): Promise<void> {
+    await input.setText(option);
+    await input.confirm();
+
+    if (option !== ContextOptions.NO_CONTEXT) {
+      await toggleContexts();
+    }
   }
 
   /**

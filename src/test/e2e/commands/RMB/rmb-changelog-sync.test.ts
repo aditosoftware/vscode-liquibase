@@ -17,7 +17,6 @@ suite("changelog-sync: Right Click Menu", function () {
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -25,7 +24,6 @@ suite("changelog-sync: Right Click Menu", function () {
    * Test case for executing the 'changelog sync' command via RMB in a file.
    */
   test("should execute 'changelog sync' command from RMB in file", async function () {
-    this.timeout(50_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Changelog Sync")
     );
@@ -35,7 +33,6 @@ suite("changelog-sync: Right Click Menu", function () {
    * Test case for executing the 'changelog sync' command via RMB in the file explorer.
    */
   test("should execute 'changelog sync' command from RMB in file explorer", async function () {
-    this.timeout(50_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Changelog Sync")
     );

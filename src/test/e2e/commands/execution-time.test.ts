@@ -16,7 +16,6 @@ suite("Execution time", function () {
    * Sets up the test suite before running any tests.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -24,8 +23,6 @@ suite("Execution time", function () {
    * Test case showing the execution time after the 'drop-all' command.
    */
   test("should show execution time after command execution", async function () {
-    this.timeout(40_000);
-
     const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
 
     await input.setText(configurationName);

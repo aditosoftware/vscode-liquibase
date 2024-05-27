@@ -2,7 +2,6 @@ import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { suiteTeardown } from "mocha";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the "Clear Checksums" command.
@@ -17,7 +16,6 @@ suite("Clear Checksums", function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -26,7 +24,6 @@ suite("Clear Checksums", function () {
    */
   LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test("should execute 'Clear Checksums' with context type '" + option + "' command with " + key, async function () {
-      this.timeout(40_000);
       await DockerTestUtils.resetDB();
 
       const input = await LiquibaseGUITestUtils.startCommandExecution("update");
@@ -37,15 +34,7 @@ suite("Clear Checksums", function () {
       await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
-      if (option === ContextOptions.NO_CONTEXT) {
-        await input.setText(option);
-        await input.confirm();
-      } else {
-        await input.setText(option);
-        await input.confirm();
-
-        await exec();
-      }
+      await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 
       await LiquibaseGUITestUtils.startCommandExecution("Clear Checksums");
 

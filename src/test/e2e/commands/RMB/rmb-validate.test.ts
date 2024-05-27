@@ -16,7 +16,6 @@ suite("validate: Right Click Menu", function () {
    * Sets up the test suite by creating a configuration.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -33,7 +32,6 @@ suite("validate: Right Click Menu", function () {
    * enters the configuration name, and verifies the success notification.
    */
   test("should execute 'validate' command from RMB in file", async function () {
-    this.timeout(50_000);
     await executeCommand(configurationName, () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Validate"));
   });
 
@@ -43,7 +41,6 @@ suite("validate: Right Click Menu", function () {
    * enters the configuration name, and verifies the success notification.
    */
   test("should execute 'validate' command from RMB in file explorer", async function () {
-    this.timeout(50_000);
     await executeCommand(configurationName, () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Validate"));
   });
 });

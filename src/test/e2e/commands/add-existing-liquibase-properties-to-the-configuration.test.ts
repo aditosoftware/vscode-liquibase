@@ -13,7 +13,6 @@ suite("Add existing liquibase.properties to the configuration", function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     await LiquibaseGUITestUtils.openWorkspace();
   });
 
@@ -21,8 +20,6 @@ suite("Add existing liquibase.properties to the configuration", function () {
    * Test case for adding a liquibase.properties file to the config.
    */
   test("should add a liquibase.properties file to the config", async function () {
-    this.timeout(50_000);
-
     const configName = randomUUID();
     const propertiesFileName = "dummy.liquibase.properties";
 

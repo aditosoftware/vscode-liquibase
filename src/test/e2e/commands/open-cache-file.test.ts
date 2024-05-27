@@ -17,7 +17,6 @@ suite("open cache", () => {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -41,7 +40,9 @@ suite("open cache", () => {
 
     // check that the cache is not there and the user is notified about it
     assert.ok(
-      LiquibaseGUITestUtils.assertIfNotificationExists(/File .*cache\.json could not be opened, because it does not exist./)
+      LiquibaseGUITestUtils.assertIfNotificationExists(
+        /File .*cache\.json could not be opened, because it does not exist./
+      )
     );
   });
 

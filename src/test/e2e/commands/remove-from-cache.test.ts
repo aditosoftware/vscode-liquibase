@@ -17,7 +17,6 @@ suite("Removes any values from the recently loaded elements", () => {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 

@@ -15,7 +15,6 @@ suite("Tag Exist", function () {
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -23,8 +22,6 @@ suite("Tag Exist", function () {
    * Test case for executing the 'tag-exists' command when the tag already exists.
    */
   test("should execute 'tag-exists' command successfully when tag exists", async function () {
-    this.timeout(40_000);
-
     const tagName = "test";
 
     await LiquibaseGUITestUtils.executeCreateTag(configurationName, tagName);
@@ -50,8 +47,6 @@ suite("Tag Exist", function () {
    * Test case for executing the 'tag-exists' command when the tag does not exist.
    */
   test("should execute 'tag-exists' command successfully even if no tag exists", async function () {
-    this.timeout(40_000);
-
     const input = await LiquibaseGUITestUtils.startCommandExecution("tag-exists");
 
     await input.setText(configurationName);

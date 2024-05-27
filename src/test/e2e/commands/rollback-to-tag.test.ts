@@ -16,7 +16,6 @@ suite("Rollback to Tag", function () {
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -24,7 +23,6 @@ suite("Rollback to Tag", function () {
    * Test case for executing the "Rollback to Tag" command.
    */
   test("should execute 'Rollback to Tag' command", async function () {
-    this.timeout(80_000);
     await DockerTestUtils.resetDB();
 
     const tagName = "test";
