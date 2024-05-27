@@ -1,7 +1,6 @@
 import { By, Key, WebView } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import assert from "assert";
-import { wait } from "../CommandUtils";
 
 /**
  * Tests the additional elements from the webview.
@@ -79,9 +78,6 @@ suite("AdditionalElements", () => {
 
       const addButton = await webView.findWebElement(By.id("addButton"));
       await addButton.click();
-
-      await wait();
-      await wait();
 
       await WebviewTestUtils.assertEqualsPreview(webView, ""); //should not add the key-value pair
     });
