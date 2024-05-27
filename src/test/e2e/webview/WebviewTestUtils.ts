@@ -1,6 +1,5 @@
 import assert from "assert";
-import { By, EditorView, InputBox, Key, WebView, Workbench } from "vscode-extension-tester";
-import { wait } from "../CommandUtils";
+import { By, EditorView, InputBox, Key, VSBrowser, WebView, Workbench } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { randomUUID } from "crypto";
@@ -38,19 +37,15 @@ export class WebviewTestUtils {
   static async checkForOpenedWebview(): Promise<boolean | undefined> {
     const editor = new EditorView();
 
-    const maxTries = 10;
-    // wait a bit to have the webview there
-    for (let i = 1; i <= maxTries; i++) {
+    return VSBrowser.instance.driver.wait(async () => {
       try {
         await editor.getTabByTitle("Liquibase Configuration");
         return true;
-      } catch (e) {
-        if (i === maxTries) {
-          throw e;
-        }
+      } catch (error) {
+        console.error("error finding webview in the opened editor", error);
+        return false;
       }
-      await wait(1000);
-    }
+    }, 10_000);
   }
 
   /**

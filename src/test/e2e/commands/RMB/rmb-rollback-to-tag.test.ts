@@ -18,7 +18,6 @@ suite("rollback-to-tag: Right Click Menu", function () {
    * Setup function that runs before all tests in the suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -26,7 +25,6 @@ suite("rollback-to-tag: Right Click Menu", function () {
    * Test case for executing the "rollback-to-tag" command from RMB in file.
    */
   test("should execute 'rollback-to-tag' command from RMB in file", async function () {
-    this.timeout(80_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Rollback to Tag")
     );
@@ -36,7 +34,6 @@ suite("rollback-to-tag: Right Click Menu", function () {
    * Test case for executing the "rollback-to-tag" command from RMB in file explorer.
    */
   test("should execute 'rollback-to-tag' command from RMB in file explorer", async function () {
-    this.timeout(80_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Rollback to Tag")
     );

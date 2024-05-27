@@ -24,7 +24,7 @@ suite("Extension Test Suite", () => {
   /**
    * The existing changelog file in the workspace.
    */
-  const changelogFile = path.join(workspacePath, "liquibase", "changelog.xml");
+  const changelogFile = path.join(workspacePath, ".liquibase", "changelog.xml");
 
   const tag = randomUUID();
   const contextLoaded = "Load all contexts from the changelog file";

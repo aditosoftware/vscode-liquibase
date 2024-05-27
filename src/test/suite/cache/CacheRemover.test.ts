@@ -9,6 +9,7 @@ import { ConfirmationDialog, DialogValues, QuickPick } from "@aditosoftware/vsco
 import { PROPERTY_FILE } from "../../../input/ConnectionType";
 import { TestUtils } from "../TestUtils";
 import { RemoveCacheOptions } from "../../../constants";
+import * as configReader from "../../../configuration/handle/readConfiguration";
 
 /**
  * Tests the cache remover.
@@ -123,6 +124,13 @@ suite("CacheRemover tests", () => {
         four: "path/to/connection/four.liquibase.properties",
       };
 
+      Sinon.stub(configReader, "readConfiguration").resolves({
+        one: "path/to/connection/one.liquibase.properties",
+        two: "path/to/connection/two.liquibase.properties",
+        three: "path/to/connection/three.liquibase.properties",
+        four: "path/to/connection/four.liquibase.properties",
+      });
+
       // init the stubs
       showDialogQuickPick = Sinon.stub(QuickPick.prototype, "showDialog").callThrough();
 
@@ -133,8 +141,7 @@ suite("CacheRemover tests", () => {
      * Restore the stubs after each test.
      */
     teardown("restore stubs", () => {
-      showDialogQuickPick.restore();
-      showDialogConfirmationDialog.restore();
+      Sinon.restore();
     });
 
     /**
@@ -162,8 +169,8 @@ suite("CacheRemover tests", () => {
      * Tests that the generation of properties for the cache removing works correctly.
      * This method is explicitly tested, because there is no easy way to test it correctly in the program flow.
      */
-    test("should generatePropertiesForCacheRemoving", () => {
-      const result = cacheRemover["generatePropertiesForCacheRemoving"]({
+    test("should generatePropertiesForCacheRemoving", async () => {
+      const result = await cacheRemover["generatePropertiesForCacheRemoving"]({
         "path/to/connection/one.liquibase.properties": {
           contexts: ["a", "b"],
         },

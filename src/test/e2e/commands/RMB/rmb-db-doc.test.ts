@@ -19,7 +19,6 @@ suite("db-doc: Right Click Menu", function () {
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 

@@ -15,7 +15,6 @@ suite("Validate", function () {
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -23,8 +22,6 @@ suite("Validate", function () {
    * Test case for executing the 'validate' command.
    */
   test("should execute 'validate' command", async function () {
-    this.timeout(40_000);
-
     const input = await LiquibaseGUITestUtils.startCommandExecution("validate");
 
     await input.setText(configurationName);

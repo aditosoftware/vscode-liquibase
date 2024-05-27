@@ -45,6 +45,11 @@ export class LiquibaseGUITestUtils {
    */
   static outputPanel: OutputView;
 
+  /**
+   * Information, if the extension is active.
+   */
+  static extensionActive: boolean = false;
+
   //#region setup tests
 
   /**
@@ -68,13 +73,17 @@ export class LiquibaseGUITestUtils {
 
     // create a configuration
     const configurationName = await this.createConfiguration();
+    // after we have successfully created a config via the webview, the extension is definitely active
+    this.extensionActive = true;
 
     // and close all editors
     await new EditorView().closeAllEditors();
 
     // open our output panel
-    this.outputPanel = await new BottomBarPanel().openOutputView();
-    await this.outputPanel.selectChannel("Liquibase");
+    if (!this.outputPanel) {
+      this.outputPanel = await new BottomBarPanel().openOutputView();
+      await this.outputPanel.selectChannel("Liquibase");
+    }
 
     return configurationName;
   }
@@ -120,14 +129,22 @@ export class LiquibaseGUITestUtils {
    * Waits until the extension was activated.
    */
   static async waitForExtensionToActivate(): Promise<void> {
-    for (let i = 0; i < 10; i++) {
-      const activateProgress = await new StatusBar().getItem("Activating Extensions...");
-      if (activateProgress) {
-        await this.wait(1000);
-      } else {
-        break;
-      }
+    if (this.extensionActive) {
+      return;
     }
+
+    const result = await VSBrowser.instance.driver.wait(async () => {
+      return await new StatusBar().getItem("Activating Extensions...");
+    }, 2000);
+
+    if (result) {
+      await VSBrowser.instance.driver.wait(async () => {
+        const activatingDone = await new StatusBar().getItem("Activating Extensions...");
+        return typeof activatingDone === "undefined";
+      }, 10_000);
+    }
+
+    this.extensionActive = true;
   }
 
   /**
@@ -302,11 +319,12 @@ export class LiquibaseGUITestUtils {
    *
    * @param callback - The function to be executed. It takes three parameters:
    *   - `option`: A string representing the current option.
-   *   - `exec`: A function that returns a promise and is executed for the current option.
+   *   - `toggleContexts`: A function that toggles the contexts
    *   - `key`: A string representing the key associated with the current option.
    */
-  static matrixExecution(callback: (option: string, exec: () => Promise<void>, key: string) => void): void {
+  static matrixExecution(callback: (option: string, toggleContexts: () => Promise<void>, key: string) => void): void {
     const options = [ContextOptions.NO_CONTEXT, ContextOptions.LOAD_ALL_CONTEXT, ContextOptions.USE_RECENTLY_LOADED];
+
     const execFunctions = {
       "all available contexts": () => this.selectContext({ toggleAll: true }),
       "the first available context": () => this.selectContext({ toggleAll: true, filterForInput: "foo" }),
@@ -318,6 +336,25 @@ export class LiquibaseGUITestUtils {
         callback(option, exec, key);
       });
     });
+  }
+
+  /**
+   * Selects the what type of context and the contexts itself in the matrixExecution.
+   * @param input - the inputBox on which the elements should be put into
+   * @param option - the option what type of context should be used
+   * @param toggleContexts - the function to toggle the contexts
+   */
+  static async selectContextsInMatrixExecution(
+    input: InputBox,
+    option: string,
+    toggleContexts: () => Promise<void>
+  ): Promise<void> {
+    await input.setText(option);
+    await input.confirm();
+
+    if (option !== ContextOptions.NO_CONTEXT) {
+      await toggleContexts();
+    }
   }
 
   /**
@@ -362,13 +399,17 @@ export class LiquibaseGUITestUtils {
   }): Promise<void> {
     const inputBox = input || new InputBox();
 
-    // wait for the inputs to load
-    await this.wait();
+    // wait until there are checkboxes loaded
+    await VSBrowser.instance.driver.wait(async () => {
+      const checkboxes = await inputBox.getCheckboxes();
+      return checkboxes.length !== 0;
+    }, 5000);
 
     if (filterForInput) {
       await inputBox.setText(filterForInput);
     }
     await inputBox.toggleAllQuickPicks(toggleAll);
+
     await inputBox.confirm();
   }
 
@@ -520,11 +561,16 @@ export class LiquibaseGUITestUtils {
    *
    * @param timeout - the number of milliseconds that should be waited.
    */
-  static async wait(timeout: number = 2000): Promise<void> {
+  private static async wait(timeout: number = 2000): Promise<void> {
     await new Promise((r) => setTimeout(r, timeout));
   }
 
-  // TODO TSCOd
+  /**
+   * Waits until a condition was fulfilled.
+   * @param waitFunction - the function that should return true and be called as long as the wait takes
+   * @param timeout - the timeout that should be waited
+   * @returns the last result of the wait function
+   */
   static async waitUntil(waitFunction: () => boolean, timeout: number = 2000): Promise<boolean> {
     return await VSBrowser.instance.driver.wait(waitFunction, timeout);
   }

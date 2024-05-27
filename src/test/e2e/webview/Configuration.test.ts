@@ -12,7 +12,6 @@ suite("Configuration of the Webview", () => {
    * Before the tests, open a temp workspace.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     await LiquibaseGUITestUtils.setupTests();
   });
 

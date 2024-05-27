@@ -19,7 +19,6 @@ suite("History", async function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -28,8 +27,6 @@ suite("History", async function () {
    */
   ["TABULAR", "TEXT"].forEach((pHistoryOption) => {
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
-      this.timeout(40_000);
-
       const fileName = `history_${pHistoryOption}.txt`;
 
       const input = await LiquibaseGUITestUtils.startCommandExecution("history");

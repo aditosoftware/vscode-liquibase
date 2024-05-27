@@ -18,7 +18,6 @@ suite("db-doc", function () {
    * Sets up the test suite by creating a configuration and setting the timeout.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -27,9 +26,6 @@ suite("db-doc", function () {
    * It sets up a temporary database, generates documentation using Liquibase, and checks for the existence of the generated documentation file.
    */
   test("should execute 'db-doc' command", async function () {
-    // Extend the timeout to accommodate potentially long-running Liquibase operations.
-    this.timeout(80_000);
-
     const dbDocFolder = path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "output", randomUUID());
     fs.mkdirSync(dbDocFolder);
 

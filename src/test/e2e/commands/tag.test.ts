@@ -15,7 +15,6 @@ suite("Tag", function () {
    * Sets up the test suite before running any tests.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -23,8 +22,6 @@ suite("Tag", function () {
    * Test case for executing the 'tag' command.
    */
   test("should execute 'tag' command", async function () {
-    this.timeout(40_000);
-
     const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
 
     await input.setText(configurationName);

@@ -17,7 +17,6 @@ suite("unexpected-changesets: Right Click Menu", function () {
    * Sets up the test suite before running any tests.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -25,7 +24,6 @@ suite("unexpected-changesets: Right Click Menu", function () {
    * Test case for executing the 'Unexpected Changesets' command from RMB in file.
    */
   test("should execute 'Unexpected Changesets' command from RMB in file", async function () {
-    this.timeout(50_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
     );
@@ -35,7 +33,6 @@ suite("unexpected-changesets: Right Click Menu", function () {
    * Test case for executing the 'Unexpected Changesets' command from RMB in file explorer.
    */
   test("should execute 'Unexpected Changesets' command from RMB in file explorer", async function () {
-    this.timeout(50_000);
     await executeCommand(configurationName, () =>
       LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
     );

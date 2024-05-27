@@ -19,7 +19,6 @@ suite("Remove existing liquibase.properties from the configuration", function ()
    * Set up the test suite.
    */
   setup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 

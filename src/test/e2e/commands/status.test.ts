@@ -1,7 +1,6 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { ContextOptions } from "../../../constants";
 
 /**
  * Test suite for the 'status' command.
@@ -16,7 +15,6 @@ suite("Status", function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -25,8 +23,6 @@ suite("Status", function () {
    */
   LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
-      this.timeout(40_000);
-
       const input = await LiquibaseGUITestUtils.startCommandExecution("status");
 
       await input.setText(configurationName);
@@ -35,15 +31,8 @@ suite("Status", function () {
       await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick(1);
 
-      if (option === ContextOptions.NO_CONTEXT) {
-        await input.setText(option);
-        await input.confirm();
-      } else {
-        await input.setText(option);
-        await input.confirm();
+      await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 
-        await exec();
-      }
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully.")
       );

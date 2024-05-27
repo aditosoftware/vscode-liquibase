@@ -17,7 +17,6 @@ suite("generate changelog", function () {
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -25,7 +24,6 @@ suite("generate changelog", function () {
    * Test case for executing the "generate changelog" command.
    */
   test("should execute 'generate changelog' command", async function () {
-    this.timeout(80_000);
     await DockerTestUtils.resetDB();
 
     const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();

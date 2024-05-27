@@ -16,7 +16,6 @@ suite("Drop-all", function () {
    * Sets up the test suite before running any tests.
    */
   suiteSetup(async function () {
-    this.timeout(50_000);
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
@@ -24,45 +23,16 @@ suite("Drop-all", function () {
    * Test case for executing the 'drop-all' command.
    */
   test("should execute 'drop-all' command", async function () {
-    this.timeout(40_000);
-
-    const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    const modalDialog = new ModalDialog();
-    await modalDialog.pushButton("Drop-all");
-
-    assert.ok(
-      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully.")
-    );
+    await executeDropAll(configurationName, "Drop-all", true);
 
     //TODO: add comparison to db to check if everything was removed
   });
-
-  // TODO Methoden zusammenlegen?
 
   /**
    * Test case for cancelling the execution of the 'drop-all' command.
    */
   test("should cancel execute 'drop-all' command", async function () {
-    this.timeout(40_000);
-
-    const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    const modelDialog = new ModalDialog();
-    await modelDialog.pushButton("Cancel");
-
-    assert.ok(
-      !(await LiquibaseGUITestUtils.waitForCommandExecution(
-        "Liquibase command 'drop-all' was executed successfully.",
-        false
-      ))
-    );
+    await executeDropAll(configurationName, "Cancel", false);
   });
 
   /**
@@ -72,3 +42,31 @@ suite("Drop-all", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
+
+/**
+ * Executed the drop all command.
+ * @param configurationName - the name of the configuration that should be dropped
+ * @param buttonPushed - the button that should be pushed in the modalDialog
+ * @param result - the expected result, if the drop-all was successfully done
+ */
+async function executeDropAll(
+  configurationName: string,
+  buttonPushed: "Drop-all" | "Cancel",
+  result: boolean
+): Promise<void> {
+  const input = await LiquibaseGUITestUtils.startCommandExecution("drop-all");
+
+  await input.setText(configurationName);
+  await input.confirm();
+
+  const modalDialog = new ModalDialog();
+  await modalDialog.pushButton(buttonPushed);
+
+  assert.strictEqual(
+    await LiquibaseGUITestUtils.waitForCommandExecution(
+      "Liquibase command 'drop-all' was executed successfully.",
+      false
+    ),
+    result
+  );
+}

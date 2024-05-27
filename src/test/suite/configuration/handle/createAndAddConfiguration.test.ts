@@ -360,18 +360,11 @@ function assertCreationOfLiquibaseProperties(
 ): void {
   createLiquibaseProperties(liquibaseConfigurationData)
     .then(() => {
-      const expectedClasspath = path
-        .join(baseResourcePath, "dummy", "mariadb-java-client-2.5.3.jar")
-        .replaceAll(`\\`, `\\\\`);
-
       const expectedFileContent = `
 # configuration for the database
 username = admin
 password = secretPw
-driver = org.mariadb.jdbc.Driver
-# Specifies the directories and JAR files to search for changelog files and custom extension classes.
-# To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
-classpath = ${expectedClasspath}`;
+driver = org.mariadb.jdbc.Driver`;
 
       //  find opened editors
       assertFileWasOpened("data.liquibase.properties", expectedFileContent);

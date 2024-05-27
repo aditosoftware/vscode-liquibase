@@ -290,15 +290,9 @@
     "createTempWorkspace": "copyfiles -u 3 -E -a src/test/workspace/**/* out/temp/workspace",
     "lint": "eslint .",
     "pretest": "npm run clean-compile && npm run createTempWorkspace",
-    "test:unit": "vscode-test",
-    "test:e2e": "extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js --coverage --uninstall_extension",
-    "test": "npm run test:unit && npm run test:e2e",
-    "e2e-testing": "npm run pretest && npm run test:e2e",
-    "e2e-specific": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/commands/clear-output.test.js",
-    "e2e-specific2": "extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/commands/changelog-sync.test.js",
-    "e2e-webview-specific": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/webview/*.test.js",
+    "test": "vscode-test",
+    "test:e2e": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
-    "help": "extest setup-and-run --help",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
