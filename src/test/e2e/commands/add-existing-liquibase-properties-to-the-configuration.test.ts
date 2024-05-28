@@ -36,13 +36,9 @@ suite("Add existing liquibase.properties to the configuration", function () {
       "Add existing liquibase.properties to the configuration"
     );
 
-    await VSBrowser.instance.takeScreenshot("01");
-
     // Input the configuration name
     await input.setText(configName);
-    await VSBrowser.instance.takeScreenshot("02");
     await input.confirm();
-    await VSBrowser.instance.takeScreenshot("03");
 
     // Select the folder
     await LiquibaseGUITestUtils.selectFolder(input, LiquibaseGUITestUtils.WORKSPACE_PATH);
