@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { By, InputBox, Workbench } from "vscode-extension-tester";
+import { By, InputBox, VSBrowser, Workbench } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
@@ -29,19 +29,20 @@ suite("Add existing liquibase.properties to the configuration", function () {
     const configName = randomUUID();
     const propertiesFileName = "dummy.liquibase.properties";
 
-    // Open the command prompt/palette
-    const prompt = await new Workbench().openCommandPrompt();
-
-    // Wait for the input box to appear
-    const input = await InputBox.create();
+    await VSBrowser.instance.takeScreenshot("00");
 
     // Execute the command
-    await prompt.setText(">liquibase.addExistingConfiguration");
-    await prompt.confirm();
+    const input = await LiquibaseGUITestUtils.startCommandExecution(
+      "Add existing liquibase.properties to the configuration"
+    );
+
+    await VSBrowser.instance.takeScreenshot("01");
 
     // Input the configuration name
     await input.setText(configName);
+    await VSBrowser.instance.takeScreenshot("02");
     await input.confirm();
+    await VSBrowser.instance.takeScreenshot("03");
 
     // Select the folder
     await LiquibaseGUITestUtils.selectFolder(input, LiquibaseGUITestUtils.WORKSPACE_PATH);
