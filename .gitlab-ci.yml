@@ -74,6 +74,7 @@ e2e_tests:
 
       # create a dummy user for non sudo access
     - useradd -m -s /bin/bash testuser
+    - usermod -aG docker testuser
     - chown -R testuser:testuser .
     - chmod -R u+rwX .
     - export CURRENT_DIR=$(pwd)
