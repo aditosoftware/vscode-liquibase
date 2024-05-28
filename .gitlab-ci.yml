@@ -69,6 +69,7 @@ build_and_test:
     reports:
       junit: test-results.xml
     paths:
+      - "*.xml"
       - eslint-results.json
       - coverage/lcov.info
       - "out/src/**"
