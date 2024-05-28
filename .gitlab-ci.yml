@@ -57,20 +57,25 @@ build_and_test:
 e2e_tests:
   stage: build
   interruptible: true
-  # services:
-  #   - name: docker:dind
-  #     alias: docker
-  # variables:
-  # DOCKER_TLS_CERTDIR: ""
-  # DOCKER_HOST: tcp://docker:2375
-  # DOCKER_DRIVER: overlay2
+  services:
+    - name: docker:dind
+      alias: docker
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
   before_script:
-    # - !reference [.prepareDocker]
+    - !reference [.prepareDocker]
     - !reference [.prepareJavaHome]
     - !reference [.prepareVscodeEnvironment]
     # add extra package for merging mocha config
     - apt update
     - apt install -y jq
+
+      # create a dummy user for non sudo access
+    - useradd -m -s /bin/bash testuser
+    - chown -R testuser:testuser .
+    - chmod -R u+rwX .
   script:
     - whoami
     - npm install
@@ -87,7 +92,8 @@ e2e_tests:
         "reporterEnabled": "spec,mocha-junit-reporter"
       }' > mocha-multi-reporters.json
     # Running tests with a storage directory inside the project directory
-    - xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources
+    - su - testuser -c "whoami"
+    - su - testuser -c "xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources"
   artifacts:
     when: always
     expire_in: 5 days
