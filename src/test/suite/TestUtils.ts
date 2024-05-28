@@ -17,9 +17,14 @@ export class TestUtils {
   private static extensionInitialized: boolean = false;
 
   /**
+   * The path to the out folder
+   */
+  static readonly basicPathToOut = path.join(__dirname, "..", "..");
+
+  /**
    * Temporary folder for writing cache files.
    */
-  private static readonly temporaryResourcePath = path.join(process.cwd(), "..", "..", "out", "temp");
+  private static readonly temporaryResourcePath = path.join(this.basicPathToOut, "temp");
 
   /**
    * The resource path were all the resources were downloaded.
@@ -76,7 +81,7 @@ export class TestUtils {
   static initLoggerForTests(): void {
     const context: vscode.ExtensionContext = {
       subscriptions: [],
-      logUri: vscode.Uri.file(path.join(process.cwd(), "out", "temp", "logging")),
+      logUri: vscode.Uri.file(path.join(this.basicPathToOut, "temp", "logging")),
     } as unknown as vscode.ExtensionContext;
     Logger.initializeLogger(context, "Tests");
     initializeLogger(Logger.getLogger());

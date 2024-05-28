@@ -58,7 +58,7 @@ export function executeJar(
 
         const childProcess = spawn(javaExecutable, argsArray);
         const startTime = new Date().getTime();
-        
+
         if (getClearOutputChannelOnStartSetting()) {
           Logger.getLogger().clear();
         }
@@ -97,12 +97,14 @@ export function executeJar(
         });
 
         childProcess.on("exit", () => {
-            const duration = new Date().getTime() - startTime;
-            const minutes = Math.floor(duration / 60000);
-            const seconds = Math.floor((duration % 60000) / 1000);
-            const milliseconds = duration % 1000;
-            const formattedDuration = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(3, '0')}`;
-            Logger.getLogger().info({ message: `Liquibase command '${operation}' finished in ${formattedDuration} min` });
+          const duration = new Date().getTime() - startTime;
+          const minutes = Math.floor(duration / 60000);
+          const seconds = Math.floor((duration % 60000) / 1000);
+          const milliseconds = duration % 1000;
+          const formattedDuration = `${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}:${milliseconds.toString().padStart(3, "0")}`;
+          Logger.getLogger().info({ message: `Liquibase command '${operation}' finished in ${formattedDuration} min` });
         });
       });
     }
@@ -134,7 +136,9 @@ export async function loadContextsFromChangelogFile(
     }
 
     // classpath elements needed for execution of the jar
-    const cp = [path.join(resourcePath, "*"), path.join(libFolder, "*"), getLiquibaseFolder()].join(getClasspathSeparator());
+    const cp = [path.join(resourcePath, "*"), path.join(libFolder, "*"), getLiquibaseFolder()].join(
+      getClasspathSeparator()
+    );
 
     // all arguments for the jar execution
     const args = [
@@ -154,7 +158,9 @@ export async function loadContextsFromChangelogFile(
 
       Logger.getLogger().info({ message: `Fetching of contexts finished with ${result.status}` });
       // Log every output (stdout, stderr) from the command for later information.
-      Logger.getLogger().debug({ message: `${sanitizeOutput(result.output.toString())}` });
+      if (result.output) {
+        Logger.getLogger().debug({ message: `${sanitizeOutput(result.output.toString())}` });
+      }
 
       if (result.status === 0) {
         // command execution was successful, trim the result and transform it to the array

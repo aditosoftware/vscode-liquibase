@@ -99,40 +99,32 @@ export class DockerTestUtils {
     containerName: string = "mariadb",
     dbExecutable: string = "mysql-client"
   ): Promise<void> {
+    const fullContainerName = this.containerNamePrefix + containerName;
+
     // check if container is running
-    const running = await this.repeatCommand(
-      `${this.docker} inspect -f '{{.State.Running}}' ${this.containerNamePrefix + containerName}`
-    );
+    const running = await this.repeatCommand(`${this.docker} inspect -f '{{.State.Running}}' ${fullContainerName}`);
 
     if (running && running.trim() === "true") {
       switch (containerName) {
         case "mariadb":
           // install mysql to the container
           await this.executeCommand(
-            `${this.docker} exec ${
-              this.containerNamePrefix + containerName
-            } sh -c "apt-get update && apt-get install -y ${dbExecutable}"`
+            `${this.docker} exec ${fullContainerName} sh -c "apt-get update && apt-get install -y ${dbExecutable}"`
           );
 
           // check if database is available
           await this.repeatCommand(
-            `${this.docker} exec ${this.containerNamePrefix + containerName} mysql -u${this.username} -p${
-              this.password
-            } -e "SELECT 1;"`
+            `${this.docker} exec ${fullContainerName} mysql -u${this.username} -p${this.password} -e "SELECT 1;"`
           );
           break;
 
         // check if database is available
         case "postgres":
-          await this.repeatCommand(
-            `${this.docker} exec ${this.containerNamePrefix + containerName} psql ${this.dbName} -c "SELECT 1;"`
-          );
+          await this.repeatCommand(`${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "SELECT 1;"`);
 
           //
           await this.executeCommand(
-            `${this.docker} exec ${this.containerNamePrefix + containerName} psql ${this.dbName} -c "CREATE SCHEMA ${
-              this.dbName
-            };"`
+            `${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "CREATE SCHEMA ${this.dbName};"`
           );
           break;
 

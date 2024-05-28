@@ -15,6 +15,7 @@ import { LiquibaseConfigurationData } from "../../../../configuration/data/Liqui
 import { Driver } from "../../../../configuration/drivers";
 import { assertFileWasOpened } from "../../utilities/vscodeUtilities.test";
 import { setResourcePath } from "../../../../extension";
+import { LiquibaseConfigurationPanel } from "../../../../panels/LiquibaseConfigurationPanel";
 
 /**
  * Tests the creating of configurations.
@@ -220,6 +221,9 @@ suite("create and add configuration", () => {
       liquibaseConfigurationData.databaseConnection.password = "secretPw";
 
       setResourcePath(path.join(baseResourcePath, "dummy"));
+
+      // do nothing when transfer messages was called
+      Sinon.stub(LiquibaseConfigurationPanel, "transferMessage").callsFake(function () {});
     });
 
     /**

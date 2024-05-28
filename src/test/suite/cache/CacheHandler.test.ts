@@ -26,7 +26,7 @@ suite("CacheHandler tests", () => {
    * Tests the reading of the cache and contexts.
    */
   suite("readCache and readContext", () => {
-    const baseResourcePath = path.join(process.cwd(), "..", "..", "src", "test", "resources", "cache");
+    const baseResourcePath = path.join(TestUtils.basicPathToOut, "..", "src", "test", "resources", "cache");
 
     const firstConnectionLocation = "/path/to/project/data/liquibase/data.liquibase.properties";
     const secondConnectionLocation = "/path/to/project/data/liquibase/system.liquibase.properties";

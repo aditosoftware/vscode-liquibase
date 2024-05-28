@@ -287,7 +287,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc --watch -p ./",
     "clean-compile": "npm run clean && npm run compile",
-    "createTempWorkspace": "copyfiles -u 3 -E -a src/test/workspace/**/* out/temp/workspace",
+    "createTempWorkspace": "copyfiles -u 3 -E -a \"src/test/workspace/**/*\" out/temp/workspace",
     "lint": "eslint .",
     "pretest": "npm run clean-compile && npm run createTempWorkspace",
     "test": "vscode-test",
