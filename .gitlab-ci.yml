@@ -73,11 +73,11 @@ e2e_tests:
     - apt install -y jq
 
       # create a dummy user for non sudo access
-    - useradd -m -s /bin/bash testuser
-    - usermod -aG docker testuser
-    - chown -R testuser:testuser .
-    - chmod -R u+rwX .
-    - export CURRENT_DIR=$(pwd)
+    # - useradd -m -s /bin/bash testuser
+    # # - usermod -aG docker testuser
+    # - chown -R testuser:testuser .
+    # - chmod -R u+rwX .
+    # - export CURRENT_DIR=$(pwd)
   script:
     - whoami
     - npm install
@@ -94,7 +94,8 @@ e2e_tests:
         "reporterEnabled": "spec,mocha-junit-reporter"
       }' > mocha-multi-reporters.json
     # Running tests with a storage directory inside the project directory
-    - su - testuser -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && cd $CURRENT_DIR && xvfb-run -a npm run test:e2e -- --storage ./out/test-resources"
+    - xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources
+    # - su - testuser -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && cd $CURRENT_DIR && xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources"
   artifacts:
     when: always
     expire_in: 5 days
