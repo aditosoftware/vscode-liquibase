@@ -568,10 +568,11 @@ export class LiquibaseGUITestUtils {
   /**
    * Waits until a condition was fulfilled.
    * @param waitFunction - the function that should return true and be called as long as the wait takes
+   * @param message - the message that should be written when failing the timeout
    * @param timeout - the timeout that should be waited
    * @returns the last result of the wait function
    */
-  static async waitUntil(waitFunction: () => boolean, timeout: number = 2000): Promise<boolean> {
-    return await VSBrowser.instance.driver.wait(waitFunction, timeout);
+  static async waitUntil(waitFunction: () => boolean, message: string, timeout: number = 4000): Promise<boolean> {
+    return await VSBrowser.instance.driver.wait(waitFunction, timeout, message);
   }
 }

@@ -89,8 +89,9 @@ async function executeCommand(fileName: string, configurationName: string, secon
   await input.confirm();
 
   assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'diff' was executed successfully"));
+  const diffFile = path.join(temporaryFolder, fileName);
   assert.ok(
-    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(path.join(temporaryFolder, fileName))),
+    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(diffFile), `wait for ${diffFile} to exist`),
     "file for diff should exist"
   );
 }

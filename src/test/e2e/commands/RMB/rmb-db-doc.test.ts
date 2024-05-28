@@ -74,8 +74,9 @@ async function executeCommand(configurationName: string, contextMenuFunction: ()
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'db-doc' was executed successfully.")
   );
 
+  const indexFile = path.join(directoryForDbDoc, "index.html");
   assert.ok(
-    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(path.join(directoryForDbDoc, "index.html"))),
+    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(indexFile), `wait for ${indexFile} to exist`),
     "Did NOT create a DB-DOC Files"
   );
 }
