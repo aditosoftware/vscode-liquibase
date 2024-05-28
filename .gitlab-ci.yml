@@ -37,6 +37,11 @@ build_and_test:
       echo 8192 | tee /proc/sys/fs/inotify/max_user_instances
 
   script:
+    # set java_home
+    - apt install openjdk-17-jdk
+    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+    - echo $JAVA_HOME
+
     # add auth token to npm config
     - npm config set -- //gitlab.adito.de/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}
     - node -v
