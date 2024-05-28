@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { By, InputBox, VSBrowser, Workbench } from "vscode-extension-tester";
+import { By, VSBrowser, Workbench } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 

@@ -93,8 +93,7 @@ e2e_tests:
         "reporterEnabled": "spec,mocha-junit-reporter"
       }' > mocha-multi-reporters.json
     # Running tests with a storage directory inside the project directory
-    - su - testuser -c "whoami"
-    - su - testuser -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && cd $CURRENT_DIR && xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources"
+    - su - testuser -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && cd $CURRENT_DIR && xvfb-run -a npm run test:e2e -- --storage ./out/test-resources"
   artifacts:
     when: always
     expire_in: 5 days
