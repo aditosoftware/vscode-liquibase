@@ -38,7 +38,7 @@ build_and_test:
 
   script:
     # set java_home
-    - apt install openjdk-17-jdk
+    - apt install -y openjdk-17-jdk
     - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
     - echo $JAVA_HOME
 
