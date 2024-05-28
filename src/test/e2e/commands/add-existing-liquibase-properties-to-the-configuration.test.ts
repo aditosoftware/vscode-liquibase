@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { By, InputBox, Workbench } from "vscode-extension-tester";
+import { ActivityBar, By, InputBox, VSBrowser, Workbench } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
@@ -13,7 +13,17 @@ suite("Add existing liquibase.properties to the configuration", function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
+    console.log(`workspace path: ${LiquibaseGUITestUtils.WORKSPACE_PATH}`);
     await LiquibaseGUITestUtils.openWorkspace();
+    await VSBrowser.instance.takeScreenshot("workspace opened");
+
+    // to open a specific view and look it up
+    const control = await new ActivityBar().getViewControl("Explorer");
+    console.log(control);
+    if (control) {
+      await control.openView();
+    }
+    await VSBrowser.instance.takeScreenshot("explorer opened");
   });
 
   /**
