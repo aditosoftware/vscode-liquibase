@@ -93,6 +93,11 @@ export class LiquibaseGUITestUtils {
    */
   static async openWorkspace(): Promise<void> {
     await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
+    await VSBrowser.instance.takeScreenshot("01");
+    await this.wait();
+    await VSBrowser.instance.takeScreenshot("02");
+    await this.wait();
+    await VSBrowser.instance.takeScreenshot("03");
   }
 
   // #endregion
