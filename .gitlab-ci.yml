@@ -17,39 +17,16 @@ build_and_test:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
   before_script:
-    # Install Docker-CLI
-    - |
-      apt update -qqq
-      apt install -y -qqq apt-transport-https ca-certificates curl gnupg lsb-release
-      curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-      echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-      apt update -qqq
-      apt install -y -qqq docker-ce-cli
-
-    # Await Daemon Availability
-    - |
-      echo Awaiting Docker Daemon to be available...
-      until docker info &>/dev/null; do sleep 1; done
-      echo Docker Daemon available now at $DOCKER_HOST
-
-    # Prepare Environment
-    - |
-      echo 8192 | tee /proc/sys/fs/inotify/max_user_instances
-
+    - !reference [.prepareDocker]
+    - !reference [.prepareJavaHome]
+    - !reference [.prepareVscodeEnvironment]
   script:
-    # set java_home
-    - apt install -y openjdk-17-jdk
-    - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-    - echo $JAVA_HOME
-
     # add auth token to npm config
     - npm config set -- //gitlab.adito.de/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}
+    # test necessary environment
     - node -v
     - npm install
     - docker -v
-    # Install necessary packages for testing VS-Code in a pipeline
-    - apt update
-    - apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
     # Running ESLint and saving the results in a file
     - npm run lint -- --format json --output-file eslint-results.json || true
     # Dependency for code coverage
@@ -69,7 +46,6 @@ build_and_test:
     reports:
       junit: xunit.xml
     paths:
-      - "*.xml"
       - eslint-results.json
       - coverage/lcov.info
       - "out/src/**"
@@ -77,3 +53,76 @@ build_and_test:
       - "tsconfig.json"
       - "package.json"
       - "CHANGELOG.md"
+
+e2e_tests:
+  stage: build
+  interruptible: true
+  services:
+    - name: docker:dind
+      alias: docker
+  variables:
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - !reference [.prepareDocker]
+    - !reference [.prepareJavaHome]
+    - !reference [.prepareVscodeEnvironment]
+    # add extra package for merging mocha config
+    - apt update
+    - apt install -y jq
+  script:
+    - npm install
+      # Reporter for junit results in pipeline
+    - npm install -d mocha-multi-reporters
+    - npm install -d mocha-junit-reporter
+      # add additional options to .mocharc.json
+    - |
+      jq '.reporter = "mocha-multi-reporters" | .["reporter-option"] = "mocha-multi-reporters.json"' .mocharc.json > .mocharc.temp.json
+      mv .mocharc.temp.json .mocharc.json
+    # and create options for
+    - |
+      echo '{
+        "reporterEnabled": "spec,mocha-junit-reporter"
+      }' > mocha-multi-reporters.json
+    # Running tests with a storage directory inside the project directory
+    - xvfb-run -a npm run test:e2e -- --storage ./out/test-resources
+  artifacts:
+    when: always
+    expire_in: 5 days
+    reports:
+      junit: test-results.xml
+    paths:
+      - "./out/test-resources/screenshots/**"
+      - "*.xml" # TODO entfernen
+
+.prepareDocker: &prepareDocker # Install Docker-CLI
+  - |
+    apt update -qqq
+    apt install -y -qqq apt-transport-https ca-certificates curl gnupg lsb-release
+    curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+    apt update -qqq
+    apt install -y -qqq docker-ce-cli
+
+  # Await Daemon Availability
+  - |
+    echo Awaiting Docker Daemon to be available...
+    until docker info &>/dev/null; do sleep 1; done
+    echo Docker Daemon available now at $DOCKER_HOST
+
+  # Prepare Environment
+  - |
+    echo 8192 | tee /proc/sys/fs/inotify/max_user_instances
+
+# install java and set JAVA_HOME
+.prepareJavaHome: &prepareJavaHome
+  - apt update
+  - apt install -y openjdk-17-jdk
+  - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+  - echo $JAVA_HOME
+
+# Install necessary packages for testing VS-Code in a pipeline
+.prepareVscodeEnvironment: &prepareVscodeEnvironment
+  - apt update
+  - apt install -y libasound2 libgbm1 libgtk-3-0 libnss3 xvfb
