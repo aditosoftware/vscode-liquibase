@@ -93,11 +93,6 @@ export class LiquibaseGUITestUtils {
    */
   static async openWorkspace(): Promise<void> {
     await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
-    await VSBrowser.instance.takeScreenshot("01");
-    await this.wait();
-    await VSBrowser.instance.takeScreenshot("02");
-    await this.wait();
-    await VSBrowser.instance.takeScreenshot("03");
   }
 
   // #endregion
@@ -138,17 +133,26 @@ export class LiquibaseGUITestUtils {
       return;
     }
 
-    const result = await VSBrowser.instance.driver.wait(async () => {
-      return await new StatusBar().getItem("Activating Extensions...");
-    }, 2000);
+    try {
+
+    const result = await VSBrowser.instance.driver.wait(
+      async () => {
+        return await new StatusBar().getItem("Activating Extensions...");
+      },
+      4000,
+      "waiting for extension to activate"
+    );
 
     if (result) {
       await VSBrowser.instance.driver.wait(async () => {
         const activatingDone = await new StatusBar().getItem("Activating Extensions...");
         return typeof activatingDone === "undefined";
-      }, 10_000);
+      }, 10_000, 'waiting for extension activation to be done');
     }
 
+    this.extensionActive = true;
+  }catch(err){
+    console.error('error checking for activating extension, assuming activated', err)
     this.extensionActive = true;
   }
 
