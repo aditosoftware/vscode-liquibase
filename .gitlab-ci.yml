@@ -94,6 +94,7 @@ e2e_tests:
       }' > mocha-multi-reporters.json
     # Running tests with a storage directory inside the project directory
     - su - testuser -c "whoami"
+    - su - testuser -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64"
     - su - testuser -c "cd $CURRENT_DIR && xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources"
   artifacts:
     when: always
