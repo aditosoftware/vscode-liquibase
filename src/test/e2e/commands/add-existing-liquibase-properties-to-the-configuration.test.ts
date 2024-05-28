@@ -19,7 +19,6 @@ suite("Add existing liquibase.properties to the configuration", function () {
 
     // to open a specific view and look it up
     const control = await new ActivityBar().getViewControl("Explorer");
-    console.log(control);
     if (control) {
       await control.openView();
     }

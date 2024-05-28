@@ -57,21 +57,22 @@ build_and_test:
 e2e_tests:
   stage: build
   interruptible: true
-  services:
-    - name: docker:dind
-      alias: docker
-  variables:
-    DOCKER_TLS_CERTDIR: ""
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_DRIVER: overlay2
+  # services:
+  #   - name: docker:dind
+  #     alias: docker
+  # variables:
+  # DOCKER_TLS_CERTDIR: ""
+  # DOCKER_HOST: tcp://docker:2375
+  # DOCKER_DRIVER: overlay2
   before_script:
-    - !reference [.prepareDocker]
+    # - !reference [.prepareDocker]
     - !reference [.prepareJavaHome]
     - !reference [.prepareVscodeEnvironment]
     # add extra package for merging mocha config
     - apt update
     - apt install -y jq
   script:
+    - whoami
     - npm install
       # Reporter for junit results in pipeline
     - npm install -d mocha-multi-reporters
