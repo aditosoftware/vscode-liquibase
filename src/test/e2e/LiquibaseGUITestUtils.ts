@@ -133,31 +133,33 @@ export class LiquibaseGUITestUtils {
       return;
     }
 
-    try {
-      const result = await VSBrowser.instance.driver.wait(
-        async () => {
-          return await new StatusBar().getItem("Activating Extensions...");
-        },
-        4000,
-        "waiting for extension to activate"
-      );
-
-      if (result) {
-        await VSBrowser.instance.driver.wait(
-          async () => {
-            const activatingDone = await new StatusBar().getItem("Activating Extensions...");
-            return typeof activatingDone === "undefined";
-          },
-          10_000,
-          "waiting for extension activation to be done"
-        );
-      }
-
+    // check if we have any success message for downloading all drivers
+    const success = await this.waitForCommandExecution("Successfully downloaded all the missing files to", false);
+    if (success) {
       this.extensionActive = true;
-    } catch (err) {
-      console.error("error checking for activating extension, assuming activated", err);
-      this.extensionActive = true;
+      return;
     }
+
+    const result = await VSBrowser.instance.driver.wait(
+      async () => {
+        return await new StatusBar().getItem("Activating Extensions...");
+      },
+      4000,
+      "waiting for extension to activate"
+    );
+
+    if (result) {
+      await VSBrowser.instance.driver.wait(
+        async () => {
+          const activatingDone = await new StatusBar().getItem("Activating Extensions...");
+          return typeof activatingDone === "undefined";
+        },
+        10_000,
+        "waiting for extension activation to be done"
+      );
+    }
+
+    this.extensionActive = true;
   }
 
   /**
