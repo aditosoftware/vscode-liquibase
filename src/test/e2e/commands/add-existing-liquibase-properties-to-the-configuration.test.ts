@@ -63,7 +63,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
         const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
         return data[configName];
       }
-    });
+    }, `waiting for ${settingsFile} to exist`);
 
     assert.ok(fs.existsSync(settingsFile), "settings file does exist");
 
