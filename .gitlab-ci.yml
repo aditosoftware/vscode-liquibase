@@ -75,7 +75,7 @@ e2e_tests:
       # create a dummy user for non sudo access
     # - useradd -m -s /bin/bash testuser
     # # - usermod -aG docker testuser
-    # - chown -R testuser:testuser .
+    - chown -R node:node .
     # - chmod -R u+rwX .
     # - export CURRENT_DIR=$(pwd)
   script:
@@ -94,7 +94,7 @@ e2e_tests:
         "reporterEnabled": "spec,mocha-junit-reporter"
       }' > mocha-multi-reporters.json
     # Running tests with a storage directory inside the project directory
-    - xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources
+    - su node -c "xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources"
     # - su - testuser -c "export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64 && cd $CURRENT_DIR && xvfb-run -a npm run test:e2e-specific -- --storage ./out/test-resources"
   artifacts:
     when: always
