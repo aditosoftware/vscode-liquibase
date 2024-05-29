@@ -22,21 +22,48 @@ suite("rollback-to-tag: Right Click Menu", function () {
   });
 
   /**
-   * Test case for executing the "rollback-to-tag" command from RMB in file.
+   * Test case for executing the "rollback-to-tag" command from RMB.
    */
-  test("should execute 'rollback-to-tag' command from RMB in file", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Rollback to Tag")
-    );
-  });
+  LiquibaseGUITestUtils.createRmbArguments("Rollback to Tag").forEach((pArgument) => {
+    test(`should execute 'rollback-to-tag' command from ${pArgument.description}`, async function () {
+      const tagName = randomUUID();
 
-  /**
-   * Test case for executing the "rollback-to-tag" command from RMB in file explorer.
-   */
-  test("should execute 'rollback-to-tag' command from RMB in file explorer", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Rollback to Tag")
-    );
+      // update one dataset
+      await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
+
+      // Set tag
+      await LiquibaseGUITestUtils.executeCreateTag(configurationName, tagName);
+
+      // Update all datasets
+      await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
+
+      await pArgument.command();
+
+      const input = new InputBox();
+
+      await input.setText(configurationName);
+      await input.confirm();
+
+      await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
+      await input.confirm();
+      await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
+
+      await input.setText(tagName);
+      await input.confirm();
+
+      // Check if the message is popping up
+      assert.ok(
+        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
+      );
+      assert.ok(
+        (
+          await DockerTestUtils.executeMariaDBSQL(
+            "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"
+          )
+        )?.length === 0,
+        "Rollback did not remove values from DB"
+      );
+    });
   });
 
   /**
@@ -46,47 +73,3 @@ suite("rollback-to-tag: Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
-
-/**
- * Executes the command.
- * @param configurationName - the name of the configuration
- * @param contextMenuFunction - the function to call the context menu
- */
-async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await DockerTestUtils.resetDB();
-
-  const tagName = randomUUID();
-
-  // update one dataset
-  await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
-
-  // Set tag
-  await LiquibaseGUITestUtils.executeCreateTag(configurationName, tagName);
-
-  // Update all datasets
-  await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
-
-  await contextMenuFunction();
-
-  const input = new InputBox();
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-  await input.confirm();
-  await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
-
-  await input.setText(tagName);
-  await input.confirm();
-
-  // Check if the message is popping up
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
-  );
-  assert.ok(
-    (await DockerTestUtils.executeMariaDBSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"))
-      ?.length === 0,
-    "Rollback did not remove values from DB"
-  );
-}

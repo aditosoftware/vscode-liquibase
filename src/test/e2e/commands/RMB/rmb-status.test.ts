@@ -20,20 +20,26 @@ suite("status: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  /**
-   * Test case for executing the 'status' command from RMB in file.
-   */
-  test("should execute 'status' command from RMB in file", async function () {
-    await executeCommand(configurationName, () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Status"));
-  });
+  LiquibaseGUITestUtils.createRmbArguments("Status").forEach((pArgument) => {
+    /**
+     * Test case for executing the 'status' command from RMB.
+     */
+    test(`should execute 'status' command from ${pArgument.description}`, async function () {
+      await pArgument.command();
 
-  /**
-   * Test case for executing the 'status' command from RMB in file explorer.
-   */
-  test("should execute 'status' command from RMB in file explorer", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Status")
-    );
+      const input = new InputBox();
+
+      await input.setText(configurationName);
+      await input.confirm();
+
+      await input.setText(ContextOptions.NO_CONTEXT);
+      await input.confirm();
+
+      assert.ok(
+        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully."),
+        "Notification did NOT show"
+      );
+    });
   });
 
   /**
@@ -43,27 +49,3 @@ suite("status: Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
-
-/**
- * Executes the command.
- * @param configurationName - the name of the configuration
- * @param contextMenuFunction - the function to call the context menu
- */
-async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await DockerTestUtils.resetDB();
-
-  await contextMenuFunction();
-
-  const input = new InputBox();
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(ContextOptions.NO_CONTEXT);
-  await input.confirm();
-
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully."),
-    "Notification did NOT show"
-  );
-}

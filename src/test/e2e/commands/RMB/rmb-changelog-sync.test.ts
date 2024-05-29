@@ -21,21 +21,26 @@ suite("changelog-sync: Right Click Menu", function () {
   });
 
   /**
-   * Test case for executing the 'changelog sync' command via RMB in a file.
+   * Test case for executing the 'changelog sync' command via RMB.
    */
-  test("should execute 'changelog sync' command from RMB in file", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Changelog Sync")
-    );
-  });
+  LiquibaseGUITestUtils.createRmbArguments("Changelog Sync").forEach((pArgument) => {
+    test(`should execute 'changelog sync' command from ${pArgument.description}`, async function () {
+      await pArgument.command();
 
-  /**
-   * Test case for executing the 'changelog sync' command via RMB in the file explorer.
-   */
-  test("should execute 'changelog sync' command from RMB in file explorer", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Changelog Sync")
-    );
+      const input = new InputBox();
+
+      await input.setText(configurationName);
+      await input.confirm();
+
+      await input.setText(ContextOptions.NO_CONTEXT);
+      await input.confirm();
+
+      assert.ok(
+        await LiquibaseGUITestUtils.waitForCommandExecution(
+          "Liquibase command 'changelog-sync' was executed successfully."
+        )
+      );
+    });
   });
 
   /**
@@ -45,26 +50,3 @@ suite("changelog-sync: Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
-
-/**
- * Executes the command.
- * @param configurationName - the name of the configuration
- * @param contextMenuFunction - the function to call the context menu
- */
-async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await DockerTestUtils.resetDB();
-
-  await contextMenuFunction();
-
-  const input = new InputBox();
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(ContextOptions.NO_CONTEXT);
-  await input.confirm();
-
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'changelog-sync' was executed successfully.")
-  );
-}

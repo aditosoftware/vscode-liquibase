@@ -20,20 +20,32 @@ suite("update: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  /**
-   * Test case to execute the 'update' command from RMB in file.
-   */
-  test("should execute 'update' command from RMB in file", async function () {
-    await executeCommand(configurationName, () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Update"));
-  });
+  LiquibaseGUITestUtils.createRmbArguments("Update").forEach((pArgument) => {
+    /**
+     * Test case to execute the 'update' command from RMB.
+     */
+    test(`should execute 'update' command from ${pArgument.description}`, async function () {
+      await pArgument.command();
 
-  /**
-   * Test case to execute the 'update' command from RMB in file explorer.
-   */
-  test("should execute 'update' command from RMB in file explorer", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Update")
-    );
+      const input = new InputBox();
+
+      await input.setText(configurationName);
+      await input.confirm();
+
+      await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
+      await input.confirm();
+      await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
+
+      assert.ok(
+        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."),
+        "Notification did NOT show"
+      );
+      assert.ok(
+        (await DockerTestUtils.executeMariaDBSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))
+          ?.length >= 1,
+        "Table 'person' DOES NOT exist, while it should"
+      );
+    });
   });
 
   /**
@@ -43,33 +55,3 @@ suite("update: Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
-
-/**
- * Executes the command.
- * @param configurationName - the name of the configuration
- * @param contextMenuFunction - the function to call the context menu
- */
-async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await DockerTestUtils.resetDB();
-
-  await contextMenuFunction();
-
-  const input = new InputBox();
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-  await input.confirm();
-  await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
-
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."),
-    "Notification did NOT show"
-  );
-  assert.ok(
-    (await DockerTestUtils.executeMariaDBSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))
-      ?.length >= 1,
-    "Table 'person' DOES NOT exist, while it should"
-  );
-}

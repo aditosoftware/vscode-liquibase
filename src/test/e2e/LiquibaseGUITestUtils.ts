@@ -460,6 +460,21 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
+   * Creates some RMB arguments for the tests.
+   * @param name - the name of the command that should be called
+   * @returns the arguments for this command
+   */
+  static createRmbArguments(name: string): RmbArgument[] {
+    return [
+      { command: () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog(name), description: "RMB in file" },
+      {
+        command: () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer(name),
+        description: "RMB in file explorer",
+      },
+    ];
+  }
+
+  /**
    * Opens the Liquibase context menu and selects the given action.
    *
    * This method will open an changelog before executing the action.
@@ -617,3 +632,18 @@ export class LiquibaseGUITestUtils {
     return await VSBrowser.instance.driver.wait(waitFunction, timeout, message);
   }
 }
+
+/**
+ * The arguments for any RMB tests.
+ */
+type RmbArgument = {
+  /**
+   * The command itself.
+   */
+  command: () => Promise<void>;
+
+  /**
+   * The description of the argument.
+   */
+  description: string;
+};

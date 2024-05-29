@@ -20,22 +20,28 @@ suite("unexpected-changesets: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  /**
-   * Test case for executing the 'Unexpected Changesets' command from RMB in file.
-   */
-  test("should execute 'Unexpected Changesets' command from RMB in file", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
-    );
-  });
+  LiquibaseGUITestUtils.createRmbArguments("Unexpected Changesets").forEach((pArgument) => {
+    /**
+     * Test case for executing the 'Unexpected Changesets' command from RMB.
+     */
+    test(`should execute 'Unexpected Changesets' command from ${pArgument.description}`, async function () {
+      await pArgument.command();
 
-  /**
-   * Test case for executing the 'Unexpected Changesets' command from RMB in file explorer.
-   */
-  test("should execute 'Unexpected Changesets' command from RMB in file explorer", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Unexpected Changesets")
-    );
+      const input = new InputBox();
+
+      await input.setText(configurationName);
+      await input.confirm();
+
+      await input.setText(ContextOptions.NO_CONTEXT);
+      await input.confirm();
+
+      assert.ok(
+        await LiquibaseGUITestUtils.waitForCommandExecution(
+          "Liquibase command 'unexpected-changesets' was executed successfully."
+        ),
+        "Notification did NOT show"
+      );
+    });
   });
 
   /**
@@ -45,29 +51,3 @@ suite("unexpected-changesets: Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
-
-/**
- * Executes the command.
- * @param configurationName - the name of the configuration
- * @param contextMenuFunction - the function to call the context menu
- */
-async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  await DockerTestUtils.resetDB();
-
-  await contextMenuFunction();
-
-  const input = new InputBox();
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(ContextOptions.NO_CONTEXT);
-  await input.confirm();
-
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution(
-      "Liquibase command 'unexpected-changesets' was executed successfully."
-    ),
-    "Notification did NOT show"
-  );
-}

@@ -22,22 +22,41 @@ suite("update-sql: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  /**
-   * Test case to execute the 'update-sql' command from RMB in file.
-   */
-  test("should execute 'update-sql' command from RMB in file", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog("Generate SQL File for incoming changes")
-    );
-  });
+  LiquibaseGUITestUtils.createRmbArguments("Generate SQL File for incoming changes").forEach((pArgument) => {
+    /**
+     * Test case to execute the 'update-sql' command from RMB.
+     */
+    test(`should execute 'update-sql' command from RMB ${pArgument.description}`, async function () {
+      const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
-  /**
-   * Test case to execute the 'update-sql' command from RMB in file explorer.
-   */
-  test("should execute 'update-sql' command from RMB in file explorer", async function () {
-    await executeCommand(configurationName, () =>
-      LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer("Generate SQL File for incoming changes")
-    );
+      // first, update the database
+      await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
+
+      // then generate the changelog
+      await pArgument.command();
+
+      const input = new InputBox();
+
+      await input.setText(configurationName);
+      await input.confirm();
+
+      await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
+      await input.confirm();
+      await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
+
+      await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
+
+      await input.setText("update.sql");
+      await input.confirm();
+
+      assert.ok(
+        await LiquibaseGUITestUtils.waitForCommandExecution(
+          "Liquibase command 'update-sql' was executed successfully."
+        ),
+        "Notification did NOT show up"
+      );
+      assert.ok(fs.existsSync(path.join(temporaryFolder, "update.sql")), "Did NOT create a SQL File");
+    });
   });
 
   /**
@@ -47,38 +66,3 @@ suite("update-sql: Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 });
-
-/**
- * Executes the command.
- * @param configurationName - the name of the configuration
- * @param contextMenuFunction - the function to call the context menu
- */
-async function executeCommand(configurationName: string, contextMenuFunction: () => Promise<void>): Promise<void> {
-  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
-
-  await DockerTestUtils.resetDB();
-
-  await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
-
-  await contextMenuFunction();
-
-  const input = new InputBox();
-
-  await input.setText(configurationName);
-  await input.confirm();
-
-  await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-  await input.confirm();
-  await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
-
-  await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
-
-  await input.setText("update.sql");
-  await input.confirm();
-
-  assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),
-    "Notification did NOT show up"
-  );
-  assert.ok(fs.existsSync(path.join(temporaryFolder, "update.sql")), "Did NOT create a SQL File");
-}
