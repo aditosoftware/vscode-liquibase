@@ -42,7 +42,7 @@ export class WebviewTestUtils {
         await editor.getTabByTitle("Liquibase Configuration");
         return true;
       } catch (error) {
-        console.error("error finding webview in the opened editor", error);
+        console.debug("error finding webview in the opened editor", error);
         return false;
       }
     }, 10_000);
