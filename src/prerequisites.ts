@@ -37,11 +37,10 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   if (!context.globalState.get("liquibase-first-activation")) {
     // Perform one-time setup tasks (e.g., download files)
     Logger.getLogger().info({ message: "Liquibase was executed for the first time" });
-    // TODO fehlendes await ok?
-    void downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
+    await downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
 
     // Mark first activation as completed
-    void context.globalState.update("liquibase-first-activation", true);
+    await context.globalState.update("liquibase-first-activation", true);
   }
 
   // Check beforehand if action is ready to be used
@@ -72,13 +71,14 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
       message: `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`,
       notifyUser: true,
     });
-    // TODO fehledes await / return ok?
-    void downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
-      Logger.getLogger().info({
-        message: `Successfully downloaded all the missing files to ${resourcePath}`,
-        notifyUser: true,
-      });
-    });
+    downloadLiquibaseFiles(resourcePath, missingUrls)
+      .then(() => {
+        Logger.getLogger().info({
+          message: `Successfully downloaded all the missing files to ${resourcePath}`,
+          notifyUser: true,
+        });
+      })
+      .catch((error) => Logger.getLogger().error({ message: "error downloading any liquibase file", error }));
   }
 }
 
@@ -89,14 +89,12 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
  */
 async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: string[]): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    try {
-      void Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))));
-      // TODO resolve ohne das innere Promise abzuwarten ok?
-      resolve();
-    } catch (error) {
-      Logger.getLogger().error({ message: "downloadLiquibaseFiles threw an error", error });
-      reject(error);
-    }
+    Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))))
+      .then(() => resolve())
+      .catch((error) => {
+        Logger.getLogger().error({ message: "downloadLiquibaseFiles threw an error", error });
+        reject(error);
+      });
   });
 }
 
