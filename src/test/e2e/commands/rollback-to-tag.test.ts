@@ -37,13 +37,11 @@ suite("Rollback to Tag", function () {
     await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
 
     // Rollback time
-    const input = await LiquibaseGUITestUtils.startCommandExecution("Rollback to Tag");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
+    const input = await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "Rollback to Tag",
+      configurationName,
+      changelogFile: true,
+    });
 
     await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();

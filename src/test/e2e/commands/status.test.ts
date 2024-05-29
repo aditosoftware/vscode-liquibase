@@ -23,13 +23,11 @@ suite("Status", function () {
    */
   LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
-      const input = await LiquibaseGUITestUtils.startCommandExecution("status");
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-      await input.selectQuickPick(1);
+      const input = await LiquibaseGUITestUtils.startCommandExecution({
+        pCommand: "status",
+        configurationName,
+        changelogFile: true,
+      });
 
       await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 

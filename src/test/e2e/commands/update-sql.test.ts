@@ -31,13 +31,11 @@ suite("Update-sql", function () {
     await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
     // execute the update-sql command
-    const input = await LiquibaseGUITestUtils.startCommandExecution("Generate SQL File for incoming changes");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
+    const input = await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "Generate SQL File for incoming changes",
+      configurationName,
+      changelogFile: true,
+    });
 
     await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
     await input.confirm();

@@ -22,13 +22,7 @@ suite("Validate", function () {
    * Test case for executing the 'validate' command.
    */
   test("should execute 'validate' command", async function () {
-    const input = await LiquibaseGUITestUtils.startCommandExecution("validate");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
+    await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "validate", configurationName, changelogFile: true });
 
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'validate' was executed successfully.")

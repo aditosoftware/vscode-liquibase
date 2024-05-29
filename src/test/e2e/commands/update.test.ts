@@ -26,13 +26,11 @@ suite("Update", function () {
     test("should execute 'update' with context type '" + option + "' command with " + key, async function () {
       await DockerTestUtils.resetDB();
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-      await input.selectQuickPick(1);
+      const input = await LiquibaseGUITestUtils.startCommandExecution({
+        pCommand: "update",
+        configurationName,
+        changelogFile: true,
+      });
 
       await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 

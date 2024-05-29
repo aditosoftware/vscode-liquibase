@@ -33,10 +33,10 @@ suite("generate changelog", function () {
       DockerTestUtils.createPool("data")
     );
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("generate changelog");
-
-    await input.setText(configurationName);
-    await input.confirm();
+    const input = await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "generate changelog",
+      configurationName,
+    });
 
     await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 

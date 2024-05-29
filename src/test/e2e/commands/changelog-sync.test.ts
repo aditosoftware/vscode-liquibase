@@ -28,13 +28,11 @@ suite("Changelog Sync", function () {
     test("should execute 'Changelog Sync' with context type '" + option + "' command with " + key, async function () {
       await DockerTestUtils.resetDB();
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution("Changelog Sync");
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-      await input.selectQuickPick(1);
+      const input = await LiquibaseGUITestUtils.startCommandExecution({
+        pCommand: "Changelog Sync",
+        configurationName,
+        changelogFile: true,
+      });
 
       await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 

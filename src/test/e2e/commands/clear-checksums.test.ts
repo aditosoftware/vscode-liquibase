@@ -26,20 +26,16 @@ suite("Clear Checksums", function () {
     test("should execute 'Clear Checksums' with context type '" + option + "' command with " + key, async function () {
       await DockerTestUtils.resetDB();
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-      await input.selectQuickPick(1);
-
+      // execute an update
+      const input = await LiquibaseGUITestUtils.startCommandExecution({
+        pCommand: "update",
+        configurationName,
+        changelogFile: true,
+      });
       await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 
-      await LiquibaseGUITestUtils.startCommandExecution("Clear Checksums");
-
-      await input.setText(configurationName);
-      await input.confirm();
+      // and then clear the checksums
+      await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "Clear Checksums", configurationName });
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution(

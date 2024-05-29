@@ -67,10 +67,10 @@ suite("editExistingLiquibaseConfiguration", () => {
   test("should be able to edit existing configuration via command", async () => {
     await new EditorView().closeAllEditors();
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution("Edit existing Liquibase Configuration");
-
-    await input.setText(configurationName);
-    await input.confirm();
+    await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "Edit existing Liquibase Configuration",
+      configurationName,
+    });
 
     await shouldEditExistingConfiguration();
   });

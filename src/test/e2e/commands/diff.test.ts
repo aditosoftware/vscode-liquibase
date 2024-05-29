@@ -71,10 +71,7 @@ async function executeCommand(fileName: string, configurationName: string, secon
 
   await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
-  const input = await LiquibaseGUITestUtils.startCommandExecution("diff");
-
-  await input.setText(configurationName);
-  await input.confirm();
+  const input = await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "diff", configurationName });
 
   await input.setText(secondConfiguration);
   await input.confirm();

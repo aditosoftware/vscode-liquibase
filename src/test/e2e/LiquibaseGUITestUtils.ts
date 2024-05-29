@@ -110,9 +110,19 @@ export class LiquibaseGUITestUtils {
   /**
    * Starts the execution of an command
    * @param pCommand - the command that should be executed
+   * @param configurationName - the name of the configuration that should be automatically put into
+   * @param changelogFile - if the changelog file should be automatically selected
    * @returns the input box for the commands
    */
-  static async startCommandExecution(pCommand: string): Promise<InputBox> {
+  static async startCommandExecution({
+    pCommand: command,
+    configurationName,
+    changelogFile,
+  }: {
+    pCommand: string;
+    configurationName?: string;
+    changelogFile?: boolean;
+  }): Promise<InputBox> {
     const center = await this.clearNotifications();
 
     // we need an input box to open
@@ -125,11 +135,23 @@ export class LiquibaseGUITestUtils {
     const input = await InputBox.create();
 
     // execute our command
-    await prompt.setText(">Liquibase: " + pCommand);
+    await prompt.setText(">Liquibase: " + command);
     await prompt.confirm();
 
     // then wait until the Activating Extensions from the status bar disappears
     await LiquibaseGUITestUtils.waitForExtensionToActivate();
+
+    // input the configuration name
+    if (configurationName) {
+      await input.setText(configurationName);
+      await input.confirm();
+    }
+
+    // Set the path to the Liquibase changelog file.
+    if (changelogFile) {
+      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
+      await input.selectQuickPick(1);
+    }
 
     return input;
   }
@@ -518,9 +540,9 @@ export class LiquibaseGUITestUtils {
    * Removes the whole cache.
    */
   static async removeWholeCache(): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution(
-      "Cache: Removes any values from the recently loaded elements"
-    );
+    const input = await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "Cache: Removes any values from the recently loaded elements",
+    });
 
     await input.setText(RemoveCacheOptions.WHOLE_CACHE);
     await input.confirm();
@@ -541,13 +563,11 @@ export class LiquibaseGUITestUtils {
     contextOption: ContextOptions.LOAD_ALL_CONTEXT | ContextOptions.USE_RECENTLY_LOADED,
     filterTextForContexts?: string
   ): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution("update");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(this.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
+    const input = await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "update",
+      configurationName,
+      changelogFile: true,
+    });
 
     await input.setText(contextOption);
     await input.confirm();
@@ -566,10 +586,7 @@ export class LiquibaseGUITestUtils {
    * @param tagName - the name of the tag that should be created
    */
   static async executeCreateTag(configurationName: string, tagName: string): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution("create tag");
-
-    await input.setText(configurationName);
-    await input.confirm();
+    const input = await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "create tag", configurationName });
 
     await input.setText(tagName);
     await input.confirm();

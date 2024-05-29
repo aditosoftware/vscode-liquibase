@@ -33,14 +33,11 @@ suite("db-doc", function () {
     await DockerTestUtils.resetDB();
 
     // Prepare input for the command execution.
-    const input = await LiquibaseGUITestUtils.startCommandExecution("Generate database documentation (db-doc)");
-
-    await input.setText(configurationName);
-    await input.confirm();
-
-    // Set the path to the Liquibase changelog file.
-    await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-    await input.selectQuickPick(1);
+    const input = await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "Generate database documentation (db-doc)",
+      configurationName,
+      changelogFile: true,
+    });
 
     // Set the output directory for the generated documentation.
     await LiquibaseGUITestUtils.selectFolder(input, dbDocFolder);

@@ -40,12 +40,10 @@ suite("Remove existing liquibase.properties from the configuration", function ()
     test(`should remove a liquibase.properties with remove option ${pArgument.removeOption}`, async function () {
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution(
-        "Remove existing liquibase.properties from the configuration"
-      );
-
-      await input.setText(configurationName);
-      await input.confirm();
+      const input = await LiquibaseGUITestUtils.startCommandExecution({
+        pCommand: "Remove existing liquibase.properties from the configuration",
+        configurationName,
+      });
 
       await input.setText(pArgument.removeOption);
       await input.confirm();
@@ -59,7 +57,9 @@ suite("Remove existing liquibase.properties from the configuration", function ()
         )
       );
 
-      await LiquibaseGUITestUtils.startCommandExecution("Cache: Opens the file with the recently loaded elements");
+      await LiquibaseGUITestUtils.startCommandExecution({
+        pCommand: "Cache: Opens the file with the recently loaded elements",
+      });
       const text = await new TextEditor().getText();
       const cache = JSON.parse(text);
 

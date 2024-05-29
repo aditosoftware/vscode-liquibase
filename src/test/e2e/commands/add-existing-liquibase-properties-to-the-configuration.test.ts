@@ -26,17 +26,14 @@ suite("Add existing liquibase.properties to the configuration", function () {
    * Test case for adding a liquibase.properties file to the config.
    */
   test("should add a liquibase.properties file to the config", async function () {
-    const configName = randomUUID();
+    const configurationName = randomUUID();
     const propertiesFileName = "dummy.liquibase.properties";
 
     // Execute the command
-    const input = await LiquibaseGUITestUtils.startCommandExecution(
-      "Add existing liquibase.properties to the configuration"
-    );
-
-    // Input the configuration name
-    await input.setText(configName);
-    await input.confirm();
+    const input = await LiquibaseGUITestUtils.startCommandExecution({
+      pCommand: "Add existing liquibase.properties to the configuration",
+      configurationName,
+    });
 
     // Select the folder
     await LiquibaseGUITestUtils.selectFolder(input, LiquibaseGUITestUtils.WORKSPACE_PATH);
@@ -50,7 +47,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
     await LiquibaseGUITestUtils.waitUntil(() => {
       if (fs.existsSync(settingsFile)) {
         const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
-        return data[configName];
+        return data[configurationName];
       }
     }, `waiting for ${settingsFile} to exist`);
 
@@ -58,7 +55,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
 
     // Get the content of the settings file
     const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
-    const dataForName = data[configName];
+    const dataForName = data[configurationName];
 
     // Check that the config is inside the settings file
     assert.ok(dataForName, JSON.stringify(data));
