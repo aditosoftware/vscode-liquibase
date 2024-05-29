@@ -1,6 +1,5 @@
 import { immerable } from "immer";
 import { DatabaseConnection } from "./DatabaseConnection";
-import { Driver } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
 import { LiquibaseSettings } from "./TransferSettings";
 
@@ -119,7 +118,7 @@ export class LiquibaseConfigurationData {
    */
   static createDefaultData(
     liquibaseSettings: LiquibaseSettings,
-    status: ConfigurationStatus,
+    status: ConfigurationStatus
   ): LiquibaseConfigurationData {
     return new LiquibaseConfigurationData(
       status,
@@ -178,15 +177,12 @@ export class LiquibaseConfigurationData {
 
   /**
    * Creates the properties text for saving in a file or previewing.
-   * @param pBuildDriverPath - function to build the driver path.
-   * This function can not be implemented in the data classes,
-   * because building the path requires the `path` module and this is not allowed in classes that are used in a webview.
    * @param pDisguisePassword - if the password should not be displayed as plain text, but as `***`. These should be used if you are in a preview.
    * If no value is given, then the password will be set as plain text
    * @returns the created properties file as a string
    */
-  generateProperties(pBuildDriverPath: (pDriver: Driver) => string | undefined, pDisguisePassword?: boolean): string {
-    const propertiesEditor = this.generatePropertiesEditor(pDisguisePassword ?? false, pBuildDriverPath);
+  generateProperties(pDisguisePassword?: boolean): string {
+    const propertiesEditor = this.generatePropertiesEditor(pDisguisePassword ?? false);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
     // TODO maybe more escapes are needed with unescapeContent
@@ -196,15 +192,9 @@ export class LiquibaseConfigurationData {
   /**
    * Creates the properties editor for the given configuration.
    * @param pDisguisePassword - if the password should not be displayed as plain text, but as `***`. These should be used if you are in a preview.
-   * @param pBuildDriverPath - function to build the driver path.
-   * This function can not be implemented in the data classes,
-   * because building the path requires the `path` module and this is not allowed in classes that are used in a webview.
    * @returns the created properties
    */
-  private generatePropertiesEditor(
-    pDisguisePassword: boolean,
-    pBuildDriverPath: (pDriver: Driver) => string | undefined
-  ): PropertiesEditor {
+  private generatePropertiesEditor(pDisguisePassword: boolean): PropertiesEditor {
     // Build the properties
     const properties: PropertiesEditor = new PropertiesEditor("");
 
@@ -212,25 +202,14 @@ export class LiquibaseConfigurationData {
       properties.insert("changelogFile", this.changelogFile);
     }
 
+    // write the data for the normal connection
     if (this.databaseConnection.hasData()) {
-      const result = this.databaseConnection.writeDataForConnection(
-        properties,
-        false,
-        pBuildDriverPath,
-        pDisguisePassword
-      );
-      result;
+      this.databaseConnection.writeDataForConnection(properties, false, pDisguisePassword);
     }
 
-    // and the reference properties
+    // and write the reference properties
     if (this.referenceDatabaseConnection && this.referenceDatabaseConnection.hasData()) {
-      const result = this.referenceDatabaseConnection.writeDataForConnection(
-        properties,
-        true,
-        pBuildDriverPath,
-        pDisguisePassword
-      );
-      result;
+      this.referenceDatabaseConnection.writeDataForConnection(properties, true, pDisguisePassword);
     }
 
     // add advanced properties

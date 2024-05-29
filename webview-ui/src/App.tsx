@@ -1,10 +1,5 @@
 import { vscodeApiWrapper } from "./utilities/vscodeApiWrapper";
-import {
-  VSCodeButton,
-  VSCodeDivider,
-  VSCodeLink,
-  VSCodeTextField,
-} from "@vscode/webview-ui-toolkit/react";
+import { VSCodeButton, VSCodeDivider, VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
 import "./App.css";
 import "./codicon.css";
 import { useEffect, useState } from "react";
@@ -244,7 +239,7 @@ function App(): JSX.Element {
   function fetchData(): void {
     try {
       // do not add any values for the driver, because we can not build them here (path is not allowed!)
-      setPreviewData(data.generateProperties(() => undefined, true));
+      setPreviewData(data.generateProperties(true));
     } catch (error) {
       vscodeApiWrapper.postMessage(
         new MessageData(MessageType.LOG_MESSAGE, {

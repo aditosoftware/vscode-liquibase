@@ -134,16 +134,13 @@ export class DatabaseConnection {
    *
    * @param properties - the properties editor where the properties should be written
    * @param pReferenceConnection - information if this is the reference connection or not
-   * @param pBuildDriverPath - a function for building the drivers path
    * @param pDisguisePassword - if the password should not be displayed as plain text, but as `***`. These should be used if you are in a preview.
-   * @returns the path from the downloaded driver, if downloaded
    */
   writeDataForConnection(
     properties: PropertiesEditor,
     pReferenceConnection: boolean,
-    pBuildDriverPath: (pDriver: Driver) => string | undefined,
     pDisguisePassword: boolean
-  ): string | undefined {
+  ): void {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
     Object.entries(this).forEach(([key, value]) => {
       if (key && value && key !== "databaseType" && typeof value === "string") {
@@ -156,7 +153,7 @@ export class DatabaseConnection {
         properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, val);
       }
     });
-    return this.writeDriverConfigurationAndDownload(properties, pReferenceConnection, pBuildDriverPath);
+    this.writeDriverConfigurationAndDownload(properties, pReferenceConnection);
   }
 
   /**
@@ -164,13 +161,8 @@ export class DatabaseConnection {
    * @param pProperties - the properties editor where the properties should be written
    * @param pIsReferenceConnection - information if this is the reference connection or not
    * @param pBuildDriverPath - a function for building the driver path
-   * @returns the path from the downloaded driver, if downloaded
    */
-  private writeDriverConfigurationAndDownload(
-    pProperties: PropertiesEditor,
-    pIsReferenceConnection: boolean,
-    pBuildDriverPath: (pDriver: Driver) => string | undefined
-  ): string | undefined {
+  private writeDriverConfigurationAndDownload(pProperties: PropertiesEditor, pIsReferenceConnection: boolean): void {
     const databaseType: string = this.databaseType;
 
     if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
@@ -182,9 +174,6 @@ export class DatabaseConnection {
           pIsReferenceConnection ? this.createReferenceKey(driverKey) : driverKey,
           databaseDriver.driverClass
         );
-
-        // build the path for the driver
-        return pBuildDriverPath(databaseDriver);
       }
     }
   }

@@ -70,10 +70,7 @@ suite("LiquibaseConfigurationData", () => {
 
         liquibaseConfigurationData.handleValueFromLiquibaseConfiguration(pArgument.key, pArgument.value);
 
-        assert.deepStrictEqual(
-          pArgument.getActualValue(liquibaseConfigurationData),
-          pArgument.value
-        );
+        assert.deepStrictEqual(pArgument.getActualValue(liquibaseConfigurationData), pArgument.value);
       });
     });
 
@@ -174,7 +171,7 @@ referencePassword = ${passwordValue}`;
        * Tests that the disguising of passwords work.
        */
       test("should work with disguised password", () => {
-        const actual = liquibaseConfigurationData.generateProperties(() => undefined, true);
+        const actual = liquibaseConfigurationData.generateProperties(true);
 
         assert.deepStrictEqual(actual, expected("***"));
       });
@@ -184,7 +181,7 @@ referencePassword = ${passwordValue}`;
        */
       [false, undefined].forEach((pArgument) => {
         test(`should work with not disguised password (${pArgument})`, () => {
-          const actual = liquibaseConfigurationData.generateProperties(() => undefined, pArgument);
+          const actual = liquibaseConfigurationData.generateProperties(pArgument);
 
           assert.deepStrictEqual(actual, expected(password));
         });
@@ -214,7 +211,7 @@ dolor = sit`;
       liquibaseConfigurationData.handleValueFromLiquibaseConfiguration("lorem", "ipsum");
       liquibaseConfigurationData.handleValueFromLiquibaseConfiguration("dolor", "sit");
 
-      const actual = liquibaseConfigurationData.generateProperties((driver) => driver.getFileName());
+      const actual = liquibaseConfigurationData.generateProperties();
 
       assert.deepStrictEqual(actual, expected);
     });

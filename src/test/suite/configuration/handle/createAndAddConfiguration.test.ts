@@ -4,7 +4,6 @@ import assert from "assert";
 import fs from "fs";
 import {
   addToLiquibaseConfiguration,
-  buildDriverPath,
   createLiquibaseProperties,
 } from "../../../../configuration/handle/createAndAddConfiguration";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
@@ -12,7 +11,6 @@ import Sinon from "sinon";
 import * as vscode from "vscode";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
 import { LiquibaseConfigurationData } from "../../../../configuration/data/LiquibaseConfigurationData";
-import { Driver } from "../../../../configuration/drivers";
 import { assertFileWasOpened } from "../../utilities/vscodeUtilities.test";
 import { setResourcePath } from "../../../../extension";
 import { LiquibaseConfigurationPanel } from "../../../../panels/LiquibaseConfigurationPanel";
@@ -315,32 +313,6 @@ suite("create and add configuration", () => {
         })
         .catch(done);
     });
-  });
-
-  /**
-   * Tests that the building of the driver path works as expected.
-   */
-  test("should buildDriverPath", () => {
-    const driver: Driver = new Driver(
-      "not needed",
-      "https://maven.central.org/url/to/my/driver/myDriver.jar",
-      "not needed",
-      42,
-      "not needed",
-      () => {
-        throw new Error("not needed");
-      },
-      () => {
-        throw new Error("not needed");
-      },
-      () => {
-        throw new Error("not needed");
-      }
-    );
-
-    setResourcePath(path.join("path", "to", "resource"));
-
-    assert.strictEqual(buildDriverPath(driver), path.normalize("path/to/resource/myDriver.jar"));
   });
 });
 
