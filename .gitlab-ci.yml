@@ -9,13 +9,15 @@ stages:
 .basic_build:
   stage: build
   script:
-    - echo "foo"
+    - echo "foo1"
+    - echo "foo2"
 
 build1:
   extends: .basic_build
   script:
+    - !reference [.basic_build, script]
     - echo "bar"
-    
+
 build2:
   extends: .basic_build
   script:
