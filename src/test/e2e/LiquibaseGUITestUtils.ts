@@ -81,8 +81,17 @@ export class LiquibaseGUITestUtils {
 
     // open our output panel
     if (!this.outputPanel) {
-      this.outputPanel = await new BottomBarPanel().openOutputView();
-      await this.outputPanel.selectChannel("Liquibase");
+      await VSBrowser.instance.driver.wait(async () => {
+        try {
+          this.outputPanel = await new BottomBarPanel().openOutputView();
+          console.error(`all channels: ${await this.outputPanel.getChannelNames()}`);
+          await this.outputPanel.selectChannel("Liquibase");
+          return true;
+        } catch (err) {
+          console.error("error opening the output channel", err);
+          return false;
+        }
+      }, 5_000);
     }
 
     return configurationName;
