@@ -126,6 +126,11 @@
         "command": "liquibase.removeFromCache",
         "title": "Removes any values from the recently loaded elements",
         "category": "Liquibase: Cache"
+      },
+      {
+        "command": "liquibase.drivers",
+        "title": "Drivers ...",
+        "category": "Liquibase"
       }
     ],
     "configuration": {
