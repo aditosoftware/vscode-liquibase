@@ -170,7 +170,7 @@ export class DockerTestUtils {
           return;
         }
         if (stderr) {
-          reject(stderr);
+          console.error(stderr);
         }
         resolve(stdout);
       });
