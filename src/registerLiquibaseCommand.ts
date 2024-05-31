@@ -171,13 +171,17 @@ export function registerLiquibaseCommand(
         executeJar(resourcePath, action, propertyFilePath, args).then(
           (code) => {
             if (code === 0) {
-              void vscode.window
+              vscode.window
                 .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
-                .then((result) => {
-                  if (result && result === "Show log") {
-                    Logger.getLogger().showOutputChannel(true);
-                  }
-                });
+                .then(
+                  (result) => {
+                    if (result && result === "Show log") {
+                      Logger.getLogger().showOutputChannel(true);
+                    }
+                  },
+                  (error) =>
+                    Logger.getLogger().error({ message: `error showing success message for action ${action}`, error })
+                );
             } else {
               Logger.getLogger().warn({
                 message: `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`,
