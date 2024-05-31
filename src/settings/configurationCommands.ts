@@ -5,7 +5,7 @@ import * as path from "path";
 import * as fs from "fs";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
-import { ConfirmationDialog, DialogValues, InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
+import { InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
 import { ConnectionType } from "../input/ConnectionType";
 import { ALL_DRIVERS } from "../configuration/drivers";
@@ -133,6 +133,7 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
  * Add, Modify and Delete shit.
  */
 export function displayAvailableDrivers(): void {
+  //TODO: maybe help?
   const help: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon("question"),
     tooltip: "help"
@@ -142,6 +143,7 @@ export function displayAvailableDrivers(): void {
   quickpick.items = getDrivers();
   quickpick.ignoreFocusOut = true;
   quickpick.onDidChangeActive((selectedItems) => {
+    //TODO: listen to click or enter, it automatically goes in here, if you hover per keyboard
     selectedItems.forEach((selectedItem) => {
       if (selectedItem.label === "Add New Driver") {
         quickpick.dispose();
@@ -152,9 +154,9 @@ export function displayAvailableDrivers(): void {
   quickpick.title = "Available Drivers",
   quickpick.buttons = [vscode.QuickInputButtons.Back, help];
   quickpick.onDidTriggerItemButton((selectedAction) => {
+    //FIXME: is there a better way to get the right action?
     if (selectedAction.button.tooltip === "delete") {
       quickpick.dispose();
-      const fileContent = fs.readFileSync(path.join(resourcePath, selectedAction.item.label)).toString();
       deleteDriver(selectedAction.item.label);
     }
   });
@@ -168,6 +170,7 @@ function getDrivers(): vscode.QuickPickItem[] {
   };
 
   const editDriver: vscode.QuickInputButton = {
+    //TODO: @Ramona: pls spinny?
     iconPath: new vscode.ThemeIcon("gear~spin"),
     tooltip: "edit"
   };
@@ -270,14 +273,13 @@ function addNewDriver(): void {
       const driverClass = dialogValues.inputValues.get("driverClass")?.[0];
       const visualName = dialogValues.inputValues.get("visualName")?.[0];
 
-      if (driverFile && jdbcUrl && driverClass) {
+      if (driverFile && jdbcUrl && driverClass && visualName) {
         const driverFilePath = vscode.Uri.file(driverFile).fsPath;
         const driverName = path.basename(driverFilePath);
-        const driverDestination = path.join(resourcePath, driverName);
-        fs.copyFileSync(driverFilePath, driverDestination); // Copy the driver to the resource folder
-        fs.writeFileSync(path.join(resourcePath, driverName.replace(".jar", ".json")), JSON.stringify({
+        fs.copyFileSync(driverFilePath, path.join(resourcePath, visualName + ".jar")); // Copy the driver to the resource folder
+        fs.writeFileSync(path.join(resourcePath, visualName + ".json"), JSON.stringify({
           "name": visualName,
-          "physicalName": driverName.replace(".jar", ""),
+          "jarName": driverName,
           "jdbcUrl": jdbcUrl,
           "driverClass": driverClass
         }, null, 2));
@@ -287,39 +289,8 @@ function addNewDriver(): void {
     console.error(error);
   });
 }
-function deleteDriver(driverName: string): void {
-  const input = new ConfirmationDialog({
-    name: "confirmation",
-    message: `Do you really want to delete ${driverName}?`,
-    detail: (dialogValues: DialogValues) => {
-      const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
-
-      let detail: string = "";
-      if (propertyFile) {
-        const url = readUrl(propertyFile);
-        if (url) {
-          detail = ` ${url}`;
-        }
-      }
-
-      return `This will remove all the data from your database${detail}.\n You can NOT restore any of the data.`;
-    },
-    confirmButtonName: "Drop-all",
-  });
-
-  handleMultiStepInput([input]).then((dialogValues) => {
-    if (dialogValues && dialogValues.confirmation) {
-      // Drop all
-      const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
-      if (propertyFile) {
-        const url = readUrl(propertyFile);
-        if (url) {
-          dropAll(url);
-        }
-      }
-    }
-  }
-  
+function deleteDriver(driverName: string): void {  
+  //TODO: add modal dialog to confirm deletion
   fs.rmSync(path.join(resourcePath, driverName + ".jar"));
   fs.rmSync(path.join(resourcePath, driverName + ".json"));
 }
