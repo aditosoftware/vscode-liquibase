@@ -37,15 +37,19 @@ export class WebviewTestUtils {
   static async checkForOpenedWebview(): Promise<boolean | undefined> {
     const editor = new EditorView();
 
-    return VSBrowser.instance.driver.wait(async () => {
-      try {
-        await editor.getTabByTitle("Liquibase Configuration");
-        return true;
-      } catch (error) {
-        console.debug("error finding webview in the opened editor", error);
-        return false;
-      }
-    }, 10_000);
+    return VSBrowser.instance.driver.wait(
+      async () => {
+        try {
+          await editor.getTabByTitle("Liquibase Configuration");
+          return true;
+        } catch (error) {
+          console.debug("error finding webview in the opened editor", error);
+          return false;
+        }
+      },
+      10_000,
+      "waiting for the webview to open"
+    );
   }
 
   /**

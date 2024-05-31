@@ -82,16 +82,20 @@ export class LiquibaseGUITestUtils {
     // open our output panel
     if (!this.outputPanel) {
       // try a bit longer to open the output channel
-      await VSBrowser.instance.driver.wait(async () => {
-        try {
-          this.outputPanel = await new BottomBarPanel().openOutputView();
-          await this.outputPanel.selectChannel("Liquibase");
-          return true;
-        } catch (err) {
-          console.error("error opening the output channel", err);
-          return false;
-        }
-      }, 5_000);
+      await VSBrowser.instance.driver.wait(
+        async () => {
+          try {
+            this.outputPanel = await new BottomBarPanel().openOutputView();
+            await this.outputPanel.selectChannel("Liquibase");
+            return true;
+          } catch (err) {
+            console.error("error opening the output channel", err);
+            return false;
+          }
+        },
+        5_000,
+        "showing the output channel"
+      );
     }
 
     return configurationName;
@@ -293,7 +297,7 @@ export class LiquibaseGUITestUtils {
           console.error(error);
           return false;
         }
-      }, 10_000);
+      }, 10_000, 'waiting for the command execution to be done');
     } catch (err) {
       console.error(err);
       if (failOnWaitExceeded) {
