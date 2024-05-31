@@ -52,7 +52,7 @@ export async function getPathOfConfiguration(pConfigurationName: string): Promis
  * Updates the values of the configuration.
  * @param pOnUpdate - the function used for updating the json data. This data is given as key / value pairs
  * @returns `true` when the updating was successful
- */ // TODO korrekter ort?
+ */
 export async function updateConfiguration(
   pOnUpdate: (pJsonData: Record<string, string>) => Promise<void> | void
 ): Promise<boolean> {

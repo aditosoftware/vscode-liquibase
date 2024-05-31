@@ -1,6 +1,6 @@
 import { DialogValues } from "@aditosoftware/vscode-input";
 import assert from "assert";
-import { folderSelectionName } from "../../extension";
+import { folderSelectionName } from "../../constants";
 import {
   fileName,
   generateCommandLineArgs,

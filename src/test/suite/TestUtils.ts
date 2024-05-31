@@ -87,7 +87,6 @@ export class TestUtils {
     initializeLogger(Logger.getLogger());
   }
 
-  // FIXME
   /**
    * Inits the extension for the test.
    *

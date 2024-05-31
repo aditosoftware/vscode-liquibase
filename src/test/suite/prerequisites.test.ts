@@ -61,7 +61,7 @@ suite("prerequisites", () => {
 
     prerequisites(context, tempDir)
       .then(() => {
-        // TODO because of no awaits, we wait 7 seconds in order to have everything downloaded
+        // because of no awaits, we wait 7 seconds in order to have everything downloaded
         new Promise((r) => setTimeout(r, 7_000))
           .then(() => {
             // check that the jars were downloaded correctly

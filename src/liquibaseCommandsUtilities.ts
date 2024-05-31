@@ -4,7 +4,7 @@ import { openDocument } from "./utilities/vscodeUtilities";
 import * as vscode from "vscode";
 import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
-import { folderSelectionName } from "./extension";
+import { folderSelectionName } from "./constants";
 
 /**
  * The name that should be used for any file name input.

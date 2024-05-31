@@ -170,8 +170,7 @@ export class DockerTestUtils {
           return;
         }
         if (stderr) {
-          // TODO  korrekt? vorher war reject
-          console.error(stderr);
+          reject(stderr);
         }
         resolve(stdout);
       });

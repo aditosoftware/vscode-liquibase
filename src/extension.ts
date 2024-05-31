@@ -32,12 +32,9 @@ import { generateContextInputs } from "./handleContexts";
 import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
 import { CacheHandler, CacheRemover } from "./cache/";
 import { removeConfiguration } from "./settings/removeConfiguration";
+import { folderSelectionName } from "./constants";
 
-/**
- * The name that should be used for any folder selection.
- * TODO position?
- */
-export const folderSelectionName = "folderSelection";
+
 
 /**
  * The path where all resources (jars) are located from the extension.

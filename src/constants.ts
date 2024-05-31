@@ -52,3 +52,8 @@ export enum ContextOptions {
    */
   USE_RECENTLY_LOADED = "Use any of the recently loaded contexts",
 }
+
+/**
+ * The name that should be used for any folder selection.
+ */
+export const folderSelectionName = "folderSelection";

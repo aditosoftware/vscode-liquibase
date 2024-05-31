@@ -224,10 +224,10 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
 
   // Process changelogFileLine if found
   if (changelogs) {
-      // Read and parse the specified XML file
-      const possibleFile = path.join(getLiquibaseFolder(), path.normalize(changelogs.trim()));
-      const contexts = await loadContextsFromChangelogFile(possibleFile, liquibasePropertiesPath);
-      contextValues.push(...contexts);
+    // Read and parse the specified XML file
+    const possibleFile = path.join(getLiquibaseFolder(), path.normalize(changelogs.trim()));
+    const contexts = await loadContextsFromChangelogFile(possibleFile, liquibasePropertiesPath);
+    contextValues.push(...contexts);
   }
 
   // Return an empty array if 'changelogFile:' line is not found
