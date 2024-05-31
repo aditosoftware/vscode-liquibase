@@ -1,7 +1,6 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
-import { InputBox } from "vscode-extension-tester";
 import { ContextOptions } from "../../../../constants";
 
 /**
@@ -23,17 +22,9 @@ suite("changelog-sync: Right Click Menu", function () {
   /**
    * Test case for executing the 'changelog sync' command via RMB.
    */
-  LiquibaseGUITestUtils.createRmbArguments("Changelog Sync").forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments("Changelog Sync", ContextOptions.NO_CONTEXT).forEach((pArgument) => {
     test(`should execute 'changelog sync' command from ${pArgument.description}`, async function () {
-      await pArgument.command();
-
-      const input = new InputBox();
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(ContextOptions.NO_CONTEXT);
-      await input.confirm();
+      await pArgument.command(configurationName);
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution(

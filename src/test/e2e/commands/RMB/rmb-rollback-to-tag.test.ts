@@ -3,7 +3,6 @@ import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import assert from "assert";
 import { randomUUID } from "crypto";
 import { ContextOptions } from "../../../../constants";
-import { InputBox } from "vscode-extension-tester";
 
 /**
  * Test suite for the "Rollback to Tag" command in the Right Click Menu.
@@ -24,7 +23,7 @@ suite("rollback-to-tag: Right Click Menu", function () {
   /**
    * Test case for executing the "rollback-to-tag" command from RMB.
    */
-  LiquibaseGUITestUtils.createRmbArguments("Rollback to Tag").forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments("Rollback to Tag", ContextOptions.LOAD_ALL_CONTEXT).forEach((pArgument) => {
     test(`should execute 'rollback-to-tag' command from ${pArgument.description}`, async function () {
       const tagName = randomUUID();
 
@@ -37,17 +36,12 @@ suite("rollback-to-tag: Right Click Menu", function () {
       // Update all datasets
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
 
-      await pArgument.command();
+      const input = await pArgument.command(configurationName);
 
-      const input = new InputBox();
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-      await input.confirm();
+      // toggle the contexts
       await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
+      // set the tag name
       await input.setText(tagName);
       await input.confirm();
 

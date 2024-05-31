@@ -446,10 +446,14 @@ export class LiquibaseGUITestUtils {
     const inputBox = input || new InputBox();
 
     // wait until there are checkboxes loaded
-    await VSBrowser.instance.driver.wait(async () => {
-      const checkboxes = await inputBox.getCheckboxes();
-      return checkboxes.length !== 0;
-    }, 5000);
+    await VSBrowser.instance.driver.wait(
+      async () => {
+        const checkboxes = await inputBox.getCheckboxes();
+        return checkboxes.length !== 0;
+      },
+      5000,
+      "waiting for input checkboxes"
+    );
 
     if (filterForInput) {
       await inputBox.setText(filterForInput);
@@ -462,13 +466,19 @@ export class LiquibaseGUITestUtils {
   /**
    * Creates some RMB arguments for the tests.
    * @param name - the name of the command that should be called
+   * @param contextOption - the possible context option that should be selected as second element in the dialogs (first element is always configuration)
    * @returns the arguments for this command
    */
-  static createRmbArguments(name: string): RmbArgument[] {
+  static createRmbArguments(name: string, contextOption?: ContextOptions): RmbArgument[] {
     return [
-      { command: () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog(name), description: "RMB in file" },
       {
-        command: () => LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer(name),
+        command: (configurationName: string) =>
+          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog(name, configurationName, contextOption),
+        description: "RMB in file",
+      },
+      {
+        command: (configurationName: string) =>
+          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer(name, configurationName, contextOption),
         description: "RMB in file explorer",
       },
     ];
@@ -480,19 +490,62 @@ export class LiquibaseGUITestUtils {
    * This method will open an changelog before executing the action.
    *
    * @param action - the action that should be called
+   * @param configurationName - the name of the configuration that should be set as first value
+   * @param contextOption - the context that should be set as second value
+   * @returns the input box that can be used for setting other values in the dialogs
    */
-  static async openAndSelectRMBItemFromChangelog(action: string): Promise<void> {
+  static async openAndSelectRMBItemFromChangelog(
+    action: string,
+    configurationName?: string,
+    contextOption?: ContextOptions
+  ): Promise<InputBox> {
     await VSBrowser.instance.openResources(this.CHANGELOG_FILE);
 
     await this.openAndSelectRMBItemFromAlreadyOpenedFile(action);
+
+    return LiquibaseGUITestUtils.inputBasicValuesForRMB(configurationName, contextOption);
   }
 
   /**
    * Opens the Liquibase context menu in the explorer side bar on the changelog file and selects the given action.
    * @param action - the name of the action
+   * @param configurationName - the name of the configuration that should be set as first value
+   * @param contextOption - the context that should be set as second value
+   * @returns the input box that can be used for setting other values in the dialogs
    */
-  static async openAndSelectRMBItemFromChangelogFromExplorer(action: string): Promise<void> {
-    return this.openAndSelectRMBItemFromExplorer(action, ".liquibase", "changelog.xml");
+  static async openAndSelectRMBItemFromChangelogFromExplorer(
+    action: string,
+    configurationName?: string,
+    contextOption?: ContextOptions
+  ): Promise<InputBox> {
+    await this.openAndSelectRMBItemFromExplorer(action, ".liquibase", "changelog.xml");
+
+    return LiquibaseGUITestUtils.inputBasicValuesForRMB(configurationName, contextOption);
+  }
+
+  /**
+   * Inputs some basic values for the RMB dialogs.
+   * @param configurationName - the name of the configuration that should be set as first value
+   * @param contextOption - the context that should be set as second value
+   * @returns the input box that can be used for setting other values in the dialogs
+   */
+  private static async inputBasicValuesForRMB(
+    configurationName?: string,
+    contextOption?: ContextOptions
+  ): Promise<InputBox> {
+    const input = new InputBox();
+
+    if (configurationName) {
+      await input.setText(configurationName);
+      await input.confirm();
+    }
+
+    if (contextOption) {
+      await input.setText(contextOption);
+      await input.confirm();
+    }
+
+    return input;
   }
 
   /**
@@ -639,8 +692,9 @@ export class LiquibaseGUITestUtils {
 type RmbArgument = {
   /**
    * The command itself.
+   * It returns a InputBox for further configuration.
    */
-  command: () => Promise<void>;
+  command: (configurationName: string) => Promise<InputBox>;
 
   /**
    * The description of the argument.

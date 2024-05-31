@@ -1,5 +1,4 @@
 import assert from "assert";
-import { InputBox } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 
@@ -33,12 +32,7 @@ suite("validate: Right Click Menu", function () {
      * enters the configuration name, and verifies the success notification.
      */
     test(`should execute 'validate' command from ${pArgument.description}`, async function () {
-      await pArgument.command();
-
-      const input = new InputBox();
-
-      await input.setText(configurationName);
-      await input.confirm();
+      await pArgument.command(configurationName);
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'validate' was executed successfully."),

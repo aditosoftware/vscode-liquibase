@@ -1,7 +1,6 @@
 import path from "path";
 import assert from "assert";
 import fs from "fs";
-import { InputBox } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -22,22 +21,17 @@ suite("db-doc: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Generate database documentation (db-doc)").forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments(
+    "Generate database documentation (db-doc)",
+    ContextOptions.NO_CONTEXT
+  ).forEach((pArgument) => {
     /**
      * Test case to execute the 'db-doc' command from RMB.
      */
     test(`should execute 'db-doc' command from ${pArgument.description}`, async function () {
       const directoryForDbDoc = LiquibaseGUITestUtils.generateTemporaryFolder();
 
-      await pArgument.command();
-
-      const input = new InputBox();
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(ContextOptions.NO_CONTEXT);
-      await input.confirm();
+      const input = await pArgument.command(configurationName);
 
       // Set the output directory for the generated documentation.
       await LiquibaseGUITestUtils.selectFolder(input, directoryForDbDoc);

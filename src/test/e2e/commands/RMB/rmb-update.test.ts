@@ -1,5 +1,4 @@
 import assert from "assert";
-import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -20,20 +19,13 @@ suite("update: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Update").forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments("Update", ContextOptions.LOAD_ALL_CONTEXT).forEach((pArgument) => {
     /**
      * Test case to execute the 'update' command from RMB.
      */
     test(`should execute 'update' command from ${pArgument.description}`, async function () {
-      await pArgument.command();
-
-      const input = new InputBox();
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-      await input.confirm();
+      await pArgument.command(configurationName);
+      // toggle the contexts
       await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
       assert.ok(

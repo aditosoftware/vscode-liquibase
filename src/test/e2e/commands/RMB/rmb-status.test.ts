@@ -1,5 +1,4 @@
 import assert from "assert";
-import { InputBox } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -20,20 +19,12 @@ suite("status: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Status").forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments("Status", ContextOptions.NO_CONTEXT).forEach((pArgument) => {
     /**
      * Test case for executing the 'status' command from RMB.
      */
     test(`should execute 'status' command from ${pArgument.description}`, async function () {
-      await pArgument.command();
-
-      const input = new InputBox();
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(ContextOptions.NO_CONTEXT);
-      await input.confirm();
+      await pArgument.command(configurationName);
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully."),

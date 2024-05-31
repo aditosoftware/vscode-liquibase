@@ -4,7 +4,6 @@ import assert from "assert";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
-import { InputBox } from "vscode-extension-tester";
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -22,28 +21,24 @@ suite("update-sql: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Generate SQL File for incoming changes").forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments(
+    "Generate SQL File for incoming changes",
+    ContextOptions.LOAD_ALL_CONTEXT
+  ).forEach((pArgument) => {
     /**
      * Test case to execute the 'update-sql' command from RMB.
      */
-    test(`should execute 'update-sql' command from RMB ${pArgument.description}`, async function () {
+    test(`should execute 'update-sql' command from ${pArgument.description}`, async function () {
       const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
       // first, update the database
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
       // then generate the changelog
-      await pArgument.command();
-
-      const input = new InputBox();
-
-      await input.setText(configurationName);
-      await input.confirm();
-
-      await input.setText(ContextOptions.LOAD_ALL_CONTEXT);
-      await input.confirm();
+      const input = await pArgument.command(configurationName);
       await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
+      // select the folder where the data should be written
       await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 
       await input.setText("update.sql");
