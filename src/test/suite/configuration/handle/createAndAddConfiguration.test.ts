@@ -4,7 +4,6 @@ import assert from "assert";
 import fs from "fs";
 import {
   addToLiquibaseConfiguration,
-  buildDriverPath,
   createLiquibaseProperties,
 } from "../../../../configuration/handle/createAndAddConfiguration";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
@@ -12,9 +11,9 @@ import Sinon from "sinon";
 import * as vscode from "vscode";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
 import { LiquibaseConfigurationData } from "../../../../configuration/data/LiquibaseConfigurationData";
-import { Driver } from "../../../../configuration/drivers";
 import { assertFileWasOpened } from "../../utilities/vscodeUtilities.test";
 import { setResourcePath } from "../../../../extension";
+import { LiquibaseConfigurationPanel } from "../../../../panels/LiquibaseConfigurationPanel";
 
 /**
  * Tests the creating of configurations.
@@ -220,6 +219,9 @@ suite("create and add configuration", () => {
       liquibaseConfigurationData.databaseConnection.password = "secretPw";
 
       setResourcePath(path.join(baseResourcePath, "dummy"));
+
+      // do nothing when transfer messages was called
+      Sinon.stub(LiquibaseConfigurationPanel, "transferMessage").callsFake(function () {});
     });
 
     /**
@@ -312,32 +314,6 @@ suite("create and add configuration", () => {
         .catch(done);
     });
   });
-
-  /**
-   * Tests that the building of the driver path works as expected.
-   */
-  test("should buildDriverPath", () => {
-    const driver: Driver = new Driver(
-      "not needed",
-      "https://maven.central.org/url/to/my/driver/myDriver.jar",
-      "not needed",
-      42,
-      "not needed",
-      () => {
-        throw new Error("not needed");
-      },
-      () => {
-        throw new Error("not needed");
-      },
-      () => {
-        throw new Error("not needed");
-      }
-    );
-
-    setResourcePath(path.join("path", "to", "resource"));
-
-    assert.strictEqual(buildDriverPath(driver), path.normalize("path/to/resource/myDriver.jar"));
-  });
 });
 
 /**
@@ -360,18 +336,11 @@ function assertCreationOfLiquibaseProperties(
 ): void {
   createLiquibaseProperties(liquibaseConfigurationData)
     .then(() => {
-      const expectedClasspath = path
-        .join(baseResourcePath, "dummy", "mariadb-java-client-2.5.3.jar")
-        .replaceAll(`\\`, `\\\\`);
-
       const expectedFileContent = `
 # configuration for the database
 username = admin
 password = secretPw
-driver = org.mariadb.jdbc.Driver
-# Specifies the directories and JAR files to search for changelog files and custom extension classes.
-# To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
-classpath = ${expectedClasspath}`;
+driver = org.mariadb.jdbc.Driver`;
 
       //  find opened editors
       assertFileWasOpened("data.liquibase.properties", expectedFileContent);

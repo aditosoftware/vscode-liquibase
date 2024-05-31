@@ -161,38 +161,45 @@ export function registerLiquibaseCommand(
 
       if (dialogValues.uri) {
         // if this was called from an right click menu, then handle some parameters differently
-        args.push("--changelogFile=" + path.basename(dialogValues.uri.fsPath));
+        args.push("--changelogFile=" + path.relative(getWorkFolder(), dialogValues.uri.fsPath));
 
-        args.push("-Dliquibase.searchPath=" + path.join(dialogValues.uri.fsPath, ".."));
+        args.push("-Dliquibase.searchPath=" + getWorkFolder());
       }
 
       if (propertyFilePath) {
         // Execute Liquibase update with the final selections
-        executeJar(resourcePath, action, propertyFilePath, args).then((code) => {
-          if (code === 0) {
-            vscode.window
-              .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
-              .then((result) => {
-                if (result && result === "Show log") {
-                  Logger.getLogger().showOutputChannel(true);
-                }
+        executeJar(resourcePath, action, propertyFilePath, args).then(
+          (code) => {
+            if (code === 0) {
+              vscode.window
+                .showInformationMessage(`Liquibase command '${action}' was executed successfully.`, "Show log")
+                .then(
+                  (result) => {
+                    if (result && result === "Show log") {
+                      Logger.getLogger().showOutputChannel(true);
+                    }
+                  },
+                  (error) =>
+                    Logger.getLogger().error({ message: `error showing success message for action ${action}`, error })
+                );
+            } else {
+              Logger.getLogger().warn({
+                message: `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`,
+                notifyUser: true,
               });
-          } else {
-            Logger.getLogger().warn({
-              message: `Liquibase command '${action}' was not executed successfully. Please see logs for more information.`,
-              notifyUser: true,
-            });
-            Logger.getLogger().showOutputChannel();
-          }
+              Logger.getLogger().showOutputChannel();
+            }
 
-          // execute any action after the execution
-          if (additionalCommandAction && additionalCommandAction.afterCommandAction) {
-            additionalCommandAction.afterCommandAction(dialogValues);
-          }
+            // execute any action after the execution
+            if (additionalCommandAction && additionalCommandAction.afterCommandAction) {
+              additionalCommandAction.afterCommandAction(dialogValues);
+            }
 
-          // Execute all Transfer Actions from any command calls
-          transferActions.forEach((pTransferAction) => pTransferAction.executeAfterCommandAction());
-        });
+            // Execute all Transfer Actions from any command calls
+            transferActions.forEach((pTransferAction) => pTransferAction.executeAfterCommandAction());
+          },
+          (error) => Logger.getLogger().error({ message: "error executing jar", error })
+        );
       } else {
         Logger.getLogger().info({ message: "No property file path given. Command could not be executed" });
       }

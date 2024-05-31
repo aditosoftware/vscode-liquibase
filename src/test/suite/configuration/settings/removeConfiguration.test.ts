@@ -1,12 +1,9 @@
 import Sinon from "sinon";
 import * as vscode from "vscode";
 import {
-  cache,
-  deleteAll,
   generateDetailMessageForDeleteConfiguration,
   removeConfiguration,
   removeType,
-  setting,
 } from "../../../../settings/removeConfiguration";
 import { TestUtils } from "../../TestUtils";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
@@ -17,6 +14,7 @@ import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
 import assert from "assert";
 import { setCacheHandler } from "../../../../extension";
 import { CacheHandler } from "../../../../cache";
+import { RemoveConfigurationOptions } from "../../../../constants";
 
 /**
  * Tests the removing of the configuration.
@@ -111,7 +109,7 @@ suite("removeConfiguration", () => {
    * Tests that the deletion with the remove option `cache` works.
    */
   test("should delete cache", (done) => {
-    const deletionMode = cache;
+    const deletionMode = RemoveConfigurationOptions.CACHE;
 
     assertDeletion(
       deletionMode,
@@ -126,7 +124,7 @@ suite("removeConfiguration", () => {
    * Tests that the deletion with the remove option `setting` works.
    */
   test("should delete setting", (done) => {
-    const deletionMode = setting;
+    const deletionMode = RemoveConfigurationOptions.SETTING;
 
     assertDeletion(deletionMode, { existPropertyFile: true, settingsFileContent: { bar: "baz" } }, files, stubs, done);
   });
@@ -135,7 +133,7 @@ suite("removeConfiguration", () => {
    * Tests that the deletion with the remove option `delete all` works.
    */
   test("should delete all", (done) => {
-    const deletionMode = deleteAll;
+    const deletionMode = RemoveConfigurationOptions.DELETE_ALL;
 
     assertDeletion(deletionMode, { existPropertyFile: false, settingsFileContent: { bar: "baz" } }, files, stubs, done);
   });
@@ -157,19 +155,19 @@ suite("removeConfiguration", () => {
         removeOption: "unknown option",
       },
       {
-        expectedDetail: `- ${cache}`,
-        removeOption: cache,
+        expectedDetail: `- ${RemoveConfigurationOptions.CACHE}`,
+        removeOption: RemoveConfigurationOptions.CACHE,
       },
       {
-        expectedDetail: `- ${cache}
-- ${setting}`,
-        removeOption: setting,
+        expectedDetail: `- ${RemoveConfigurationOptions.CACHE}
+- ${RemoveConfigurationOptions.SETTING}`,
+        removeOption: RemoveConfigurationOptions.SETTING,
       },
       {
-        expectedDetail: `- ${cache}
-- ${setting}
-- ${deleteAll}`,
-        removeOption: deleteAll,
+        expectedDetail: `- ${RemoveConfigurationOptions.CACHE}
+- ${RemoveConfigurationOptions.SETTING}
+- ${RemoveConfigurationOptions.DELETE_ALL}`,
+        removeOption: RemoveConfigurationOptions.DELETE_ALL,
       },
     ].forEach((pArgument) => {
       test(`should generate detail message for ${pArgument.removeOption}`, () => {

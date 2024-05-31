@@ -5,6 +5,7 @@ import { readConfiguration } from "../configuration/handle/readConfiguration";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as vscode from "vscode";
 import { PROPERTY_FILE } from "../input/ConnectionType";
+import { RemoveCacheOptions } from "../constants";
 
 /**
  * Class used for removing the whole cache.
@@ -17,23 +18,13 @@ export class CacheRemover {
   private static readonly removeOption = "removeOption";
 
   /**
-   * The label for removing the whole cache.
-   */
-  private static readonly wholeCache = "Invalidate every recently loaded value";
-
-  /**
-   * The label for removing only the cache for any number of connections.
-   */
-  private static readonly removeConnection = "Remove one or more connections";
-
-  /**
    * The remove options that are possible in the remove input.
    * The value is the detail message.
    */
   private static readonly removeOptions = new Map<string, string>([
-    [CacheRemover.wholeCache, "This will remove the whole file."],
+    [RemoveCacheOptions.WHOLE_CACHE, "This will remove the whole file."],
     [
-      CacheRemover.removeConnection,
+      RemoveCacheOptions.REMOVE_CONNECTION,
       "This will remove everything that is saved as recently loaded values for the selected connections.",
     ],
   ]);
@@ -105,11 +96,11 @@ export class CacheRemover {
    */
   private handleRemoving(toRemove: string, result: DialogValues): void {
     switch (toRemove) {
-      case CacheRemover.wholeCache:
+      case RemoveCacheOptions.WHOLE_CACHE:
         // remove the whole cache
         this.cacheHandler.removeCache();
         break;
-      case CacheRemover.removeConnection:
+      case RemoveCacheOptions.REMOVE_CONNECTION:
         // remove just a few connections
         {
           const propertyFiles = result.inputValues.get(PROPERTY_FILE);
@@ -143,16 +134,17 @@ export class CacheRemover {
    * @param cache - the cached values
    * @returns the `QuickPickItems` for the liquibase.properties selection
    */
-  private generatePropertiesForCacheRemoving(cache: Cache): vscode.QuickPickItem[] {
-    readConfiguration().then((result) => {
+  private async generatePropertiesForCacheRemoving(cache: Cache): Promise<vscode.QuickPickItem[]> {
+    const result = await readConfiguration();
+    if (result) {
       this.configuration = result ?? {};
-    });
+    }
 
     const cacheKeys: string[] = Object.keys(cache);
 
     return Object.keys(this.configuration)
       .filter((key) => cacheKeys.includes(this.configuration[key]))
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
       .map((key) => {
         const value = this.configuration[key];
         return {
@@ -201,7 +193,7 @@ export class CacheRemover {
     const toRemove = currentResults.inputValues.get(CacheRemover.removeOption);
 
     if (toRemove && toRemove[0]) {
-      return toRemove[0] !== CacheRemover.wholeCache;
+      return toRemove[0] !== RemoveCacheOptions.WHOLE_CACHE;
     } else {
       return false;
     }

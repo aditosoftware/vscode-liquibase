@@ -1,13 +1,5 @@
 import { vscodeApiWrapper } from "./utilities/vscodeApiWrapper";
-import {
-  VSCodeButton,
-  VSCodeDivider,
-  VSCodeLink,
-  VSCodeRadio,
-  VSCodeRadioGroup,
-  VSCodeTextArea,
-  VSCodeTextField,
-} from "@vscode/webview-ui-toolkit/react";
+import { VSCodeButton, VSCodeDivider, VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
 import "./App.css";
 import "./codicon.css";
 import { useEffect, useState } from "react";
@@ -28,8 +20,7 @@ function App(): JSX.Element {
     // The data will be updated shortly after the view is created.
     LiquibaseConfigurationData.createDefaultData(
       { defaultDatabaseForConfiguration: NO_PRE_CONFIGURED_DRIVER, liquibaseDirectoryInProject: "" },
-      ConfigurationStatus.NEW,
-      ";"
+      ConfigurationStatus.NEW
     )
   );
   const [referenceConnection, setReferenceConnection] = useState<boolean>(false);
@@ -90,7 +81,6 @@ function App(): JSX.Element {
   function handleChooseChangelogResult(pMessage: MessageData): void {
     updateData((draft) => {
       if (pMessage.configurationData) {
-        draft.classpath = pMessage.configurationData.classpath;
         draft.changelogFile = pMessage.configurationData.changelogFile;
       }
     });
@@ -132,7 +122,9 @@ function App(): JSX.Element {
 
       <p>
         For more information about the <code>liquibase.properties</code> file, see{" "}
-        <VSCodeLink href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html">
+        <VSCodeLink
+          id="documentationLink"
+          href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html">
           the official documentation
         </VSCodeLink>
         .
@@ -152,47 +144,10 @@ function App(): JSX.Element {
               </section>
               <VSCodeDivider />
               <section>
-                <VSCodeTextArea
-                  id="classpathInput"
-                  value={data.classpath}
-                  resize="vertical"
-                  rows={3}
-                  onBlur={handleChangeClasspath}>
-                  The classpath used for executing liquibase.
-                </VSCodeTextArea>
-                <label htmlFor="classpathInput" slot="label">
-                  These should be absolute paths. Each line is treated as one entry. These are connected automatically
-                  by the selected system separator. If you have a custom driver specified, then you need to put in the
-                  path to your driver here.
-                </label>
-                <VSCodeRadioGroup
-                  orientation="horizontal"
-                  value={data.classpathSeparator}
-                  onClick={(e) => {
-                    // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
-                    const value = e.target.value;
-                    updateData((draft) => {
-                      draft.classpathSeparator = value;
-                    });
-                  }}>
-                  <label slot="label">
-                    The separator for multiple classpaths. This is depending on your operating system
-                  </label>
-
-                  <VSCodeRadio id="classpathSeparatorWindows" value=";">
-                    Windows: semicolon (<code>;</code>)
-                  </VSCodeRadio>
-                  <VSCodeRadio id="classpathSeparatorUnix" value=":">
-                    Linux and MacOS: colon (<code>:</code>)
-                  </VSCodeRadio>
-                </VSCodeRadioGroup>
-              </section>
-
-              <section>
-                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange}>
+                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange} id="changelogInput">
                   The basic changelog file for any command
                 </VSCodeTextField>
-                <VSCodeButton appearance="secondary" onClick={handleChooseChangelog}>
+                <VSCodeButton appearance="secondary" onClick={handleChooseChangelog} id="changelogSelection">
                   Choose changelog
                   <span slot="start" className="codicon codicon-file-code"></span>
                 </VSCodeButton>
@@ -201,12 +156,14 @@ function App(): JSX.Element {
 
             <DatabaseConfiguration
               title="Database configuration"
+              baseId="dbConfig"
               databaseConnection={data.databaseConnection}
               onUpdate={changeDatabaseConnection}
             />
 
             <section>
               <VSCodeButton
+                id="addReferenceConnection"
                 className="normalButton"
                 formnovalidate={true}
                 disabled={referenceConnection}
@@ -216,6 +173,7 @@ function App(): JSX.Element {
                 <span slot="start" className="codicon codicon-add"></span>
               </VSCodeButton>
               <VSCodeButton
+                id="removeReferenceConnection"
                 className="normalButton"
                 formnovalidate={true}
                 disabled={!referenceConnection}
@@ -230,6 +188,7 @@ function App(): JSX.Element {
             {referenceConnection && (
               <DatabaseConfiguration
                 title="Reference Database configuration"
+                baseId="referenceConfig"
                 databaseConnection={data.referenceDatabaseConnection}
                 onUpdate={changeReferenceConnection}
               />
@@ -249,19 +208,20 @@ function App(): JSX.Element {
                 </p>
               )}
 
-              <div>{previewData !== null ? <pre>{previewData}</pre> : <p>Load Data...</p>}</div>
+              <div>{previewData !== null ? <pre id="preview">{previewData}</pre> : <p>Load Data...</p>}</div>
             </fieldset>
           </div>
         </section>
 
         <VSCodeDivider />
 
-        <VSCodeButton onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
+        <VSCodeButton id="saveButton" onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
           Save configuration
           <span slot="start" className="codicon codicon-save"></span>
         </VSCodeButton>
 
         <VSCodeButton
+          id="testButton"
           onClick={handleTestConfiguration}
           appearance="secondary"
           formnovalidate={true}
@@ -279,7 +239,7 @@ function App(): JSX.Element {
   function fetchData(): void {
     try {
       // do not add any values for the driver, because we can not build them here (path is not allowed!)
-      setPreviewData(data.generateProperties(() => undefined, true));
+      setPreviewData(data.generateProperties(true));
     } catch (error) {
       vscodeApiWrapper.postMessage(
         new MessageData(MessageType.LOG_MESSAGE, {
@@ -361,16 +321,6 @@ function App(): JSX.Element {
    */
   function handleChooseChangelog(): void {
     vscodeApiWrapper.postMessage(new MessageData(MessageType.CHOOSE_CHANGELOG, data));
-  }
-
-  /**
-   * Handles the change of the classpath elements.
-   * @param event - the event which was triggered
-   */
-  function handleChangeClasspath(event: React.FocusEvent<HTMLInputElement>): void {
-    updateData((draft) => {
-      draft.classpath = event.target.value;
-    });
   }
 
   /**

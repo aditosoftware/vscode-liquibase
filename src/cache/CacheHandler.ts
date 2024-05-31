@@ -29,7 +29,7 @@ export class CacheHandler {
    * Constructor. This should be created in you `activate` function, in order the have the `cacheLocation` to your globalStoragePath.
    * @param cacheLocation - The location where the cache iss located. This will be inside the resourcePath in a json file.
    */
-  constructor(private readonly cacheLocation: string) {
+  constructor(readonly cacheLocation: string) {
     this.cacheLocation = cacheLocation;
   }
 

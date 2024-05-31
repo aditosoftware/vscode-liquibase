@@ -4,11 +4,12 @@ import {
   VSCodeDataGrid,
   VSCodeDataGridCell,
   VSCodeDataGridRow,
+  VSCodeLink,
   VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react";
 import { useState } from "react";
 import { vscodeApiWrapper } from "../utilities/vscodeApiWrapper";
-import { MessageType } from "../../../src/configuration/transfer";
+import { MessageData, MessageType } from "../../../src/configuration/transfer";
 
 /**
  * The properties for the additional element tag.
@@ -102,7 +103,19 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
       const newAdditionalValues = new Map(additionalElementValues);
 
-      if (indicator === keyIndicator) {
+      if(indicator === keyIndicator && !isKeyAcceptable(newCellValue)) {  
+        vscodeApiWrapper.postMessage(
+          new MessageData(MessageType.LOG_MESSAGE, {
+            level: "error",
+            message: "Invalid key input: " + newCellValue,
+            notifyUser: true,
+          })
+        );
+
+        //set content to old value
+        cell.innerText = oldKey;
+        return;
+      } else if (indicator === keyIndicator) {
         // if the key has changed delete the old entry and add one with the new key
         newAdditionalValues.delete(oldKey);
         newAdditionalValues.set(newCellValue, oldValue);
@@ -124,7 +137,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
    * Creates a new row, when the plus button was pressed and both key and value where given.
    */
   function createNewRow(): void {
-    if (key && value) {
+    if (key && value && isKeyAcceptable(key)) {
       setAdditionalElementValues(additionalElementValues.set(key, value));
 
       setKey("");
@@ -147,12 +160,40 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
     pProperties.onValueChange(newElementValues);
   }
 
+
+
+  /**
+   * Checks if the entered key is acceptable.
+   * @param key - the key to check
+   * @returns true if the key is acceptable, false otherwise
+   */
+  function isKeyAcceptable(key: string): boolean {
+    //TODO: maybe get the invalid keys from the extension? Or from the liquibase documentation? Or from the liquibase code? who knows, who knows...
+    const invalidKeys = [
+      "changelogFile",
+      "driver",
+      "url",
+      "username",
+      "password",
+      "referenceDatabase",
+      "referenceDriver",
+      "referenceUrl",
+      "referenceUsername",
+      "referencePassword",
+    ];
+    return !invalidKeys.includes(key);
+  }
+
   return (
     <div>
       <fieldset>
-        <legend>Additional elements</legend>
+        <legend>
+          Advanced properties      
+          <VSCodeLink 
+          id="helpLink"
+          href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html"><span className="codicon codicon-question"> </span></VSCodeLink>
+        </legend>
         <p>To edit an row, click on it.</p>
-
         <VSCodeDataGrid aria-label="Default">
           <VSCodeDataGridRow row-type="header">
             <VSCodeDataGridCell cell-type="columnheader" grid-column="1">
@@ -168,16 +209,40 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
           <VSCodeDataGridRow key="newDataRow">
             <VSCodeDataGridCell cell-type="columnheader" grid-column="1">
-              <VSCodeTextField value={key} onBlur={(e: React.FocusEvent<HTMLInputElement>) => setKey(e.target.value)} />
+              <VSCodeTextField
+                id="keyInput"
+                value={key}
+                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
+                  const enteredKey = e.target.value;
+                  if (isKeyAcceptable(enteredKey)) {
+                    setKey(enteredKey);
+                  } else {
+                    setKey(enteredKey);
+                    vscodeApiWrapper.postMessage(
+                      new MessageData(MessageType.LOG_MESSAGE, {
+                        level: "error",
+                        message: "Invalid key input: " + enteredKey,
+                        notifyUser: true,
+                      })
+                    );
+                  }
+                }}
+              />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="2">
               <VSCodeTextField
+                id="valueInput"
                 value={value}
                 onBlur={(e: React.FocusEvent<HTMLInputElement>) => setValue(e.target.value)}
               />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="3">
-              <VSCodeButton onClick={() => createNewRow()} appearance="icon" formnovalidate={true}>
+              <VSCodeButton
+                id="addButton"
+                onClick={() => createNewRow()}
+                appearance="icon"
+                formnovalidate={true}
+                title="Add">
                 <span className="codicon codicon-add"></span>
               </VSCodeButton>
             </VSCodeDataGridCell>
@@ -198,7 +263,12 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
                 {value}
               </VSCodeDataGridCell>
               <VSCodeDataGridCell grid-column="3">
-                <VSCodeButton onClick={() => handleDeleteRow(key)} appearance="icon" formnovalidate={true}>
+                <VSCodeButton
+                  id={"delete" + separator + key + separator + value}
+                  onClick={() => handleDeleteRow(key)}
+                  appearance="icon"
+                  formnovalidate={true}
+                  title="Delete">
                   <span className="codicon codicon-trash"></span>
                 </VSCodeButton>
               </VSCodeDataGridCell>

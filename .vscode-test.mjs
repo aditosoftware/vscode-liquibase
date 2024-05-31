@@ -5,4 +5,8 @@ export default defineConfig({
   version: "insiders",
   workspaceFolder: "./out/temp/workspace",
   launchArgs: ["--disable-extensions", "--profile-temp"],
+  mocha: {
+    ui: "tdd",
+    retries: 3,
+  },
 });

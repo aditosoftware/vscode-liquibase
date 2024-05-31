@@ -95,15 +95,16 @@ suite("liquibaseCommandsUtilities", () => {
       const wrongColumns = path.join(dbDoc, "columns");
 
       // check before the test, that the wrong structure exist
-      assert.ok(fs.existsSync(tables), "tables should exist");
-      assert.ok(fs.existsSync(wrongColumns), "wrong columns should exist before the test");
+      assert.ok(fs.existsSync(tables), `tables should exist: ${tables}`);
+      assert.ok(fs.existsSync(wrongColumns), `wrong columns should exist before the test ${wrongColumns}`);
 
       openIndexHtmlAfterCommandExecution(dialogValues)
         .then(() => {
+          const newColumns = fs.existsSync(path.join(tables, "columns"));
 
-          assert.ok(fs.existsSync(tables), "tables should still exist");
-          assert.ok(fs.existsSync(path.join(tables, "columns")), "columns should have moved");
-          assert.ok(!fs.existsSync(wrongColumns), "wrong columns should no longer exist");
+          assert.ok(fs.existsSync(tables), `tables should still exist:  ${tables}`);
+          assert.ok(newColumns, `columns should have moved: ${newColumns}`);
+          assert.ok(!fs.existsSync(wrongColumns), `wrong columns should no longer exist:  ${wrongColumns}`);
 
           Sinon.assert.calledOnce(openExternal);
           Sinon.assert.calledWith(openExternal, vscode.Uri.file(path.join(dbDoc, "index.html")));

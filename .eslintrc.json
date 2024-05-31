@@ -13,10 +13,12 @@
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 6,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": ["./tsconfig.json", "./webview-ui/tsconfig.json"]
   },
   "plugins": ["@typescript-eslint", "eslint-plugin-tsdoc"],
   "rules": {
+    "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {

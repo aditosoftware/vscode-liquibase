@@ -4,7 +4,6 @@ import * as fs from "fs";
 import path from "path";
 import * as os from "os";
 import { TransferActionForCommand, TransferDataForCommand } from "../../registerLiquibaseCommand";
-import { buildDriverPath } from "./createAndAddConfiguration";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
 
 /**
@@ -17,7 +16,7 @@ export async function testLiquibaseConnection(pConfiguration: LiquibaseConfigura
   const tempFilePath = path.join(tempFolder, "temporary.liquibase.properties");
 
   // create a temporary configuration
-  fs.writeFileSync(tempFilePath, pConfiguration.generateProperties(buildDriverPath), "utf-8");
+  fs.writeFileSync(tempFilePath, pConfiguration.generateProperties(), "utf-8");
 
   // execute the validate command
   await vscode.commands.executeCommand(

@@ -6,6 +6,8 @@ import { PROPERTY_FILE } from "../../input/ConnectionType";
 import { TestUtils } from "./TestUtils";
 import path from "path";
 import * as fs from "fs";
+import * as lbSettings from "../../handleLiquibaseSettings";
+import Sinon from "sinon";
 
 /**
  * Tests the file handleContexts
@@ -37,14 +39,7 @@ suite("handleContexts", () => {
      */
     setup("create dialog values", () => {
       const propertyFile = path.join(tempDir, "data.liquibase.properties");
-      fs.writeFileSync(
-        propertyFile,
-        `
-changelogFile: changelog.xml
-classpath: ${tempDir.replaceAll("\\", "\\\\")}
-      `,
-        { encoding: "utf-8" }
-      );
+      fs.writeFileSync(propertyFile, "changelogFile: changelog.xml", { encoding: "utf-8" });
 
       fs.writeFileSync(
         path.join(tempDir, "changelog.xml"),
@@ -92,8 +87,17 @@ classpath: ${tempDir.replaceAll("\\", "\\\\")}
 `
       );
 
+      Sinon.stub(lbSettings, "getLiquibaseFolder").returns(tempDir);
+
       dialogValues = new DialogValues();
       dialogValues.addValue(PROPERTY_FILE, propertyFile);
+    });
+
+    /**
+     * Restores all sinon stubs.
+     */
+    teardown(() => {
+      Sinon.restore();
     });
 
     /**
@@ -206,7 +210,7 @@ function assertLoadContexts(dialogValues: DialogValues, expectedItems: vscode.Qu
 
   loadContextsFromChangelog(dialogValues)
     .then((result) => {
-      assert.deepStrictEqual(expected, result);
+      assert.deepStrictEqual(result, expected);
 
       done();
     })

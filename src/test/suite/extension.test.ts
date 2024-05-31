@@ -4,9 +4,8 @@ import Sinon from "sinon";
 import { TestUtils } from "./TestUtils";
 import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
-import { getClasspathSeparator } from "../../utilities/osUtilities";
 import { randomUUID } from "crypto";
-import { MariaDbDockerTestUtils } from "./MariaDbDockerTestUtils";
+import { DockerTestUtils } from "./DockerTestUtils";
 
 /**
  * Tests commands of the extension.
@@ -25,7 +24,7 @@ suite("Extension Test Suite", () => {
   /**
    * The existing changelog file in the workspace.
    */
-  const changelogFile = path.join(workspacePath, "liquibase", "changelog.xml");
+  const changelogFile = path.join(workspacePath, ".liquibase", "changelog.xml");
 
   const tag = randomUUID();
   const contextLoaded = "Load all contexts from the changelog file";
@@ -38,8 +37,8 @@ suite("Extension Test Suite", () => {
     this.timeout(60_000);
 
     // start a maria db container and wait for its status
-    MariaDbDockerTestUtils.startContainer();
-    await MariaDbDockerTestUtils.checkContainerStatus();
+    await DockerTestUtils.startContainer();
+    await DockerTestUtils.checkContainerStatus();
 
     fs.mkdirSync(outputFolder);
 
@@ -55,18 +54,9 @@ suite("Extension Test Suite", () => {
     );
 
     const properties = new PropertiesEditor("# written by the tests");
-    properties.insert("username", MariaDbDockerTestUtils.username);
-    properties.insert("password", MariaDbDockerTestUtils.password);
-    properties.insert(
-      "url",
-      `jdbc:mariadb://localhost:${MariaDbDockerTestUtils.port}/${MariaDbDockerTestUtils.dbName}`
-    );
-    properties.insert(
-      "classpath",
-      [path.join(TestUtils.resourcePath, "mariadb-java-client-2.5.3.jar"), path.join(workspacePath, "liquibase")].join(
-        getClasspathSeparator()
-      )
-    );
+    properties.insert("username", DockerTestUtils.username);
+    properties.insert("password", DockerTestUtils.password);
+    properties.insert("url", `jdbc:mariadb://localhost:3310/${DockerTestUtils.dbName}`);
 
     fs.writeFileSync(propertiesFile, properties.format());
 
@@ -78,7 +68,7 @@ suite("Extension Test Suite", () => {
    * Remove the container after all tests.
    */
   suiteTeardown("remove docker container", async () => {
-    await MariaDbDockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer();
   });
 
   /**

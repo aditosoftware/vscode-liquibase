@@ -31,7 +31,6 @@ export async function chooseFileForChangelog(data: LiquibaseConfigurationData): 
       // if the path could not be transformed to a relative path, e.g. when on other drive, then add a new element to the classpath and
       // make a relative path from the new classpathElement
       const directoryOfChosenFile = path.dirname(chosenFile);
-      data.classpath = data.classpath + "\n" + directoryOfChosenFile;
       relativePath = path.relative(directoryOfChosenFile, chosenFile);
     }
 

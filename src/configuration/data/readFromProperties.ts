@@ -2,7 +2,6 @@ import * as fs from "fs";
 import { KeyValuePairObject, getProperties } from "properties-file";
 import { LiquibaseSettings } from "./TransferSettings";
 import { ConfigurationStatus, LiquibaseConfigurationData } from "./LiquibaseConfigurationData";
-import { ClasspathType } from "../../utilities/osUtilities";
 
 /**
  * All possible reference keys.
@@ -19,24 +18,6 @@ const possibleReferenceKeys = [
   "username",
   "url",
 ];
-
-/**
- * Reads just classpath and changelog from any configuration file.
- *
- * @param pPath - the path which should be read
- * @param pClasspathSeparator - the separator in the classpath
- * @returns the classpath and changelog of the file
- */
-export function readChangelogAndClasspathFile(
-  pPath: string,
-  pClasspathSeparator: ClasspathType
-): { classpath?: string[]; changelog?: string } {
-  const liquibaseProperties = readProperties(pPath);
-
-  const classpath: string[] | undefined = liquibaseProperties["classpath"]?.split(pClasspathSeparator) ?? undefined;
-  const changelog: string | undefined = liquibaseProperties["changelogFile"];
-  return { classpath, changelog };
-}
 
 /**
  * Reads the `changelogFile` element of the file.
@@ -97,22 +78,19 @@ export function readPossibleReferenceValues(pPath: string): string[] {
  * @param pName - the name of the configuration
  * @param pPath - the path of the file
  * @param pLiquibaseSettings - the settings used for creating and updating the configuration
- * @param classpathSeparator - the separator in the classpath. This is depending on OS.
  * @returns the loaded content
  */
 export function readFullValues(
   pName: string,
   pPath: string,
-  pLiquibaseSettings: LiquibaseSettings,
-  classpathSeparator: ClasspathType
+  pLiquibaseSettings: LiquibaseSettings  
 ): LiquibaseConfigurationData {
   // read the liquibase properties from a file
   const liquibaseProperties = readProperties(pPath);
 
   const data = LiquibaseConfigurationData.createDefaultData(
     pLiquibaseSettings,
-    ConfigurationStatus.EDIT,
-    classpathSeparator
+    ConfigurationStatus.EDIT
   );
   data.name = pName;
 

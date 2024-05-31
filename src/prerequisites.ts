@@ -37,11 +37,10 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   if (!context.globalState.get("liquibase-first-activation")) {
     // Perform one-time setup tasks (e.g., download files)
     Logger.getLogger().info({ message: "Liquibase was executed for the first time" });
-    // TODO fehlendes await ok?
-    downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
+    await downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
 
     // Mark first activation as completed
-    context.globalState.update("liquibase-first-activation", true);
+    await context.globalState.update("liquibase-first-activation", true);
   }
 
   // Check beforehand if action is ready to be used
@@ -72,14 +71,18 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
       message: `Required file(s) ${missingFiles.join(", ")} are missing. Trying to download the missing files.`,
       notifyUser: true,
     });
-    // TODO fehledes await / return ok?
-    downloadLiquibaseFiles(resourcePath, missingUrls).then(() => {
-      Logger.getLogger().info({
-        message: `Successfully downloaded all the missing files to ${resourcePath}`,
-        notifyUser: true,
-      });
-    });
+    downloadLiquibaseFiles(resourcePath, missingUrls)
+      .then(() => {
+        Logger.getLogger().info({
+          message: `Successfully downloaded all the missing files to ${resourcePath}`,
+          notifyUser: true,
+        });
+      })
+      .catch((error) => Logger.getLogger().error({ message: "error downloading any liquibase file", error }));
   }
+
+  // log a message after all prerequisites to show that the activate was done correctly
+  Logger.getLogger().info({ message: "Liquibase extension was initialized correctly" });
 }
 
 /**
@@ -89,14 +92,12 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
  */
 async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: string[]): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    try {
-      Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))));
-      // TODO resolve ohne das innere Promise abzuwarten ok?
-      resolve();
-    } catch (error) {
-      Logger.getLogger().error({ message: "downloadLiquibaseFiles threw an error", error });
-      reject(error);
-    }
+    Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))))
+      .then(() => resolve())
+      .catch((error) => {
+        Logger.getLogger().error({ message: "downloadLiquibaseFiles threw an error", error });
+        reject(error);
+      });
   });
 }
 
@@ -120,14 +121,4 @@ function getRequiredFiles(): Map<string, string> {
     requiredFiles.set(value.getFileName(), value.urlForDownload);
   });
   return requiredFiles;
-}
-
-/**
- * Builds the classpath by combining all desired jars into on array.
- * @param rootPath - the root path where all the classpath elements are downloaded
- * @param jars - the jar names that should be included in the path
- * @returns a combined array of all jar paths, starting with the root path
- */
-export function buildClasspath(rootPath: string, ...jars: string[]): string[] {
-  return jars.map((pJarName) => path.join(rootPath, pJarName));
 }

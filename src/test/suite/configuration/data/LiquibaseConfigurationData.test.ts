@@ -21,12 +21,6 @@ suite("LiquibaseConfigurationData", () => {
         getActualValue: (data: LiquibaseConfigurationData) => data.changelogFile,
       },
       {
-        key: "classpath",
-        value: "classpath1;classpath2;classpath3",
-        expectedValue: "classpath1\nclasspath2\nclasspath3",
-        getActualValue: (data: LiquibaseConfigurationData) => data.classpath,
-      },
-      {
         key: "username",
         value: "admin",
         getActualValue: (data: LiquibaseConfigurationData) => data.databaseConnection.username,
@@ -47,14 +41,6 @@ suite("LiquibaseConfigurationData", () => {
         key: "referenceChangelogFile",
         value: "myValue",
         getActualValue: (data: LiquibaseConfigurationData) => data.changelogFile,
-      },
-
-      // This key does not exists in reference, but de-referenced it will be set to the normal value
-      {
-        key: "referenceClasspath",
-        value: "classpath1;classpath2;classpath3",
-        expectedValue: "classpath1\nclasspath2\nclasspath3",
-        getActualValue: (data: LiquibaseConfigurationData) => data.classpath,
       },
       {
         key: "referenceUsername",
@@ -84,10 +70,7 @@ suite("LiquibaseConfigurationData", () => {
 
         liquibaseConfigurationData.handleValueFromLiquibaseConfiguration(pArgument.key, pArgument.value);
 
-        assert.deepStrictEqual(
-          pArgument.getActualValue(liquibaseConfigurationData),
-          pArgument.expectedValue ?? pArgument.value
-        );
+        assert.deepStrictEqual(pArgument.getActualValue(liquibaseConfigurationData), pArgument.value);
       });
     });
 
@@ -188,7 +171,7 @@ referencePassword = ${passwordValue}`;
        * Tests that the disguising of passwords work.
        */
       test("should work with disguised password", () => {
-        const actual = liquibaseConfigurationData.generateProperties(() => undefined, true);
+        const actual = liquibaseConfigurationData.generateProperties(true);
 
         assert.deepStrictEqual(actual, expected("***"));
       });
@@ -198,7 +181,7 @@ referencePassword = ${passwordValue}`;
        */
       [false, undefined].forEach((pArgument) => {
         test(`should work with not disguised password (${pArgument})`, () => {
-          const actual = liquibaseConfigurationData.generateProperties(() => undefined, pArgument);
+          const actual = liquibaseConfigurationData.generateProperties(pArgument);
 
           assert.deepStrictEqual(actual, expected(password));
         });
@@ -215,26 +198,20 @@ changelogFile = myChangelogFile
 driver = org.mariadb.jdbc.Driver
 # configuration for the reference database
 referenceDriver = org.postgresql.Driver
-# Specifies the directories and JAR files to search for changelog files and custom extension classes.
-# To separate multiple directories, use a semicolon (;) on Windows or a colon (:) on Linux or MacOS.
-classpath = path1:path2:path3:mariadb-java-client-2.5.3.jar:postgresql-42.6.0.jar
 # additional configuration values
 lorem = ipsum
 dolor = sit`;
 
       const liquibaseConfigurationData = TestUtils.createDummyLiquibaseConfigurationData();
-      liquibaseConfigurationData.classpathSeparator = ":";
 
       liquibaseConfigurationData.handleValueFromLiquibaseConfiguration("changelogFile", "myChangelogFile");
-      // This classpath has duplicate elements, elements with quotation marks and some empty lines. All of those this are special handling
-      liquibaseConfigurationData.handleValueFromLiquibaseConfiguration("classpath", 'path1\n"path2"\npath3\n\npath1\n');
       // set any reference driver
       liquibaseConfigurationData.handleValueFromLiquibaseConfiguration("referenceDriver", "org.postgresql.Driver");
       // set some additional values
       liquibaseConfigurationData.handleValueFromLiquibaseConfiguration("lorem", "ipsum");
       liquibaseConfigurationData.handleValueFromLiquibaseConfiguration("dolor", "sit");
 
-      const actual = liquibaseConfigurationData.generateProperties((driver) => driver.getFileName());
+      const actual = liquibaseConfigurationData.generateProperties();
 
       assert.deepStrictEqual(actual, expected);
     });

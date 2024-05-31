@@ -4,29 +4,18 @@ import { Logger } from "@aditosoftware/vscode-logging";
 import * as fs from "fs";
 import { ConnectionType, PROPERTY_FILE } from "../input/ConnectionType";
 import { cacheHandler } from "../extension";
-
-/**
- * The option to remove the cache.
- */
-export const cache = "Remove recently loaded elements";
-
-/**
- * The option to remove the setting entry.
- */
-export const setting = "Remove configuration from settings";
-
-/**
- * The option to remove everything.
- */
-export const deleteAll = "Delete configuration";
+import { RemoveConfigurationOptions } from "../constants";
 
 /**
  * Information what will be deleted when choosing each option.
  */
 const whatDeleted = new Map<string, string[]>([
-  [cache, [cache]],
-  [setting, [cache, setting]],
-  [deleteAll, [cache, setting, deleteAll]],
+  [RemoveConfigurationOptions.CACHE, [RemoveConfigurationOptions.CACHE]],
+  [RemoveConfigurationOptions.SETTING, [RemoveConfigurationOptions.CACHE, RemoveConfigurationOptions.SETTING]],
+  [
+    RemoveConfigurationOptions.DELETE_ALL,
+    [RemoveConfigurationOptions.CACHE, RemoveConfigurationOptions.SETTING, RemoveConfigurationOptions.DELETE_ALL],
+  ],
 ]);
 
 /**
@@ -49,15 +38,15 @@ export async function removeConfiguration(): Promise<void> {
       generateItems: () => {
         return [
           {
-            label: cache,
+            label: RemoveConfigurationOptions.CACHE,
             detail: "Configuration file and setting will still exist.",
           },
           {
-            label: setting,
+            label: RemoveConfigurationOptions.SETTING,
             detail: "Configuration file will still exist, but the recently loaded elements will be also deleted.",
           },
           {
-            label: deleteAll,
+            label: RemoveConfigurationOptions.DELETE_ALL,
           },
         ];
       },
@@ -126,15 +115,15 @@ function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<
     const deleteOptions = whatDeleted.get(deletionMode[0]);
 
     if (foundKey && deleteOptions) {
-      if (deleteOptions.includes(cache)) {
+      if (deleteOptions.includes(RemoveConfigurationOptions.CACHE)) {
         // remove the cache
         cacheHandler.removeConnectionsFromCache([path]);
       }
-      if (deleteOptions.includes(setting)) {
+      if (deleteOptions.includes(RemoveConfigurationOptions.SETTING)) {
         // remove the setting
         delete pJsonData[foundKey];
       }
-      if (deleteOptions.includes(deleteAll)) {
+      if (deleteOptions.includes(RemoveConfigurationOptions.DELETE_ALL)) {
         // remove the configuration file
         fs.rmSync(path);
       }

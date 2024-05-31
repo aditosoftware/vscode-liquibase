@@ -8,6 +8,8 @@ import assert from "assert";
 import { ConfirmationDialog, DialogValues, QuickPick } from "@aditosoftware/vscode-input";
 import { PROPERTY_FILE } from "../../../input/ConnectionType";
 import { TestUtils } from "../TestUtils";
+import { RemoveCacheOptions } from "../../../constants";
+import * as configReader from "../../../configuration/handle/readConfiguration";
 
 /**
  * Tests the cache remover.
@@ -122,6 +124,13 @@ suite("CacheRemover tests", () => {
         four: "path/to/connection/four.liquibase.properties",
       };
 
+      Sinon.stub(configReader, "readConfiguration").resolves({
+        one: "path/to/connection/one.liquibase.properties",
+        two: "path/to/connection/two.liquibase.properties",
+        three: "path/to/connection/three.liquibase.properties",
+        four: "path/to/connection/four.liquibase.properties",
+      });
+
       // init the stubs
       showDialogQuickPick = Sinon.stub(QuickPick.prototype, "showDialog").callThrough();
 
@@ -132,8 +141,7 @@ suite("CacheRemover tests", () => {
      * Restore the stubs after each test.
      */
     teardown("restore stubs", () => {
-      showDialogQuickPick.restore();
-      showDialogConfirmationDialog.restore();
+      Sinon.restore();
     });
 
     /**
@@ -161,8 +169,8 @@ suite("CacheRemover tests", () => {
      * Tests that the generation of properties for the cache removing works correctly.
      * This method is explicitly tested, because there is no easy way to test it correctly in the program flow.
      */
-    test("should generatePropertiesForCacheRemoving", () => {
-      const result = cacheRemover["generatePropertiesForCacheRemoving"]({
+    test("should generatePropertiesForCacheRemoving", async () => {
+      const result = await cacheRemover["generatePropertiesForCacheRemoving"]({
         "path/to/connection/one.liquibase.properties": {
           contexts: ["a", "b"],
         },
@@ -218,7 +226,7 @@ suite("CacheRemover tests", () => {
         expected: "This will remove the whole file.",
         dialogValues: () => {
           const dialogValues = new DialogValues();
-          dialogValues.addValue(CacheRemover["removeOption"], CacheRemover["wholeCache"]);
+          dialogValues.addValue(CacheRemover["removeOption"], RemoveCacheOptions.WHOLE_CACHE);
 
           return dialogValues;
         },
@@ -229,7 +237,7 @@ suite("CacheRemover tests", () => {
           "This will remove everything that is saved as recently loaded values for the selected connections.\n - one\n - four",
         dialogValues: () => {
           const dialogValues = new DialogValues();
-          dialogValues.addValue(CacheRemover["removeOption"], CacheRemover["removeConnection"]);
+          dialogValues.addValue(CacheRemover["removeOption"], RemoveCacheOptions.REMOVE_CONNECTION);
           dialogValues.addValue(PROPERTY_FILE, ["one", "four"]);
 
           return dialogValues;
@@ -313,7 +321,7 @@ suite("CacheRemover tests", () => {
      * Tests that the removing of the whole cache works.
      */
     test("should work with remove option whole cache", (done) => {
-      showDialogQuickPick.resolves([CacheRemover["wholeCache"]]);
+      showDialogQuickPick.resolves([RemoveCacheOptions.WHOLE_CACHE]);
       showDialogConfirmationDialog.resolves(true);
 
       cacheRemover
@@ -335,7 +343,7 @@ suite("CacheRemover tests", () => {
     test("should work with remove option connection", (done) => {
       showDialogQuickPick
         .onFirstCall()
-        .resolves([CacheRemover["removeConnection"]])
+        .resolves([RemoveCacheOptions.REMOVE_CONNECTION])
         .onSecondCall()
         .resolves(["one", "three"]);
       showDialogConfirmationDialog.resolves(true);

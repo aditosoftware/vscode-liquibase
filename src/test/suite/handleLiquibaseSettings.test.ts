@@ -85,12 +85,17 @@ suite("handleLiquibaseSettings", () => {
         vscode.workspace
           .getConfiguration()
           .update("liquibase.defaultDatabaseForConfiguration", pArgument.newValue)
-          .then(() => {
-            // and then call the method under test
-            assert.deepStrictEqual(pArgument.expected, getDefaultDatabaseForConfiguration());
+          .then(
+            () => {
+              // and then call the method under test
+              assert.deepStrictEqual(pArgument.expected, getDefaultDatabaseForConfiguration());
 
-            done();
-          });
+              done();
+            },
+            (reject) => {
+              assert.fail(reject);
+            }
+          );
       });
     });
   });

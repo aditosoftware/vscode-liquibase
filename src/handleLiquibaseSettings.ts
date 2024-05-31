@@ -86,3 +86,12 @@ export function getDefaultDatabaseForConfiguration(): string {
 
   return defaultDatabaseForConfiguration ? defaultDatabaseForConfiguration : NO_PRE_CONFIGURED_DRIVER;
 }
+
+/**
+ * Returns the setting if the output channel should be cleared on start.
+ * @returns `true` when the output channel should be cleared on start, otherwise `false`
+ */
+export function getClearOutputChannelOnStartSetting(): boolean {
+  const configuration = vscode.workspace.getConfiguration(configurationName);
+  return configuration.get("clearOutputChannelOnStart", true);
+}

@@ -24,8 +24,7 @@ suite("MessageData", () => {
             defaultDatabaseForConfiguration: "MariaDB",
             liquibaseDirectoryInProject: "",
           },
-          ConfigurationStatus.NEW,
-          ";"
+          ConfigurationStatus.NEW
         )
       );
 

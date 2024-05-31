@@ -2,10 +2,10 @@ import * as path from "path";
 import * as vscode from "vscode";
 import { spawn, spawnSync } from "child_process";
 import { Logger } from "@aditosoftware/vscode-logging";
-import { buildClasspath, gson, liquibaseCore, picocli, snakeYaml } from "./prerequisites";
 import * as fs from "fs";
 import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
+import { getClearOutputChannelOnStartSetting, getLiquibaseFolder } from "./handleLiquibaseSettings";
 
 class CustomError extends Error {
   stdout?: string;
@@ -39,7 +39,9 @@ export function executeJar(
           return;
         }
 
-        const cp = buildClasspath(rootPath, liquibaseCore, picocli, snakeYaml).join(getClasspathSeparator());
+        // classpath elements needed for execution of the jar
+        // the classpath is built from the root path and the workspace folder
+        const cp = [path.join(rootPath, "*"), getLiquibaseFolder()].join(getClasspathSeparator());
 
         const argsArray: string[] = [
           // force liquibase to use english locale, because other I18N are not good
@@ -55,6 +57,11 @@ export function executeJar(
         ];
 
         const childProcess = spawn(javaExecutable, argsArray);
+        const startTime = new Date().getTime();
+
+        if (getClearOutputChannelOnStartSetting()) {
+          Logger.getLogger().clear();
+        }
 
         Logger.getLogger().info({ message: `Liquibase command '${operation}' will be executed` });
         Logger.getLogger().info({ message: `${javaExecutable} ${argsArray.join(" ")}` });
@@ -88,6 +95,17 @@ export function executeJar(
           Logger.getLogger().error({ message: "Child process encountered an error", error });
           reject(error);
         });
+
+        childProcess.on("exit", () => {
+          const duration = new Date().getTime() - startTime;
+          const minutes = Math.floor(duration / 60000);
+          const seconds = Math.floor((duration % 60000) / 1000);
+          const milliseconds = duration % 1000;
+          const formattedDuration = `${minutes.toString().padStart(2, "0")}:${seconds
+            .toString()
+            .padStart(2, "0")}:${milliseconds.toString().padStart(3, "0")}`;
+          Logger.getLogger().info({ message: `Liquibase command '${operation}' finished in ${formattedDuration} min` });
+        });
       });
     }
   );
@@ -117,18 +135,17 @@ export async function loadContextsFromChangelogFile(
       return [];
     }
 
-    // jar from lib directory
-    const extendedJar = path.join(libFolder, "liquibase-extended-cli.jar");
-
     // classpath elements needed for execution of the jar
-    const cp = [extendedJar, ...buildClasspath(resourcePath, picocli, liquibaseCore, snakeYaml, gson)];
+    const cp = [path.join(resourcePath, "*"), path.join(libFolder, "*"), getLiquibaseFolder()].join(
+      getClasspathSeparator()
+    );
 
     // all arguments for the jar execution
     const args = [
       // set encoding to utf-8, because otherwise special characters will not be displayed correctly from liquibase
       "-Dfile.encoding=UTF-8",
       "-cp",
-      cp.join(getClasspathSeparator()),
+      cp,
       "de.adito.context.ContextResolver",
       changelogFile,
     ];
@@ -141,7 +158,9 @@ export async function loadContextsFromChangelogFile(
 
       Logger.getLogger().info({ message: `Fetching of contexts finished with ${result.status}` });
       // Log every output (stdout, stderr) from the command for later information.
-      Logger.getLogger().debug({ message: `${sanitizeOutput(result.output.toString())}` });
+      if (result.output) {
+        Logger.getLogger().debug({ message: `${sanitizeOutput(result.output.toString())}` });
+      }
 
       if (result.status === 0) {
         // command execution was successful, trim the result and transform it to the array

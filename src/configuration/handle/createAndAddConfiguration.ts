@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import path from "path";
-import { Driver } from "../drivers";
 import { getLiquibaseConfigurationPath } from "../../handleLiquibaseSettings";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
@@ -9,7 +8,6 @@ import { MessageType } from "../transfer";
 import { readLiquibaseConfigurationNames, updateConfiguration } from "./readConfiguration";
 import { openDocument } from "../../utilities/vscodeUtilities";
 import { Logger } from "@aditosoftware/vscode-logging";
-import { resourcePath } from "../../extension";
 
 /**
  * The file ending of all liquibase configuration files.
@@ -81,7 +79,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
     fileName = fileName + fileEnding;
   }
 
-  const properties: string = pConfigurationData.generateProperties(buildDriverPath);
+  const properties: string = pConfigurationData.generateProperties();
 
   const propertiesFilePath = path.join(configurationPath, fileName);
 
@@ -101,18 +99,6 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
 
   // Transfer successful saving back to webview
   LiquibaseConfigurationPanel.transferMessage(MessageType.SAVING_SUCCESSFUL, pConfigurationData);
-}
-
-/**
- * Builds the driver path for the classpath.
- *
- * @param pDriver - the driver that need to be included in the classpath.
- * @returns the generated absolute path to the driver file
- */
-export function buildDriverPath(pDriver: Driver): string | undefined {
-  if (resourcePath) {
-    return path.join(resourcePath, pDriver.getFileName());
-  }
 }
 
 /**

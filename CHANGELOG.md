@@ -12,6 +12,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Loading dialog for any long loading processes
 - Indicator in the context dialog where the context was loaded from
 - Reload option for all loading dialogs
+- Setting to clear the output "clearOutputChannelOnStart" was added
+- Added execution time for commands
+- Added a "help"-button to the "Advanced properties" inside the visual Liquibase configurator
 
 ### Changed
 
@@ -20,11 +23,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Wording improved: changed cache to recently loaded
 - Moved logging into extra dependency
 - database url can be inputted in parts
+- removed "Classpath" from the visual Liquibase configurator 
+- changed "Additional Elements" to "Advanced properties"
 
 ### Fixed
 
 - Fixed a typo in the settings
 - Removed a false second changelog selection at the generate changelog command
+- Parameters for changelogPath and searchPath were alternated to be based off of the opened workspace
+- "Advanced properties" now only allows key that are not included in the visual Liquibase configurator
 
 ## 0.0.4
 
