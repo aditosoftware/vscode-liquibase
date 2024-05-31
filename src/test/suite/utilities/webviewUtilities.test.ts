@@ -11,9 +11,8 @@ suite("webviewUtilities", () => {
    * Tests the url function.
    */
   suite("getUri", () => {
-
     /**
-     * Tests that an correct uri is returned. 
+     * Tests that an correct uri is returned.
      */
     test("should get uri", () => {
       const uri = vscode.Uri.file("/my/uri");
@@ -38,7 +37,7 @@ suite("webviewUtilities", () => {
       const actual = getNonce();
 
       assert.strictEqual(actual.length, 32);
-      assert.ok(/^[a-zA-Z0-9]+$/.test(actual));
+      assert.match(actual, /^[a-zA-Z0-9]+$/);
     });
   });
 });
