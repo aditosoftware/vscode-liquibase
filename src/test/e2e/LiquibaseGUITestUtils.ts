@@ -7,7 +7,6 @@ import {
   NotificationType,
   OutputView,
   SideBarView,
-  StatusBar,
   TextEditor,
   VSBrowser,
   Workbench,
@@ -80,8 +79,16 @@ export class LiquibaseGUITestUtils {
     await new EditorView().closeAllEditors();
 
     // open our output panel
+    await LiquibaseGUITestUtils.openOutputPanel();
+
+    return configurationName;
+  }
+
+  /**
+   * Opens the output panel with the channel Liquibase.
+   */
+  private static async openOutputPanel(): Promise<void> {
     if (!this.outputPanel) {
-      // try a bit longer to open the output channel
       await VSBrowser.instance.driver.wait(
         async () => {
           try {
@@ -93,12 +100,10 @@ export class LiquibaseGUITestUtils {
             return false;
           }
         },
-        5_000,
+        10_000,
         "showing the output channel"
       );
     }
-
-    return configurationName;
   }
 
   /**
@@ -168,31 +173,17 @@ export class LiquibaseGUITestUtils {
       return;
     }
 
-    // check if we have any success message for downloading all drivers
-    const success = await this.waitForCommandExecution("Successfully downloaded all the missing files to", false);
-    if (success) {
-      this.extensionActive = true;
-      return;
-    }
+    await this.openOutputPanel();
 
-    const result = await VSBrowser.instance.driver.wait(
+    await VSBrowser.instance.driver.wait(
       async () => {
-        return await new StatusBar().getItem("Activating Extensions...");
-      },
-      4000,
-      "waiting for extension to activate"
-    );
+        const text = await this.outputPanel.getText();
 
-    if (result) {
-      await VSBrowser.instance.driver.wait(
-        async () => {
-          const activatingDone = await new StatusBar().getItem("Activating Extensions...");
-          return typeof activatingDone === "undefined";
-        },
-        10_000,
-        "waiting for extension activation to be done"
-      );
-    }
+        return text.includes("Liquibase extension was initialized correctly");
+      },
+      5000,
+      "waiting for initialize message to occur"
+    );
 
     this.extensionActive = true;
   }
@@ -284,20 +275,24 @@ export class LiquibaseGUITestUtils {
     const messages = new Set<string>();
 
     try {
-      return await VSBrowser.instance.driver.wait(async () => {
-        try {
-          const notifications = await this.notificationExists(text);
-          if (notifications.notification) {
-            return true;
-          } else if (notifications.otherNotification) {
-            notifications.otherNotification.forEach((pNotification) => messages.add(pNotification));
+      return await VSBrowser.instance.driver.wait(
+        async () => {
+          try {
+            const notifications = await this.notificationExists(text);
+            if (notifications.notification) {
+              return true;
+            } else if (notifications.otherNotification) {
+              notifications.otherNotification.forEach((pNotification) => messages.add(pNotification));
+            }
+            return false;
+          } catch (error) {
+            console.error(error);
+            return false;
           }
-          return false;
-        } catch (error) {
-          console.error(error);
-          return false;
-        }
-      }, 10_000, 'waiting for the command execution to be done');
+        },
+        10_000,
+        "waiting for the command execution to be done"
+      );
     } catch (err) {
       console.error(err);
       if (failOnWaitExceeded) {

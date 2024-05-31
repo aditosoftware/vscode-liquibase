@@ -80,6 +80,9 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
       })
       .catch((error) => Logger.getLogger().error({ message: "error downloading any liquibase file", error }));
   }
+
+  // log a message after all prerequisites to show that the activate was done correctly
+  Logger.getLogger().info({ message: "Liquibase extension was initialized correctly" });
 }
 
 /**
