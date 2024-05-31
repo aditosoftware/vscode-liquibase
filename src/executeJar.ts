@@ -159,7 +159,7 @@ export async function loadContextsFromChangelogFile(
       Logger.getLogger().info({ message: `Fetching of contexts finished with ${result.status}` });
       // Log every output (stdout, stderr) from the command for later information.
       if (result.output) {
-        Logger.getLogger().debug({ message: `${sanitizeOutput(result.output.toString())}` });
+        Logger.getLogger().debug({ message: result.output.toString() });
       }
 
       if (result.status === 0) {
@@ -189,7 +189,7 @@ export async function loadContextsFromChangelogFile(
         Logger.getLogger().error({
           message: `Error while fetching contexts`,
           // adding the whole stderr as stack. This will put everything in the error log
-          error: { stack: sanitizeOutput(result.stderr) },
+          error: { stack: result.stderr },
           notifyUser: true,
         });
         reject(`Error ${result.status}, ${result.error?.message}\n ${result.stderr}`);
@@ -216,19 +216,6 @@ function getJavaExecutable(reject: (reason?: unknown) => void): string | undefin
   }
 
   return path.join(javaHome, "bin", "java");
-}
-
-/**
- * Sanitizes any output that can include ANSI Escape Codes. These codes can do in some consoles color formats.
- * In the VSCode output panel or any log file, these escape codes can not be interpreted correctly.
- * Because of these two outputs, we are removing these elements.
- *
- * @param output - the output given that has potentially unsanitized elements
- * @returns the sanitized output
- */
-function sanitizeOutput(output: string): string {
-  // eslint-disable-next-line no-control-regex
-  return output.replace(/\x1b\[[0-9;]*[mG]/g, "");
 }
 
 /**
