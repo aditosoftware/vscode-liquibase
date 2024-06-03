@@ -2,6 +2,11 @@ import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
+ * The number of changelogs that should maximally be there for one connection.
+ */
+const MAX_CHANGELOGS_IN_CACHE = 5;
+
+/**
  * Any connection in the cache.
  */
 export interface Connection {
@@ -9,6 +14,26 @@ export interface Connection {
    * The cached contexts of the cache.
    */
   contexts: string[];
+
+  /**
+   * The recently used changelog elements.
+   */
+  changelogs: Changelog[];
+}
+
+/**
+ * A recently used changelog element.
+ */
+interface Changelog {
+  /**
+   * The timestamp of the last used time.
+   */
+  lastUsed: number;
+
+  /**
+   * The path to the changelog.
+   */
+  path: string;
 }
 
 /**
@@ -72,6 +97,30 @@ export class CacheHandler {
   }
 
   /**
+   * Reads the cache. If there is no element for the given connection location, then an empty element will be added.
+   * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
+   * @returns the read cache
+   */
+  private readCacheAndAddElement(connectionLocation: string): Cache {
+    const cache = this.readCache();
+
+    if (!cache[connectionLocation]) {
+      // if no cache is there for the connection, then add an element
+      cache[connectionLocation] = {
+        contexts: [],
+        changelogs: [],
+      };
+    }
+
+    if (!cache[connectionLocation].changelogs) {
+      // changelogs were added later to the cache, just add them, if there were none
+      cache[connectionLocation].changelogs = [];
+    }
+
+    return cache;
+  }
+
+  /**
    * Reads the cache from the cache location in the file system.
    * If there was already a cache loaded, then the stored object will be returned.
    *
@@ -108,6 +157,23 @@ export class CacheHandler {
 
     if (this.cache[connectionLocation]) {
       return this.cache[connectionLocation].contexts.sort((a, b) => a.localeCompare(b));
+    } else {
+      return [];
+    }
+  }
+
+  /**
+   * Reads the changelogs from the cache.
+   * @param connectionLocation - the location of the connection (= liquibase.properties file). This is used as a key in cache
+   * @returns the absolute path of the changelogs, already ordered by last used descending
+   */
+  readChangelogs(connectionLocation: string): string[] {
+    const cache = this.readCache();
+
+    if (cache[connectionLocation] && cache[connectionLocation].changelogs) {
+      return cache[connectionLocation].changelogs
+        .toSorted((a, b) => b.lastUsed - a.lastUsed)
+        .map((pChangelog) => pChangelog.path);
     } else {
       return [];
     }

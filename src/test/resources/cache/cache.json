@@ -4,7 +4,8 @@
       "prod",
       "qs",
       "dev"
-    ]
+    ],
+    "changelogs": []
   },
   "/path/to/project/data/liquibase/system.liquibase.properties": {
     "contexts": [
@@ -14,6 +15,7 @@
       "c2",
       "c6",
       "c4"
-    ]
+    ],
+    "changelogs": []
   }
 }
