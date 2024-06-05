@@ -1,30 +1,70 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": 6,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:jsdoc/recommended-typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "project": ["./tsconfig.json", "./webview-ui/tsconfig.json"]
+  },
+  "plugins": ["@typescript-eslint", "eslint-plugin-tsdoc", "jsdoc"],
+  "rules": {
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/explicit-function-return-type": [
+      "error",
+      {
+        "allowExpressions": true,
+        "allowTypedFunctionExpressions": true,
+        "allowHigherOrderFunctions": true
+      }
     ],
-    "rules": {
-        "@typescript-eslint/naming-convention": [
-            "warn",
-            {
-                "selector": "import",
-                "format": [ "camelCase", "PascalCase" ]
-            }
-        ],
-        "@typescript-eslint/semi": "warn",
-        "curly": "warn",
-        "eqeqeq": "warn",
-        "no-throw-literal": "warn",
-        "semi": "off"
-    },
-    "ignorePatterns": [
-        "out",
-        "dist",
-        "**/*.d.ts"
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "selector": "import",
+        "format": ["camelCase", "PascalCase"]
+      }
+    ],
+    "@typescript-eslint/semi": "warn",
+    "curly": "warn",
+    "eqeqeq": "warn",
+    "no-throw-literal": "warn",
+    "tsdoc/syntax": "warn",
+    "jsdoc/tag-lines": ["warn", "never", { "startLines": 1 }],
+    "jsdoc/no-blank-block-descriptions": "warn",
+    "jsdoc/check-tag-names": ["warn", { "definedTags": ["remarks"] }],
+    "jsdoc/require-param": ["warn", { "checkDestructured": false }],
+    "jsdoc/check-param-names": ["warn", { "checkDestructured": false }],
+    "jsdoc/check-indentation": "warn",
+    "jsdoc/check-line-alignment": "warn",
+    "jsdoc/require-jsdoc": [
+      "warn",
+      {
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true,
+          "ClassExpression": true,
+          "ArrowFunctionExpression": false,
+          "FunctionExpression": false
+        }
+      }
     ]
+  },
+  "ignorePatterns": ["out", "dist", "**/*.d.ts", "build"],
+  "settings": {
+    "jsdoc": {
+      "mode": "typescript"
+    }
+  }
 }

@@ -1,15 +1,47 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "files.exclude": {
-        "out": false // set this to true to hide the "out" folder with the compiled JS files
-    },
-    "search.exclude": {
-        "out": true // set this to false to include "out" folder in search results
-    },
-    // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-    "typescript.tsc.autoDetect": "off",
-    "sonarlint.connectedMode.project": {
-        "connectionId": "SonarQube",
-        "projectKey": "plattform-designer-vscode-liquibase"
-    }
+  "files.exclude": {
+    "out": false // set this to true to hide the "out" folder with the compiled JS files
+  },
+  "search.exclude": {
+    "out": true // set this to false to include "out" folder in search results
+  },
+  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+  "typescript.tsc.autoDetect": "off",
+  "sonarlint.connectedMode.project": {
+    "connectionId": "SonarQube",
+    "projectKey": "plattform-designer-vscode-liquibase"
+  },
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#88d042",
+    "activityBar.background": "#88d042",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#337ecc",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#88d042",
+    "statusBar.background": "#6fb32c",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#568a22",
+    "statusBarItem.remoteBackground": "#6fb32c",
+    "statusBarItem.remoteForeground": "#15202b",
+    "titleBar.activeBackground": "#6fb32c",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#6fb32c99",
+    "titleBar.inactiveForeground": "#15202b99",
+    "editorGroup.border": "#88d042",
+    "panel.border": "#88d042",
+    "sideBar.border": "#88d042",
+    "statusBar.border": "#6fb32c",
+    "statusBar.debuggingBackground": "#702cb3",
+    "statusBar.debuggingBorder": "#702cb3",
+    "statusBar.debuggingForeground": "#e7e7e7",
+    "tab.activeBorder": "#88d042",
+    "titleBar.border": "#6fb32c"
+  },
+  "peacock.color": "#6fb32c",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+  "editor.tabSize": 2,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

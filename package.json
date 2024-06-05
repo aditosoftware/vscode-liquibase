@@ -1,41 +1,328 @@
 {
   "name": "liquibase",
   "displayName": "Liquibase",
-  "description": "execute liquibase changelogs",
-  "version": "0.0.1",
+  "description": "Execute liquibase changelogs and create liquibase.properties",
+  "version": "0.0.4",
+  "preview": true,
   "engines": {
     "vscode": "^1.84.0"
   },
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git"
+  },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "liquibase.helloWorld",
-        "title": "Hello World"
+        "command": "liquibase.initialize",
+        "title": "Load all resources for the extension",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.update",
+        "title": "Update",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.drop-all",
+        "title": "Drop-all",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.validate",
+        "title": "Validate",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.status",
+        "title": "Status",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.diff",
+        "title": "Diff",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.db-doc",
+        "title": "Generate database documentation (db-doc)",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.generate-changelog",
+        "title": "Generate Changelog",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.unexpected-changesets",
+        "title": "Unexpected Changesets",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.changelog-sync",
+        "title": "Changelog Sync",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.clear-checksums",
+        "title": "Clear Checksums",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.history",
+        "title": "History",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.tag",
+        "title": "Create Tag",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.tag-exists",
+        "title": "Tag Exists",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.rollback",
+        "title": "Rollback to Tag",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.update-sql",
+        "title": "Generate SQL File for incoming changes",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.createLiquibaseConfiguration",
+        "title": "Create Liquibase Configuration",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.editExistingLiquibaseConfiguration",
+        "title": "Edit existing Liquibase Configuration",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.addExistingConfiguration",
+        "title": "Add existing liquibase.properties to the configuration",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.removeExistingConfiguration",
+        "title": "Remove existing liquibase.properties from the configuration",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.openCacheFile",
+        "title": "Opens the file with the recently loaded elements",
+        "category": "Liquibase: Cache"
+      },
+      {
+        "command": "liquibase.removeFromCache",
+        "title": "Removes any values from the recently loaded elements",
+        "category": "Liquibase: Cache"
+      }
+    ],
+    "configuration": {
+      "title": "Liquibase",
+      "properties": {
+        "liquibase.configurationPath": {
+          "type": "string",
+          "default": "data/liquibase",
+          "markdownDescription": "Relative path inside the workspace where liquibase configuration should be stored.\nThis folder should not be included in your version control system."
+        },
+        "liquibase.liquibaseFolder": {
+          "type": "string",
+          "markdownDescription": "Relative path inside the workspace, where your liquibase changelog files are located.This location will be added the classpath of newly generated files.\n\nIf there is no path given, then the project itself will be added to classpath.\n\n**Important:** Changing this path after some configurations were created could possible invalidate those configurations. This is, because this folder will be included in classpath of the configuration and and the changelog-file gets a relative path depending on this file."
+        },
+        "liquibase.defaultDatabaseForConfiguration": {
+          "type": "string",
+          "markdownDescription": "The default selected database for creating a new configuration.",
+          "enum": [
+            "NO_PRE_CONFIGURED_DRIVER",
+            "MariaDB",
+            "MySQL",
+            "MS SQL",
+            "PostgreSQL",
+            "Oracle"
+          ],
+          "enumItemLabels": [
+            "no pre-configured driver"
+          ],
+          "default": "NO_PRE_CONFIGURED_DRIVER"
+        },
+        "liquibase.clearOutputChannelOnStart": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Clears the output channel on start of the extension."
+        }
+      }
+    },
+    "submenus": [
+      {
+        "id": "liquibase.commandsMenu",
+        "label": "Liquibase"
+      },
+      {
+        "id": "liquibase.configurationMenu",
+        "label": "Liquibase"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "submenu": "liquibase.commandsMenu",
+          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml || resourceLangId == sql",
+          "group": "Liquibase"
+        },
+        {
+          "submenu": "liquibase.configurationMenu",
+          "when": "resourceLangId == properties",
+          "group": "Liquibase"
+        }
+      ],
+      "editor/context": [
+        {
+          "submenu": "liquibase.commandsMenu",
+          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml || resourceLangId == sql",
+          "group": "Liquibase"
+        },
+        {
+          "submenu": "liquibase.configurationMenu",
+          "when": "resourceLangId == properties",
+          "group": "Liquibase"
+        }
+      ],
+      "liquibase.commandsMenu": [
+        {
+          "command": "liquibase.update"
+        },
+        {
+          "command": "liquibase.validate"
+        },
+        {
+          "command": "liquibase.status"
+        },
+        {
+          "command": "liquibase.db-doc"
+        },
+        {
+          "command": "liquibase.unexpected-changesets"
+        },
+        {
+          "command": "liquibase.changelog-sync"
+        },
+        {
+          "command": "liquibase.rollback"
+        },
+        {
+          "command": "liquibase.update-sql"
+        }
+      ],
+      "liquibase.configurationMenu": [
+        {
+          "command": "liquibase.editExistingLiquibaseConfiguration",
+          "when": "resourceLangId == properties"
+        }
+      ]
+    },
+    "walkthroughs": [
+      {
+        "id": "liquibaseWalkthrough",
+        "title": "Get started with Liquibase",
+        "description": "A short overview how to use the liquibase extension.",
+        "steps": [
+          {
+            "id": "configureSetting",
+            "title": "Configure your settings",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "description": "First, you should configure your settings for the extension.\nAll the settings can be found under Liquibase.\n[Take me to the settings](command:workbench.action.openSettings?%22liquibase.%22)"
+          },
+          {
+            "id": "createLiquibaseProperties",
+            "title": "Create a liquibase property file",
+            "description": "In order to fully use this extension, you should create a liquibase.properties file. This is used for any command and stores the connection values to your database. The graphic editor will support you\nYou should **NOT** add this file to your version control system, because this file can contain sensitive information, such as passwords.\n[Create liquibase.properties](command:liquibase.createLiquibaseConfiguration)",
+            "media": {
+              "markdown": "media/walkthrough/properties.md"
+            },
+            "completionEvents": [
+              "onCommand:liquibase.createLiquibaseConfiguration"
+            ]
+          },
+          {
+            "id": "runFirstUpdate",
+            "title": "Run first command",
+            "description": "Now that you have created your liquibase properties file, you can now execute any command. You could run the `status` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "completionEvents": [
+              "onCommand:liquibase.status"
+            ]
+          },
+          {
+            "id": "learnMoreAboutLiquibase",
+            "title": "Learn more about liquibase",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "description": "Read more about liquibase [in the official documentation](https://docs.liquibase.com/start/home.html).",
+            "completionEvents": [
+              "onLink:https://docs.liquibase.com/start/home.htm"
+            ]
+          }
+        ]
       }
     ]
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
+    "clean": "rimraf ./out",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
-    "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "watch": "tsc --watch -p ./",
+    "clean-compile": "npm run clean && npm run compile",
+    "createTempWorkspace": "copyfiles -u 3 -E -a \"src/test/workspace/**/*\" out/temp/workspace",
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "pretest": "npm run clean-compile && npm run createTempWorkspace",
+    "test": "vscode-test",
+    "test:e2e": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
+    "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
+    "postinstall": "cd webview-ui && npm install && npm run build"
+  },
+  "dependencies": {
+    "@aditosoftware/vscode-input": "^1.0.0",
+    "@aditosoftware/vscode-logging": "^1.0.0",
+    "download": "^8.0.0",
+    "immer": "^10.0.3",
+    "properties-file": "^3.3.18"
   },
   "devDependencies": {
-    "@types/vscode": "^1.84.0",
+    "@types/download": "^8.0.5",
     "@types/mocha": "^10.0.6",
-    "@types/node": "18.x",
-    "@typescript-eslint/eslint-plugin": "^6.13.1",
-    "@typescript-eslint/parser": "^6.13.1",
-    "eslint": "^8.54.0",
-    "typescript": "^5.3.2",
-    "@vscode/test-cli": "^0.0.4",
-    "@vscode/test-electron": "^2.3.8"
+    "@types/node": "20.x",
+    "@types/sinon": "^17.0.3",
+    "@types/vscode": "^1.84.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vscode/test-cli": "^0.0.6",
+    "@vscode/test-electron": "^2.3.9",
+    "concurrently": "^8.2.2",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-jsdoc": "^48.2.7",
+    "eslint-plugin-tsdoc": "^0.2.17",
+    "mariadb": "^3.3.0",
+    "mkdirp": "^3.0.1",
+    "rimraf": "^5.0.5",
+    "sinon": "^17.0.1",
+    "typescript": "^5.3.3",
+    "vscode-extension-tester": "^8.2.0"
   }
 }

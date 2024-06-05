@@ -1,26 +1,501 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
+import * as path from "path";
+import { prerequisites } from "./prerequisites";
+import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
+import { PickPanelConfig, registerLiquibaseCommand } from "./registerLiquibaseCommand";
+import { isExtraQueryForChangelogNeeded, setExtraChangelogCorrectly } from "./readChangelogFile";
+import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
+import {
+  ConfirmationDialog,
+  DialogValues,
+  InputBox,
+  OpenDialog,
+  QuickPick,
+  initializeLogger,
+} from "@aditosoftware/vscode-input";
+import * as os from "os";
+import {
+  addExistingLiquibaseConfiguration,
+  editExistingLiquibaseConfiguration,
+} from "./settings/configurationCommands";
+import {
+  fileName,
+  generateCommandLineArgs,
+  openFileAfterCommandExecution,
+  openIndexHtmlAfterCommandExecution,
+} from "./liquibaseCommandsUtilities";
+import * as fs from "fs";
+import { Logger } from "@aditosoftware/vscode-logging";
+import { readUrl } from "./configuration/data/readFromProperties";
+import { openDocument } from "./utilities/vscodeUtilities";
+import { generateContextInputs } from "./handleContexts";
+import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
+import { CacheHandler, CacheRemover } from "./cache/";
+import { removeConfiguration } from "./settings/removeConfiguration";
+import { folderSelectionName } from "./constants";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+/**
+ * The path where all resources (jars) are located from the extension.
+ */
+export let resourcePath: string;
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "liquibase" is now active!');
+/**
+ * Internal resources folder inside the extension.
+ */
+export let libFolder: string;
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	let disposable = vscode.commands.registerCommand('liquibase.helloWorld', () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		vscode.window.showInformationMessage('Hello World from Liquibase!');
-	});
+/**
+ * The cache handler used for handling the cache.
+ */
+export let cacheHandler: CacheHandler;
 
-	context.subscriptions.push(disposable);
+/**
+ * Main-Function that will execute all the code within
+ *
+ * @param context - The context object provided by VSCode to the extension.
+ * It represents the lifecycle of the extension and can be used
+ * to store and retrieve global state.
+ */
+export async function activate(context: vscode.ExtensionContext): Promise<void> {
+  // Constructing the path to the resources folder
+  if (context.globalStorageUri) {
+    // use the global storage directory for the file system
+    if (!fs.existsSync(context.globalStorageUri.fsPath)) {
+      fs.mkdirSync(context.globalStorageUri.fsPath, { recursive: true });
+    }
+    resourcePath = context.globalStorageUri.fsPath;
+  } else {
+    // Fallback - use home directory
+    resourcePath = path.join(os.homedir(), ".liquibase", "resources");
+  }
+
+  // construct the cache location and cache handler
+  const cacheLocation = path.join(resourcePath, "cache.json");
+  cacheHandler = new CacheHandler(cacheLocation);
+
+  // the folder, where additional libraries are included
+  libFolder = path.join(context.extensionPath, "lib");
+
+  // initialize the logger
+  Logger.initializeLogger(context, "Liquibase");
+  // and pass the logger to the input
+  initializeLogger(Logger.getLogger());
+
+  // Perform any necessary prerequisites setup before executing the extension logic
+  await prerequisites(context, resourcePath);
+  // and register all commands
+  registerCommands(context);
 }
 
-// This method is called when your extension is deactivated
-export function deactivate() {}
+/**
+ * Registers all commands for the extension.
+ *
+ * @param context - the context on which the commands should be registered
+ */
+function registerCommands(context: vscode.ExtensionContext): void {
+  // add a dummy command for loading all resources
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.initialize", () => {
+      Logger.getLogger().info({
+        message: "Triggered loading of all resources. Check logs afterwards.",
+        notifyUser: true,
+      });
+    })
+  );
+
+  // Register all commands that are needed for handling liquibase properties
+  registerCommandsForLiquibasePropertiesHandling(context);
+
+  // Register all commands that are used for showing/deleting the cache
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.openCacheFile", async () => {
+      await openDocument(cacheHandler.cacheLocation);
+    }),
+    vscode.commands.registerCommand("liquibase.removeFromCache", async () => {
+      await new CacheRemover(cacheHandler).removeFromCache();
+    })
+  );
+
+  // Command that will be executed when the extension command is triggered
+  context.subscriptions.push(
+    registerLiquibaseCommand("update", [...generatePropertyFileDialogOptions(true, true)], {
+      searchPathRequired: true,
+    }),
+
+    registerLiquibaseCommand("drop-all", [
+      ...generatePropertyFileDialogOptions(false, false),
+      {
+        input: new ConfirmationDialog({
+          name: "confirmation",
+          message: "Do you really want to execute 'drop-all'?",
+          detail: (dialogValues: DialogValues) => {
+            const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
+
+            let detail: string = "";
+            if (propertyFile) {
+              const url = readUrl(propertyFile);
+              if (url) {
+                detail = ` ${url}`;
+              }
+            }
+
+            return `This will remove all the data from your database${detail}.\n You can NOT restore any of the data.`;
+          },
+          confirmButtonName: "Drop-all",
+        }),
+      },
+    ]),
+
+    registerLiquibaseCommand("validate", [...generatePropertyFileDialogOptions(true, false)], {
+      searchPathRequired: true,
+    }),
+
+    registerLiquibaseCommand("status", [...generatePropertyFileDialogOptions(true, true)]),
+
+    registerLiquibaseCommand(
+      "diff",
+      [
+        ...generatePropertyFileDialogOptions(false, false),
+        {
+          input: new ConnectionType({ name: "referencePropertyFile" }),
+          createCmdArgs: (dialogValues) =>
+            getReferenceKeysFromPropertyFile(dialogValues.inputValues.get(REFERENCE_PROPERTY_FILE)?.[0]),
+        },
+        {
+          input: new OpenDialog({
+            name: folderSelectionName,
+            openDialogOptions: {
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            },
+          }),
+        },
+
+        {
+          input: new InputBox({
+            name: fileName,
+            inputBoxOptions: {
+              title: "The file name where your diff should be written",
+              placeHolder: "any file name",
+              value: "diff.txt",
+            },
+          }),
+          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+        },
+        {
+          input: new QuickPick({
+            name: "diffTypes",
+            title: "Choose any diff types",
+            //all possible diffTypes for the diff dialog
+            generateItems: () => [
+              { label: "catalogs", description: "" },
+              { label: "columns", description: "default", picked: true },
+              { label: "data", description: "" },
+              { label: "foreignkeys", description: "default", picked: true },
+              { label: "indexes", description: "default", picked: true },
+              { label: "primarykeys", description: "default", picked: true },
+              { label: "sequences", description: "" },
+              { label: "tables", description: "default", picked: true },
+              { label: "uniqueconstraints", description: "default", picked: true },
+              { label: "views", description: "default", picked: true },
+            ],
+            allowMultiple: true,
+          }),
+          cmdArgs: "--diff-types",
+        },
+      ],
+      {
+        afterCommandAction: openFileAfterCommandExecution,
+      }
+    ),
+
+    //TODO: Generate-Changelog -> more steps and user-input
+    registerLiquibaseCommand(
+      "generate-changelog",
+      [
+        ...generatePropertyFileDialogOptions(false, false),
+        // This needs a separate context query, because it is only used for generating new files and not getting old files
+        // FIXME: better context handling at generate-changelog!!!!
+        // {
+        //   input: new InputBox("context", {
+        //     title: "The context all the changelogs should get",
+        //     value: " ", // TODO empty value gets cancelled. How to improve?
+        //   }),
+        //   cmdArgs: "--context-filter",
+        // },
+        {
+          input: new OpenDialog({
+            name: folderSelectionName,
+            openDialogOptions: {
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            },
+          }),
+          cmdArgs: "--data-output-directory",
+        },
+        {
+          input: new InputBox({
+            name: fileName,
+            inputBoxOptions: {
+              title: "Choose a File Name",
+              placeHolder: "any file name with an extension",
+              value: "changelog.xml",
+            },
+          }),
+          createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
+        },
+      ],
+      {
+        afterCommandAction: openFileAfterCommandExecution,
+      }
+    ),
+
+    registerLiquibaseCommand(
+      "db-doc",
+      [
+        ...generatePropertyFileDialogOptions(true, false),
+        {
+          input: new OpenDialog({
+            name: folderSelectionName,
+            openDialogOptions: {
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            },
+          }),
+          cmdArgs: "--output-directory",
+        },
+      ],
+      {
+        afterCommandAction: openIndexHtmlAfterCommandExecution,
+      }
+    ),
+
+    registerLiquibaseCommand("unexpected-changesets", [...generatePropertyFileDialogOptions(true, true)], {
+      commandLineArgs: ["--verbose"],
+    }),
+
+    registerLiquibaseCommand("changelog-sync", [...generatePropertyFileDialogOptions(true, true)]),
+
+    registerLiquibaseCommand("clear-checksums", [...generatePropertyFileDialogOptions(false, false)]),
+
+    registerLiquibaseCommand(
+      "history",
+      [
+        ...generatePropertyFileDialogOptions(false, false),
+        {
+          input: new OpenDialog({
+            name: folderSelectionName,
+            openDialogOptions: {
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            },
+          }),
+        },
+        {
+          input: new InputBox({
+            name: fileName,
+            inputBoxOptions: {
+              title: "The file name where your history should be written",
+              placeHolder: "any file name with extension",
+              value: "history.txt",
+            },
+          }),
+          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+        },
+        {
+          input: new QuickPick({
+            name: "historyFormat",
+            title: "Choose the desired history format",
+            generateItems: () => [
+              {
+                label: "TABULAR",
+                picked: true,
+                detail:
+                  "This groups changesets by deployment ID and displays other information in individual table cell.",
+              },
+              { label: "TEXT", detail: "This displays the output as plain text." },
+            ],
+          }),
+          cmdArgs: "--format",
+        },
+      ],
+      {
+        afterCommandAction: openFileAfterCommandExecution,
+      }
+    ),
+
+    registerLiquibaseCommand("tag", [
+      ...generatePropertyFileDialogOptions(false, false),
+      {
+        input: new InputBox({
+          name: "tagName",
+          inputBoxOptions: {
+            title: "Choose a name of new Tag",
+          },
+        }),
+        cmdArgs: "--tag",
+      },
+    ]),
+
+    registerLiquibaseCommand("tag-exists", [
+      ...generatePropertyFileDialogOptions(false, false),
+      {
+        input: new InputBox({
+          name: "tagName",
+          inputBoxOptions: {
+            title: "Tag to check if it exists",
+          },
+        }),
+        cmdArgs: "--tag",
+      },
+    ]),
+
+    registerLiquibaseCommand("rollback", [
+      ...generatePropertyFileDialogOptions(true, true),
+      {
+        input: new InputBox({
+          name: "tagName",
+          inputBoxOptions: {
+            title: "Tag to rollback to",
+          },
+        }),
+        cmdArgs: "--tag",
+      },
+    ]),
+
+    registerLiquibaseCommand(
+      "update-sql",
+      [
+        ...generatePropertyFileDialogOptions(true, true),
+        {
+          input: new OpenDialog({
+            name: folderSelectionName,
+            openDialogOptions: {
+              canSelectFiles: false,
+              canSelectFolders: true,
+              canSelectMany: false,
+            },
+          }),
+        },
+        {
+          input: new InputBox({
+            name: fileName,
+            inputBoxOptions: {
+              title: "The file name where your update sql should be written",
+              placeHolder: "any filename with extension",
+              value: "update-sql.sql",
+            },
+          }),
+          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+        },
+      ],
+      {
+        afterCommandAction: openFileAfterCommandExecution,
+      }
+    )
+  );
+}
+
+/**
+ * Generate the PickPanelConfigs for any dialog that needs a property file.
+ * This will return the basic `ConnectionType` input as well as the required changelog and context dialogs.
+ *
+ * @param changelogNeeded - information if the changelog is query is potentially needed for the command. This should be true, if the command can use a `--changelog-file` parameter
+ * @param contextNeeded - information if the context can be given as a parameter for the command. Note: If this is true, then the changelog should be also true, because the changelog is needed for finding out the contexts.
+ * @returns an array of the required elements for the property file querying in the dialog
+ */
+function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeeded: boolean): PickPanelConfig[] {
+  const inputConfigs: PickPanelConfig[] = [
+    {
+      input: new ConnectionType({ name: "propertyFile" }),
+    },
+  ];
+
+  if (changelogNeeded) {
+    inputConfigs.push({
+      input: new OpenDialog({
+        name: "changelog",
+        openDialogOptions: {
+          canSelectFiles: true,
+          canSelectFolders: false,
+          canSelectMany: false,
+          filters: {
+            Changelog: ["xml", "json", "yaml", "yml"],
+          },
+        },
+        onBeforeInput: isExtraQueryForChangelogNeeded,
+        onAfterInput: setExtraChangelogCorrectly,
+      }),
+    });
+  }
+
+  if (contextNeeded) {
+    inputConfigs.push(...generateContextInputs());
+  }
+
+  return inputConfigs;
+}
+
+/**
+ * Registers all the commands that are needed by liquibase properties handling
+ *
+ * @param context - the Context for storing the commands
+ */
+function registerCommandsForLiquibasePropertiesHandling(context: vscode.ExtensionContext): void {
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.createLiquibaseConfiguration", () => {
+      LiquibaseConfigurationPanel.render(context.extensionUri);
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.editExistingLiquibaseConfiguration", (uri: vscode.Uri) =>
+      editExistingLiquibaseConfiguration(uri, context)
+    )
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", async () => removeConfiguration())
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration)
+  );
+}
+
+/**
+ * Shutting down the client. This function is called when the extension is deactivated.
+ */
+export function deactivate(): void {
+  Logger.end();
+}
+
+/**
+ * Sets the resource path. This is used for tests, when no value was set.
+ *
+ * @param pResourcePath - the value the set
+ */
+export function setResourcePath(pResourcePath: string): void {
+  resourcePath = pResourcePath;
+}
+/**
+ * Sets the cache handler. This is used for tests, when no value was set.
+ *
+ * @param pCacheHandler - the value the set
+ */
+export function setCacheHandler(pCacheHandler: CacheHandler): void {
+  cacheHandler = pCacheHandler;
+}
+
+/**
+ * Sets the lib folder. This is used for tests, when no value was set.
+ *
+ * @param pLibFolder - the value the set
+ */
+export function setLibFolder(pLibFolder: string): void {
+  libFolder = pLibFolder;
+}
