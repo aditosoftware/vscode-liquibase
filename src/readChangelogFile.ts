@@ -9,8 +9,10 @@ import { cacheHandler } from "./extension";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { PickPanelConfig } from "./registerLiquibaseCommand";
 
-// TODO TSDOC
-export class ReadChangelogFile {
+/**
+ * Class for handling the changelog file input in the dialog.
+ */
+export class HandleChangelogFileInput {
   /**
    * The name of the changelog selection in the quick pick.
    */
@@ -26,7 +28,11 @@ export class ReadChangelogFile {
    */
   static CHOOSE_CHANGELOG_OPTION = "Choose Changelog...";
 
-  // TODO TSDOC
+  /**
+   * Generates the inputs for selecting the changelog.
+   *
+   * @returns - the inputs for selecting the changelog
+   */
   static generateChangelogInputs(): PickPanelConfig[] {
     return [
       {
@@ -78,6 +84,7 @@ export class ReadChangelogFile {
 
   /**
    * Gets the changelog file from the property file.
+   *
    * @param dialogValues - the current dialog values
    * @returns the value of the `changelogFile` in the properties
    */
@@ -94,6 +101,7 @@ export class ReadChangelogFile {
 
   /**
    * Checks if the changelog needs to be put into by an extra open dialog.
+   *
    * @param dialogValues - the current dialog values
    * @returns `true` if an OpenDialog is needed for selecting the changelog
    */
@@ -154,12 +162,17 @@ export class ReadChangelogFile {
     }
   }
 
-  // TODO TSDOC
+  /**
+   * Generates the items for the changelog selection.
+   *
+   * @param dialogValues - the current dialog values
+   * @returns the items that should be there to select the changelog
+   */
   private static generateItemsForChangelogSelection(dialogValues: DialogValues): vscode.QuickPickItem[] {
     const items: vscode.QuickPickItem[] = [];
 
     // add the existing changelog to the items
-    const existingChangelog = this.getChangelogFileFromProperties(dialogValues);
+    const existingChangelog = HandleChangelogFileInput.getChangelogFileFromProperties(dialogValues);
     if (existingChangelog) {
       items.push({ label: "configured changelog", kind: vscode.QuickPickItemKind.Separator });
       items.push({ label: existingChangelog });
@@ -167,24 +180,26 @@ export class ReadChangelogFile {
 
     // add the choose option to the items
     items.push({ label: "", kind: vscode.QuickPickItemKind.Separator });
-    items.push({ label: this.CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") });
+    items.push({ label: HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") });
 
     // and add the recently loaded elements
     const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
     if (propertyFile) {
-      items.push({ label: "recently chosen changelogs", kind: vscode.QuickPickItemKind.Separator });
-      items.push(
-        ...cacheHandler
-          .readChangelogs(propertyFile)
-          // transform to relative path
-          .map((pCachedChangelog) => {
-            return path.relative(getWorkFolder(), pCachedChangelog);
-          })
-          // and create quick pick
-          .map((pCachedChangelog) => {
-            return { label: pCachedChangelog } as vscode.QuickPickItem;
-          })
-      );
+      const cachedElements = cacheHandler
+        .readChangelogs(propertyFile)
+        // transform to relative path
+        .map((pCachedChangelog) => {
+          return path.relative(getWorkFolder(), pCachedChangelog);
+        })
+        // and create quick pick
+        .map((pCachedChangelog) => {
+          return { label: pCachedChangelog } as vscode.QuickPickItem;
+        });
+
+      if (cachedElements && cachedElements.length !== 0) {
+        items.push({ label: "recently chosen changelogs", kind: vscode.QuickPickItemKind.Separator });
+        items.push(...cachedElements);
+      }
     }
 
     return items;

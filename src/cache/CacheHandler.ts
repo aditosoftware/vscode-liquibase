@@ -112,12 +112,40 @@ export class CacheHandler {
       };
     }
 
-    if (!cache[connectionLocation].changelogs) {
-      // changelogs were added later to the cache, just add them, if there were none
-      cache[connectionLocation].changelogs = [];
+  /**
+   * Saves a recently selected changelog file in the cache.
+   *
+   * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
+   * @param changelogPath - the absolute path to the changelog file
+   */
+  saveChangelog(connectionLocation: string, changelogPath: string): void {
+    this.readCache();
+
+    this.addDummyElementForConnectionToCache(connectionLocation);
+
+    const changelogs = this.cache[connectionLocation].changelogs;
+
+    const existingChangelog = changelogs.find((log) => log.path === changelogPath);
+
+    if (existingChangelog) {
+      // update lastUsed, if we already have an element
+      existingChangelog.lastUsed = new Date().getTime();
+    } else {
+      // otherwise, add a new element
+      changelogs.push({
+        lastUsed: new Date().getTime(),
+        path: changelogPath,
+      });
     }
 
-    return cache;
+    // sort by last used descending
+    changelogs.sort((a, b) => b.lastUsed - a.lastUsed);
+
+    // Keep only the top X changelogs
+    this.cache[connectionLocation].changelogs = changelogs.slice(0, MAX_CHANGELOGS_IN_CACHE);
+
+    // write the cache back to to file system
+    this.writeCache();
   }
 
   /**
