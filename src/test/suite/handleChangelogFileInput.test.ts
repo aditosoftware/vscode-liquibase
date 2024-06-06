@@ -12,6 +12,7 @@ import { CacheHandler } from "../../cache";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as lbSettings from "../../handleLiquibaseSettings";
+import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
 
 /**
  * Tests the file readChangelogFile.
@@ -134,7 +135,7 @@ suite("handleChangelogInput", () => {
     [
       {
         description: "the changelog should be selected",
-        content: HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION,
+        content: CHOOSE_CHANGELOG_OPTION,
         expected: true,
       },
       {
@@ -181,7 +182,7 @@ suite("handleChangelogInput", () => {
     [
       {
         description: "when choose changelog option",
-        option: HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION,
+        option: CHOOSE_CHANGELOG_OPTION,
         logMessage: undefined,
       },
       {
@@ -275,7 +276,7 @@ suite("handleChangelogInput", () => {
   suite("generateItemsForChangelogSelection", () => {
     const chooseChangelogOptions: vscode.QuickPickItem[] = [
       { label: "", kind: vscode.QuickPickItemKind.Separator },
-      { label: HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") },
+      { label: CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") },
     ];
 
     /**

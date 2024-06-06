@@ -57,3 +57,8 @@ export enum ContextOptions {
  * The name that should be used for any folder selection.
  */
 export const folderSelectionName = "folderSelection";
+
+/**
+ * Name of the option to choose a custom changelog from the dialogs.
+ */
+export const CHOOSE_CHANGELOG_OPTION = "Choose Changelog...";

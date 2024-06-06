@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
 import { randomUUID } from "crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
-import { HandleChangelogFileInput } from "../../handleChangelogFileInput";
+import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
 
 /**
  * Tests commands of the extension.
@@ -84,7 +84,7 @@ suite("Extension Test Suite", () => {
       command: "status",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, contextLoaded],
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -92,7 +92,7 @@ suite("Extension Test Suite", () => {
       command: "update",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, contextLoaded],
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -104,7 +104,7 @@ suite("Extension Test Suite", () => {
       command: "validate",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION],
+        quickPick: [CHOOSE_CHANGELOG_OPTION],
       },
     },
     {
@@ -120,7 +120,7 @@ suite("Extension Test Suite", () => {
       command: "db-doc",
       answers: {
         openDialog: [changelogFile, outputFolder],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION],
+        quickPick: [CHOOSE_CHANGELOG_OPTION],
       },
     },
     {
@@ -134,7 +134,7 @@ suite("Extension Test Suite", () => {
       command: "unexpected-changesets",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, contextLoaded],
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -142,7 +142,7 @@ suite("Extension Test Suite", () => {
       command: "changelog-sync",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, contextLoaded],
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -174,7 +174,7 @@ suite("Extension Test Suite", () => {
       command: "rollback",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, contextLoaded],
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
         inputBox: tag,
       },
@@ -183,7 +183,7 @@ suite("Extension Test Suite", () => {
       command: "update-sql",
       answers: {
         openDialog: [changelogFile, outputFolder],
-        quickPick: [HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, contextLoaded],
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         inputBox: "update-sql.sql",
         loadContexts: true,
       },

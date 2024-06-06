@@ -8,6 +8,7 @@ import * as fs from "fs";
 import { cacheHandler } from "./extension";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { PickPanelConfig } from "./registerLiquibaseCommand";
+import { CHOOSE_CHANGELOG_OPTION } from "./constants";
 
 /**
  * Class for handling the changelog file input in the dialog.
@@ -22,11 +23,6 @@ export class HandleChangelogFileInput {
    * The name of the changelog selection in the open dialog.
    */
   static CHANGELOG_OPEN_DIALOG_NAME = "changelogOpenDialog";
-
-  /**
-   * Name of the option to choose a custom changelog
-   */
-  static CHOOSE_CHANGELOG_OPTION = "Choose Changelog...";
 
   /**
    * Generates the inputs for selecting the changelog.
@@ -110,7 +106,7 @@ export class HandleChangelogFileInput {
       const changelogPreSelection = dialogValues.inputValues.get(this.CHANGELOG_QUICK_PICK_NAME);
       if (changelogPreSelection && changelogPreSelection[0]) {
         // check, if the correct option was selected
-        return changelogPreSelection[0] === this.CHOOSE_CHANGELOG_OPTION;
+        return changelogPreSelection[0] === CHOOSE_CHANGELOG_OPTION;
       }
     }
 
@@ -131,7 +127,7 @@ export class HandleChangelogFileInput {
     let changelogPath: string | undefined;
 
     if (fileSelection && fileSelection[0]) {
-      if (fileSelection[0] === this.CHOOSE_CHANGELOG_OPTION) {
+      if (fileSelection[0] === CHOOSE_CHANGELOG_OPTION) {
         // we are not having a correct values selected, but instead a dialog progression value
         // => we do not need to save anything
         return;
@@ -180,7 +176,7 @@ export class HandleChangelogFileInput {
 
     // add the choose option to the items
     items.push({ label: "", kind: vscode.QuickPickItemKind.Separator });
-    items.push({ label: HandleChangelogFileInput.CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") });
+    items.push({ label: CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") });
 
     // and add the recently loaded elements
     const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
