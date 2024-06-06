@@ -1,7 +1,7 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
 import { VSCodeDivider, VSCodeTextField, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react";
 import { DatabaseConnection } from "../../../src/configuration/data/DatabaseConnection";
-import { NO_PRE_CONFIGURED_DRIVER, ALL_DRIVERS } from "../../../src/configuration/drivers";
+import { NO_PRE_CONFIGURED_DRIVER, PREDEFINED_DRIVERS, CustomDriver } from "../../../src/configuration/drivers";
 import { useEffect, useState } from "react";
 import { vscodeApiWrapper } from "../utilities/vscodeApiWrapper";
 import { MessageData, MessageType } from "../../../src/configuration/transfer";
@@ -24,6 +24,11 @@ interface DatabaseConfigurationProps {
    * The configured database connection. This will be used to display the values inside the element.
    */
   databaseConnection?: DatabaseConnection;
+
+  /**
+   * The path to the liquibase resources.
+   */
+  customDrivers?: string;
 
   /**
    * Method that will get a new value whenever the initial component was left (`onBlur`).
@@ -52,10 +57,12 @@ interface NewUrlValues extends UrlParts {
  * @param pProperties - the properties for creating the element
  * @returns the created element
  */
-export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): JSX.Element {
+export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfigurationProps>): JSX.Element {
   const [serverAddress, setServerAddress] = useState<string>("localhost");
   const [port, setPort] = useState<number>(-1);
   const [databaseName, setDatabaseName] = useState<string>("data");
+
+  const customDrivers: { [key: string]: CustomDriver } = JSON.parse(pProperties.customDrivers ?? "");
 
   /**
    * Updates the url for the changed values of the url parts.
@@ -63,12 +70,20 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
    */
   function updateUrl(newValues: NewUrlValues): void {
     const databaseType = newValues.databaseType ?? pProperties.databaseConnection?.databaseType ?? "";
-    const driver = ALL_DRIVERS.get(databaseType);
+    const driver = PREDEFINED_DRIVERS.get(databaseType);
     if (driver) {
       // builds the new url
       const url = driver.buildUrl(pProperties.databaseConnection?.url, newValues, serverAddress, port, databaseName);
 
       // and set the new url
+      pProperties.onUpdate("url", url);
+    }
+    else if (databaseType !== NO_PRE_CONFIGURED_DRIVER && !PREDEFINED_DRIVERS.has(databaseType))
+    {
+      const driverJSON = customDrivers[databaseType];
+      const customDriver: CustomDriver = new CustomDriver(driverJSON.driverClass, driverJSON.port, driverJSON.jdbcName, driverJSON.separator);
+      const url = customDriver.buildUrl(pProperties.databaseConnection?.url, newValues, serverAddress, port, databaseName);
+
       pProperties.onUpdate("url", url);
     }
   }
@@ -80,18 +95,18 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
    */
   function updateAfterDatabaseConnectionChanged(): void {
     // extract the new url parts from the database connection
-    const extractedUrlParts = pProperties.databaseConnection?.extractUrlPartsFromDatabaseConfiguration();
+    const extractedUrlParts = pProperties.databaseConnection?.extractUrlPartsFromDatabaseConfiguration(pProperties.customDrivers);
 
     // sets the new server address
-    const newServerAddress = extractedUrlParts?.serverAddress || "localhost";
+    const newServerAddress = extractedUrlParts?.serverAddress ?? "localhost";
     setServerAddress(newServerAddress);
 
     // sets the new port
-    const newPort = extractedUrlParts?.port || 0;
+    const newPort = extractedUrlParts?.port ?? 0;
     setPort(newPort);
 
     // sets the new database name
-    const newDatabaseName = extractedUrlParts?.databaseName || "data";
+    const newDatabaseName = extractedUrlParts?.databaseName ?? "data";
     setDatabaseName(newDatabaseName);
 
     // updates the url with the new elements
@@ -217,10 +232,15 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
                 const newDatabaseType = e.target.value;
                 pProperties.onUpdate("databaseType", newDatabaseType);
                 // remove classpath and driver values, when a pre-configured values was used
-                if (newDatabaseType !== NO_PRE_CONFIGURED_DRIVER) {
+                if (newDatabaseType !== NO_PRE_CONFIGURED_DRIVER && PREDEFINED_DRIVERS.has(newDatabaseType)) {
                   pProperties.onUpdate("driver", "");
                   // updates the url, when a new database type was selected
-                  updateUrl({ databaseType: newDatabaseType, port: ALL_DRIVERS.get(newDatabaseType)?.port });
+                  updateUrl({ databaseType: newDatabaseType, port: PREDEFINED_DRIVERS.get(newDatabaseType)?.port });
+                }
+                else {                  
+                  pProperties.onUpdate("driver", customDrivers[newDatabaseType].driverClass);
+
+                  updateUrl({ databaseType: newDatabaseType, port: customDrivers[newDatabaseType].port });
                 }
               }}>
               {createDatabaseSelections()}
@@ -246,20 +266,34 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
 
   /**
    * Creates all the radio elements for all the possible pre-configured drivers and a wildcard driver entry.
+   * 
    * @returns the created `VSCodeRadio` elements
    */
   function createDatabaseSelections(): JSX.Element[] {
     const radioElements: JSX.Element[] = [];
+    const drivers = customDrivers;
 
     // add all the pre-configured drivers drivers
-    [...ALL_DRIVERS.keys()]
+    [...PREDEFINED_DRIVERS.keys()]
       .sort((a, b) => a.localeCompare(b))
       .forEach((pKey: string) => {
-        const driver = ALL_DRIVERS.get(pKey);
+        const driver = PREDEFINED_DRIVERS.get(pKey);
         if (driver) {
           radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
         }
       });
+
+    // add custom drivers
+    if (drivers) {
+      // add a divider between the pre-configured drivers and the custom drivers
+      radioElements.push(<VSCodeDivider />);
+
+      [...Object.keys(drivers)]
+        .sort((a, b) => a.localeCompare(b))
+        .forEach((pKey: string) => {
+          radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
+        });
+    }
 
     // and add one element for no pre-configured driver at the end
     radioElements.push(<VSCodeDivider />);

@@ -7,6 +7,7 @@ import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handl
 import { testLiquibaseConnection } from "../configuration/handle/testConfiguration";
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
 import { Logger, LoggingMessageWithLevel } from "@aditosoftware/vscode-logging";
+import { getCustomDrivers } from "../utilities/customDrivers";
 /**
  * This class manages the state and behavior of HelloWorld webview panels.
  *
@@ -47,6 +48,7 @@ export class LiquibaseConfigurationPanel {
    * will be created and displayed.
    *
    * @param extensionUri - The URI of the directory containing the extension.
+   * @param data - The data to be passed to the webview panel.
    */
   public static render(extensionUri: Uri, data?: LiquibaseConfigurationData): void {
     if (LiquibaseConfigurationPanel.currentPanel) {
@@ -77,12 +79,11 @@ export class LiquibaseConfigurationPanel {
     // In all cases, transfer a message with the current data
     this.transferMessage(
       MessageType.INIT,
-      data
-        ? data
-        : LiquibaseConfigurationData.createDefaultData(
+      data || LiquibaseConfigurationData.createDefaultData(
             {
               defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
               liquibaseDirectoryInProject: getLiquibaseFolder(),
+              customDrivers: getCustomDrivers(),
             },
             ConfigurationStatus.NEW
           )
@@ -206,13 +207,11 @@ export class LiquibaseConfigurationPanel {
             default:
               throw new Error(`Handling for command ${messageType} not found.`);
           }
-        } else {
-          if (messageData.messageType === MessageType.LOG_MESSAGE) {
+        } else if (messageData.messageType === MessageType.LOG_MESSAGE) {
             Logger.getLogger().log(data);
           } else {
             throw new Error(`Handling for command ${messageType} not found.`);
           }
-        }
       },
       undefined,
       this._disposables

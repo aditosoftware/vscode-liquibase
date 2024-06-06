@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import download from "download";
-import { ALL_DRIVERS } from "./configuration/drivers";
+import { PREDEFINED_DRIVERS } from "./configuration/drivers";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
@@ -117,7 +117,7 @@ function getRequiredFiles(): Map<string, string> {
   requiredFiles.set(snakeYaml, "https://repo1.maven.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar");
   // Gson for executing the extended CLI file
   requiredFiles.set(gson, "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar");
-  ALL_DRIVERS.forEach((value) => {
+  PREDEFINED_DRIVERS.forEach((value) => {
     requiredFiles.set(value.getFileName(), value.urlForDownload);
   });
   return requiredFiles;

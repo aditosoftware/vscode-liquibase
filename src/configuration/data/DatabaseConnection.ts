@@ -1,5 +1,5 @@
 import { immerable } from "immer";
-import { ALL_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER } from "../drivers";
+import { PREDEFINED_DRIVERS, CustomDriver, Driver, NO_PRE_CONFIGURED_DRIVER } from "../drivers";
 import { PropertiesEditor } from "properties-file/editor";
 import { UrlParts } from "./UrlParts";
 
@@ -78,14 +78,23 @@ export class DatabaseConnection {
 
   /**
    * Trying to extract all the url parts from a database connection
+   * 
+   * @param customDriver - the custom driver that should be used if the database type is not a pre-configured driver
+   * 
    * @returns the url parts
    */
-  extractUrlPartsFromDatabaseConfiguration(): UrlParts {
+  extractUrlPartsFromDatabaseConfiguration(customDriver?: string): UrlParts {
     // find the driver for the database type
-    const driver = ALL_DRIVERS.get(this.databaseType);
+    const driver = PREDEFINED_DRIVERS.get(this.databaseType);
     if (driver) {
       // and extract the url parts
       return driver.extractUrlParts(this.url);
+    }
+    else if (customDriver) {
+      const driverJSON = JSON.parse(customDriver)[this.databaseType];
+      if (driverJSON) {
+        return new CustomDriver(driverJSON.driver, driverJSON.port, driverJSON.jdbcName, driverJSON.seperator).extractUrlParts(this.url);
+      }
     }
 
     return {};
@@ -108,7 +117,7 @@ export class DatabaseConnection {
    * @param pValue - the value that should be set
    * @returns the updated element
    */
-  setValue(pName: keyof DatabaseConnection, pValue: string): DatabaseConnection {
+  setValue(pName: keyof DatabaseConnection, pValue: string): this {
     if (typeof this[pName] === "string") {
       (this[pName] as string) = pValue;
     }
@@ -166,7 +175,7 @@ export class DatabaseConnection {
     const databaseType: string = this.databaseType;
 
     if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
-      const databaseDriver: Driver | undefined = ALL_DRIVERS.get(databaseType);
+      const databaseDriver: Driver | undefined = PREDEFINED_DRIVERS.get(databaseType);
       if (databaseDriver) {
         const driverKey: string = "driver";
 
@@ -207,7 +216,7 @@ export class DatabaseConnection {
   adjustDriver(value: string): void {
     let preConfiguredDriver = false;
 
-    for (const [driverKey, driverValue] of ALL_DRIVERS.entries()) {
+    for (const [driverKey, driverValue] of PREDEFINED_DRIVERS.entries()) {
       if (driverValue.driverClass === value) {
         // adjust database type when driver was given
         this.databaseType = driverKey;

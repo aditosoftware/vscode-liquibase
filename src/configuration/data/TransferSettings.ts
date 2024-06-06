@@ -11,4 +11,9 @@ export interface LiquibaseSettings {
    * The basic liquibase directory in the project that should be added to the classpath
    */
   readonly liquibaseDirectoryInProject: string;
+
+  /**
+   * The resource path where the liquibase resources are located.
+   */
+  readonly customDrivers?: string;
 }

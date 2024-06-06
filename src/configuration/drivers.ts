@@ -133,9 +133,8 @@ export class Driver {
     const builtDatabaseName = this.buildDatabaseName(this, newValues.databaseName ?? databaseName);
 
     // and build the url
-    return `${this.jdbcName}${newValues.serverAddress ?? serverAddress}:${
-      newValues.port ?? port
-    }${builtDatabaseName}${parameters}`;
+    return `${this.jdbcName}${newValues.serverAddress ?? serverAddress}:${newValues.port ?? port
+      }${builtDatabaseName}${parameters}`;
   }
 }
 
@@ -158,7 +157,7 @@ interface DatabaseNameExtraction {
 /**
  * All the pre-configured drivers.
  */
-export const ALL_DRIVERS = new Map<string, Driver>([
+export const PREDEFINED_DRIVERS = new Map<string, Driver>([
   [
     // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
     "MariaDB",
@@ -334,4 +333,46 @@ function extractParametersForMsSQL(oldUrl: string): string {
     }
   }
   return "";
+}
+
+
+/**
+ * Custom driver class for drivers that are not pre-configured.
+ */
+export class CustomDriver extends Driver {
+  /**
+   * The class which is needed for creating the Liquibase file.
+   */
+  declare readonly driverClass: string;
+
+  /**
+   * The default port of the driver.
+   */
+  declare readonly port: number;
+
+  /**
+   * The jdbc name of the driver.
+   */
+  declare readonly jdbcName: string;
+
+  /**
+   * The separator for the jdbc url.
+   */
+  declare readonly separator: string;
+
+  /**
+   * Constructor.
+   * @param pDriverClass - The class which is needed for creating the Liquibase file.
+   * @param port - The default port of the driver.
+   * @param pJdbcName - The jdbc name of the driver.
+   * @param pSeparator - The separator for the jdbc url.
+   */
+  constructor(
+    pDriverClass: string,
+    port: number,
+    pJdbcName: string,
+    pSeparator: string,
+  ) {
+    super(pDriverClass, "", pJdbcName, port, pSeparator, extractDatabaseNameBySeparator, buildDatabaseNameBySeparator, extractParameters);
+  }
 }

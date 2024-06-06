@@ -1,5 +1,5 @@
 import assert, { fail } from "assert";
-import { ALL_DRIVERS, Driver } from "../../configuration/drivers";
+import { PREDEFINED_DRIVERS, Driver } from "../../configuration/drivers";
 import { UrlParts } from "../../configuration/data/UrlParts";
 
 /**
@@ -178,7 +178,7 @@ suite("url handling", () => {
       );
 
       assert.deepStrictEqual(
-        Array.from(ALL_DRIVERS.keys()).sort((a, b) => a.localeCompare(b)),
+        Array.from(PREDEFINED_DRIVERS.keys()).sort((a, b) => a.localeCompare(b)),
         testCaseDrivers
       );
     });
@@ -206,8 +206,8 @@ suite("url handling", () => {
          * Gets the pre-configured driver from the `ALL_DRIVERS` map. If any driver is not there, then this suite will fail.
          */
         suiteSetup("get driver from map", () => {
-          assert.ok(ALL_DRIVERS.has(pCase.driver));
-          const driverFromMap = ALL_DRIVERS.get(pCase.driver);
+          assert.ok(PREDEFINED_DRIVERS.has(pCase.driver));
+          const driverFromMap = PREDEFINED_DRIVERS.get(pCase.driver);
           if (driverFromMap) {
             driver = driverFromMap;
           } else {

@@ -5,11 +5,12 @@ import * as path from "path";
 import * as fs from "fs";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
-import { InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
+import { ConfirmationDialog, InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
 import { ConnectionType } from "../input/ConnectionType";
-import { ALL_DRIVERS } from "../configuration/drivers";
+import { PREDEFINED_DRIVERS } from "../configuration/drivers";
 import { resourcePath } from "../extension";
+import { getCustomDrivers } from "../utilities/customDrivers";
 
 /**
  * Edits an existing configuration.
@@ -58,6 +59,7 @@ export async function editExistingLiquibaseConfiguration(
       {
         defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
         liquibaseDirectoryInProject: getLiquibaseFolder(),
+        customDrivers: getCustomDrivers(),
       }
     );
     // and renders the panel with the data
@@ -130,13 +132,13 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
 
 
 /**
- * Add, Modify and Delete shit.
+ * Displays all available drivers in the resource folder.
+ * The user can add, edit or delete custom drivers.
  */
 export function displayAvailableDrivers(): void {
-  //TODO: maybe help?
-  const help: vscode.QuickInputButton = {
-    iconPath: new vscode.ThemeIcon("question"),
-    tooltip: "help"
+  const reload: vscode.QuickInputButton = {
+    iconPath: new vscode.ThemeIcon("sync"),
+    tooltip: "Reload"
   };
 
   const quickpick = vscode.window.createQuickPick();
@@ -147,22 +149,40 @@ export function displayAvailableDrivers(): void {
     selectedItems.forEach((selectedItem) => {
       if (selectedItem.label === "Add New Driver") {
         quickpick.dispose();
-        addNewDriver();
+        modifyOrAddDriver();
       }
     });
   });
-  quickpick.title = "Available Drivers",
-  quickpick.buttons = [vscode.QuickInputButtons.Back, help];
+  quickpick.title = "Available Drivers";
+  quickpick.buttons = [vscode.QuickInputButtons.Back, reload];
   quickpick.onDidTriggerItemButton((selectedAction) => {
-    //FIXME: is there a better way to get the right action?
     if (selectedAction.button.tooltip === "delete") {
       quickpick.dispose();
       deleteDriver(selectedAction.item.label);
+    }
+    else if (selectedAction.button.tooltip === "edit") {
+      quickpick.dispose();
+      const driverJSON = JSON.parse(getCustomDrivers());
+      console.log(driverJSON);
+      console.log(selectedAction.item.label);
+      console.log(driverJSON[selectedAction.item.label]);
+      modifyOrAddDriver(driverJSON[selectedAction.item.label], selectedAction.item.label);
+    }
+  });
+  quickpick.onDidTriggerButton((button) => {
+    if (button === reload) {
+      quickpick.dispose();
+      displayAvailableDrivers();
     }
   });
   quickpick.show();
 }
 
+/**
+ * Returns a list of all available drivers.
+ * 
+ * @returns a list of all available drivers
+ */
 function getDrivers(): vscode.QuickPickItem[] {
   const deleteDriver: vscode.QuickInputButton = {
     iconPath: new vscode.ThemeIcon("trashcan"),
@@ -170,8 +190,7 @@ function getDrivers(): vscode.QuickPickItem[] {
   };
 
   const editDriver: vscode.QuickInputButton = {
-    //TODO: @Ramona: pls spinny?
-    iconPath: new vscode.ThemeIcon("gear~spin"),
+    iconPath: new vscode.ThemeIcon("gear"),
     tooltip: "edit"
   };
 
@@ -182,7 +201,7 @@ function getDrivers(): vscode.QuickPickItem[] {
     kind: vscode.QuickPickItemKind.Separator
   });
 
-  ALL_DRIVERS.forEach((value, key) => {
+  PREDEFINED_DRIVERS.forEach((value, key) => {
     drivers.push({
       label: key,
       description: value.jdbcName,
@@ -199,11 +218,10 @@ function getDrivers(): vscode.QuickPickItem[] {
   fs.readdirSync(resourcePath).forEach(file => {
     if (path.extname(file) === '.json') {
       const fileContent = fs.readFileSync(path.join(resourcePath, file)).toString();
-      if (fileContent !== null && fileContent.includes("driverClass")) {
+      if (fileContent?.includes("driverClass")) {
         const driver = JSON.parse(fileContent);
         drivers.push({
           label: driver.name,
-          description: driver.jdbcUrl,
           detail: driver.driverClass,
           buttons: [editDriver, deleteDriver]
         });
@@ -224,73 +242,196 @@ function getDrivers(): vscode.QuickPickItem[] {
   return drivers;
 }
 
-function addNewDriver(): void {
-  const inputs = [
-    new OpenDialog({
-      name: "driverFile",
-      openDialogOptions: {
-        canSelectFiles: true,
-        canSelectFolders: false,
-        canSelectMany: false,
-        filters: {
-          "Driver Files": ["jar"],
-          "All Files": ["*"],
+/**
+ * Deletes a driver from the resource folder.
+ * 
+ * @param driverName - the name of the driver to delete
+ */
+function deleteDriver(driverName: string): void {
+  const input = [new ConfirmationDialog({
+    name: "confirmation",
+    message: "Do you really want to delete this driver?",
+    detail: () => `This will remove the driver "${driverName}" globally.\n You can NOT restore any of the data.`,
+    confirmButtonName: "Delete Driver",
+  })];
+  handleMultiStepInput(input).then((dialogValues) => {
+    if (dialogValues) {
+      if (dialogValues.confirmation) {
+        fs.rmSync(path.join(resourcePath, driverName + ".jar"));
+        fs.rmSync(path.join(resourcePath, driverName + ".json"));
+      }
+    }
+    displayAvailableDrivers(); //re-open the previous view
+  }).catch((error) => {
+    console.error(error);
+  });
+}
+
+/**
+ * Modifies or adds a driver to the resource folder.
+ * 
+ * @param oldDriverValues - the old values of the driver
+ * @param oldDriverValues - the old values of the driver
+ * @param oldDriverName - the old name of the driver
+ * 
+ * @returns void
+ */
+function modifyOrAddDriver(oldDriverValues?: { driver: string, port: number, jdbcName: string, seperator: string }, oldDriverName?: string): void {
+  const inputs: (InputBox | OpenDialog)[] = [];
+
+  if (!oldDriverName && !oldDriverValues) {
+    inputs.push(
+      new OpenDialog({
+        name: "driverFile",
+        openDialogOptions: {
+          canSelectFiles: true,
+          canSelectFolders: false,
+          canSelectMany: false,
+          filters: {
+            "Driver File": ["jar"],
+            "All Files": ["*"],
+          },
+          openLabel: "Select driver file",
+          title: "Select the driver file you want to add",
         },
-        openLabel: "Select driver file",
-        title: "Select the driver file you want to add",
-      },
-    }),
+      }),
+    );
+  }
+
+  inputs.push(
     new InputBox({
       name: "visualName",
       inputBoxOptions: {
+        value: oldDriverName ?? "",
         ignoreFocusOut: true,
+        validateInput(value) {
+          if (value === "") {
+            return "Driver name must not be empty";
+          }
+          return null;
+        },
         placeHolder: "Your Driver Name",
-        title: "Enter the visual name of the new driver",
+        title: "Enter the visual name of the driver",
       },
     }),
     new InputBox({
-      name: "jdbcUrl",
+      name: "jdbcName",
       inputBoxOptions: {
+        value: oldDriverValues?.jdbcName ?? "",
         ignoreFocusOut: true,
-        placeHolder: "jdbc:yourDatabase://",
-        title: "Enter the JDBC URL of the new driver",
+        validateInput(value) {
+          if (value === "") {
+            return "JDBC name must not be empty";
+          }
+          return null;
+        },
+        placeHolder: "jdbc:yourDriver://",
+        title: "Enter the jdbc name of the driver",
       },
     }),
     new InputBox({
       name: "driverClass",
       inputBoxOptions: {
+        value: oldDriverValues?.driver ?? "",
         ignoreFocusOut: true,
+        validateInput(value) {
+          if (value === "") {
+            return "Driver class must not be empty";
+          }
+          return null;
+        },
         placeHolder: "org.yourDriver.Driver",
-        title: "Enter the driver class of the new driver",
+        title: "Enter the driver class of the driver",
       },
     }),
-  ];
+    new InputBox({
+      name: "defaultPort",
+      inputBoxOptions: {
+        value: oldDriverValues?.port?.toString() ?? "",
+        ignoreFocusOut: true,
+        placeHolder: "1234",
+        validateInput: (input) => {
+          if (isNaN(Number(input))) {
+            return "Port must be a number";
+          }
+          else if (input === "") {
+            return "Port must not be empty";
+          }
+
+          return null;
+        },
+        title: "Enter the default port of the driver",
+      },
+    }),
+    new InputBox({
+      name: "separator",
+      inputBoxOptions: {
+        value: oldDriverValues?.seperator ?? "",
+        ignoreFocusOut: true,
+        validateInput(value) {
+          if (value === "") {
+            return "Seperator must not be empty";
+          }
+          return null;
+        },
+        placeHolder: "/ or ; or , or : or - or _ or . or | or \\ or any other character",
+        title: "Enter the separator of the driver",
+      },
+    }),
+  );
 
   handleMultiStepInput(inputs).then((dialogValues) => {
     if (dialogValues) {
       const driverFile = dialogValues.inputValues.get("driverFile")?.[0];
-      const jdbcUrl = dialogValues.inputValues.get("jdbcUrl")?.[0];
-      const driverClass = dialogValues.inputValues.get("driverClass")?.[0];
       const visualName = dialogValues.inputValues.get("visualName")?.[0];
+      const jdbcName = dialogValues.inputValues.get("jdbcName")?.[0];
+      const driverClass = dialogValues.inputValues.get("driverClass")?.[0];
+      const defaultPort = dialogValues.inputValues.get("defaultPort")?.[0];
+      const separator = dialogValues.inputValues.get("separator")?.[0];
 
-      if (driverFile && jdbcUrl && driverClass && visualName) {
-        const driverFilePath = vscode.Uri.file(driverFile).fsPath;
-        const driverName = path.basename(driverFilePath);
-        fs.copyFileSync(driverFilePath, path.join(resourcePath, visualName + ".jar")); // Copy the driver to the resource folder
-        fs.writeFileSync(path.join(resourcePath, visualName + ".json"), JSON.stringify({
-          "name": visualName,
-          "jarName": driverName,
-          "jdbcUrl": jdbcUrl,
-          "driverClass": driverClass
-        }, null, 2));
+      if (visualName && jdbcName && driverClass && defaultPort && separator) {
+        // Add or modify the driver based on the presence of oldDriverValues and oldDriverName
+        if (oldDriverValues && oldDriverName) {
+          updateDriver(oldDriverName, visualName, driverClass, defaultPort, jdbcName, separator);
+        } else if (driverFile) {
+          const driverFilePath = vscode.Uri.file(driverFile).fsPath;
+          copyAndCreateDriver(driverFilePath, visualName, driverClass, defaultPort, jdbcName, separator);
+        }
+        else {
+          console.error("No driver file selected or modified driver values given");
+        }
       }
     }
   }).catch((error) => {
     console.error(error);
   });
 }
-function deleteDriver(driverName: string): void {  
-  //TODO: add modal dialog to confirm deletion
-  fs.rmSync(path.join(resourcePath, driverName + ".jar"));
-  fs.rmSync(path.join(resourcePath, driverName + ".json"));
+
+/**
+ * Updates the driver and JSON in the resource folder.
+ */
+function updateDriver(oldDriverName: string, visualName: string, driverClass: string, defaultPort: string, jdbcName: string, separator: string): void {
+  fs.renameSync(path.join(resourcePath, oldDriverName + ".jar"), path.join(resourcePath, visualName + ".jar"));
+  fs.renameSync(path.join(resourcePath, oldDriverName + ".json"), path.join(resourcePath, visualName + ".json"));
+  fs.writeFileSync(path.join(resourcePath, visualName + ".json"), JSON.stringify({
+    "name": visualName,
+    "driverClass": driverClass,
+    "defaultPort": defaultPort ?? "",
+    "jdbcName": jdbcName ?? "",
+    "seperator": separator ?? "",
+  }, null, 2));
+}
+
+/**
+ * Copies the driver to the resource folder and creates a JSON file for the driver with default values.
+ */
+function copyAndCreateDriver(driverFilePath: string, visualName: string, driverClass: string, defaultPort: string, jdbcName: string, separator: string): void {
+  fs.copyFileSync(driverFilePath, path.join(resourcePath, visualName + ".jar")); // Copy the driver to the resource folder
+  fs.writeFileSync(path.join(resourcePath, visualName + ".json"), JSON.stringify({
+    "name": visualName,
+    "driverClass": driverClass,
+    "defaultPort": defaultPort ?? "",
+    "jdbcName": jdbcName ?? "",
+    "seperator": separator ?? "",
+  }, null, 2));
 }
