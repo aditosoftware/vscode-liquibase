@@ -3,7 +3,7 @@ import * as path from "path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { PickPanelConfig, registerLiquibaseCommand } from "./registerLiquibaseCommand";
-import { HandleChangelogFileInput } from "./readChangelogFile";
+import { HandleChangelogFileInput } from "./handleChangelogFileInput";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import {
   ConfirmationDialog,

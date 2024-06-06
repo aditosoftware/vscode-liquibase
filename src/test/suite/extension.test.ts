@@ -6,7 +6,7 @@ import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
 import { randomUUID } from "crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
-import { HandleChangelogFileInput } from "../../readChangelogFile";
+import { HandleChangelogFileInput } from "../../handleChangelogFileInput";
 
 /**
  * Tests commands of the extension.

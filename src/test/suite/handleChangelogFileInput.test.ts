@@ -1,7 +1,7 @@
 import { DialogValues } from "@aditosoftware/vscode-input";
 import assert from "assert";
 import * as vscode from "vscode";
-import { HandleChangelogFileInput } from "../../readChangelogFile";
+import { HandleChangelogFileInput } from "../../handleChangelogFileInput";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
 import { TestUtils } from "./TestUtils";
 import path from "path";
