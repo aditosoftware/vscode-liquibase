@@ -30,6 +30,7 @@ export function generateCommandLineArgs(argument: string, dialogValues: DialogVa
 
 /**
  * Opens the created file after the command was executed.
+ *
  * @param dialogValues - the dialog values
  */
 export async function openFileAfterCommandExecution(dialogValues: DialogValues): Promise<void> {
@@ -58,6 +59,7 @@ function generateFilePath(dialogValues: DialogValues): string | undefined {
 
 /**
  * Opens the index.html, when the command was finished.
+ *
  * @param dialogValues - the dialog values
  */
 export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogValues): Promise<void> {

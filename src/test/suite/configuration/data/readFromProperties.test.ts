@@ -3,11 +3,7 @@ import { TestUtils } from "../../TestUtils";
 import path from "path";
 import { randomUUID } from "crypto";
 import * as fs from "fs";
-import {
-  readChangelog,
-  readFullValues,
-  readUrl,
-} from "../../../../configuration/data/readFromProperties";
+import { readChangelog, readFullValues, readUrl } from "../../../../configuration/data/readFromProperties";
 import {
   ConfigurationStatus,
   LiquibaseConfigurationData,

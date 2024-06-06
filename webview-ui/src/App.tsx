@@ -14,6 +14,11 @@ import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnect
 import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
 import { MessageData, MessageType } from "../../src/configuration/transfer";
 
+/**
+ * The main Webview for the Liquibase Configuration.
+ *
+ * @returns the created react element for the webview
+ */
 function App(): JSX.Element {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
     // dummy data to create the element.
@@ -46,6 +51,7 @@ function App(): JSX.Element {
   /**
    * Handles the initialization of the web view with the given data.
    * All the required components will be set.
+   *
    * @param messageData - the message data given
    */
   function handleInitData(messageData: MessageData): void {
@@ -61,6 +67,7 @@ function App(): JSX.Element {
 
   /**
    * Handles the changing of the state after the saving was successful.
+   *
    * @param messageData - the message data given
    */
   function handleSavingSuccessful(messageData: MessageData): void {
@@ -76,6 +83,7 @@ function App(): JSX.Element {
    * Handles the result after the user choose a changelog file.
    * This will update the classpath (when relative path was not possible from existing classpath)
    * and changelog file.
+   *
    * @param pMessage - the message data given
    */
   function handleChooseChangelogResult(pMessage: MessageData): void {
@@ -281,6 +289,7 @@ function App(): JSX.Element {
 
   /**
    * Creates and removes a dummy connection for the reference connection. This will also trigger the appearing or disappearing of the reference connection element.
+   *
    * @param pAdded - indicator weather the reference connection was added (`true`) or removed (`false`)
    */
   function handleAddRemoveReferenceConnection(pAdded: boolean): void {
@@ -295,7 +304,8 @@ function App(): JSX.Element {
 
   /**
    * Handles the name change of the input field.
-   * @returns the event
+   *
+   * @param event - the event that was triggered
    */
   function handleChangeName(event: React.FocusEvent<HTMLInputElement>): void {
     updateData((draft) => {
@@ -308,6 +318,7 @@ function App(): JSX.Element {
 
   /**
    * Handles the change of the changelog file.
+   *
    * @param event - the event which was triggered
    */
   function handleChangelogFileChange(event: React.FocusEvent<HTMLInputElement>): void {
@@ -327,6 +338,7 @@ function App(): JSX.Element {
 
   /**
    * Handles the changing of the additional elements.
+   *
    * @param pValues - the new additional elements.
    */
   function handleChangeAdditionalElements(pValues: Map<string, string>): void {

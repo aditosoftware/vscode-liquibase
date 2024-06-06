@@ -9,7 +9,7 @@ import { RemoveCacheOptions } from "../constants";
 
 /**
  * Class used for removing the whole cache.
- * This will be used to show the user the dialogs for removing. The logic how to remove is in `CacheHandler`.
+ * This will be used to show the user the dialogs for removal. The logic how to remove is in `CacheHandler`.
  */
 export class CacheRemover {
   /**
@@ -36,6 +36,7 @@ export class CacheRemover {
 
   /**
    * Constructor.
+   *
    * @param cacheHandler - the cache handler
    */
   constructor(private readonly cacheHandler: CacheHandler) {}
@@ -63,7 +64,7 @@ export class CacheRemover {
       new QuickPick({
         name: PROPERTY_FILE,
         title: "Select any number of connections you want to remove from the recently loaded elements",
-        generateItems: () => this.generatePropertiesForCacheRemoving(cache),
+        generateItems: () => this.generatePropertiesForCacheRemoval(cache),
         allowMultiple: true,
         onBeforeInput: this.shouldShowPropertyFileSelection,
       }),
@@ -84,17 +85,17 @@ export class CacheRemover {
     const toRemove = result.inputValues.get(CacheRemover.removeOption);
 
     if (toRemove && toRemove[0]) {
-      this.handleRemoving(toRemove[0], result);
+      this.handleRemoval(toRemove[0], result);
     }
   }
 
   /**
-   * Handles the removing of the selected values after the dialog was executed.
+   * Handles the removal of the selected values after the dialog was executed.
    *
    * @param toRemove - the option what should be removed
    * @param result - the results from the dialog input
    */
-  private handleRemoving(toRemove: string, result: DialogValues): void {
+  private handleRemoval(toRemove: string, result: DialogValues): void {
     switch (toRemove) {
       case RemoveCacheOptions.WHOLE_CACHE:
         // remove the whole cache
@@ -127,14 +128,14 @@ export class CacheRemover {
   }
 
   /**
-   * Generates the `QuickPickItems` for the liquibase.properties for cache removing.
+   * Generates the `QuickPickItems` for the liquibase.properties for cache removal.
    *
    * There will be only items from the configuration available that are also in the cache.
    *
    * @param cache - the cached values
    * @returns the `QuickPickItems` for the liquibase.properties selection
    */
-  private async generatePropertiesForCacheRemoving(cache: Cache): Promise<vscode.QuickPickItem[]> {
+  private async generatePropertiesForCacheRemoval(cache: Cache): Promise<vscode.QuickPickItem[]> {
     const result = await readConfiguration();
     if (result) {
       this.configuration = result ?? {};
@@ -155,7 +156,7 @@ export class CacheRemover {
   }
 
   /**
-   * Generates a detail message for the cache removing dialog.
+   * Generates a detail message for the cache removal dialog.
    *
    * This message will have information about the remove option and - if available - about the selected property files.
    *
@@ -201,6 +202,7 @@ export class CacheRemover {
 
   /**
    * Generates the `QuickPickItems` for the remove options
+   *
    * @returns the `QuickPickItems` for the remove option
    */
   private generateRemoveOptions(): QuickPickItem[] {

@@ -5,15 +5,16 @@ import * as path from "path";
 import * as fs from "fs";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
-import { ConfirmationDialog, InputBox, OpenDialog, handleMultiStepInput } from "@aditosoftware/vscode-input";
+import { InputBox, OpenDialog, handleMultiStepInput, ConfirmationDialog } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
 import { ConnectionType } from "../input/ConnectionType";
+import { getCustomDrivers } from "../utilities/customDrivers";
 import { PREDEFINED_DRIVERS } from "../configuration/drivers";
 import { resourcePath } from "../extension";
-import { getCustomDrivers } from "../utilities/customDrivers";
 
 /**
  * Edits an existing configuration.
+ *
  * @param uri - the file that should be edited
  * @param context - the ExtensionContext. This is needed for opening the webview for editing the context
  */
@@ -23,9 +24,9 @@ export async function editExistingLiquibaseConfiguration(
 ): Promise<void> {
   let existingConfiguration:
     | {
-      fsPath: string;
-      name: string;
-    }
+        fsPath: string;
+        name: string;
+      }
     | undefined;
 
   if (uri) {
@@ -69,6 +70,7 @@ export async function editExistingLiquibaseConfiguration(
 
 /**
  * Shows an input that lets the user select any of the configured configurations.
+ *
  * @param pTitle - the title of the quick pick dialog
  * @returns the selected configuration
  */

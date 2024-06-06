@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import { vscodeApiWrapper } from "../utilities/vscodeApiWrapper";
 import { MessageData, MessageType } from "../../../src/configuration/transfer";
+import { LiquibaseConfigurationData } from "../../../src/configuration/data/LiquibaseConfigurationData";
 
 /**
  * The properties for the additional element tag.
@@ -17,6 +18,7 @@ import { MessageData, MessageType } from "../../../src/configuration/transfer";
 interface AdditionalElementProps {
   /**
    * Event for listening on any value change of the additional elements.
+   *
    * @param pValues - all the new additional values
    */
   onValueChange: (pValues: Map<string, string>) => void;
@@ -29,6 +31,7 @@ const valueIndicator = "value";
 
 /**
  * Creates an editable grid component for adding the additional elements to the configuration.
+ *
  * @param pProperties - the properties that are needed for the additional elements
  * @returns the created component
  */
@@ -52,6 +55,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
   /**
    * Makes the row editable when clicked on it.
+   *
    * @param pEvent - the click event
    */
   function makeRowEditable(pEvent: { target: unknown }): void {
@@ -76,6 +80,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
   /**
    * Exists the editing when Enter or Escape where pressed.
+   *
    * @param pEvent - the keyboard event
    */
   function handleKeydown(pEvent: KeyboardEvent): void {
@@ -87,6 +92,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
   /**
    * Handles any event where the edit of a DataGridCell was finished.
    * In this case the data will be updated.
+   *
    * @param pEvent - the event when the cell was left
    */
   function handleEditFinished(pEvent: Event): void {
@@ -103,7 +109,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
       const newAdditionalValues = new Map(additionalElementValues);
 
-      if(indicator === keyIndicator && !isKeyAcceptable(newCellValue)) {  
+      if (indicator === keyIndicator && !isKeyAcceptable(newCellValue)) {
         vscodeApiWrapper.postMessage(
           new MessageData(MessageType.LOG_MESSAGE, {
             level: "error",
@@ -149,6 +155,7 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
 
   /**
    * Deletes a row based on the key.
+   *
    * @param pKey - the key of the row which should be deleted
    */
   function handleDeleteRow(pKey: string): void {
@@ -160,38 +167,26 @@ export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Ele
     pProperties.onValueChange(newElementValues);
   }
 
-
-
   /**
    * Checks if the entered key is acceptable.
+   *
    * @param key - the key to check
    * @returns true if the key is acceptable, false otherwise
    */
   function isKeyAcceptable(key: string): boolean {
-    //TODO: maybe get the invalid keys from the extension? Or from the liquibase documentation? Or from the liquibase code? who knows, who knows...
-    const invalidKeys = [
-      "changelogFile",
-      "driver",
-      "url",
-      "username",
-      "password",
-      "referenceDatabase",
-      "referenceDriver",
-      "referenceUrl",
-      "referenceUsername",
-      "referencePassword",
-    ];
-    return !invalidKeys.includes(key);
+    return !LiquibaseConfigurationData.configuredKeys.includes(key);
   }
 
   return (
     <div>
       <fieldset>
         <legend>
-          Advanced properties      
-          <VSCodeLink 
-          id="helpLink"
-          href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html"><span className="codicon codicon-question"> </span></VSCodeLink>
+          Advanced properties
+          <VSCodeLink
+            id="helpLink"
+            href="https://docs.liquibase.com/concepts/connections/creating-config-properties.html">
+            <span className="codicon codicon-question"> </span>
+          </VSCodeLink>
         </legend>
         <p>To edit an row, click on it.</p>
         <VSCodeDataGrid aria-label="Default">

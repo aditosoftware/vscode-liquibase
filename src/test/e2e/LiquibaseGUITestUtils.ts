@@ -53,15 +53,11 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Opens a temp workspace and closes all editors. Also starts the docker container when needed.
+   *
+   * @param startContainer - If the container should be started.
+   * @returns the name of the created configuration
    */
-  static async setupTests({
-    startContainer = true,
-  }: {
-    /**
-     * If the container should be started.
-     */
-    startContainer?: boolean;
-  } = {}): Promise<string> {
+  static async setupTests(startContainer: boolean = true): Promise<string> {
     // start the container
     if (startContainer) {
       await DockerTestUtils.startContainer();
@@ -118,17 +114,19 @@ export class LiquibaseGUITestUtils {
   //#region command start
   /**
    * Starts the execution of an command
-   * @param pCommand - the command that should be executed
-   * @param configurationName - the name of the configuration that should be automatically put into
-   * @param changelogFile - if the changelog file should be automatically selected
+   *
+   * @param startingArguments - information about the command execution
+   * - `command` - the command that should be executed
+   * - `configurationName` - the name of the configuration that should be automatically put into
+   * - `changelogFile` - if the changelog file should be automatically selected
    * @returns the input box for the commands
    */
   static async startCommandExecution({
-    pCommand: command,
+    command,
     configurationName,
     changelogFile,
   }: {
-    pCommand: string;
+    command: string;
     configurationName?: string;
     changelogFile?: boolean;
   }): Promise<InputBox> {
@@ -206,10 +204,10 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Creates a configuration.
-
+   *
    * @param databaseType - the type of the database that should be used for the configuration
    * @param port - the port that should be used for creating the configuration
-   * @param databaseName - the name of the database 
+   * @param databaseName - the name of the database
    * @returns the name that was used for creating the configuration
    */
   static async createConfiguration(
@@ -253,6 +251,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Creates a temporary folder for the tests.
+   *
    * @returns - the path to the temporary folder
    */
   static generateTemporaryFolder(): string {
@@ -266,6 +265,7 @@ export class LiquibaseGUITestUtils {
   /**
    * Example wait condition for WebDriver. Wait for a notification with given text to appear.
    * Wait conditions resolve when the first truthy value is returned.
+   *
    * @param text - the text that should be in any notification
    * @param failOnWaitExceeded - if the method should fail, when no message with the given text was in the notifications. Default behavior is `true`.
    * @returns `true`, when the text was matched
@@ -308,6 +308,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Checks if a notification exists.
+   *
    * @param text - the text that should be in any notification
    * @returns the found notification, if it exists
    * @throws `AssertionError` - when no notification with the given text was found
@@ -363,9 +364,9 @@ export class LiquibaseGUITestUtils {
    * Executes a callback function for a matrix of options.
    *
    * @param callback - The function to be executed. It takes three parameters:
-   *   - `option`: A string representing the current option.
-   *   - `toggleContexts`: A function that toggles the contexts
-   *   - `key`: A string representing the key associated with the current option.
+   * - `option`: A string representing the current option.
+   * - `toggleContexts`: A function that toggles the contexts
+   * - `key`: A string representing the key associated with the current option.
    */
   static matrixExecution(callback: (option: string, toggleContexts: () => Promise<void>, key: string) => void): void {
     const options = [ContextOptions.NO_CONTEXT, ContextOptions.LOAD_ALL_CONTEXT, ContextOptions.USE_RECENTLY_LOADED];
@@ -385,6 +386,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Selects the what type of context and the contexts itself in the matrixExecution.
+   *
    * @param input - the inputBox on which the elements should be put into
    * @param option - the option what type of context should be used
    * @param toggleContexts - the function to toggle the contexts
@@ -404,6 +406,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Selects the folder and confirms the dialog
+   *
    * @param input - the input where the folder should be put into
    * @param folderName - the name of the folder
    * @see https://github.com/redhat-developer/vscode-extension-tester/blob/b283b0f7a1ca451b9decf6b08d76fda24134f897/docs/Home.md?plain=1#L77
@@ -430,7 +433,7 @@ export class LiquibaseGUITestUtils {
    *
    * @param options - The options for selecting the context.
    * - `toggleAll` - Flag indicating whether to toggle all contexts.
-   * - filterForInput - The filtering that should happen before the toggle all
+   * - `filterForInput` - The filtering that should happen before the toggle all
    * - `input` - The input box on which the filtering and toggling should be executed.
    */
   static async selectContext({
@@ -464,6 +467,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Creates some RMB arguments for the tests.
+   *
    * @param name - the name of the command that should be called
    * @param contextOption - the possible context option that should be selected as second element in the dialogs (first element is always configuration)
    * @returns the arguments for this command
@@ -507,6 +511,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Opens the Liquibase context menu in the explorer side bar on the changelog file and selects the given action.
+   *
    * @param action - the name of the action
    * @param configurationName - the name of the configuration that should be set as first value
    * @param contextOption - the context that should be set as second value
@@ -524,6 +529,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Inputs some basic values for the RMB dialogs.
+   *
    * @param configurationName - the name of the configuration that should be set as first value
    * @param contextOption - the context that should be set as second value
    * @returns the input box that can be used for setting other values in the dialogs
@@ -549,6 +555,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Opens the explorer at a specific point and opens the context menu.
+   *
    * @param action - the name of the action that should be executed
    * @param topLevelItem - the name of the top level folder in the explorer
    * @param children - all the children folders and the file that should be selected in the specific order
@@ -608,7 +615,7 @@ export class LiquibaseGUITestUtils {
    */
   static async removeWholeCache(): Promise<void> {
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Cache: Removes any values from the recently loaded elements",
+      command: "Cache: Removes any values from the recently loaded elements",
     });
 
     await input.setText(RemoveCacheOptions.WHOLE_CACHE);
@@ -616,6 +623,8 @@ export class LiquibaseGUITestUtils {
 
     const modalDialog = new ModalDialog();
     await modalDialog.pushButton("Delete");
+
+    await LiquibaseGUITestUtils.waitForCommandExecution("Successfully removed all recently loaded elements.");
   }
 
   /**
@@ -631,7 +640,7 @@ export class LiquibaseGUITestUtils {
     filterTextForContexts?: string
   ): Promise<void> {
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "update",
+      command: "update",
       configurationName,
       changelogFile: true,
     });
@@ -653,7 +662,7 @@ export class LiquibaseGUITestUtils {
    * @param tagName - the name of the tag that should be created
    */
   static async executeCreateTag(configurationName: string, tagName: string): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "create tag", configurationName });
+    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag", configurationName });
 
     await input.setText(tagName);
     await input.confirm();
@@ -675,6 +684,7 @@ export class LiquibaseGUITestUtils {
 
   /**
    * Waits until a condition was fulfilled.
+   *
    * @param waitFunction - the function that should return true and be called as long as the wait takes
    * @param message - the message that should be written when failing the timeout
    * @param timeout - the timeout that should be waited

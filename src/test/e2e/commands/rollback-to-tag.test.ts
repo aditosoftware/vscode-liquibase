@@ -38,7 +38,7 @@ suite("Rollback to Tag", function () {
 
     // Rollback time
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Rollback to Tag",
+      command: "Rollback to Tag",
       configurationName,
       changelogFile: true,
     });

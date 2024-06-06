@@ -10,6 +10,7 @@ import { randomUUID } from "crypto";
 export class WebviewTestUtils {
   /**
    * Opens the webview before each test.
+   *
    * @returns the opened webview
    */
   private static async openWebview(): Promise<WebView> {
@@ -33,8 +34,10 @@ export class WebviewTestUtils {
 
   /**
    * Check if the webview is opened
+   *
+   * @returns `true`, if the webview was opened
    */
-  static async checkForOpenedWebview(): Promise<boolean | undefined> {
+  static async checkForOpenedWebview(): Promise<boolean> {
     const editor = new EditorView();
 
     return VSBrowser.instance.driver.wait(
@@ -78,6 +81,7 @@ export class WebviewTestUtils {
 
   /**
    * Tests if the content in the preview matches the expected expression.
+   *
    * @param webView - the webview from which the preview should be taken
    * @param expected - the expected text that should be contained in the preview
    */
@@ -89,6 +93,7 @@ export class WebviewTestUtils {
 
   /**
    * Tests if the content in the preview is equals to the expected expression.
+   *
    * @param webView - the webview from which the preview should be taken
    * @param expected - the expected text that should be equals the preview
    */
@@ -100,6 +105,7 @@ export class WebviewTestUtils {
 
   /**
    *Extracts the text of the preview.
+   *
    * @param webView - the webview from which the preview should be taken
    * @returns the text of the preview
    */
@@ -113,7 +119,7 @@ export class WebviewTestUtils {
    * Writes MariaDB data for a normal configuration to the webview.
    * Also clicks the given button.
    *
-   * @param config- the configuration that should be written
+   * @param config - the configuration that should be written
    */
   static async addConfigurationDataToWebview(
     config: Config = {

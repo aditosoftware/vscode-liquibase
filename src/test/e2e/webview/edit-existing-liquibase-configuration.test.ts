@@ -68,7 +68,7 @@ suite("editExistingLiquibaseConfiguration", () => {
     await new EditorView().closeAllEditors();
 
     await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Edit existing Liquibase Configuration",
+      command: "Edit existing Liquibase Configuration",
       configurationName,
     });
 

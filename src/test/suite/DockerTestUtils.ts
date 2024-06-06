@@ -6,8 +6,8 @@ import mariadb from "mariadb";
  * Creates and manages a maria docker container for tests.
  *
  * **Note:** for this tests to work, you need the following prerequisites:
- * * under Windows: you need WSL. In the WSL you need to have docker installed. You can verify it by running `wsl docker -v` in your CMD or PowerShell.
- * * under Linux and mac: you need docker installed. You can verify it by running `docker -v`
+ * - under Windows: you need WSL. In the WSL you need to have docker installed. You can verify it by running `wsl docker -v` in your CMD or PowerShell.
+ * - under Linux and mac: you need docker installed. You can verify it by running `docker -v`
  */
 export class DockerTestUtils {
   /**
@@ -46,7 +46,7 @@ export class DockerTestUtils {
    * You want to check the status of the container with `checkContainerStatus` afterwards.
    *
    * @param containerName - The container that should be started
-   *
+   * @param exposedPort - the port number that should be exposed in the container
    * @returns the id of the started container
    */
   static async startContainer(containerName: string = "mariadb", exposedPort: number = 3310): Promise<string> {
@@ -79,7 +79,6 @@ export class DockerTestUtils {
    * Stops and removes the docker container.
    *
    * @param containerName - Container that should be removed
-   *
    * @returns The id of the removed container
    */
   static async stopAndRemoveContainer(containerName: string = "mariadb"): Promise<string> {
@@ -203,6 +202,7 @@ export class DockerTestUtils {
 
   /**
    * Creates a pool for the database.
+   *
    * @param database - the name of the database
    * @returns the created pool
    */

@@ -70,8 +70,10 @@ export async function removeConfiguration(): Promise<void> {
 }
 
 /**
- * Handles the dialog results. This will delete depending on the mode the desired elements.
+ * Handles the dialog results. This will delete the desired elements depending on the mode.
+ *
  * @param dialogResult - the results of the dialogs
+ * @returns a promise if the dialog values were there, otherwise `undefined`
  */
 function handleDialogResults(dialogResult: DialogValues): Promise<void> | undefined {
   const path = dialogResult.inputValues.get(PROPERTY_FILE)?.[0];
@@ -100,6 +102,7 @@ function handleDialogResults(dialogResult: DialogValues): Promise<void> | undefi
 
 /**
  * Deletes the values from the configuration.
+ *
  * @param path - the path of the configuration
  * @param deletionMode - the modes what should be deleted. This was selected by the user.
  * @returns a function that has as parameter the jsonData from the setting and removes async the values from it.
@@ -133,6 +136,7 @@ function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<
 
 /**
  * Generates a detail message for the deletion of the contexts.
+ *
  * @param dialogValues - the current dialog values
  * @returns detail message what will be deleted
  */

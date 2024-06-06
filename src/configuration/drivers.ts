@@ -36,17 +36,18 @@ export class Driver {
 
   /**
    * Constructor.
+   *
    * @param pDriverClass - The class which is needed for creating the Liquibase file.
    * @param pUrlForDownload - The url for downloading the driver. This is only used in the prerequisites.
    * @param jdbcName - The jdbc name of the driver.
    * @param port - The default port of the driver.
    * @param separator - The separator for the jdbc url.
    * @param extractDatabaseNameFromUrl - the function that will be used for extracting the database name from the url.
-   *  Not all drivers have the database name separated only by the separator, therefore a custom function is needed.
+   * Not all drivers have the database name separated only by the separator, therefore a custom function is needed.
    * @param buildDatabaseName - the function that will build that database name, so it can be added to the url. This should also add the separator to the return value.
-   *  Not all drivers have the database name separated only by the separator, therefore a custom function is needed.
+   * Not all drivers have the database name separated only by the separator, therefore a custom function is needed.
    * @param extractParameters - the function that will extract all additional parameters from the given url and return them.
-   *  This should not include the database name, because it will be extracted and added in a other way.
+   * This should not include the database name, because it will be extracted and added in a other way.
    */
   constructor(
     pDriverClass: string,
@@ -70,6 +71,7 @@ export class Driver {
 
   /**
    * Finds out the file name under which an existing driver would be downloaded.
+   *
    * @returns the file name under which the driver would be saved
    */
   getFileName(): string {
@@ -78,6 +80,7 @@ export class Driver {
 
   /**
    * Extract the url parts of a given url.
+   *
    * @param url - the url whose parts should be extracted
    * @returns the parts of the url
    */
@@ -109,6 +112,7 @@ export class Driver {
 
   /**
    * Builds an jdbc url from the given url parts.
+   *
    * @param oldUrl - any old url where parameters should be preserved
    * @param newValues - the new values from the user input.
    * @param serverAddress - the old input value from the server address input. This will be used as a fallback, if in `newValues` is no corresponding element.
@@ -133,8 +137,9 @@ export class Driver {
     const builtDatabaseName = this.buildDatabaseName(this, newValues.databaseName ?? databaseName);
 
     // and build the url
-    return `${this.jdbcName}${newValues.serverAddress ?? serverAddress}:${newValues.port ?? port
-      }${builtDatabaseName}${parameters}`;
+    return `${this.jdbcName}${newValues.serverAddress ?? serverAddress}:${
+      newValues.port ?? port
+    }${builtDatabaseName}${parameters}`;
   }
 }
 
@@ -236,6 +241,7 @@ export const PREDEFINED_DRIVERS = new Map<string, Driver>([
 
 /**
  * Extracts the database name of an url by the separator of the driver.
+ *
  * @param url - the given url
  * @param driver - the driver for which the extraction should be done
  * @returns the extracted database name
@@ -257,6 +263,7 @@ function extractDatabaseNameBySeparator(url: string, driver: Driver): DatabaseNa
 /**
  * Builds the database name, so it can be added to the url.
  * This will have the separator in front of the name.
+ *
  * @param driver - the driver which has the separator
  * @param databaseName - the name of the database
  * @returns the name of the database with the separator
@@ -268,6 +275,7 @@ function buildDatabaseNameBySeparator(driver: Driver, databaseName: string): str
 /**
  * Extracts the parameters by the separator `?`.
  * If there are no parameters, then an empty string will be returned.
+ *
  * @param oldUrl - the url where the parameters should be extracted
  * @returns the parameters with the separator `?`
  */
@@ -282,6 +290,7 @@ function extractParameters(oldUrl: string): string {
  * Extracts the database name for MS SQL. This has the database name not separated by an separator, but with an argument.
  *
  * Example url: `jdbc:sqlserver://hostname:port;databaseName=database_name;parameter1=value1;parameter2=value2`
+ *
  * @param url - the given url
  * @param driver - the driver for which the extraction should be done
  * @returns the extracted database name
@@ -305,6 +314,7 @@ function extractDatabaseNameForMsSQL(url: string, driver: Driver): DatabaseNameE
 
 /**
  * Builds the database name for MS SQL, so it can be added to the url.This has the database name not separated by an separator, but with an argument.
+ *
  * @param driver - the driver which is currently building the database name
  * @param databaseName - the name of the database
  * @returns the name of the database for MS SQL
@@ -316,6 +326,7 @@ function buildDatabaseNameForMsSQL(driver: Driver, databaseName: string): string
 /**
  * Extracts the parameters for MS SQL. These parameters are separated by `;` and can be in any number.
  * Also the parameters can include the databaseName, which should not be extracted.
+ *
  * @param oldUrl - the url where the parameters should be extracted
  * @returns the parameters starting with `;`. If there are no parameters, then an empty string will be returned.
  */

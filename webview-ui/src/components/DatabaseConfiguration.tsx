@@ -172,6 +172,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
   /**
    * Sets the new database name whenever a `onBlur` event was triggered.
    * It updates automatically the url with the new url part.
+   *
    * @param event - the `onBlur` event which has the new value
    */
   function handleDatabaseName(event: React.FocusEvent<HTMLInputElement>): void {
@@ -266,7 +267,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
 
   /**
    * Creates all the radio elements for all the possible pre-configured drivers and a wildcard driver entry.
-   * 
+   *
    * @returns the created `VSCodeRadio` elements
    */
   function createDatabaseSelections(): JSX.Element[] {
@@ -311,7 +312,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
    *
    * @param pProperties - the properties which are used to configure this component. This is needed for handling the changing of values.
    * @param pType - the type of the text input field, e.g. text, password
-   * @param pFieldName -  the name of the field. This is used for setting the new value when the value has changed
+   * @param pFieldName - the name of the field. This is used for setting the new value when the value has changed
    * @param pLabel - the label of the text field
    * @param pPlaceholder - a possible placeholder value for this input
    * @returns the created input

@@ -4,6 +4,7 @@ import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
  * Opens a document in VS-Code.
+ *
  * @param path - the path of the document that should be opened
  */
 export async function openDocument(path: string): Promise<void> {

@@ -28,6 +28,8 @@ interface Configuration {
 
 /**
  * Reads the database configuration and return all names.
+ *
+ * @returns the sorted names of the configuration
  */
 export async function readLiquibaseConfigurationNames(): Promise<string[] | undefined> {
   const configuration = await readConfiguration();
@@ -38,6 +40,7 @@ export async function readLiquibaseConfigurationNames(): Promise<string[] | unde
 
 /**
  * Reads the path from an configuration name.
+ *
  * @param pConfigurationName - the name of the configuration
  * @returns the path for this configuration
  */
@@ -50,6 +53,7 @@ export async function getPathOfConfiguration(pConfigurationName: string): Promis
 
 /**
  * Updates the values of the configuration.
+ *
  * @param pOnUpdate - the function used for updating the json data. This data is given as key / value pairs
  * @returns `true` when the updating was successful
  */
@@ -75,6 +79,7 @@ export async function updateConfiguration(
 
 /**
  * Reads the configuration values for the liquibase specific configuration.
+ *
  * @returns the read values from the configuration
  */
 export async function readConfiguration(): Promise<Record<string, string> | undefined> {
@@ -87,6 +92,7 @@ export async function readConfiguration(): Promise<Record<string, string> | unde
 /**
  * Reads the liquibase specific configuration.
  * This method should not be exported. Instead, use `readConfiguration` for reading and `updateConfiguration` for updating the configuration.
+ *
  * @returns the found configuration. This includes also the stored location for further updating
  */
 async function readConfigurationInternal(): Promise<Configuration | undefined> {
@@ -108,6 +114,7 @@ async function readConfigurationInternal(): Promise<Configuration | undefined> {
 
 /**
  * Finds the file where the liquibase specific settings are stored.
+ *
  * @returns the full path to the file with liquibase specific settings
  */
 async function getLiquibaseSpecificSettingsPath(): Promise<string | undefined> {

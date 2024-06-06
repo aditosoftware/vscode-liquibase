@@ -294,9 +294,10 @@
     "clean-compile": "npm run clean && npm run compile",
     "createTempWorkspace": "copyfiles -u 3 -E -a \"src/test/workspace/**/*\" out/temp/workspace",
     "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
     "pretest": "npm run clean-compile && npm run createTempWorkspace",
     "test": "vscode-test",
-    "test:e2e": "npm run pretest && extest setup-and-run --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
+    "test:e2e": "npm run pretest && extest setup-and-run --code_version max --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
@@ -317,15 +318,16 @@
     "@typescript-eslint/parser": "^6.21.0",
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
+    "concurrently": "^8.2.2",
     "copyfiles": "^2.4.1",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-jsdoc": "^48.2.7",
     "eslint-plugin-tsdoc": "^0.2.17",
+    "mariadb": "^3.3.0",
     "mkdirp": "^3.0.1",
+    "rimraf": "^5.0.5",
     "sinon": "^17.0.1",
     "typescript": "^5.3.3",
-    "vscode-extension-tester": "^8.2.0",
-    "rimraf": "^5.0.5",
-    "mariadb": "^3.3.0",
-    "concurrently": "^8.2.2"
+    "vscode-extension-tester": "^8.2.0"
   }
 }

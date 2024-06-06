@@ -58,7 +58,7 @@ suite("LiquibaseConfigurationData", () => {
         getActualValue: (data: LiquibaseConfigurationData) => data.referenceDatabaseConnection?.url,
       },
 
-      // This key will set as additional configuration.
+      // This key will be set as additional configuration.
       {
         key: "lorem",
         value: "ipsum",
@@ -143,6 +143,7 @@ suite("LiquibaseConfigurationData", () => {
 
       /**
        * The function to create the expected value.
+       *
        * @param passwordValue - the value that should be set as password
        * @returns the content for the properties file.
        */

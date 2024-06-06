@@ -190,6 +190,8 @@ suite("removeConfiguration", () => {
  *
  * @param deletionMode - the deletion mode that should be selected
  * @param expected - the expected elements
+ * - `existPropertyFile`: if a property file exists
+ * - `settingsFileContent`: the content of the settings file
  * @param files - the location to the temporary created files
  * @param stubs - the stubs  for the tests
  * @param done - mochas done to indicate the end of the test

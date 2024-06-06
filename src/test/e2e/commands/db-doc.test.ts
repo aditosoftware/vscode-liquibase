@@ -34,7 +34,7 @@ suite("db-doc", function () {
 
     // Prepare input for the command execution.
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Generate database documentation (db-doc)",
+      command: "Generate database documentation (db-doc)",
       configurationName,
       changelogFile: true,
     });

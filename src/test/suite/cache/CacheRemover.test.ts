@@ -169,8 +169,8 @@ suite("CacheRemover tests", () => {
      * Tests that the generation of properties for the cache removing works correctly.
      * This method is explicitly tested, because there is no easy way to test it correctly in the program flow.
      */
-    test("should generatePropertiesForCacheRemoving", async () => {
-      const result = await cacheRemover["generatePropertiesForCacheRemoving"]({
+    test("should generatePropertiesForCacheRemoval", async () => {
+      const result = await cacheRemover["generatePropertiesForCacheRemoval"]({
         "path/to/connection/one.liquibase.properties": {
           contexts: ["a", "b"],
         },
@@ -375,6 +375,7 @@ suite("CacheRemover tests", () => {
 
 /**
  * Asserts that the cache location was not changed
+ *
  * @param cacheLocation - the cache location
  */
 function assertCacheLocationUnchanged(cacheLocation: string): void {

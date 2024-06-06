@@ -83,7 +83,7 @@ suite("vscodeUtilities", () => {
 
 /**
  * Tests that a file with the given name was opened.
- * 
+ *
  * @param fileName - the name of the file
  * @param fileContent - the expected content of the file
  */

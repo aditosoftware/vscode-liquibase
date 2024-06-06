@@ -62,7 +62,8 @@ suite("diff", function () {
 
 /**
  * Executes the diff command.
- * @param fileName  - the file name where the diff should be written
+ *
+ * @param fileName - the file name where the diff should be written
  * @param configurationName - the name of the first configuration
  * @param secondConfiguration - the name of the second configuration
  */
@@ -71,7 +72,7 @@ async function executeCommand(fileName: string, configurationName: string, secon
 
   await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
-  const input = await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "diff", configurationName });
+  const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "diff", configurationName });
 
   await input.setText(secondConfiguration);
   await input.confirm();

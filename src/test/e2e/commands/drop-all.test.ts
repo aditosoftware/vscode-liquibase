@@ -25,7 +25,15 @@ suite("Drop-all", function () {
   test("should execute 'drop-all' command", async function () {
     await executeDropAll(configurationName, "Drop-all", true);
 
-    //TODO: add comparison to db to check if everything was removed
+    // check if no data is in database
+    const databaseInformation = await DockerTestUtils.executeMariaDBSQL(
+      "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
+    );
+    assert.strictEqual(
+      databaseInformation.length,
+      0,
+      `Table 'person' DOES exist, while it shouldn't: ${databaseInformation}`
+    );
   });
 
   /**
@@ -45,6 +53,7 @@ suite("Drop-all", function () {
 
 /**
  * Executed the drop all command.
+ *
  * @param configurationName - the name of the configuration that should be dropped
  * @param buttonPushed - the button that should be pushed in the modalDialog
  * @param result - the expected result, if the drop-all was successfully done
@@ -54,7 +63,7 @@ async function executeDropAll(
   buttonPushed: "Drop-all" | "Cancel",
   result: boolean
 ): Promise<void> {
-  await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "drop-all", configurationName });
+  await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all", configurationName });
 
   const modalDialog = new ModalDialog();
   await modalDialog.pushButton(buttonPushed);

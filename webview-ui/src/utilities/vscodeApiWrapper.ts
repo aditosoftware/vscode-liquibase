@@ -13,6 +13,9 @@ import { MessageData } from "../../../src/configuration/transfer";
 class VSCodeAPIWrapper {
   private readonly vsCodeApi: WebviewApi<unknown> | undefined;
 
+  /**
+   * Constructor.
+   */
   constructor() {
     // Check if the acquireVsCodeApi function exists in the current development
     // context (i.e. VS Code development window or web browser)
@@ -26,7 +29,6 @@ class VSCodeAPIWrapper {
    *
    * @remarks When running webview code inside a web browser, postMessage will instead
    * log the given message to the console.
-   *
    * @param message - Arbitrary data (must be JSON serializable) to send to the extension context.
    */
   public postMessage(message: MessageData): void {
@@ -46,7 +48,7 @@ class VSCodeAPIWrapper {
   public addMessageListener(handleMessageData: (pMessageData: MessageData) => void): void {
     window.addEventListener("message", (event) => {
       if (event.origin.startsWith("vscode-webview://")) {
-        const messageData = MessageData.createFromSerializedData(event.data);
+        const messageData = MessageData.clone(event.data);
 
         handleMessageData(messageData);
       } else {
@@ -60,7 +62,6 @@ class VSCodeAPIWrapper {
    *
    * @remarks When running webview source code inside a web browser, getState will retrieve state
    * from local storage (https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-   *
    * @returns The current state or `undefined` if no state has been set.
    */
   public getState(): unknown | undefined {
@@ -77,10 +78,8 @@ class VSCodeAPIWrapper {
    *
    * @remarks When running webview source code inside a web browser, setState will set the given
    * state using local storage (https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage).
-   *
    * @param newState - New persisted state. This must be a JSON serializable object. Can be retrieved
    * using {@link getState}.
-   *
    * @returns The new state.
    */
   public setState<T extends unknown | undefined>(newState: T): T {

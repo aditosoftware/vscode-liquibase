@@ -49,12 +49,13 @@ suite("Tag Exist", function () {
 
 /**
  * Executes the tag exist command and verify the message in the output channel.
+ *
  * @param configurationName - the name of the configuration
  * @param tagName - the name of the tag that should be put into the tg command
  * @param messageToCheck - the message that should be in the output panel
  */
 async function executeTagExists(configurationName: string, tagName: string, messageToCheck: RegExp): Promise<void> {
-  const input = await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "tag-exists", configurationName });
+  const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "tag-exists", configurationName });
 
   // set the name of the tag to check
   await input.setText(tagName);

@@ -21,7 +21,8 @@ const possibleReferenceKeys = [
 
 /**
  * Reads the `changelogFile` element of the file.
- * @param path -  the path which should be read
+ *
+ * @param pPath - the path which should be read
  * @returns the changelogFile element of the file
  */
 export function readChangelog(pPath: string): string | undefined {
@@ -32,7 +33,8 @@ export function readChangelog(pPath: string): string | undefined {
 
 /**
  * Reads the `url` element of the file.
- * @param path -  the path which should be read
+ *
+ * @param pPath - the path which should be read
  * @returns the url element of the file
  */
 export function readUrl(pPath: string): string | undefined {
@@ -73,7 +75,7 @@ export function readPossibleReferenceValues(pPath: string): string[] {
 }
 
 /**
- * Loads the content from a file and transform it into an object.
+ * Loads the content from a file and transforms it into an object.
  *
  * @param pName - the name of the configuration
  * @param pPath - the path of the file
@@ -83,15 +85,12 @@ export function readPossibleReferenceValues(pPath: string): string[] {
 export function readFullValues(
   pName: string,
   pPath: string,
-  pLiquibaseSettings: LiquibaseSettings  
+  pLiquibaseSettings: LiquibaseSettings
 ): LiquibaseConfigurationData {
   // read the liquibase properties from a file
   const liquibaseProperties = readProperties(pPath);
 
-  const data = LiquibaseConfigurationData.createDefaultData(
-    pLiquibaseSettings,
-    ConfigurationStatus.EDIT
-  );
+  const data = LiquibaseConfigurationData.createDefaultData(pLiquibaseSettings, ConfigurationStatus.EDIT);
   data.name = pName;
 
   // handle all key-value-pairs from the file
@@ -104,6 +103,7 @@ export function readFullValues(
 
 /**
  * Reads the properties file and returns it as key-value-pair
+ *
  * @param pPath - the path where this file should be read
  * @returns the properties as key-value pairs
  */

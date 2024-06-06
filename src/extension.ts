@@ -35,8 +35,6 @@ import { CacheHandler, CacheRemover } from "./cache/";
 import { removeConfiguration } from "./settings/removeConfiguration";
 import { folderSelectionName } from "./constants";
 
-
-
 /**
  * The path where all resources (jars) are located from the extension.
  */
@@ -54,9 +52,10 @@ export let cacheHandler: CacheHandler;
 
 /**
  * Main-Function that will execute all the code within
+ *
  * @param context - The context object provided by VSCode to the extension.
- *                  It represents the lifecycle of the extension and can be used
- *                  to store and retrieve global state.
+ * It represents the lifecycle of the extension and can be used
+ * to store and retrieve global state.
  */
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
   // Constructing the path to the resources folder
@@ -173,7 +172,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
             },
           }),
         },
-        // TODO format parameter can be there to create diff as json. Include?
+
         {
           input: new InputBox({
             name: fileName,
@@ -190,23 +189,17 @@ function registerCommands(context: vscode.ExtensionContext): void {
             name: "diffTypes",
             title: "Choose any diff types",
             //all possible diffTypes for the diff dialog
-            //TODO: maybe all descriptions should say something useful?
             generateItems: () => [
               { label: "catalogs", description: "" },
-              { label: "tables", description: "default", picked: true },
-              { label: "functions", description: "" },
-              { label: "views", description: "default", picked: true },
               { label: "columns", description: "default", picked: true },
-              { label: "indexes", description: "default", picked: true },
-              { label: "foreignkeys", description: "default", picked: true },
-              { label: "primarykeys", description: "default", picked: true },
-              { label: "uniqueconstraints", description: "default", picked: true },
               { label: "data", description: "" },
-              { label: "storedprocedures", description: "" },
-              { label: "triggers", description: "" },
+              { label: "foreignkeys", description: "default", picked: true },
+              { label: "indexes", description: "default", picked: true },
+              { label: "primarykeys", description: "default", picked: true },
               { label: "sequences", description: "" },
-              { label: "databasepackage", description: "" },
-              { label: "databasepackagebody", description: "" },
+              { label: "tables", description: "default", picked: true },
+              { label: "uniqueconstraints", description: "default", picked: true },
+              { label: "views", description: "default", picked: true },
             ],
             allowMultiple: true,
           }),
@@ -450,6 +443,7 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
 
 /**
  * Registers all the commands that are needed by liquibase properties handling
+ *
  * @param context - the Context for storing the commands
  */
 function registerCommandsForLiquibasePropertiesHandling(context: vscode.ExtensionContext): void {

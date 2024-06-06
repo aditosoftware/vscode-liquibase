@@ -69,7 +69,6 @@ suite("AdditionalElements", () => {
    */
   test("should not add an element with an unacceptable key", async function () {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
-
       const keyInput = await webView.findWebElement(By.id("keyInput"));
       await keyInput.sendKeys("driver", Key.TAB);
 
@@ -100,7 +99,6 @@ suite("AdditionalElements", () => {
    */
   test("should return old value when editing an element with an unacceptable key", async function () {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
-
       const keyInput = await webView.findWebElement(By.id("keyInput"));
       await keyInput.sendKeys("driver2", Key.TAB);
 

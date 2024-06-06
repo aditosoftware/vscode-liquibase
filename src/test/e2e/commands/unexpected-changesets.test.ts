@@ -28,14 +28,13 @@ suite("Unexpected Changesets", function () {
         await DockerTestUtils.resetDB();
 
         const input = await LiquibaseGUITestUtils.startCommandExecution({
-          pCommand: "unexpected changesets",
+          command: "unexpected changesets",
           configurationName,
           changelogFile: true,
         });
 
         await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 
-        //TODO: SQL query to check if it was right
         assert.ok(
           await LiquibaseGUITestUtils.waitForCommandExecution(
             "Liquibase command 'unexpected-changesets' was executed successfully."

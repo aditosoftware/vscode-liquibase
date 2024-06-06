@@ -14,6 +14,7 @@ export function getClasspathSeparator(): ClasspathType {
 
 /**
  * Checks if the current OS is windows.
+ *
  * @returns `true` if the current os is windows,  else `false`
  */
 export function isWindows(): boolean {

@@ -204,7 +204,7 @@ suite("CacheHandler tests", () => {
 
     /**
      * Tests that writing to a file filled with the same cache values works.
-     * Validates that the old results are thrown away and the new values used
+     * Validates that the old results are thrown away and the new values are used.
      */
     test("should write to cache file filled with same cache values", () => {
       const cacheLocation = path.join(temporaryResourcePath, "filledWithSameCache.json");
@@ -262,7 +262,7 @@ suite("CacheHandler tests", () => {
     });
 
     /**
-     * Tests that the removing of the files.
+     * Tests that the removing of the files works and the uses is correctly notified.
      */
     test("should remove file", () => {
       const cacheLocation = path.join(temporaryResourcePath, "removeTest.json");
@@ -300,7 +300,7 @@ suite("CacheHandler tests", () => {
     const c6 = { c6: { contexts: ["a", "b", "c"] } };
 
     /**
-     * Creates before each test the cache.
+     * Creates the cache before each test.
      */
     setup("create cache", () => {
       fs.writeFileSync(
@@ -420,6 +420,7 @@ function assertRemoveConnectionOfCache(expected: object, cacheLocation: string, 
 
 /**
  * Asserts the content of the cache.
+ *
  * @param expected - the expected values from the cache as json object
  * @param cacheLocation - the location where the cache should be read
  */

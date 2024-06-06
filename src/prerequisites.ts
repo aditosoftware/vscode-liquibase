@@ -27,6 +27,7 @@ export const gson = "gson-2.10.1.jar";
 
 /**
  * Check and perform one-time setup tasks if it's the first activation of the extension.
+ *
  * @param context - The context object provided by VSCode to the extension.
  * @param resourcePath - The path to the resources folder within the extension.
  */
@@ -87,6 +88,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
 
 /**
  * Download Liquibase files if they are not already present in the resources folder.
+ *
  * @param pathToResources - The path to the resources folder within the extension.
  * @param downloadUrls - all the urls where the files needed to be downloaded
  */
@@ -103,6 +105,7 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
 
 /**
  * Gets all the required jar files that are needed for the execution of the extension.
+ *
  * @returns - the required files with filename and url to download
  */
 function getRequiredFiles(): Map<string, string> {

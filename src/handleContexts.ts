@@ -88,6 +88,8 @@ export function generateContextInputs(): PickPanelConfig[] {
  * Generates the cmd args for the pre-context-dialog.
  * This will only need cmd args, if no context should be used.
  * In this case, a dummy argument will be added in order to prevent the execution of all contexts.
+ *
+ * @param dialogValues - the current dialog values
  * @returns the cmd args
  */
 function generateCmdArgsForPreContextSelection(dialogValues: DialogValues): string[] | undefined {
@@ -103,6 +105,8 @@ function generateCmdArgsForPreContextSelection(dialogValues: DialogValues): stri
  * Generates the cmd args for the context-dialog.
  * This will always create some arguments.
  * When no context was selected, then a dummy argument will be added in order to prevent the execution of all contexts.
+ *
+ * @param dialogValues - the current dialog values
  * @returns the cmd args
  */
 function createCmdArgsForContextSelection(dialogValues: DialogValues): string[] {
@@ -115,7 +119,8 @@ function createCmdArgsForContextSelection(dialogValues: DialogValues): string[] 
 
 /**
  * Loads the cache values for the property file.
- * @param currentResults  - the current dialog values
+ *
+ * @param currentResults - the current dialog values
  * @returns the cache values and an text for the details of the cache selection
  */
 function loadCacheForPropertyFile(currentResults: DialogValues): {
@@ -188,6 +193,7 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
 
 /**
  * Loads the context items from the given root changelog file.
+ *
  * @param dialogValues - the current dialog values
  * @returns the loaded items
  */

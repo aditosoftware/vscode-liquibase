@@ -29,6 +29,7 @@ export interface PickPanelConfig {
   /**
    * If there is more logic needed while creating the command-line-arguments than provided by `cmdArgs`, then this should be used.
    * You can give any function that will be given the whole dialog values after all the values where processed and can give an array of command line arguments.
+   *
    * @param dialogValues - the dialog values after all dialogs where given to the user
    * @returns an array of the command line arguments. Each element in the array is one argument.
    */
@@ -46,6 +47,7 @@ export interface AdditionalCommandAction {
 
   /**
    * Any action that should be executed after the command was run successful, e.g. opening created files.
+   *
    * @param dialogValues - the dialog values which contains all the user input from the dialog
    */
   afterCommandAction?: (dialogValues: DialogValues) => void;
@@ -106,7 +108,7 @@ export function registerLiquibaseCommand(
       } else if (commandArg instanceof TransferActionForCommand) {
         transferActions.push(commandArg);
       } else if (typeof commandArg !== "undefined") {
-        // XXX: this message will also appear, if everything was alright.
+        // Note: this message will also appear, if everything was alright.
         Logger.getLogger().debug({
           message: `Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`,
         });
@@ -215,25 +217,19 @@ export function registerLiquibaseCommand(
  * This should be used when you call any liquibase command from another command.
  *
  * Example call:
+ *
  * @example
  * await vscode.commands.executeCommand("liquibase.validate", new TransferDataForCommand(PROPERTY_FILE, file));
  */
 export class TransferDataForCommand {
   /**
-   * The name of the data. This should be identical to `InputBase.name`.
+   * Creates the transfer data.
+   *
+   * @param name - The name of the data. This should be identical to `InputBase.name`.
    * This will be used to set the data and prevent the dialog element with data name.
+   * @param data - The data which should be set for the given name.
    */
-  name: string;
-
-  /**
-   * The data which should be set for the given name.
-   */
-  data: string | boolean | string[];
-
-  constructor(name: string, data: string | boolean | string[]) {
-    this.name = name;
-    this.data = data;
-  }
+  constructor(public name: string, public data: string | boolean | string[]) {}
 }
 
 /**
@@ -242,6 +238,7 @@ export class TransferDataForCommand {
  * This should be used when you call any liquibase command from another command.
  *
  * Example call:
+ *
  * @example
  * await vscode.commands.executeCommand("liquibase.validate", new MyTransferActionForCommand());
  */

@@ -22,15 +22,27 @@ export interface Cache {
 }
 
 /**
- * Handler for every cache.
+ * Handler for the cache. The cache location is stated in the constructor and all the values from the `Cache` interface are cached.
  */
 export class CacheHandler {
   /**
-   * Constructor. This should be created in you `activate` function, in order the have the `cacheLocation` to your globalStoragePath.
-   * @param cacheLocation - The location where the cache iss located. This will be inside the resourcePath in a json file.
+   * The cache. This will be loaded in `readCache`, if it was never checked
+   */
+  private cache: Cache;
+
+  /**
+   * Indicator, if the cache was loaded.
+   */
+  private cacheLoaded: boolean = false;
+
+  /**
+   * Constructor. This should be created in your `activate` function, in order the have the `cacheLocation` pointing to your globalStoragePath.
+   *
+   * @param cacheLocation - The location where the cache is located. The location should point to a json file inside the globalStoragePath of the extension.
    */
   constructor(readonly cacheLocation: string) {
     this.cacheLocation = cacheLocation;
+    this.cache = {};
   }
 
   /**
@@ -41,38 +53,46 @@ export class CacheHandler {
    */
   saveContexts(connectionLocation: string, contexts: string[]): void {
     // first, read any existing cache
-    const cache: Cache = this.readCache();
+    this.readCache();
 
-    if (!cache[connectionLocation]) {
+    if (!this.cache[connectionLocation]) {
       // if no cache is there for the connection, then add an element
-      cache[connectionLocation] = {
+      this.cache[connectionLocation] = {
         contexts: [],
       };
     }
 
     // remove any old contexts
-    cache[connectionLocation].contexts = [];
+    this.cache[connectionLocation].contexts = [];
     // and save the new cache values
-    cache[connectionLocation].contexts.push(...contexts);
+    this.cache[connectionLocation].contexts.push(...contexts);
 
-    // write the cache back to to file system
-    fs.writeFileSync(this.cacheLocation, JSON.stringify(cache, undefined, 2), { encoding: "utf-8" });
+    // write the cache back to the file system
+    fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf-8" });
   }
 
   /**
-   * Reads the cache from the cache location from the file system.
+   * Reads the cache from the cache location in the file system.
+   * If there was already a cache loaded, then the stored object will be returned.
    *
-   * @returns the cache or an empty object, if there is no cache
+   * @returns the cache
    */
   readCache(): Cache {
-    if (!fs.existsSync(this.cacheLocation)) {
-      // if no cache exists, just return an empty element
-      return {};
+    if (!this.cacheLoaded) {
+      // if we have no cached elements, then try to read them
+      if (!fs.existsSync(this.cacheLocation)) {
+        // if no cache exists, just use an empty element
+        this.cache = {};
+      } else {
+        // otherwise, just read and parse the cache
+        const cacheContext = fs.readFileSync(this.cacheLocation, { encoding: "utf-8" });
+        this.cache = JSON.parse(cacheContext) as Cache;
+      }
+
+      this.cacheLoaded = true;
     }
 
-    // otherwise, just read and parse the cache
-    const cacheContext = fs.readFileSync(this.cacheLocation, { encoding: "utf-8" });
-    return JSON.parse(cacheContext) as Cache;
+    return this.cache;
   }
 
   /**
@@ -81,13 +101,13 @@ export class CacheHandler {
    * If there is no cache, or no cache for this connection, then you will get an empty array.
    *
    * @param connectionLocation - the location of the connection (= liquibase.properties file). This is used as a key in cache
-   * @returns an sorted array with all contexts of the connections
+   * @returns an sorted array with all contexts of the given connection
    */
   readContexts(connectionLocation: string): string[] {
-    const cache = this.readCache();
+    this.readCache();
 
-    if (cache[connectionLocation]) {
-      return cache[connectionLocation].contexts.sort((a, b) => a.localeCompare(b));
+    if (this.cache[connectionLocation]) {
+      return this.cache[connectionLocation].contexts.sort((a, b) => a.localeCompare(b));
     } else {
       return [];
     }
@@ -100,7 +120,10 @@ export class CacheHandler {
    */
   removeCache(): void {
     if (fs.existsSync(this.cacheLocation)) {
+      // remove the cache from the file system
       fs.rmSync(this.cacheLocation);
+      // empty the cache as well
+      this.cache = {};
       Logger.getLogger().info({ message: `Successfully removed all recently loaded elements.`, notifyUser: true });
     }
   }
@@ -113,10 +136,10 @@ export class CacheHandler {
    * @param connections - the connections that should be removed from the cache. All values need to be keys of the cache (= absolute paths)
    */
   removeConnectionsFromCache(connections: string[]): void {
-    const cache = this.readCache();
+    this.readCache();
 
-    connections.forEach((pConnection) => delete cache[pConnection]);
+    connections.forEach((pConnection) => delete this.cache[pConnection]);
 
-    fs.writeFileSync(this.cacheLocation, JSON.stringify(cache, undefined, 2), { encoding: "utf-8" });
+    fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf-8" });
   }
 }

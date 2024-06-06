@@ -114,7 +114,7 @@ suite("handleChangelogSelection", () => {
       chooseFileForChangelog(data)
         .then(() => {
           Sinon.assert.calledOnce(transferMessage);
-          
+
           done();
         })
         .catch(done);

@@ -44,7 +44,7 @@ export class TestUtils {
   /**
    * Creates a temporary folder for tests.
    *
-   * This temp folder will be removed when `npm run test-compile` was run.
+   * This temp folder will be removed when `npm run test-compile` is run.
    *
    * @param folderNames - the name of the folders
    * @returns the full path to the temporary folder.
@@ -91,7 +91,7 @@ export class TestUtils {
    * Inits the extension for the test.
    *
    * **Note**: This method has a 7 second timeout in order to initialize everything.
-   * You need the set the timeout for the setup higher, in order th let it execute.
+   * You need the set the timeout for the setup higher, in order to let it execute.
    */
   static async initExtension(): Promise<void> {
     if (this.extensionInitialized) {

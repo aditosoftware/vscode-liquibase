@@ -52,7 +52,7 @@ suite("osUtilities", () => {
     {
       platform: "win32",
       classpath: ";",
-    }, 
+    },
   ].forEach((pArguments) => {
     test(`should get classpath separator for ${pArguments.platform}`, () => {
       Object.defineProperty(process, "platform", { value: pArguments.platform });

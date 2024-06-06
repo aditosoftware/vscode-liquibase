@@ -37,7 +37,7 @@ suite("open cache", () => {
 
     // try to execute the command
     await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Cache: Opens the file with the recently loaded elements",
+      command: "Cache: Opens the file with the recently loaded elements",
     });
 
     // check that the cache is not there and the user is notified about it
@@ -57,7 +57,7 @@ suite("open cache", () => {
 
     // open the cache file
     await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Cache: Opens the file with the recently loaded elements",
+      command: "Cache: Opens the file with the recently loaded elements",
     });
 
     // get the text from the editor

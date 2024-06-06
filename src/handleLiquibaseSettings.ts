@@ -11,6 +11,7 @@ const configurationName: string = "liquibase";
 
 /**
  * Reads the settings and loads the configuration path where the liquibase specific settings should be stored
+ *
  * @returns the configuration path where the liquibase specific settings should be stored. This is an absolute path.
  */
 export async function getLiquibaseConfigurationPath(): Promise<string | undefined> {
@@ -50,6 +51,7 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
 
 /**
  * Returns the user setting where the liquibase folder is located inside the workspace.
+ *
  * @returns the liquibase folder in the workspace or the workspace folder
  */
 export function getLiquibaseFolder(): string {
@@ -75,6 +77,7 @@ export function getLiquibaseFolder(): string {
 /**
  * Loads from the configuration the default database type.
  * This type should always be selected in new configurations.
+ *
  * @returns the setting of the default database type from the configuration
  */
 export function getDefaultDatabaseForConfiguration(): string {
@@ -89,6 +92,7 @@ export function getDefaultDatabaseForConfiguration(): string {
 
 /**
  * Returns the setting if the output channel should be cleared on start.
+ *
  * @returns `true` when the output channel should be cleared on start, otherwise `false`
  */
 export function getClearOutputChannelOnStartSetting(): boolean {

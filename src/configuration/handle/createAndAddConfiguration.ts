@@ -16,10 +16,11 @@ const fileEnding: string = ".liquibase.properties";
 
 /**
  * Adds an key-value pair to the configuration. If no configuration exists, one will be created.
+ *
  * @param pName - the name of the configuration
  * @param pPath - the path to the configuration file
  * @param pCheckForExisting - if there should be a check for existing configurations. This is by default always true.
- *   You should only disable this check, if you have done one separate check before
+ * You should only disable this check, if you have done one separate check before
  */
 export async function addToLiquibaseConfiguration(
   pName: string,
@@ -47,6 +48,7 @@ export async function addToLiquibaseConfiguration(
 
 /**
  *Creates a `liquibase.properties` file by filling out a multi step dialog.
+ *
  * @param pConfigurationData - the inputted values from the user
  */
 export async function createLiquibaseProperties(pConfigurationData: LiquibaseConfigurationData): Promise<void> {
@@ -103,6 +105,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
 
 /**
  * Creates a dialog for the user, to ask if an existing configuration with the same name should be overwritten.
+ *
  * @param name - the name of the current configuration
  * @returns `true`, when the current configuration should be overwritten, `false`, when it should not be overwritten
  */

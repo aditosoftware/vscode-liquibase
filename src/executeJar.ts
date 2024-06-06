@@ -7,18 +7,30 @@ import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
 import { getClearOutputChannelOnStartSetting, getLiquibaseFolder } from "./handleLiquibaseSettings";
 
+/**
+ * The error that was given during the process execution.
+ */
 class CustomError extends Error {
+  /**
+   * The message from the stdout.
+   */
   stdout?: string;
+
+  /**
+   * The message from the stderr.
+   */
   stderr?: string;
 }
 
 /**
  * Execute a JAR file with specified operation and arguments.
+ *
  * @param rootPath - The root path for the JAR file and other resources.
  * @param operation - The operation to perform using Liquibase.
+ * @param propertyPath - the path to the property file
  * @param args - Additional arguments for the Liquibase command.
  * @returns A Promise that resolves when the process completes successfully or rejects on error.
- *  This promise has the code of the command. 0 = successful, 1 = not successful.
+ * This promise has the code of the command. 0 = successful, 1 = not successful.
  */
 export function executeJar(
   rootPath: string,
@@ -113,8 +125,9 @@ export function executeJar(
 
 /**
  * Loads all contexts from a changelog file.
+ *
  * @param changelogFile - the absolute path to the changelog file
- * @param liquibasePropertiesPath  - the path to the liquibase properties file
+ * @param liquibasePropertiesPath - the path to the liquibase properties file
  * @returns the quick pick items containing all changelogs
  */
 export async function loadContextsFromChangelogFile(
@@ -203,6 +216,7 @@ export async function loadContextsFromChangelogFile(
 
 /**
  * Returns the path to the java executable, if the environment variable was set.
+ *
  * @param reject - the reject of any promise
  * @returns the path to `JAVA_HOME/bin/java`, when a java home was given
  */
@@ -220,6 +234,7 @@ function getJavaExecutable(reject: (reason?: unknown) => void): string | undefin
 
 /**
  * Writes any messages from stdout and stderr to the output.
+ *
  * @param data - the data that should be written to any output
  * @param progress - the progress where some messages should be written
  */

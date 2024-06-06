@@ -37,10 +37,10 @@ suite("Removes any values from the recently loaded elements", () => {
 
     // then try to execute the command a second time
     await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Cache: Removes any values from the recently loaded elements",
+      command: "Cache: Removes any values from the recently loaded elements",
     });
 
-    assert.ok(await LiquibaseGUITestUtils.assertIfNotificationExists("There are no elements stored to remove"));
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("There are no elements stored to remove"));
   });
 
   /**
@@ -62,7 +62,7 @@ suite("Removes any values from the recently loaded elements", () => {
     await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      pCommand: "Cache: Removes any values from the recently loaded elements",
+      command: "Cache: Removes any values from the recently loaded elements",
     });
 
     await input.setText(RemoveCacheOptions.REMOVE_CONNECTION);

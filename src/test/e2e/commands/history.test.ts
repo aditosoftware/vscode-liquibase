@@ -29,7 +29,7 @@ suite("History", async function () {
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
       const fileName = `history_${pHistoryOption}.txt`;
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution({ pCommand: "history", configurationName });
+      const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "history", configurationName });
 
       await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 

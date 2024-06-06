@@ -1,5 +1,5 @@
 /**
- * The message types any of the message can have.
+ * The message types any of the messages can have.
  */
 export enum MessageType {
   INIT = "INIT",

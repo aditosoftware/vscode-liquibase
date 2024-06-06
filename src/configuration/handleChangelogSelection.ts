@@ -20,7 +20,7 @@ export async function chooseFileForChangelog(data: LiquibaseConfigurationData): 
       "All Files": ["*"],
     },
   });
-  
+
   if (result && result[0]) {
     const chosenFile = result[0].fsPath;
 

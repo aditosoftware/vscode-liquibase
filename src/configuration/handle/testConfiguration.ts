@@ -8,6 +8,7 @@ import { PROPERTY_FILE } from "../../input/ConnectionType";
 
 /**
  * Tests a existing liquibase configuration from a webview.
+ *
  * @param pConfiguration - the whole configuration that should be tested
  */
 export async function testLiquibaseConnection(pConfiguration: LiquibaseConfigurationData): Promise<void> {
@@ -31,21 +32,21 @@ export async function testLiquibaseConnection(pConfiguration: LiquibaseConfigura
  */
 class DeleteTemporaryFiles extends TransferActionForCommand {
   /**
-   * The temporary folder.
+   * Constructor.
+   *
+   * @param tempFolder - The temporary folder.
+   * @param tempFilePath - The temporary file which is inside the temporary folder.
    */
-  tempFolder: string;
-
-  /**
-   * The temporary file which is inside the temporary folder.
-   */
-  tempFilePath: string;
-
-  constructor(tempFolder: string, tempFilePath: string) {
+  constructor(
+    public tempFolder: string,
+    public tempFilePath: string
+  ) {
     super();
-    this.tempFolder = tempFolder;
-    this.tempFilePath = tempFilePath;
   }
 
+  /**
+   * @override
+   */
   executeAfterCommandAction(): void {
     fs.rmSync(this.tempFilePath);
     fs.rmdirSync(this.tempFolder);

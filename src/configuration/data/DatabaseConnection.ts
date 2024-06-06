@@ -5,6 +5,7 @@ import { UrlParts } from "./UrlParts";
 
 /**
  * The Database connection configuration with all the input that is needed for connecting to the database.
+ *
  * @see https://docs.liquibase.com/concepts/connections/creating-config-properties.html
  */
 export class DatabaseConnection {
@@ -16,44 +17,28 @@ export class DatabaseConnection {
   static readonly REFERENCE: string = "reference";
 
   /**
-   * Username to connect to the target database.
+   * Constructor for a database connection. This be never called outside the class, instead you should use the static methods.
+   *
+   * @param username - Username to connect to the target database.
+   * @param password - Password to connect to the target database.
+   * @param url - Specifies the database to use when making comparisons to the source database. Also known as the target. This is usually a jdbc url.
+   * @param driver - Specifies the driver class name for the target database.
+   * @param databaseType - The database type. This can be any type from the drivers. This will be later adjusted into `driver` and `classpath`, if a pre-configured driver was selected.
    */
-  username: string;
-
-  /**
-   *Password to connect to the target database.
-   */
-  password: string;
-
-  /**
-   * Specifies the database to use when making comparisons to the source database. Also known as the target.
-   * This is usually a jdbc url.
-   */
-  url: string;
-
-  /**
-   * Specifies the driver class name for the target database.
-   */
-  driver: string;
-
-  /**
-   * The database type. This can be any type from the drivers. This will be later adjusted into `driver` and `classpath`, if a pre-configured driver was selected.
-   */
-  databaseType: string;
-
-  private constructor(username: string, password: string, url: string, driver: string, databaseType: string) {
-    this.username = username;
-    this.password = password;
-    this.url = url;
-    this.driver = driver;
-    this.databaseType = databaseType;
-  }
+  private constructor(
+    public username: string,
+    public password: string,
+    public url: string,
+    public driver: string,
+    public databaseType: string
+  ) {}
 
   /**
    * Clones an existing object to create a new one. This is needed after serialization and deserialization, because otherwise the methods will not be there.
    *
    * This method needs to be static, because after serialization and deserialization no methods of the class will be available,
    * and so this method would not be callable, when it is an class method.
+   *
    * @param dataToClone - the data that needs to be cloned.
    * @returns the new instance
    */
@@ -69,7 +54,8 @@ export class DatabaseConnection {
 
   /**
    * Creates a default database connection.
-   * @param defaultDatabaseForConfiguration  - the default database configuration that should be selected
+   *
+   * @param defaultDatabaseForConfiguration - the default database configuration that should be selected
    * @returns the default DatabaseConnection
    */
   static createDefaultDatabaseConnection(defaultDatabaseForConfiguration: string): DatabaseConnection {
@@ -102,6 +88,7 @@ export class DatabaseConnection {
 
   /**
    * Returns a value of an element.
+   *
    * @param pName - the name of the element that should be get
    * @returns the value of the element
    */
@@ -113,11 +100,12 @@ export class DatabaseConnection {
 
   /**
    * Sets a value to a dynamic key.
+   *
    * @param pName - the name of the element that should be set
    * @param pValue - the value that should be set
    * @returns the updated element
    */
-  setValue(pName: keyof DatabaseConnection, pValue: string): this {
+  setValue(pName: keyof DatabaseConnection, pValue: string): DatabaseConnection {
     if (typeof this[pName] === "string") {
       (this[pName] as string) = pValue;
     }
@@ -126,6 +114,7 @@ export class DatabaseConnection {
 
   /**
    * Checks if any data is given.
+   *
    * @returns `true` if any data is there
    */
   hasData(): boolean {
@@ -159,17 +148,17 @@ export class DatabaseConnection {
           val = "***";
         }
 
-        properties.insert(pReferenceConnection ? this.createReferenceKey(key) : key, val);
+        properties.insert(pReferenceConnection ? DatabaseConnection.createReferenceKey(key) : key, val);
       }
     });
     this.writeDriverConfigurationAndDownload(properties, pReferenceConnection);
   }
 
   /**
-   * Writes the driver configuration to the properties file. If `pDownloadDriver` is given, then will be also the driver downloaded, if not there.
+   * Writes the driver configuration to the properties file. If `pDownloadDriver` is given, the driver will also be downloaded, if it is not there.
+   *
    * @param pProperties - the properties editor where the properties should be written
    * @param pIsReferenceConnection - information if this is the reference connection or not
-   * @param pBuildDriverPath - a function for building the driver path
    */
   private writeDriverConfigurationAndDownload(pProperties: PropertiesEditor, pIsReferenceConnection: boolean): void {
     const databaseType: string = this.databaseType;
@@ -180,7 +169,7 @@ export class DatabaseConnection {
         const driverKey: string = "driver";
 
         pProperties.insert(
-          pIsReferenceConnection ? this.createReferenceKey(driverKey) : driverKey,
+          pIsReferenceConnection ? DatabaseConnection.createReferenceKey(driverKey) : driverKey,
           databaseDriver.driverClass
         );
       }
@@ -189,15 +178,17 @@ export class DatabaseConnection {
 
   /**
    * Transforms a key into a reference key. For instance `username` will be transformed to `referenceUsername`.
+   *
    * @param key - the key which should be transformed into a reference key
    * @returns the reference key
    */
-  private createReferenceKey(key: string): string {
+  static createReferenceKey(key: string): string {
     return DatabaseConnection.REFERENCE + key.charAt(0).toUpperCase() + key.substring(1);
   }
 
   /**
    * Transforms a key, which was previously referenced, back into its normal state.
+   *
    * @param key - the referenced key
    * @returns the normal key
    */
@@ -209,9 +200,9 @@ export class DatabaseConnection {
   /**
    * Adjusts the driver after loading it from a properties file.
    * If the driver is from a pre-configured driver class, then the databaseType will be set to this pre-configured element,
-   * in order to have it easier displayed in the webview.
+   * in order to have it displayed more easily in the webview.
+   *
    * @param value - the value of the current driver configuration
-   * @param connection - the database connection that should be changed
    */
   adjustDriver(value: string): void {
     let preConfiguredDriver = false;

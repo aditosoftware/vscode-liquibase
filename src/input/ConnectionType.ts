@@ -25,6 +25,9 @@ interface ConnectionTypeOptions extends InputBaseOptions {
  * Input for the connection type.
  */
 export class ConnectionType extends InputBase<ConnectionTypeOptions> {
+  /**
+   * @override
+   */
   async showDialog(
     _currentResults: DialogValues,
     currentStep: number,
@@ -64,6 +67,7 @@ export class ConnectionType extends InputBase<ConnectionTypeOptions> {
 
   /**
    * Generates the items for the selection.
+   *
    * @returns the items for the selection
    */
   private async generateItems(): Promise<vscode.QuickPickItem[] | undefined> {

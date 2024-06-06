@@ -5,7 +5,8 @@ import { LiquibaseSettings } from "./TransferSettings";
 
 /**
  * The type for additional configurations.
- *  NOTE: If you plan to refactor this, Maps are not really serializable and therefore not good for passing the values from the webview to the extension!
+ *
+ * **NOTE**: If you plan to refactor this, Maps are not really serializable and therefore not good for passing the values from the webview to the extension!
  */
 type AdditionalConfiguration = { [key: string]: string };
 
@@ -24,64 +25,39 @@ export class LiquibaseConfigurationData {
   [immerable] = true;
 
   /**
-   * Indicator, if this is a new config or and edited config.
+   * The keys that can be configured in the configuration data.
    */
-  status: ConfigurationStatus;
-
-  /**
-   * The settings that are relevant for creating / updating a configuration.
-   */
-  liquibaseSettings: LiquibaseSettings;
-
-  /**
-   * The name of the configuration.
-   */
-  name: string;
-
-  /**
-   * The file where the basic changelog.xml is located.
-   */
-  changelogFile: string;
-
-  /**
-   * The normal database connection configuration.
-   */
-  databaseConnection: DatabaseConnection;
-
-  /**
-   * The reference database connection. This connection does not need to be there.
-   */
-  referenceDatabaseConnection?: DatabaseConnection;
-
-  /**
-   * Some additional configurations.
-   * NOTE: If you plan to refactor this, Maps are not really serializable and therefore not good for passing the values!
-   */
-  additionalConfiguration: AdditionalConfiguration;
+  static readonly configuredKeys: string[] = [
+    "changelogFile",
+    ...["username", "password", "url", "driver"]
+      .map((pKey) => [pKey, DatabaseConnection.createReferenceKey(pKey)])
+      .flat(),
+  ];
 
   /**
    * Constructor. If you want to create a new instance of this outside of the class, you might want to use any of the following methods:
    * - `createDefaultData` - for empty data
    * - `readFullValues` (`readFromProperties.ts`) - for loading from a liquibase.properties file. In this file, other methods of reading are also included.
    * - `clone` - for copying the whole object
+   *
+   * @param status - Indicator, if this is a new config or and edited config.
+   * @param liquibaseSettings - The settings that are relevant for creating / updating a configuration.
+   * @param name - The name of the configuration.
+   * @param changelogFile - The file where the basic changelog.xml is located.
+   * @param databaseConnection - The normal database connection configuration.
+   * @param additionalConfiguration - Some additional configurations.
+   * NOTE: If you plan to refactor this, Maps are not really serializable and therefore not good for passing the values!
+   * @param referenceDatabaseConnection - The reference database connection. This connection does not need to be there.
    */
   private constructor(
-    status: ConfigurationStatus,
-    liquibaseSettings: LiquibaseSettings,
-    name: string,
-    changelogFile: string,
-    databaseConnection: DatabaseConnection,
-    additionalConfiguration: AdditionalConfiguration,
-    referenceDatabaseConnection?: DatabaseConnection
-  ) {
-    this.status = status;
-    this.liquibaseSettings = liquibaseSettings;
-    this.name = name;
-    this.changelogFile = changelogFile;
-    this.databaseConnection = databaseConnection;
-    this.referenceDatabaseConnection = referenceDatabaseConnection;
-    this.additionalConfiguration = additionalConfiguration;
-  }
+    public status: ConfigurationStatus,
+    public liquibaseSettings: LiquibaseSettings,
+    public name: string,
+    public changelogFile: string,
+    public databaseConnection: DatabaseConnection,
+    public additionalConfiguration: AdditionalConfiguration,
+    public referenceDatabaseConnection?: DatabaseConnection
+  ) {}
 
   /**
    * Clones an existing object to create a new one. This is needed after serialization and deserialization, because otherwise the methods will not be there.
@@ -113,8 +89,9 @@ export class LiquibaseConfigurationData {
 
   /**
    * Creates a default object.
-   * @param liquibaseSettings  - the settings relevant for creating a new configuration
-   * @param state - if this configuration is used as a new one or to edit an existing one
+   *
+   * @param liquibaseSettings - the settings relevant for creating a new configuration
+   * @param status - if this configuration is used as a new one or to edit an existing one
    * @returns the created default object
    */
   static createDefaultData(
@@ -133,6 +110,7 @@ export class LiquibaseConfigurationData {
 
   /**
    * Adds a new key-value-pair to the current data. These key-value-pairs come directly from a liquibase.properties file.
+   *
    * @param key - the the of the liquibase properties file
    * @param value - the value of the liquibase properties file
    */
@@ -178,6 +156,7 @@ export class LiquibaseConfigurationData {
 
   /**
    * Creates the properties text for saving in a file or previewing.
+   *
    * @param pDisguisePassword - if the password should not be displayed as plain text, but as `***`. These should be used if you are in a preview.
    * If no value is given, then the password will be set as plain text
    * @returns the created properties file as a string
@@ -186,12 +165,12 @@ export class LiquibaseConfigurationData {
     const propertiesEditor = this.generatePropertiesEditor(pDisguisePassword ?? false);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
-    // TODO maybe more escapes are needed with unescapeContent
     return propertiesEditor.format().replaceAll("\\:", ":");
   }
 
   /**
    * Creates the properties editor for the given configuration.
+   *
    * @param pDisguisePassword - if the password should not be displayed as plain text, but as `***`. These should be used if you are in a preview.
    * @returns the created properties
    */
