@@ -656,6 +656,7 @@ function assertCacheContent(expected: Cache, cacheLocation: string): void {
 
 /**
  * Writes the cache to the given location.
+ *
  * @param cache - the cache that should be written
  * @param cacheLocation - the location were the cache should be written to
  */

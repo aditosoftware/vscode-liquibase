@@ -80,37 +80,31 @@ export class CacheHandler {
     // first, read any existing cache
     this.readCache();
 
-    if (!this.cache[connectionLocation]) {
-      // if no cache is there for the connection, then add an element
-      this.cache[connectionLocation] = {
-        contexts: [],
-      };
-    }
+    this.addDummyElementForConnectionToCache(connectionLocation);
 
     // remove any old contexts
     this.cache[connectionLocation].contexts = [];
     // and save the new cache values
     this.cache[connectionLocation].contexts.push(...contexts);
 
-    // write the cache back to the file system
-    fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf-8" });
+    // write the cache back to to file system
+    this.writeCache();
   }
 
   /**
-   * Reads the cache. If there is no element for the given connection location, then an empty element will be added.
+   * Adds a dummy element for the `connectionLocation` to the cache.
+   *
    * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
-   * @returns the read cache
    */
-  private readCacheAndAddElement(connectionLocation: string): Cache {
-    const cache = this.readCache();
-
-    if (!cache[connectionLocation]) {
+  private addDummyElementForConnectionToCache(connectionLocation: string): void {
+    if (!this.cache[connectionLocation]) {
       // if no cache is there for the connection, then add an element
-      cache[connectionLocation] = {
+      this.cache[connectionLocation] = {
         contexts: [],
         changelogs: [],
       };
     }
+  }
 
   /**
    * Saves a recently selected changelog file in the cache.
@@ -123,7 +117,11 @@ export class CacheHandler {
 
     this.addDummyElementForConnectionToCache(connectionLocation);
 
-    const changelogs = this.cache[connectionLocation].changelogs;
+    let changelogs = this.cache[connectionLocation].changelogs;
+
+    if (!changelogs) {
+      changelogs = [];
+    }
 
     const existingChangelog = changelogs.find((log) => log.path === changelogPath);
 
@@ -192,6 +190,7 @@ export class CacheHandler {
 
   /**
    * Reads the changelogs from the cache.
+   *
    * @param connectionLocation - the location of the connection (= liquibase.properties file). This is used as a key in cache
    * @returns the absolute path of the changelogs, already ordered by last used descending
    */
@@ -234,6 +233,14 @@ export class CacheHandler {
 
     connections.forEach((pConnection) => delete this.cache[pConnection]);
 
+    // write the cache back to to file system
+    this.writeCache();
+  }
+
+  /**
+   * Writes the cache to the cache location.
+   */
+  private writeCache(): void {
     fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf-8" });
   }
 }
