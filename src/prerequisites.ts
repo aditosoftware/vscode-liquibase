@@ -6,26 +6,6 @@ import { ALL_DRIVERS } from "./configuration/drivers";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
- * The name + version of the liquibase-core jar.
- */
-export const liquibaseCore = "liquibase-core-4.24.0.jar";
-
-/**
- * The name + version of the picocli jar.
- */
-export const picocli = "picocli-4.7.5.jar";
-
-/**
- * The name + version of the snakeyaml jar.
- */
-export const snakeYaml = "snakeyaml-2.2.jar";
-
-/**
- * The name + version of the gson jar.
- */
-export const gson = "gson-2.10.1.jar";
-
-/**
  * Check and perform one-time setup tasks if it's the first activation of the extension.
  *
  * @param context - The context object provided by VSCode to the extension.
@@ -110,18 +90,39 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
  */
 function getRequiredFiles(): Map<string, string> {
   const requiredFiles = new Map<string, string>();
-  requiredFiles.set(
-    liquibaseCore,
-    "https://repo1.maven.org/maven2/org/liquibase/liquibase-core/4.24.0/liquibase-core-4.24.0.jar"
-  );
-  // picocli for using the CLI commands
-  requiredFiles.set(picocli, "https://repo1.maven.org/maven2/info/picocli/picocli/4.7.5/picocli-4.7.5.jar");
-  // snakeyaml for handling yaml changelogs
-  requiredFiles.set(snakeYaml, "https://repo1.maven.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar");
-  // Gson for executing the extended CLI file
-  requiredFiles.set(gson, "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar");
+
+  // add the required jars for liquibase
+  [
+    "https://repo1.maven.org/maven2/org/liquibase/liquibase-core/4.28.0/liquibase-core-4.28.0.jar",
+    // picocli for using the CLI commands,
+    "https://repo1.maven.org/maven2/info/picocli/picocli/4.7.5/picocli-4.7.5.jar",
+    // snakeyaml for handling yaml changelogs
+    "https://repo1.maven.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar",
+    // Gson for executing the extended CLI file
+    "https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar",
+    // commons-io is needed for 4.28 and onwards
+    "https://repo1.maven.org/maven2/commons-io/commons-io/2.16.1/commons-io-2.16.1.jar",
+    // commons-lang3 is needed for 4.28 and onwards
+    "https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar",
+    // opencsv is needed for 4.28 and onwards
+    "https://repo1.maven.org/maven2/com/opencsv/opencsv/5.9/opencsv-5.9.jar",
+  ].forEach((pUrl) => {
+    requiredFiles.set(getFileName(pUrl), pUrl);
+  });
+
+  // and add the jars for the drivers
   ALL_DRIVERS.forEach((value) => {
-    requiredFiles.set(value.getFileName(), value.urlForDownload);
+    requiredFiles.set(getFileName(value.urlForDownload), value.urlForDownload);
   });
   return requiredFiles;
+}
+
+/**
+ * Finds out the file name from the url downloaded.
+ *
+ * @param urlForDownload - the url where the element should be downloaded
+ * @returns the file name under which the element would be saved
+ */
+function getFileName(urlForDownload: string): string {
+  return urlForDownload.substring(urlForDownload.lastIndexOf("/") + 1);
 }
