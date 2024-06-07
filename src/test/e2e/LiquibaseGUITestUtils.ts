@@ -54,11 +54,15 @@ export class LiquibaseGUITestUtils {
   /**
    * Opens a temp workspace and closes all editors. Also starts the docker container when needed.
    *
-   * @param startContainer - If the container should be started.
-   * @param addChangelog - if the changelog should be added to the configuration
+   * @param startupParameters - the startup parameters
+   * - `startContainer` - If the container should be started.
+   * - `addChangelog` - if the changelog should be added to the configuration
    * @returns the name of the created configuration
-   */ // TODO descructive object
-  static async setupTests(startContainer: boolean = true, addChangelog?: boolean): Promise<string> {
+   */
+  static async setupTests({
+    startContainer = true,
+    addChangelog = false,
+  }: { startContainer?: boolean; addChangelog?: boolean } = {}): Promise<string> {
     // start the container
     if (startContainer) {
       await DockerTestUtils.startContainer();

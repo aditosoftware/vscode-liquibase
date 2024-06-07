@@ -22,7 +22,7 @@ suite("changelog-selection", () => {
     // create a dummy file
     fs.copyFileSync(LiquibaseGUITestUtils.CHANGELOG_FILE, secondChangelogPath);
 
-    configurationName = await LiquibaseGUITestUtils.setupTests(true, true);
+    configurationName = await LiquibaseGUITestUtils.setupTests({ addChangelog: true });
   });
 
   /**

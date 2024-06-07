@@ -52,6 +52,7 @@ export class HandleChangelogFileInput {
             canSelectMany: false,
             filters: {
               Changelog: ["xml", "json", "yaml", "yml", "sql"],
+              "All Files": ["*"],
             },
           },
           onBeforeInput: this.isExtraQueryForChangelogNeeded,
