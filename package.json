@@ -2,6 +2,7 @@
   "name": "liquibase",
   "displayName": "Liquibase",
   "description": "Execute liquibase changelogs and create liquibase.properties",
+  "license": "MIT",
   "version": "0.0.4",
   "preview": true,
   "engines": {
