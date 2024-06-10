@@ -18,7 +18,7 @@ import { WebviewTestUtils } from "./webview/WebviewTestUtils";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
 import path from "path";
 import * as fs from "fs";
-import { ContextOptions, RemoveCacheOptions } from "../../constants";
+import { CHOOSE_CHANGELOG_OPTION, ContextOptions, RemoveCacheOptions } from "../../constants";
 
 /**
  * General Util methods for e2e / GUI tests with Liquibase.
@@ -54,10 +54,15 @@ export class LiquibaseGUITestUtils {
   /**
    * Opens a temp workspace and closes all editors. Also starts the docker container when needed.
    *
-   * @param startContainer - If the container should be started.
+   * @param startupParameters - the startup parameters
+   * - `startContainer` - If the container should be started.
+   * - `addChangelog` - if the changelog should be added to the configuration
    * @returns the name of the created configuration
    */
-  static async setupTests(startContainer: boolean = true): Promise<string> {
+  static async setupTests({
+    startContainer = true,
+    addChangelog = false,
+  }: { startContainer?: boolean; addChangelog?: boolean } = {}): Promise<string> {
     // start the container
     if (startContainer) {
       await DockerTestUtils.startContainer();
@@ -67,7 +72,7 @@ export class LiquibaseGUITestUtils {
     await this.openWorkspace();
 
     // create a configuration
-    const configurationName = await this.createConfiguration();
+    const configurationName = await this.createConfiguration({ addChangelog: addChangelog });
     // after we have successfully created a config via the webview, the extension is definitely active
     this.extensionActive = true;
 
@@ -156,8 +161,12 @@ export class LiquibaseGUITestUtils {
 
     // Set the path to the Liquibase changelog file.
     if (changelogFile) {
+      // choose the location of the file
+      await input.selectQuickPick(CHOOSE_CHANGELOG_OPTION);
+
+      // and choose the changelog file in the OpenDialog
       await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-      await input.selectQuickPick(1);
+      await input.selectQuickPick("changelog.xml");
     }
 
     return input;
@@ -205,16 +214,24 @@ export class LiquibaseGUITestUtils {
   /**
    * Creates a configuration.
    *
-   * @param databaseType - the type of the database that should be used for the configuration
-   * @param port - the port that should be used for creating the configuration
-   * @param databaseName - the name of the database
+   * @param configuration - the conf for the configuration that should be created. This includes:
+   * - `databaseType` - the type of the database that should be used for the configuration
+   * - `port` - the port that should be used for creating the configuration
+   * - `databaseName` - the name of the database
+   * - `addChangelog` - if the changelog should be added
    * @returns the name that was used for creating the configuration
    */
-  static async createConfiguration(
-    databaseType: "MariaDB" | "PostgreSQL" = "MariaDB",
-    port: number = 3310,
-    databaseName: string = DockerTestUtils.dbName
-  ): Promise<string> {
+  static async createConfiguration({
+    databaseType = "MariaDB",
+    port = 3310,
+    databaseName = DockerTestUtils.dbName,
+    addChangelog,
+  }: {
+    databaseType?: "MariaDB" | "PostgreSQL";
+    port?: number;
+    databaseName?: string;
+    addChangelog?: boolean;
+  } = {}): Promise<string> {
     const name = randomUUID();
 
     // create a configuration
@@ -224,6 +241,7 @@ export class LiquibaseGUITestUtils {
       databaseType,
       port,
       databaseName,
+      addChangelog,
     });
 
     return name;

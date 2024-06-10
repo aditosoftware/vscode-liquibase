@@ -35,7 +35,11 @@ suite("diff", function () {
     await DockerTestUtils.executeMariaDBSQL("CREATE SCHEMA data2");
 
     // for this test, we need a second configuration
-    const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("MariaDB", 3310, "data2");
+    const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration({
+      databaseType: "MariaDB",
+      port: 3310,
+      databaseName: "data2",
+    });
 
     await executeCommand("diffMariaDb.txt", configurationName, secondConfiguration);
   });
@@ -46,7 +50,10 @@ suite("diff", function () {
   test("should execute 'diff' command for postgres", async function () {
     await DockerTestUtils.resetDB();
 
-    const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration("PostgreSQL", postgresPort);
+    const secondConfiguration = await LiquibaseGUITestUtils.createConfiguration({
+      databaseType: "PostgreSQL",
+      port: postgresPort,
+    });
 
     await executeCommand("diffPostgres.txt", configurationName, secondConfiguration);
   });

@@ -71,6 +71,16 @@ suite("open cache", () => {
 
     // get the cache for our key and check that the contexts are there
     const cacheForKey = cache[key];
-    assert.deepStrictEqual(cacheForKey, { contexts: ["bar", "baz", "foo"] });
+    // sanitize the result to remove the lastUsed from the changelogs
+    const sanitizedResult = {
+      contexts: cacheForKey.contexts,
+      changelogs: cacheForKey.changelogs.map((changelog: { path: string }) => ({
+        path: changelog.path.toLowerCase(),
+      })),
+    };
+    assert.deepStrictEqual(sanitizedResult, {
+      contexts: ["bar", "baz", "foo"],
+      changelogs: [{ path: LiquibaseGUITestUtils.CHANGELOG_FILE.toLowerCase() }],
+    });
   });
 });

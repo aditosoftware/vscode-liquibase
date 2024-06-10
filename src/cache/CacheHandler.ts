@@ -2,6 +2,11 @@ import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
+ * The number of changelogs that should maximally be there for one connection.
+ */
+const MAX_CHANGELOGS_IN_CACHE = 5;
+
+/**
  * Any connection in the cache.
  */
 export interface Connection {
@@ -9,6 +14,26 @@ export interface Connection {
    * The cached contexts of the cache.
    */
   contexts: string[];
+
+  /**
+   * The recently used changelog elements.
+   */
+  changelogs: Changelog[];
+}
+
+/**
+ * A recently used changelog element.
+ */
+interface Changelog {
+  /**
+   * The timestamp of the last usage.
+   */
+  lastUsed: number;
+
+  /**
+   * The path to the changelog.
+   */
+  path: string;
 }
 
 /**
@@ -55,20 +80,70 @@ export class CacheHandler {
     // first, read any existing cache
     this.readCache();
 
-    if (!this.cache[connectionLocation]) {
-      // if no cache is there for the connection, then add an element
-      this.cache[connectionLocation] = {
-        contexts: [],
-      };
-    }
+    this.addDummyElementForConnectionToCache(connectionLocation);
 
     // remove any old contexts
     this.cache[connectionLocation].contexts = [];
     // and save the new cache values
     this.cache[connectionLocation].contexts.push(...contexts);
 
-    // write the cache back to the file system
-    fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf-8" });
+    // write the cache back to to file system
+    this.writeCache();
+  }
+
+  /**
+   * Adds a dummy element for the `connectionLocation` to the cache.
+   *
+   * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
+   */
+  private addDummyElementForConnectionToCache(connectionLocation: string): void {
+    if (!this.cache[connectionLocation]) {
+      // if no cache is there for the connection, then add an element
+      this.cache[connectionLocation] = {
+        contexts: [],
+        changelogs: [],
+      };
+    }
+  }
+
+  /**
+   * Saves a recently selected changelog file in the cache.
+   *
+   * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
+   * @param changelogPath - the absolute path to the changelog file
+   */
+  saveChangelog(connectionLocation: string, changelogPath: string): void {
+    this.readCache();
+
+    this.addDummyElementForConnectionToCache(connectionLocation);
+
+    let changelogs = this.cache[connectionLocation].changelogs;
+
+    if (!changelogs) {
+      changelogs = [];
+    }
+
+    const existingChangelog = changelogs.find((log) => log.path === changelogPath);
+
+    if (existingChangelog) {
+      // update lastUsed, if we already have an element
+      existingChangelog.lastUsed = new Date().getTime();
+    } else {
+      // otherwise, add a new element
+      changelogs.push({
+        lastUsed: new Date().getTime(),
+        path: changelogPath,
+      });
+    }
+
+    // sort by last used descending
+    changelogs.sort((a, b) => b.lastUsed - a.lastUsed);
+
+    // Keep only the top X changelogs
+    this.cache[connectionLocation].changelogs = changelogs.slice(0, MAX_CHANGELOGS_IN_CACHE);
+
+    // write the cache back to to file system
+    this.writeCache();
   }
 
   /**
@@ -114,6 +189,24 @@ export class CacheHandler {
   }
 
   /**
+   * Reads the changelogs from the cache.
+   *
+   * @param connectionLocation - the location of the connection (= liquibase.properties file). This is used as a key in cache
+   * @returns the absolute path of the changelogs, already ordered by last used descending
+   */
+  readChangelogs(connectionLocation: string): string[] {
+    const cache = this.readCache();
+
+    if (cache[connectionLocation] && cache[connectionLocation].changelogs) {
+      return cache[connectionLocation].changelogs
+        .toSorted((a, b) => b.lastUsed - a.lastUsed)
+        .map((pChangelog) => pChangelog.path);
+    } else {
+      return [];
+    }
+  }
+
+  /**
    * Removes the complete cache file.
    *
    * The user will be informed, if this file is successfully removed.
@@ -140,6 +233,14 @@ export class CacheHandler {
 
     connections.forEach((pConnection) => delete this.cache[pConnection]);
 
+    // write the cache back to to file system
+    this.writeCache();
+  }
+
+  /**
+   * Writes the cache to the cache location.
+   */
+  private writeCache(): void {
     fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf-8" });
   }
 }

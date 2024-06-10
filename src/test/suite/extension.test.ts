@@ -6,6 +6,7 @@ import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
 import { randomUUID } from "crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
+import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
 
 /**
  * Tests commands of the extension.
@@ -83,7 +84,7 @@ suite("Extension Test Suite", () => {
       command: "status",
       answers: {
         openDialog: [changelogFile],
-        quickPick: contextLoaded,
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -91,7 +92,7 @@ suite("Extension Test Suite", () => {
       command: "update",
       answers: {
         openDialog: [changelogFile],
-        quickPick: contextLoaded,
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -103,13 +104,14 @@ suite("Extension Test Suite", () => {
       command: "validate",
       answers: {
         openDialog: [changelogFile],
+        quickPick: [CHOOSE_CHANGELOG_OPTION],
       },
     },
     {
       command: "diff",
       answers: {
         selectReferenceConnection: true,
-        quickPick: "tables",
+        quickPick: ["tables"],
         openDialog: [outputFolder],
         inputBox: "diff.txt",
       },
@@ -118,6 +120,7 @@ suite("Extension Test Suite", () => {
       command: "db-doc",
       answers: {
         openDialog: [changelogFile, outputFolder],
+        quickPick: [CHOOSE_CHANGELOG_OPTION],
       },
     },
     {
@@ -131,7 +134,7 @@ suite("Extension Test Suite", () => {
       command: "unexpected-changesets",
       answers: {
         openDialog: [changelogFile],
-        quickPick: contextLoaded,
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -139,7 +142,7 @@ suite("Extension Test Suite", () => {
       command: "changelog-sync",
       answers: {
         openDialog: [changelogFile],
-        quickPick: contextLoaded,
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
       },
     },
@@ -152,7 +155,7 @@ suite("Extension Test Suite", () => {
       answers: {
         openDialog: [outputFolder],
         inputBox: "history.txt",
-        quickPick: "TABULAR",
+        quickPick: ["TABULAR"],
       },
     },
     {
@@ -171,7 +174,7 @@ suite("Extension Test Suite", () => {
       command: "rollback",
       answers: {
         openDialog: [changelogFile],
-        quickPick: contextLoaded,
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
         inputBox: tag,
       },
@@ -180,7 +183,7 @@ suite("Extension Test Suite", () => {
       command: "update-sql",
       answers: {
         openDialog: [changelogFile, outputFolder],
-        quickPick: contextLoaded,
+        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         inputBox: "update-sql.sql",
         loadContexts: true,
       },
@@ -214,10 +217,11 @@ suite("Extension Test Suite", () => {
 
       // then add a possible additional answers
       if (commandArgument.answers.quickPick) {
-        quickPickCount++;
-        quickPick
-          .onCall(commandArgument.answers.selectReferenceConnection ? 2 : 1)
-          .resolves({ label: commandArgument.answers.quickPick });
+        quickPickCount += commandArgument.answers.quickPick.length;
+        commandArgument.answers.quickPick.forEach((value, index) => {
+          const callCount = (commandArgument.answers.selectReferenceConnection ? 2 : 1) + index;
+          quickPick.onCall(callCount).resolves({ label: value });
+        });
       }
 
       // stub the showing of an input box
@@ -313,9 +317,9 @@ type CommandArgument = {
     selectReferenceConnection?: boolean;
 
     /**
-     * Indicates the value that is selected by the quick pick.
+     * Indicates the value that were selected by the quick pick.
      */
-    quickPick?: string;
+    quickPick?: string[];
 
     /**
      * Indicates the value that was inputted in an input box

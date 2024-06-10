@@ -5,6 +5,7 @@ import { Cache, CacheHandler } from "../../../cache/";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { TestUtils } from "../TestUtils";
+import { randomUUID } from "crypto";
 
 /**
  * Tests various methods from the CacheHandler
@@ -111,9 +112,11 @@ suite("CacheHandler tests", () => {
         const expected: Cache = {
           "/path/to/project/data/liquibase/data.liquibase.properties": {
             contexts: ["prod", "qs", "dev"],
+            changelogs: [],
           },
           "/path/to/project/data/liquibase/system.liquibase.properties": {
             contexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
+            changelogs: [],
           },
         };
 
@@ -139,12 +142,77 @@ suite("CacheHandler tests", () => {
   });
 
   /**
+   * Tests the reading of the changelogs.
+   */
+  suite("readChangelogs", () => {
+    /**
+     * Tests that the reading of an empty cache works.
+     */
+    test("should read empty cache", () => {
+      const cacheLocation = path.join(temporaryResourcePath, `${randomUUID()}.json`);
+      writeCacheToLocation({}, cacheLocation);
+
+      const cacheHandler = new CacheHandler(cacheLocation);
+
+      assert.deepStrictEqual(cacheHandler.readChangelogs("myCacheLocation"), []);
+    });
+
+    /**
+     * Test that a cache with no changelogs inside can be read correctly
+     */
+    test("should read cache without changelogs", () => {
+      const cacheLocation = path.join(temporaryResourcePath, `${randomUUID()}.json`);
+
+      // this cache has on purpose only contexts, therefore a cast to unknown is necessary
+      writeCacheToLocation(
+        {
+          myCacheLocation: {
+            contexts: [],
+          },
+        } as unknown as Cache,
+        cacheLocation
+      );
+
+      const cacheHandler = new CacheHandler(cacheLocation);
+
+      assert.deepStrictEqual(cacheHandler.readChangelogs("myCacheLocation"), []);
+    });
+
+    /**
+     * Tests that the cache can be read and fill follow the last used order.
+     */
+    test("should read cache with changelogs", () => {
+      const cache: Cache = {
+        myCacheLocation: {
+          contexts: [],
+          changelogs: [
+            { path: "a", lastUsed: 1 },
+            { path: "s", lastUsed: 6 },
+            { path: "d", lastUsed: 4 },
+            { path: "f", lastUsed: 5 },
+            { path: "g", lastUsed: 3 },
+            { path: "h", lastUsed: 2 },
+          ],
+        },
+      };
+      const cacheLocation = path.join(temporaryResourcePath, `${randomUUID()}.json`);
+
+      writeCacheToLocation(cache, cacheLocation);
+
+      const cacheHandler = new CacheHandler(cacheLocation);
+
+      assert.deepStrictEqual(cacheHandler.readChangelogs("myCacheLocation"), ["s", "f", "d", "g", "h", "a"]);
+    });
+  });
+
+  /**
    * Tests the saving of contexts to the cache.
    */
   suite("saveContexts", () => {
-    const defaultCache = {
+    const defaultCache: Cache = {
       myCacheLocation: {
         contexts: ["a", "b"],
+        changelogs: [],
       },
     };
 
@@ -156,7 +224,7 @@ suite("CacheHandler tests", () => {
 
       assert.ok(!fs.existsSync(cacheLocation), `Path ${cacheLocation} should not exist`);
 
-      assertSaveOfCache(defaultCache, cacheLocation);
+      assertSaveOfContextToCache(defaultCache, cacheLocation);
     });
 
     /**
@@ -166,11 +234,11 @@ suite("CacheHandler tests", () => {
       const cacheLocation = path.join(temporaryResourcePath, "empty.json");
 
       // create the empty file
-      fs.writeFileSync(cacheLocation, "{}");
+      writeCacheToLocation({}, cacheLocation);
 
       assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
 
-      assertSaveOfCache(defaultCache, cacheLocation);
+      assertSaveOfContextToCache(defaultCache, cacheLocation);
     });
 
     /**
@@ -180,21 +248,23 @@ suite("CacheHandler tests", () => {
       const cacheLocation = path.join(temporaryResourcePath, "filledWithOtherCaches.json");
 
       // create the file with some values
-      fs.writeFileSync(
-        cacheLocation,
-        JSON.stringify({
+      writeCacheToLocation(
+        {
           myOtherCacheLocation: {
             contexts: ["x", "y", "z"],
+            changelogs: [],
           },
-        })
+        },
+        cacheLocation
       );
 
       assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
 
-      assertSaveOfCache(
+      assertSaveOfContextToCache(
         {
           myOtherCacheLocation: {
             contexts: ["x", "y", "z"],
+            changelogs: [],
           },
           ...defaultCache,
         },
@@ -210,18 +280,157 @@ suite("CacheHandler tests", () => {
       const cacheLocation = path.join(temporaryResourcePath, "filledWithSameCache.json");
 
       // create the file with some values
-      fs.writeFileSync(
-        cacheLocation,
-        JSON.stringify({
+      writeCacheToLocation(
+        {
           myCacheLocation: {
             contexts: ["x", "y", "z"],
+            changelogs: [],
           },
-        })
+        },
+        cacheLocation
       );
 
       assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
 
-      assertSaveOfCache(defaultCache, cacheLocation);
+      assertSaveOfContextToCache(defaultCache, cacheLocation);
+    });
+  });
+
+  /**
+   * Tests the method `saveChangelog`.
+   */
+  suite("saveChangelog", () => {
+    let clock: sinon.SinonFakeTimers;
+
+    /**
+     * Use a fake timer for the timestamps.
+     */
+    suiteSetup(() => {
+      clock = Sinon.useFakeTimers({ now: 10 });
+    });
+
+    /**
+     * Restore the fake timer.
+     */
+    suiteTeardown(() => {
+      clock.restore();
+    });
+
+    /**
+     * Tests that the changelogs can be written correctly to the cache.
+     */
+    test("should write changelog to cache", () => {
+      const expectedCache: Cache = {
+        myCacheLocation: {
+          contexts: [],
+          changelogs: [{ path: "lorem", lastUsed: 10 }],
+        },
+      };
+
+      const cacheLocation = path.join(temporaryResourcePath, `${randomUUID()}.json`);
+
+      assertSaveOfChangelogToCache(expectedCache, cacheLocation);
+    });
+
+    /**
+     * Tests that an element with already existing cache entry will have their time adjusted.
+     */
+    test("should update timestamp for existing cache entry", () => {
+      const expectedCache: Cache = {
+        myCacheLocation: {
+          contexts: [],
+          changelogs: [{ path: "lorem", lastUsed: 10 }],
+        },
+      };
+
+      const cacheLocation = path.join(temporaryResourcePath, `${randomUUID()}.json`);
+
+      writeCacheToLocation(
+        {
+          myCacheLocation: {
+            contexts: [],
+            changelogs: [{ path: "lorem", lastUsed: 4 }],
+          },
+        },
+        cacheLocation
+      );
+
+      assertSaveOfChangelogToCache(expectedCache, cacheLocation);
+    });
+
+    /**
+     * Tests that five elements can be normally added to the changelog elements.
+     */
+    test("should write fifth changelog element", () => {
+      const expectedCache: Cache = {
+        myCacheLocation: {
+          contexts: [],
+          changelogs: [
+            { path: "lorem", lastUsed: 10 },
+            { path: "foobar", lastUsed: 4 },
+            { path: "baz", lastUsed: 3 },
+            { path: "bar", lastUsed: 2 },
+            { path: "foo", lastUsed: 1 },
+          ],
+        },
+      };
+
+      const cacheLocation = path.join(temporaryResourcePath, `${randomUUID()}.json`);
+
+      writeCacheToLocation(
+        {
+          myCacheLocation: {
+            contexts: [],
+            changelogs: [
+              { path: "foo", lastUsed: 1 },
+              { path: "bar", lastUsed: 2 },
+              { path: "baz", lastUsed: 3 },
+              { path: "foobar", lastUsed: 4 },
+            ],
+          },
+        },
+        cacheLocation
+      );
+
+      assertSaveOfChangelogToCache(expectedCache, cacheLocation);
+    });
+
+    /**
+     * Tests that a sixth changelog element will result in removing the element with the lowest last used.
+     */
+    test("should write sixth changelog element", () => {
+      const expectedCache: Cache = {
+        myCacheLocation: {
+          contexts: [],
+          changelogs: [
+            { path: "lorem", lastUsed: 10 },
+            { path: "bar-baz", lastUsed: 5 },
+            { path: "foobar", lastUsed: 4 },
+            { path: "baz", lastUsed: 3 },
+            { path: "bar", lastUsed: 2 },
+          ],
+        },
+      };
+
+      const cacheLocation = path.join(temporaryResourcePath, `${randomUUID()}.json`);
+
+      writeCacheToLocation(
+        {
+          myCacheLocation: {
+            contexts: [],
+            changelogs: [
+              { path: "bar", lastUsed: 2 },
+              { path: "foobar", lastUsed: 4 },
+              { path: "baz", lastUsed: 3 },
+              { path: "foo", lastUsed: 1 },
+              { path: "bar-baz", lastUsed: 5 },
+            ],
+          },
+        },
+        cacheLocation
+      );
+
+      assertSaveOfChangelogToCache(expectedCache, cacheLocation);
     });
   });
 
@@ -268,7 +477,7 @@ suite("CacheHandler tests", () => {
       const cacheLocation = path.join(temporaryResourcePath, "removeTest.json");
 
       // create the cache location
-      fs.writeFileSync(cacheLocation, "{}");
+      writeCacheToLocation({}, cacheLocation);
 
       assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should not exist`);
 
@@ -292,27 +501,27 @@ suite("CacheHandler tests", () => {
   suite("removeConnectionsFromCache", () => {
     const cacheLocation = path.join(temporaryResourcePath, "connectionRemove.json");
 
-    const c1 = { c1: { contexts: ["a", "b", "c"] } };
-    const c2 = { c2: { contexts: ["a", "b", "c"] } };
-    const c3 = { c3: { contexts: ["a", "b", "c"] } };
-    const c4 = { c4: { contexts: ["a", "b", "c"] } };
-    const c5 = { c5: { contexts: ["a", "b", "c"] } };
-    const c6 = { c6: { contexts: ["a", "b", "c"] } };
+    const c1: Cache = { c1: { contexts: ["a", "b", "c"], changelogs: [] } };
+    const c2: Cache = { c2: { contexts: ["a", "b", "c"], changelogs: [] } };
+    const c3: Cache = { c3: { contexts: ["a", "b", "c"], changelogs: [] } };
+    const c4: Cache = { c4: { contexts: ["a", "b", "c"], changelogs: [] } };
+    const c5: Cache = { c5: { contexts: ["a", "b", "c"], changelogs: [] } };
+    const c6: Cache = { c6: { contexts: ["a", "b", "c"], changelogs: [] } };
 
     /**
      * Creates the cache before each test.
      */
     setup("create cache", () => {
-      fs.writeFileSync(
-        cacheLocation,
-        JSON.stringify({
+      writeCacheToLocation(
+        {
           ...c1,
           ...c2,
           ...c3,
           ...c4,
           ...c5,
           ...c6,
-        })
+        },
+        cacheLocation
       );
     });
 
@@ -394,9 +603,24 @@ suite("CacheHandler tests", () => {
  * @param expected - the expected values from the cache as json object
  * @param cacheLocation - the location where the cache should be read
  */
-function assertSaveOfCache(expected: object, cacheLocation: string): void {
+function assertSaveOfContextToCache(expected: Cache, cacheLocation: string): void {
   const cacheHandler = new CacheHandler(cacheLocation);
   cacheHandler.saveContexts("myCacheLocation", ["a", "b"]);
+
+  assertCacheContent(expected, cacheLocation);
+}
+
+/**
+ * Asserts the `saveChangelog` method works as expected.
+ * This method will create a `CacheHandler`, call `saveChangelog`
+ * and reads the created file and compares it with the `expected` cache file.
+ *
+ * @param expected - the expected values from the cache as json object
+ * @param cacheLocation - the location where the cache should be read
+ */
+function assertSaveOfChangelogToCache(expected: Cache, cacheLocation: string): void {
+  const cacheHandler = new CacheHandler(cacheLocation);
+  cacheHandler.saveChangelog("myCacheLocation", "lorem");
 
   assertCacheContent(expected, cacheLocation);
 }
@@ -410,7 +634,7 @@ function assertSaveOfCache(expected: object, cacheLocation: string): void {
  * @param cacheLocation - the location where the cache should be read
  * @param connectionsToRemove - the connections that should be removed
  */
-function assertRemoveConnectionOfCache(expected: object, cacheLocation: string, connectionsToRemove: string[]): void {
+function assertRemoveConnectionOfCache(expected: Cache, cacheLocation: string, connectionsToRemove: string[]): void {
   const cacheHandler = new CacheHandler(cacheLocation);
 
   cacheHandler.removeConnectionsFromCache(connectionsToRemove);
@@ -424,8 +648,18 @@ function assertRemoveConnectionOfCache(expected: object, cacheLocation: string, 
  * @param expected - the expected values from the cache as json object
  * @param cacheLocation - the location where the cache should be read
  */
-function assertCacheContent(expected: object, cacheLocation: string): void {
+function assertCacheContent(expected: Cache, cacheLocation: string): void {
   const result = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" }));
 
   assert.deepStrictEqual(expected, result);
+}
+
+/**
+ * Writes the cache to the given location.
+ *
+ * @param cache - the cache that should be written
+ * @param cacheLocation - the location were the cache should be written to
+ */
+function writeCacheToLocation(cache: Cache, cacheLocation: string): void {
+  fs.writeFileSync(cacheLocation, JSON.stringify(cache), "utf-8");
 }

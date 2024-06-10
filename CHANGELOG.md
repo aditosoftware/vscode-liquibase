@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - removed "Classpath" from the visual Liquibase configurator
 - changed "Additional Elements" to "Advanced properties"
 - Upgraded "liquibase-core"-dependency from 4.24.0 to 4.28.0
+- changed changelog selection from a folder selection to a cached selection with the recent used changelogs saved
 
 ### Fixed
 

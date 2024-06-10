@@ -3,7 +3,7 @@ import * as path from "path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { PickPanelConfig, registerLiquibaseCommand } from "./registerLiquibaseCommand";
-import { isExtraQueryForChangelogNeeded, setExtraChangelogCorrectly } from "./readChangelogFile";
+import { HandleChangelogFileInput } from "./handleChangelogFileInput";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import {
   ConfirmationDialog,
@@ -416,21 +416,7 @@ function generatePropertyFileDialogOptions(changelogNeeded: boolean, contextNeed
   ];
 
   if (changelogNeeded) {
-    inputConfigs.push({
-      input: new OpenDialog({
-        name: "changelog",
-        openDialogOptions: {
-          canSelectFiles: true,
-          canSelectFolders: false,
-          canSelectMany: false,
-          filters: {
-            Changelog: ["xml", "json", "yaml", "yml"],
-          },
-        },
-        onBeforeInput: isExtraQueryForChangelogNeeded,
-        onAfterInput: setExtraChangelogCorrectly,
-      }),
-    });
+    inputConfigs.push(...HandleChangelogFileInput.generateChangelogInputs());
   }
 
   if (contextNeeded) {
