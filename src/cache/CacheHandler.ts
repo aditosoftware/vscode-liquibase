@@ -26,7 +26,7 @@ export interface Connection {
  */
 interface Changelog {
   /**
-   * The timestamp of the last used time.
+   * The timestamp of the last usage.
    */
   lastUsed: number;
 
