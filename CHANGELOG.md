@@ -23,8 +23,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Wording improved: changed cache to recently loaded
 - Moved logging into extra dependency
 - database url can be inputted in parts
-- removed "Classpath" from the visual Liquibase configurator 
+- removed "Classpath" from the visual Liquibase configurator
 - changed "Additional Elements" to "Advanced properties"
+- Upgraded "liquibase-core"-dependency from 4.24.0 to 4.28.0
 
 ### Fixed
 

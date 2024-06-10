@@ -70,15 +70,6 @@ export class Driver {
   }
 
   /**
-   * Finds out the file name under which an existing driver would be downloaded.
-   *
-   * @returns the file name under which the driver would be saved
-   */
-  getFileName(): string {
-    return this.urlForDownload.substring(this.urlForDownload.lastIndexOf("/") + 1);
-  }
-
-  /**
    * Extract the url parts of a given url.
    *
    * @param url - the url whose parts should be extracted

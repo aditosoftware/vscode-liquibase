@@ -105,13 +105,6 @@ suite("url handling", () => {
         assert.deepStrictEqual(expected, driver.extractUrlParts("jdbc:myDriver//127.0.0.1:1234:not_valid/my_database"));
       });
     });
-
-    /**
-     * Tests the creation of the file name.
-     */
-    test("getFileName", () => {
-      assert.strictEqual(driver.getFileName(), "myDriver.jar");
-    });
   });
 
   /**
