@@ -9,12 +9,15 @@ import * as fs from "fs";
  */
 suite("prerequisites", () => {
   const jars = [
+    "commons-io-2.16.1.jar",
+    "commons-lang3-3.14.0.jar",
     "gson-2.10.1.jar",
-    "liquibase-core-4.24.0.jar",
+    "liquibase-core-4.28.0.jar",
     "mariadb-java-client-2.5.3.jar",
     "mssql-jdbc-12.2.0.jre11.jar",
     "mysql-connector-j-8.2.0.jar",
     "ojdbc11-23.2.0.0.jar",
+    "opencsv-5.9.jar",
     "picocli-4.7.5.jar",
     "postgresql-42.6.0.jar",
     "snakeyaml-2.2.jar",
