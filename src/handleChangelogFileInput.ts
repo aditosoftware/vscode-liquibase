@@ -67,7 +67,7 @@ export class HandleChangelogFileInput {
    * Checks if an extra user query (dialog) for the changelog file is needed.
    *
    * @param dialogValues - the current dialog values
-   * @returns `true` hwn an extra changelog query is needed, `false` when none is needed
+   * @returns `true` when an extra changelog query is needed, `false` when none is needed
    */
   private static isExtraQueryForChangelogNeeded(dialogValues: DialogValues): boolean {
     if (dialogValues.uri) {
@@ -90,7 +90,7 @@ export class HandleChangelogFileInput {
     if (propertyFile && propertyFile[0]) {
       const changelog = readChangelog(propertyFile[0]);
       if (changelog) {
-        // if there is a changelog in in property-file, give it back, so we can show it in the dialog
+        // if there is a changelog in in property-file, return it, so we can show it in the dialog
         return changelog;
       }
     }
@@ -117,7 +117,7 @@ export class HandleChangelogFileInput {
   /**
    * Sets the changelog file from the current dialog correctly as uri (exactly as context menu).
    * This will mimic the behavior from a context menu, which is correct in this case.
-   * All the magic for setting the correct changelog-file will then automatically happen.
+   * All the logic for setting the correct changelog-file will then automatically happen.
    *
    * @param dialogValues - the dialog values with the changelog file
    * @param nameOfInput - the name of the current input that was used
