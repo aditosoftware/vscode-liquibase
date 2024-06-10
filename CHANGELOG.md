@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - database url can be inputted in parts
 - removed "Classpath" from the visual Liquibase configurator 
 - changed "Additional Elements" to "Advanced properties"
+- changed changelog selection from a folder selection to a cached selection with the recent used changelogs saved
 
 ### Fixed
 
