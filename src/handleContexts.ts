@@ -8,6 +8,7 @@ import { PROPERTY_FILE } from "./input/ConnectionType";
 import { cacheHandler } from "./extension";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
 import { ContextOptions } from "./constants";
+import { HandleChangelogFileInput } from "./handleChangelogFileInput";
 
 /**
  * The name of the pre selection dialog of the contexts.
@@ -218,9 +219,12 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
     return [];
   }
 
-  if (currentResults.uri) {
+  const changelog =
+    currentResults.uri?.fsPath ?? currentResults.inputValues.get(HandleChangelogFileInput.CHANGELOG_NAME)?.[0];
+
+  if (changelog) {
     // we are in a right click menu, read the contexts from this file
-    return await loadContextsFromChangelogFile(currentResults.uri.fsPath, liquibasePropertiesPath);
+    return await loadContextsFromChangelogFile(changelog, liquibasePropertiesPath);
   }
 
   // Read Liquibase changelog  lines from properties file content
