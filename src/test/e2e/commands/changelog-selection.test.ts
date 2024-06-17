@@ -4,7 +4,7 @@ import assert from "assert";
 import path from "path";
 import * as fs from "fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { CHOOSE_CHANGELOG_OPTION, ContextOptions } from "../../../constants";
+import { CHOOSE_CHANGELOG_OPTION } from "../../../constants";
 
 suite("changelog-selection", () => {
   /**
