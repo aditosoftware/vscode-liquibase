@@ -4,7 +4,7 @@ import assert from "assert";
 import path from "path";
 import * as fs from "fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { CHOOSE_CHANGELOG_OPTION } from "../../../constants";
+import { CHOOSE_CHANGELOG_OPTION, ContextOptions } from "../../../constants";
 
 suite("changelog-selection", () => {
   /**
@@ -41,6 +41,9 @@ suite("changelog-selection", () => {
    * 2. With the changelog from the recently selected elements
    */
   test("should select changelog correctly", async () => {
+    // first, remove everything from the cache to have a clean project
+    await LiquibaseGUITestUtils.removeWholeCache(true);
+
     const savedChangelog = path.join(".liquibase", "changelog.xml");
     const secondChangelog = path.join(".liquibase", secondChangelogFile);
 
