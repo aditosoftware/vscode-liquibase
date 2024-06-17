@@ -305,7 +305,7 @@
     "properties-file": "^3.3.18"
   },
   "devDependencies": {
-    "@aditosoftware/eslint-config-adito-platform": "^0.0.1",
+    "@aditosoftware/eslint-config-adito-platform": "^1.0.0",
     "@types/download": "^8.0.5",
     "@types/mocha": "^10.0.6",
     "@types/node": "20.x",
