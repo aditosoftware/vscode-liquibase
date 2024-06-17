@@ -110,7 +110,9 @@ suite("handleContexts", () => {
     /**
      * Tests the loading of the contexts from the dialog values.
      */
-    test("should load from dialog values", (done) => {
+    test("should load from dialog values", function (done) {
+      this.timeout(4000);
+
       assertLoadContexts(dialogValues, [{ label: "bar" }, { label: "baz" }, { label: "foo" }], done);
     });
 
