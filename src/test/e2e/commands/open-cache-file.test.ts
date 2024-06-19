@@ -31,9 +31,8 @@ suite("open cache", () => {
    * Tests that no cache file will be opened, when none does exist.
    */
   test("should fail open cache file", async () => {
-    // create some data and remove them
-    await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
-    await LiquibaseGUITestUtils.removeWholeCache();
+    // first, remove the whole cache
+    await LiquibaseGUITestUtils.removeWholeCache(true);
 
     // try to execute the command
     await LiquibaseGUITestUtils.startCommandExecution({
