@@ -20,8 +20,9 @@ export async function openDocument(path: string): Promise<void> {
   }
 }
 
-
-
+/**
+ * Opens the link to the liquibase documentation.
+ */
 export function openLiquibaseDocumentation(): void {
   const uri = vscode.Uri.parse(
     "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
