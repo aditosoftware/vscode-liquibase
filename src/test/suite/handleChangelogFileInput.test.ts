@@ -261,7 +261,9 @@ suite("handleChangelogInput", () => {
           );
 
           // uri should be set
-          assert.deepStrictEqual(dialogValues.uri, vscode.Uri.file(pArgument.expectedPath));
+          assert.deepStrictEqual(dialogValues.inputValues.get(HandleChangelogFileInput.CHANGELOG_NAME), [
+            pArgument.expectedPath,
+          ]);
 
           // and the changelog should be saved
           Sinon.assert.calledOnce(saveChangelog);

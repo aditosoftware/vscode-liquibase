@@ -42,15 +42,26 @@ suite("removeConfiguration", () => {
    * Also create some temporary files.
    */
   setup("create stubs and temporary files", () => {
+    const realQuickPick = vscode.window.createQuickPick();
+
     const loggerErrorStub = Sinon.stub(Logger.getLogger(), "error");
     const loggerInfoStub = Sinon.stub(Logger.getLogger(), "info");
 
-    const quickPick = Sinon.stub(vscode.window, "showQuickPick");
+    const showQuickPick = Sinon.stub(vscode.window, "showQuickPick");
+    const createQuickPick = Sinon.stub(vscode.window, "createQuickPick");
     const confirmationDialog = Sinon.stub(vscode.window, "showInformationMessage");
 
     const getLiquibaseConfigurationPath = Sinon.stub(handleLiquibaseSettings, "getLiquibaseConfigurationPath");
 
-    stubs = { loggerErrorStub, loggerInfoStub, quickPick, confirmationDialog, getLiquibaseConfigurationPath };
+    stubs = {
+      loggerErrorStub,
+      loggerInfoStub,
+      showQuickPick,
+      createQuickPick,
+      realQuickPick,
+      confirmationDialog,
+      getLiquibaseConfigurationPath,
+    };
 
     const tempDir = TestUtils.createTempFolderForTests("removeConfiguration");
 
@@ -208,18 +219,31 @@ function assertDeletion(
 ): void {
   stubs.getLiquibaseConfigurationPath.resolves(files.tempDir);
 
-  stubs.quickPick
-    .onFirstCall()
-    .resolves({
-      label: "foo",
-      detail: files.propertyFile,
-    } as vscode.QuickPickItem)
-    .onSecondCall()
-    .resolves([
+  stubs.showQuickPick.resolves({
+    label: "foo",
+    detail: files.propertyFile,
+  } as vscode.QuickPickItem);
+
+  const copyElementWithAccept = Object.create(stubs.realQuickPick);
+  copyElementWithAccept.onDidAccept = (callback: () => void) => {
+    callback();
+    return {
+      dispose: () => {},
+    } as vscode.Disposable;
+  };
+  // and transforms this any element back to an vscode.QuickPick, so it can be returned by createQuickPick
+  const quickPickWithAccept = copyElementWithAccept as vscode.QuickPick<vscode.QuickPickItem>;
+
+  Sinon.stub(quickPickWithAccept, "selectedItems").get(() => {
+    return [
       {
         label: deletionMode,
+        picked: true,
       } as vscode.QuickPickItem,
-    ]);
+    ];
+  });
+  stubs.createQuickPick.returns(quickPickWithAccept);
+
   stubs.confirmationDialog.resolves({ title: "Delete" });
 
   removeConfiguration()
@@ -288,7 +312,17 @@ type Stubs = {
   /**
    * The stub for `vscode.window.showQuickPick`.
    */
-  quickPick: Sinon.SinonStub;
+  showQuickPick: Sinon.SinonStub;
+
+  /**
+   * The stub for `vscode.window.createQuickPick`.
+   */
+  createQuickPick: Sinon.SinonStub;
+
+  /**
+   * The real quick pick used for stubbing the `quickPick`
+   */
+  realQuickPick: vscode.QuickPick<vscode.QuickPickItem>;
 
   /**
    * The stub for `vscode.window.showInformationMessage`.

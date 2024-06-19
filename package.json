@@ -298,7 +298,7 @@
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
-    "@aditosoftware/vscode-input": "^1.0.1",
+    "@aditosoftware/vscode-input": "^1.0.2",
     "@aditosoftware/vscode-logging": "^1.0.0",
     "download": "^8.0.0",
     "immer": "^10.0.3",

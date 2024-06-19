@@ -123,7 +123,17 @@ suite("configurationCommands", () => {
         "addToLiquibaseConfiguration"
       ).resolves();
 
-      const inputBox = Sinon.stub(vscode.window, "showInputBox").resolves("foo");
+      const copyInputBox = Object.create(vscode.window.createInputBox());
+      copyInputBox.onDidAccept = (callback: () => void) => {
+        copyInputBox.value = "foo";
+        callback();
+        return {
+          dispose: () => {},
+        } as vscode.Disposable;
+      };
+      const inputBoxWithAccept = copyInputBox as vscode.InputBox;
+      
+      const inputBox = Sinon.stub(vscode.window, "createInputBox").returns(inputBoxWithAccept);
       const openDialog = Sinon.stub(vscode.window, "showOpenDialog").resolves([vscode.Uri.file("bar")]);
 
       addExistingLiquibaseConfiguration()
