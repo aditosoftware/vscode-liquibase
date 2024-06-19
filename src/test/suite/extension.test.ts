@@ -113,7 +113,7 @@ suite("Extension Test Suite", () => {
         selectReferenceConnection: true,
         quickPick: ["tables"],
         openDialog: [outputFolder],
-        inputBox: "diff.txt",
+        inputBox: ["diff.txt"],
       },
     },
     {
@@ -127,7 +127,8 @@ suite("Extension Test Suite", () => {
       command: "generate-changelog",
       answers: {
         openDialog: [outputFolder],
-        inputBox: "changelog.yaml",
+        quickPick: ["tables"],
+        inputBox: ["changelog.yaml", "MY_TABLE"],
       },
     },
     {
@@ -154,20 +155,20 @@ suite("Extension Test Suite", () => {
       command: "history",
       answers: {
         openDialog: [outputFolder],
-        inputBox: "history.txt",
+        inputBox: ["history.txt"],
         quickPick: ["TABULAR"],
       },
     },
     {
       command: "tag",
       answers: {
-        inputBox: tag,
+        inputBox: [tag],
       },
     },
     {
       command: "tag-exists",
       answers: {
-        inputBox: tag,
+        inputBox: [tag],
       },
     },
     {
@@ -176,7 +177,7 @@ suite("Extension Test Suite", () => {
         openDialog: [changelogFile],
         quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
         loadContexts: true,
-        inputBox: tag,
+        inputBox: [tag],
       },
     },
     {
@@ -184,7 +185,7 @@ suite("Extension Test Suite", () => {
       answers: {
         openDialog: [changelogFile, outputFolder],
         quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
-        inputBox: "update-sql.sql",
+        inputBox: ["update-sql.sql"],
         loadContexts: true,
       },
     },
@@ -227,7 +228,9 @@ suite("Extension Test Suite", () => {
       // stub the showing of an input box
       const inputBox = Sinon.stub(vscode.window, "showInputBox");
       if (commandArgument.answers.inputBox) {
-        inputBox.onFirstCall().resolves(commandArgument.answers.inputBox);
+        for (let callCount = 0; callCount < commandArgument.answers.inputBox.length; callCount++) {
+          inputBox.onCall(callCount).resolves(commandArgument.answers.inputBox[callCount]);
+        }
       }
 
       // stub the showing of an open dialog
@@ -282,7 +285,7 @@ suite("Extension Test Suite", () => {
       Sinon.assert.calledWith(infoMessage);
 
       Sinon.assert.callCount(quickPick, quickPickCount);
-      Sinon.assert.callCount(inputBox, commandArgument.answers.inputBox ? 1 : 0);
+      Sinon.assert.callCount(inputBox, commandArgument.answers.inputBox?.length ?? 0);
       Sinon.assert.callCount(loadingQuickPick, commandArgument.answers.loadContexts ? 1 : 0);
       Sinon.assert.callCount(openDialog, commandArgument.answers.openDialog?.length ?? 0);
     }).timeout(10_000);
@@ -324,7 +327,7 @@ type CommandArgument = {
     /**
      * Indicates the value that was inputted in an input box
      */
-    inputBox?: string;
+    inputBox?: string[];
 
     /**
      * Indicates the values that were selected by the open dialog.

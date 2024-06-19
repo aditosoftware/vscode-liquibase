@@ -183,47 +183,19 @@ function registerCommands(context: vscode.ExtensionContext): void {
           }),
           createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
         },
-        {
-          input: new QuickPick({
-            name: "diffTypes",
-            title: "Choose any diff types",
-            //all possible diffTypes for the diff dialog
-            generateItems: () => [
-              { label: "catalogs", description: "" },
-              { label: "columns", description: "default", picked: true },
-              { label: "data", description: "" },
-              { label: "foreignkeys", description: "default", picked: true },
-              { label: "indexes", description: "default", picked: true },
-              { label: "primarykeys", description: "default", picked: true },
-              { label: "sequences", description: "" },
-              { label: "tables", description: "default", picked: true },
-              { label: "uniqueconstraints", description: "default", picked: true },
-              { label: "views", description: "default", picked: true },
-            ],
-            allowMultiple: true,
-          }),
-          cmdArgs: "--diff-types",
-        },
+        generateDiffTypes(),
       ],
       {
         afterCommandAction: openFileAfterCommandExecution,
       }
     ),
 
-    //TODO: Generate-Changelog -> more steps and user-input
+    // Generate-Changelog
     registerLiquibaseCommand(
       "generate-changelog",
       [
         ...generatePropertyFileDialogOptions(false, false),
-        // This needs a separate context query, because it is only used for generating new files and not getting old files
-        // FIXME: better context handling at generate-changelog!!!!
-        // {
-        //   input: new InputBox("context", {
-        //     title: "The context all the changelogs should get",
-        //     value: " ", // TODO empty value gets cancelled. How to improve?
-        //   }),
-        //   cmdArgs: "--context-filter",
-        // },
+
         {
           input: new OpenDialog({
             name: folderSelectionName,
@@ -233,7 +205,6 @@ function registerCommands(context: vscode.ExtensionContext): void {
               canSelectMany: false,
             },
           }),
-          cmdArgs: "--data-output-directory",
         },
         {
           input: new InputBox({
@@ -245,6 +216,45 @@ function registerCommands(context: vscode.ExtensionContext): void {
             },
           }),
           createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
+        },
+        generateDiffTypes("The types for which the changelog should be generated"),
+        {
+          input: new InputBox({
+            name: "includeObjects",
+            customButton: {
+              button: {
+                iconPath: new vscode.ThemeIcon("question"),
+                tooltip: "Information what is possible with include objects",
+              },
+              action: () => {
+                const uri = vscode.Uri.parse(
+                  "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
+                );
+                vscode.env.openExternal(uri).then(
+                  () => {},
+                  (error) => {
+                    Logger.getLogger().error({
+                      message: "Error opening the documentation to include-objects",
+                      error,
+                      notifyUser: true,
+                    });
+                  }
+                );
+              },
+            },
+            inputBoxOptions: {
+              title: "Choose any objects that should be included",
+              placeHolder: "The tables for which you want the changelog generated",
+              ignoreFocusOut: true,
+              validateInput: (input) => {
+                if (input.trim() === "") {
+                  return "Objects to include must not be empty";
+                }
+                return null;
+              },
+            },
+          }),
+          cmdArgs: "--include-objects",
         },
       ],
       {
@@ -398,6 +408,36 @@ function registerCommands(context: vscode.ExtensionContext): void {
       }
     )
   );
+}
+
+/**
+ * Generates an input for the `--diff-types` and pre-selects the default types.
+ *
+ * @param title - the title that should be set in the dialog
+ * @returns the pickPanelConfig with all the diff types
+ */
+function generateDiffTypes(title: string = "Choose any diff types"): PickPanelConfig {
+  return {
+    input: new QuickPick({
+      name: "diffTypes",
+      title,
+      //all possible diffTypes for the diff dialog
+      generateItems: () => [
+        { label: "catalogs", description: "" },
+        { label: "columns", description: "default", picked: true },
+        { label: "data", description: "" },
+        { label: "foreignkeys", description: "default", picked: true },
+        { label: "indexes", description: "default", picked: true },
+        { label: "primarykeys", description: "default", picked: true },
+        { label: "sequences", description: "" },
+        { label: "tables", description: "default", picked: true },
+        { label: "uniqueconstraints", description: "default", picked: true },
+        { label: "views", description: "default", picked: true },
+      ],
+      allowMultiple: true,
+    }),
+    cmdArgs: "--diff-types",
+  };
 }
 
 /**
