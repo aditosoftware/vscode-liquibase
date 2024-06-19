@@ -165,6 +165,7 @@ function App(): JSX.Element {
             <DatabaseConfiguration
               title="Database configuration"
               baseId="dbConfig"
+              customDrivers={data.liquibaseSettings.customDrivers}
               databaseConnection={data.databaseConnection}
               onUpdate={changeDatabaseConnection}
             />
@@ -197,6 +198,7 @@ function App(): JSX.Element {
               <DatabaseConfiguration
                 title="Reference Database configuration"
                 baseId="referenceConfig"
+                customDrivers={data.liquibaseSettings.customDrivers}
                 databaseConnection={data.referenceDatabaseConnection}
                 onUpdate={changeReferenceConnection}
               />

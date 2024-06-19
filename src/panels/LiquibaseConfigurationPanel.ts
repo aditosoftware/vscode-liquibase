@@ -7,6 +7,7 @@ import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handl
 import { testLiquibaseConnection } from "../configuration/handle/testConfiguration";
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
 import { Logger, LoggingMessageWithLevel } from "@aditosoftware/vscode-logging";
+import { getCustomDrivers } from "../utilities/customDrivers";
 /**
  * This class manages the state and behavior of LiquibaseConfiguration webview panels.
  *
@@ -85,6 +86,7 @@ export class LiquibaseConfigurationPanel {
             {
               defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
               liquibaseDirectoryInProject: getLiquibaseFolder(),
+              customDrivers: getCustomDrivers(),
             },
             ConfigurationStatus.NEW
           )

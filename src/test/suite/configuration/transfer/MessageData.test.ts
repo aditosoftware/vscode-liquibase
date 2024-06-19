@@ -23,6 +23,7 @@ suite("MessageData", () => {
           {
             defaultDatabaseForConfiguration: "MariaDB",
             liquibaseDirectoryInProject: "",
+            customDrivers: undefined,
           },
           ConfigurationStatus.NEW
         )

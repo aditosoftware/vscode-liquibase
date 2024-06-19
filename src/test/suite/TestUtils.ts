@@ -112,6 +112,7 @@ export class TestUtils {
       {
         defaultDatabaseForConfiguration: "MariaDB",
         liquibaseDirectoryInProject: "",
+        customDrivers: undefined,
       },
       ConfigurationStatus.NEW
     );

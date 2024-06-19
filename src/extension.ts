@@ -16,6 +16,7 @@ import {
 import * as os from "os";
 import {
   addExistingLiquibaseConfiguration,
+  displayAvailableDrivers,
   editExistingLiquibaseConfiguration,
 } from "./settings/configurationCommands";
 import {
@@ -450,6 +451,10 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
 
   context.subscriptions.push(
     vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration)
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.drivers", displayAvailableDrivers)
   );
 }
 
