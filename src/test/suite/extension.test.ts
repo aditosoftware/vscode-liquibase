@@ -7,6 +7,8 @@ import { PropertiesEditor } from "properties-file/editor";
 import { randomUUID } from "crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
 import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
+import assert from "assert";
+import { validateInput } from "../../extension";
 
 /**
  * Tests commands of the extension.
@@ -300,6 +302,19 @@ suite("Extension Test Suite", () => {
       Sinon.assert.callCount(loadingQuickPick, commandArgument.answers.quickPick?.length ?? 0);
       Sinon.assert.callCount(openDialog, commandArgument.answers.openDialog?.length ?? 0);
     }).timeout(10_000);
+  });
+
+  [
+    { input: "", expected: "Objects to include must not be empty" },
+    { input: " ", expected: "Objects to include must not be empty" },
+    { input: "x", expected: null },
+  ].forEach((pArgument) => {
+    /**
+     * Tests that the input is validated correctly.
+     */
+    test(`should validate input for value '${pArgument.input}'`, () => {
+      assert.strictEqual(validateInput(pArgument.input), pArgument.expected);
+    });
   });
 });
 

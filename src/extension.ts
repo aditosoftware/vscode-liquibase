@@ -27,7 +27,7 @@ import {
 import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { readUrl } from "./configuration/data/readFromProperties";
-import { openDocument } from "./utilities/vscodeUtilities";
+import { openDocument, openLiquibaseDocumentation } from "./utilities/vscodeUtilities";
 import { generateContextInputs } from "./handleContexts";
 import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
 import { CacheHandler, CacheRemover } from "./cache/";
@@ -226,32 +226,13 @@ function registerCommands(context: vscode.ExtensionContext): void {
                 iconPath: new vscode.ThemeIcon("question"),
                 tooltip: "Information what is possible with include objects",
               },
-              action: () => {
-                const uri = vscode.Uri.parse(
-                  "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
-                );
-                vscode.env.openExternal(uri).then(
-                  () => {},
-                  (error) => {
-                    Logger.getLogger().error({
-                      message: "Error opening the documentation to include-objects",
-                      error,
-                      notifyUser: true,
-                    });
-                  }
-                );
-              },
+              action: openLiquibaseDocumentation,
             },
             inputBoxOptions: {
               title: "Choose any objects that should be included",
               placeHolder: "The tables for which you want the changelog generated",
               ignoreFocusOut: true,
-              validateInput: (input) => {
-                if (input.trim() === "") {
-                  return "Objects to include must not be empty";
-                }
-                return null;
-              },
+              validateInput,
             },
           }),
           cmdArgs: "--include-objects",
@@ -408,6 +389,19 @@ function registerCommands(context: vscode.ExtensionContext): void {
       }
     )
   );
+}
+
+/**
+ * Validates an input that it was given.
+ *
+ * @param value - the value that should be validated
+ * @returns the validation message or `null`, when every value was ok
+ */
+export function validateInput(value: string): string | null {
+  if (value.trim() === "") {
+    return "Objects to include must not be empty";
+  }
+  return null;
 }
 
 /**

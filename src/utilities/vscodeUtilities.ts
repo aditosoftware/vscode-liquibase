@@ -19,3 +19,21 @@ export async function openDocument(path: string): Promise<void> {
     });
   }
 }
+
+
+
+export function openLiquibaseDocumentation(): void {
+  const uri = vscode.Uri.parse(
+    "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
+  );
+  vscode.env.openExternal(uri).then(
+    () => {},
+    (error) => {
+      Logger.getLogger().error({
+        message: "Error opening the documentation to include-objects",
+        error,
+        notifyUser: true,
+      });
+    }
+  );
+}
