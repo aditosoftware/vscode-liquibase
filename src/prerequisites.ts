@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import download from "download";
-import { ALL_DRIVERS } from "./configuration/drivers";
+import { PREDEFINED_DRIVERS } from "./configuration/drivers";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
@@ -111,7 +111,7 @@ function getRequiredFiles(): Map<string, string> {
   });
 
   // and add the jars for the drivers
-  ALL_DRIVERS.forEach((value) => {
+  PREDEFINED_DRIVERS.forEach((value) => {
     requiredFiles.set(getFileName(value.urlForDownload), value.urlForDownload);
   });
   return requiredFiles;

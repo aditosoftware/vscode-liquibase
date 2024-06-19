@@ -720,6 +720,41 @@ export class LiquibaseGUITestUtils {
   static async waitUntil(waitFunction: () => boolean, message: string, timeout: number = 4000): Promise<boolean> {
     return await VSBrowser.instance.driver.wait(waitFunction, timeout, message);
   }
+
+  /**
+   * Creates a custom driver.
+   *
+   * @returns the name of the created driver
+   */
+  static async createCustomDriver(): Promise<string> {
+    const driverName = randomUUID();
+
+    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "drivers..." });
+
+    await input.selectQuickPick("Add New Driver");
+    await input.confirm();
+
+    await input.setText(path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "dummy.jar")); //Resourcepath
+    await input.confirm();
+    await input.confirm();
+
+    await input.setText(driverName);
+    await input.confirm();
+
+    await input.setText("jdbc:dummyDriver://");
+    await input.confirm();
+
+    await input.setText("org.dummyDriver.class");
+    await input.confirm();
+
+    await input.setText("1234");
+    await input.confirm();
+
+    await input.setText(";");
+    await input.confirm();
+
+    return driverName;
+  }
 }
 
 /**

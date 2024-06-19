@@ -2,18 +2,18 @@ import assert from "assert";
 import { randomUUID } from "crypto";
 import { TestUtils } from "../../TestUtils";
 import path from "path";
-import {
-  addExistingLiquibaseConfiguration,
-  editExistingLiquibaseConfiguration,
-} from "../../../../settings/configurationCommands";
 import * as vscode from "vscode";
-import * as fs from "fs";
+import * as configurationCommand from "../../../../settings/configurationCommands";
+import fs from "fs";
 import { LiquibaseConfigurationPanel } from "../../../../panels/LiquibaseConfigurationPanel";
 import * as readConfiguration from "../../../../configuration/handle/readConfiguration";
 import Sinon from "sinon";
 import { ConnectionType } from "../../../../input/ConnectionType";
 import * as createAndAddConfiguration from "../../../../configuration/handle/createAndAddConfiguration";
 import * as handleLiquibaseFolder from "../../../../handleLiquibaseSettings";
+import { CustomDriverData } from "../../../../utilities/customDrivers";
+import { setResourcePath } from "../../../../extension";
+import { InputBox, OpenDialog } from "@aditosoftware/vscode-input";
 
 /**
  * Tests the file `configurationCommands.ts`.
@@ -31,6 +31,8 @@ suite("configurationCommands", () => {
     TestUtils.initLoggerForTests();
 
     tempPath = TestUtils.createTempFolderForTests("configurationCommands");
+
+    setResourcePath(tempPath);
 
     extensionContext = {
       extensionUri: vscode.Uri.file(tempPath),
@@ -95,7 +97,8 @@ suite("configurationCommands", () => {
 
       assert.ok(!LiquibaseConfigurationPanel.currentPanel, "no current panel created");
 
-      editExistingLiquibaseConfiguration(undefined, extensionContext)
+      configurationCommand
+        .editExistingLiquibaseConfiguration(undefined, extensionContext)
         .then(() => {
           const currentPanel = LiquibaseConfigurationPanel.currentPanel;
           assert.ok(!currentPanel, "panel is not created");
@@ -136,7 +139,8 @@ suite("configurationCommands", () => {
       const inputBox = Sinon.stub(vscode.window, "createInputBox").returns(inputBoxWithAccept);
       const openDialog = Sinon.stub(vscode.window, "showOpenDialog").resolves([vscode.Uri.file("bar")]);
 
-      addExistingLiquibaseConfiguration()
+      configurationCommand
+        .addExistingLiquibaseConfiguration()
         .then(() => {
           Sinon.assert.calledOnce(addToLiquibaseConfigurationStub);
           Sinon.assert.calledWith(addToLiquibaseConfigurationStub, "foo", Sinon.match("bar"));
@@ -158,6 +162,249 @@ suite("configurationCommands", () => {
         .catch(done);
     });
   });
+
+  /**
+   * Tests the creation of a new liquibase configuration.
+   */
+  suite("writeConfigToJSON", () => {
+    /**
+     * Tests the creation of a new liquibase configuration.
+     */
+    test("should write config to JSON", () => {
+      const driverName = crypto.randomUUID();
+      const expectedJSON = JSON.stringify(
+        {
+          name: driverName,
+          driverClass: "myDriverClass",
+          defaultPort: 1,
+          jdbcName: "jdbc:myDriver://",
+          separator: "/",
+        },
+        null,
+        2
+      );
+
+      configurationCommand.writeConfigToJSON(driverName, createCustomDriverData());
+
+      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".json")));
+      assert.strictEqual(fs.readFileSync(path.join(tempPath, driverName + ".json"), "utf-8"), expectedJSON);
+    });
+  });
+
+  /**
+   * Tests the copy and creation of a driver.
+   */
+  suite("copyAndCreateDriver", () => {
+    /**
+     * Tests the copy and creation of a driver.
+     */
+    test("should copy and create driver", () => {
+      const driverName = crypto.randomUUID();
+      const customJarFileFolder = path.join(tempPath, crypto.randomUUID());
+      const customJarFilePath = path.join(customJarFileFolder, crypto.randomUUID() + ".jar");
+      fs.mkdirSync(customJarFileFolder, { recursive: true });
+      fs.writeFileSync(customJarFilePath, "");
+      configurationCommand.copyAndCreateDriver(customJarFilePath, driverName, createCustomDriverData());
+
+      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".jar")));
+      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".json")));
+    });
+  });
+
+  /**
+   * Tests the update of a driver.
+   */
+  suite("updateDriver", () => {
+    /**
+     * Tests the update of a driver.
+     */
+    test("should update driver", () => {
+      const driverName1 = crypto.randomUUID();
+      const driverName2 = crypto.randomUUID();
+      const customJarFileFolder = path.join(tempPath, crypto.randomUUID());
+      const customJarFilePath = path.join(customJarFileFolder, crypto.randomUUID() + ".jar");
+      fs.mkdirSync(customJarFileFolder, { recursive: true });
+      fs.writeFileSync(customJarFilePath, "");
+      configurationCommand.copyAndCreateDriver(customJarFilePath, driverName1, createCustomDriverData());
+
+      configurationCommand.updateDriver(driverName1, driverName2, createCustomDriverData());
+
+      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".jar")));
+      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".json")));
+    });
+  });
+
+  suite("getCustomDriversForView", () => {
+    /**
+     * Tests the creation of a new liquibase configuration.
+     */
+    test("should get custom drivers for view", () => {
+      const driverName = crypto.randomUUID();
+      configurationCommand.writeConfigToJSON(driverName, createCustomDriverData());
+      const drivers: vscode.QuickPickItem[] = [];
+      configurationCommand.getCustomDriversForView(drivers, []);
+
+      assert.ok(
+        drivers.find((driver) => driver.label === driverName),
+        "driver was not found"
+      );
+    });
+  });
+
+  /**
+   * Tests the handling of the driver input.
+   */
+  suite("handleDriverInput", () => {
+    /**
+     * Tests the handling of the driver input
+     */
+    test("should handle driver input", async () => {
+      const driverName = crypto.randomUUID();
+      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      fs.writeFileSync(driverFile, "");
+
+      configurationCommand.handleDriverInput(createDriverInputs(driverFile, driverName));
+
+      await new Promise((resolve) => setImmediate(resolve));
+
+      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".jar")));
+      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".json")));
+      assert.ok(fs.existsSync(driverFile));
+    });
+
+    /**
+     * Tests the handling of the driver input and only update
+     */
+    test("should handle driver input with old values", async () => {
+      const driverName1 = crypto.randomUUID();
+      const driverName2 = crypto.randomUUID();
+      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      fs.writeFileSync(driverFile, "");
+
+      //create the driver to be updated
+      configurationCommand.handleDriverInput(createDriverInputs(driverFile, driverName1));
+
+      //update the driver
+      configurationCommand.handleDriverInput(
+        createDriverInputs(driverFile, driverName2),
+        createCustomDriverData(),
+        driverName1
+      );
+
+      await new Promise((resolve) => setImmediate(resolve));
+
+      assert.ok(
+        !fs.existsSync(path.join(tempPath, driverName1 + ".jar")),
+        "old driver file " + driverName1 + ".jar should be deleted"
+      );
+      assert.ok(
+        !fs.existsSync(path.join(tempPath, driverName1 + ".json")),
+        "old driver json " + driverName1 + ".json should be deleted"
+      );
+      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".jar")), "new driver file should exist");
+      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".json")), "new driver json should exist");
+      assert.ok(fs.existsSync(driverFile));
+    });
+
+    /**
+     * Tests the handling of the driver input with no input from the user.
+     */
+    test("should handle driver input with no input", () => {
+      const driverVisualName = crypto.randomUUID();
+      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      fs.writeFileSync(driverFile, "");
+
+      configurationCommand.handleDriverInput(createDriverInputs("", driverVisualName), undefined, driverVisualName);
+
+      assert.ok(!fs.existsSync(path.join(tempPath, driverVisualName + ".jar")));
+      assert.ok(!fs.existsSync(path.join(tempPath, driverVisualName + ".json")));
+      assert.ok(fs.existsSync(driverFile));
+    });
+  });
+
+  /**
+   * Tests the getting of drivers.
+   */
+  suite("getDrivers", () => {
+    /**
+     * Tests the getting of drivers.
+     */
+    test("should get drivers", () => {
+      const preExecutionDriverCount = configurationCommand.getDrivers().length;
+      const driverName = crypto.randomUUID();
+      configurationCommand.writeConfigToJSON(driverName, createCustomDriverData());
+      const drivers = configurationCommand.getDrivers();
+
+      assert.ok(
+        drivers.find((driver) => driver.label === driverName),
+        "driver was not found"
+      );
+
+      // check if the driver was added
+      assert.strictEqual(drivers.length, preExecutionDriverCount + 1);
+    });
+  });
+
+  /**
+   * Tests the modification or addition of a driver.
+   */
+  suite("modifyOrAddDriver", () => {
+    /**
+     * Tests the modification of a driver.
+     */
+    test("should modify driver", () => {
+      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      fs.writeFileSync(driverFile, "");
+
+      const modifyOrAddDriverSpy = Sinon.spy(configurationCommand, "modifyOrAddDriver");
+      const handleDriverInputStub = Sinon.stub(configurationCommand, "handleDriverInput");
+
+      modifyOrAddDriverSpy();
+
+      Sinon.assert.calledOnce(handleDriverInputStub);
+    });
+  });
+
+  /**
+   * Tests the validation of the input box text value.
+   */
+  suite("validateInputBoxTextValue", () => {
+    const inputParameter = [
+      { input: "foo", expected: undefined },
+      { input: "", expected: "Value must not be empty" },
+    ];
+
+    /**
+     * Tests the validation of the input box text value.
+     */
+    inputParameter.forEach((input) => {
+      test(`should validate input box text value ${input.input}`, () => {
+        assert.strictEqual(configurationCommand.validateInputBoxTextValue(input.input)?.message, input.expected);
+      });
+    });
+  });
+
+  /**
+   * Tests the validation of the input box port value.
+   */
+  suite("validateInputBoxPortValue", () => {
+    const inputParameter = [
+      { input: "foo", expected: "Port must be a number" },
+      { input: "1", expected: undefined },
+      { input: "0", expected: undefined },
+      { input: "65535", expected: undefined },
+      { input: "999999", expected: "Port must be between 0 and 65535" },
+      { input: "", expected: "Port must not be empty" },
+    ];
+    /**
+     * Tests the validation of the input box text value.
+     */
+    inputParameter.forEach((input) => {
+      test(`should validate input box port value ${input.input}`, () => {
+        assert.strictEqual(configurationCommand.validateInputBoxPortValue(input.input)?.message, input.expected);
+      });
+    });
+  });
 });
 
 /**
@@ -176,7 +423,8 @@ function assertEditExistingLiquibaseConfiguration(
 
   assert.ok(!LiquibaseConfigurationPanel.currentPanel, "no current panel created");
 
-  editExistingLiquibaseConfiguration(uri, extensionContext)
+  configurationCommand
+    .editExistingLiquibaseConfiguration(uri, extensionContext)
     .then(() => {
       const currentPanel = LiquibaseConfigurationPanel.currentPanel;
       assert.ok(currentPanel, "panel was created");
@@ -197,4 +445,63 @@ function assertEditExistingLiquibaseConfiguration(
       // dispose manually after the tests
       LiquibaseConfigurationPanel.currentPanel?.dispose();
     });
+}
+
+/**
+ * Creates a custom driver for the tests.
+ *
+ * @returns the custom driver data
+ */
+function createCustomDriverData(): CustomDriverData {
+  return {
+    driverClass: "myDriverClass",
+    port: 1,
+    jdbcName: "jdbc:myDriver://",
+    separator: "/",
+  };
+}
+
+/**
+ * Creates the driver inputs for the tests.
+ *
+ * @param driverFilePath - path to the driver file
+ * @param visualNameOutput - the output of the visual name
+ * @returns the driver inputs
+ */
+function createDriverInputs(
+  driverFilePath: string,
+  visualNameOutput: string
+): [OpenDialog, InputBox, InputBox, InputBox, InputBox, InputBox] {
+  const driverFileInput = new OpenDialog({
+    name: "driverFile",
+    openDialogOptions: {},
+  });
+  Sinon.stub(driverFileInput, "showDialog").resolves([driverFilePath]);
+
+  const visualName = new InputBox({
+    name: "visualName",
+  });
+  Sinon.stub(visualName, "showDialog").resolves(visualNameOutput);
+
+  const jdbcName = new InputBox({
+    name: "jdbcName",
+  });
+  Sinon.stub(jdbcName, "showDialog").resolves("jdbcName");
+
+  const driverClass = new InputBox({
+    name: "driverClass",
+  });
+  Sinon.stub(driverClass, "showDialog").resolves("driverClass");
+
+  const defaultPort = new InputBox({
+    name: "defaultPort",
+  });
+  Sinon.stub(defaultPort, "showDialog").resolves("1");
+
+  const separator = new InputBox({
+    name: "separator",
+  });
+  Sinon.stub(separator, "showDialog").resolves("/");
+
+  return [driverFileInput, visualName, jdbcName, driverClass, defaultPort, separator];
 }

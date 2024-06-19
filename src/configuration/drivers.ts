@@ -1,3 +1,4 @@
+import { CustomDriverData } from "../utilities/customDrivers";
 import { UrlParts } from "./data/UrlParts";
 
 /**
@@ -153,7 +154,7 @@ interface DatabaseNameExtraction {
 /**
  * All the pre-configured drivers.
  */
-export const ALL_DRIVERS = new Map<string, Driver>([
+export const PREDEFINED_DRIVERS = new Map<string, Driver>([
   [
     // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
     "MariaDB",
@@ -335,4 +336,47 @@ function extractParametersForMsSQL(oldUrl: string): string {
     }
   }
   return "";
+}
+
+/**
+ * Custom driver class for drivers that are not pre-configured.
+ */
+export class CustomDriver extends Driver {
+  /**
+   * The class which is needed for creating the Liquibase file.
+   */
+  declare readonly driverClass;
+
+  /**
+   * The default port of the driver.
+   */
+  declare readonly port;
+
+  /**
+   * The jdbc name of the driver.
+   */
+  declare readonly jdbcName;
+
+  /**
+   * The separator for the jdbc url.
+   */
+  declare readonly separator;
+
+  /**
+   * Constructor. This will create a custom driver with default URL-builder.
+   *
+   * @param pCustomDriver - the custom driver data
+   */
+  constructor(pCustomDriver: CustomDriverData) {
+    super(
+      pCustomDriver.driverClass,
+      "",
+      pCustomDriver.jdbcName,
+      pCustomDriver.port,
+      pCustomDriver.driverClass,
+      extractDatabaseNameBySeparator,
+      buildDatabaseNameBySeparator,
+      extractParameters
+    );
+  }
 }

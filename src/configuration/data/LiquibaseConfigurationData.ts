@@ -75,6 +75,7 @@ export class LiquibaseConfigurationData {
       {
         defaultDatabaseForConfiguration: dataToClone.liquibaseSettings.defaultDatabaseForConfiguration,
         liquibaseDirectoryInProject: dataToClone.liquibaseSettings.liquibaseDirectoryInProject,
+        customDrivers: dataToClone.liquibaseSettings.customDrivers,
       },
       dataToClone.name,
       dataToClone.changelogFile,

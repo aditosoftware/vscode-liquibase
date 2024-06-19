@@ -119,6 +119,11 @@
         "category": "Liquibase"
       },
       {
+        "command": "liquibase.drivers",
+        "title": "Drivers ...",
+        "category": "Liquibase"
+      },
+      {
         "command": "liquibase.openCacheFile",
         "title": "Opens the file with the recently loaded elements",
         "category": "Liquibase: Cache"
