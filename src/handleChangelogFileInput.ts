@@ -15,14 +15,19 @@ import { CHOOSE_CHANGELOG_OPTION } from "./constants";
  */
 export class HandleChangelogFileInput {
   /**
+   * The name where the correct changelog will be stored.
+   */
+  static readonly CHANGELOG_NAME = "changelog";
+
+  /**
    * The name of the changelog selection in the quick pick.
    */
-  static CHANGELOG_QUICK_PICK_NAME = "changelogQuickPick";
+  static readonly CHANGELOG_QUICK_PICK_NAME = "changelogQuickPick";
 
   /**
    * The name of the changelog selection in the open dialog.
    */
-  static CHANGELOG_OPEN_DIALOG_NAME = "changelogOpenDialog";
+  static readonly CHANGELOG_OPEN_DIALOG_NAME = "changelogOpenDialog";
 
   /**
    * Generates the inputs for selecting the changelog.
@@ -55,7 +60,7 @@ export class HandleChangelogFileInput {
               "All Files": ["*"],
             },
           },
-          onBeforeInput: this.isExtraQueryForChangelogNeeded,
+          onBeforeInput: this.isOpenDialogNeeded,
           onAfterInput: (dialogValues) =>
             this.setExtraChangelogCorrectly(dialogValues, this.CHANGELOG_OPEN_DIALOG_NAME),
         }),
@@ -77,6 +82,19 @@ export class HandleChangelogFileInput {
 
     // in all the other cases, ask for the changelog file
     return true;
+  }
+
+  /**
+   * Checks if the open dialog for selecting the changelog is needed.
+   *
+   * @param dialogValues - the current dialog values
+   * @returns `true` when the changelog needs to be selected from the open dialog, `false` when none is needed
+   */
+  private static isOpenDialogNeeded(dialogValues: DialogValues): boolean {
+    return (
+      HandleChangelogFileInput.isExtraQueryForChangelogNeeded(dialogValues) &&
+      dialogValues.inputValues.get(HandleChangelogFileInput.CHANGELOG_QUICK_PICK_NAME)?.[0] === CHOOSE_CHANGELOG_OPTION
+    );
   }
 
   /**
@@ -146,8 +164,10 @@ export class HandleChangelogFileInput {
     }
 
     if (changelogPath) {
-      // set the uri as the changelog file
-      dialogValues.uri = vscode.Uri.file(changelogPath);
+      // add the changelog path to the dialog values.
+      // This will be transformed before the command execution into an URI.
+      // It can not be done now, because otherwise you can´t go back to the changelog inputs
+      dialogValues.addValue(this.CHANGELOG_NAME, changelogPath);
 
       // and save to cache
       const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
-import { getWorkFolder } from "./handleChangelogFileInput";
+import { HandleChangelogFileInput, getWorkFolder } from "./handleChangelogFileInput";
 import * as path from "path";
 import { resourcePath } from "./extension";
 import { DialogValues, InputBase, InputBaseOptions, handleMultiStepInput } from "@aditosoftware/vscode-input";
@@ -160,6 +160,12 @@ export function registerLiquibaseCommand(
             }
           });
       });
+
+      // set the changelog from the dialog to the uri
+      const possibleChangelog = dialogValues.inputValues.get(HandleChangelogFileInput.CHANGELOG_NAME)?.[0];
+      if (possibleChangelog) {
+        dialogValues.uri = vscode.Uri.file(possibleChangelog);
+      }
 
       if (dialogValues.uri) {
         // if this was called from an right click menu, then handle some parameters differently

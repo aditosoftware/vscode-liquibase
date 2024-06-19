@@ -35,7 +35,7 @@ suite("Extension Test Suite", () => {
    * Also creates a properties file for the test.
    */
   suiteSetup("init extension and properties file", async function () {
-    this.timeout(60_000);
+    this.timeout(80_000);
 
     // start a maria db container and wait for its status
     await DockerTestUtils.startContainer();
@@ -84,16 +84,14 @@ suite("Extension Test Suite", () => {
       command: "status",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
-        loadContexts: true,
+        quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
       },
     },
     {
       command: "update",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
-        loadContexts: true,
+        quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
       },
     },
     {
@@ -104,14 +102,14 @@ suite("Extension Test Suite", () => {
       command: "validate",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [CHOOSE_CHANGELOG_OPTION],
+        quickPick: [[CHOOSE_CHANGELOG_OPTION]],
       },
     },
     {
       command: "diff",
       answers: {
         selectReferenceConnection: true,
-        quickPick: ["tables"],
+        quickPick: [[]],
         openDialog: [outputFolder],
         inputBox: "diff.txt",
       },
@@ -120,7 +118,7 @@ suite("Extension Test Suite", () => {
       command: "db-doc",
       answers: {
         openDialog: [changelogFile, outputFolder],
-        quickPick: [CHOOSE_CHANGELOG_OPTION],
+        quickPick: [[CHOOSE_CHANGELOG_OPTION]],
       },
     },
     {
@@ -134,16 +132,14 @@ suite("Extension Test Suite", () => {
       command: "unexpected-changesets",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
-        loadContexts: true,
+        quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
       },
     },
     {
       command: "changelog-sync",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
-        loadContexts: true,
+        quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
       },
     },
     {
@@ -155,7 +151,7 @@ suite("Extension Test Suite", () => {
       answers: {
         openDialog: [outputFolder],
         inputBox: "history.txt",
-        quickPick: ["TABULAR"],
+        quickPick: [["TABULAR"]],
       },
     },
     {
@@ -174,8 +170,7 @@ suite("Extension Test Suite", () => {
       command: "rollback",
       answers: {
         openDialog: [changelogFile],
-        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
-        loadContexts: true,
+        quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
         inputBox: tag,
       },
     },
@@ -183,9 +178,8 @@ suite("Extension Test Suite", () => {
       command: "update-sql",
       answers: {
         openDialog: [changelogFile, outputFolder],
-        quickPick: [CHOOSE_CHANGELOG_OPTION, contextLoaded],
+        quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
         inputBox: "update-sql.sql",
-        loadContexts: true,
       },
     },
   ];
@@ -197,6 +191,9 @@ suite("Extension Test Suite", () => {
     test(`should execute command ${commandArgument.command}`, async () => {
       // create a real quick pick for afterwards
       const realQuickPick = vscode.window.createQuickPick();
+
+      // create a real input for afterwards
+      const realInput = vscode.window.createInputBox();
 
       // stub the showing of the quick picks
       const quickPick = Sinon.stub(vscode.window, "showQuickPick");
@@ -215,19 +212,20 @@ suite("Extension Test Suite", () => {
         });
       }
 
-      // then add a possible additional answers
-      if (commandArgument.answers.quickPick) {
-        quickPickCount += commandArgument.answers.quickPick.length;
-        commandArgument.answers.quickPick.forEach((value, index) => {
-          const callCount = (commandArgument.answers.selectReferenceConnection ? 2 : 1) + index;
-          quickPick.onCall(callCount).resolves({ label: value });
-        });
-      }
-
       // stub the showing of an input box
-      const inputBox = Sinon.stub(vscode.window, "showInputBox");
+      const inputBox = Sinon.stub(vscode.window, "createInputBox");
       if (commandArgument.answers.inputBox) {
-        inputBox.onFirstCall().resolves(commandArgument.answers.inputBox);
+        const copyInputBox = Object.create(realInput);
+        copyInputBox.onDidAccept = (callback: () => void) => {
+          copyInputBox.value = commandArgument.answers.inputBox;
+          callback();
+          return {
+            dispose: () => {},
+          } as vscode.Disposable;
+        };
+        const inputBoxWithAccept = copyInputBox as vscode.InputBox;
+
+        inputBox.onFirstCall().returns(inputBoxWithAccept);
       }
 
       // stub the showing of an open dialog
@@ -238,17 +236,30 @@ suite("Extension Test Suite", () => {
         }
       }
 
-      // stub the showing of a loading quick pick. This is a bit more complex and only needed for loading the contexts
+      // stub the showing of a loading and normal quick pick created by the vscode-input.
       const loadingQuickPick = Sinon.stub(vscode.window, "createQuickPick");
-      if (commandArgument.answers.loadContexts) {
-        const copyElementWithAccept = Object.create(realQuickPick);
-        copyElementWithAccept.onDidAccept = (callback: () => void) => callback();
-        // and transforms this any element back to an vscode.QuickPick, so it can be returned by createQuickPick
-        const quickPickWithAccept = copyElementWithAccept as vscode.QuickPick<vscode.QuickPickItem>;
-        Sinon.stub(quickPickWithAccept, "selectedItems").get(() => {
-          return [{ label: "bar" }, { label: "baz" }, { label: "foo" }];
+      if (commandArgument.answers.quickPick) {
+        commandArgument.answers.quickPick.forEach((value, index) => {
+          const copyElementWithAccept = Object.create(realQuickPick);
+          copyElementWithAccept.onDidAccept = (callback: () => void) => {
+            callback();
+            return {
+              dispose: () => {},
+            } as vscode.Disposable;
+          };
+          // and transforms this any element back to an vscode.QuickPick, so it can be returned by createQuickPick
+          const quickPickWithAccept = copyElementWithAccept as vscode.QuickPick<vscode.QuickPickItem>;
+
+          if (value.length !== 0) {
+            Sinon.stub(quickPickWithAccept, "selectedItems").get(() => {
+              return value.map((pValue) => {
+                return { label: pValue, picked: true } as vscode.QuickPickItem;
+              });
+            });
+          }
+
+          loadingQuickPick.onCall(index).returns(quickPickWithAccept);
         });
-        loadingQuickPick.returns(quickPickWithAccept);
       }
 
       // stub the showing of the info message
@@ -283,7 +294,7 @@ suite("Extension Test Suite", () => {
 
       Sinon.assert.callCount(quickPick, quickPickCount);
       Sinon.assert.callCount(inputBox, commandArgument.answers.inputBox ? 1 : 0);
-      Sinon.assert.callCount(loadingQuickPick, commandArgument.answers.loadContexts ? 1 : 0);
+      Sinon.assert.callCount(loadingQuickPick, commandArgument.answers.quickPick?.length ?? 0);
       Sinon.assert.callCount(openDialog, commandArgument.answers.openDialog?.length ?? 0);
     }).timeout(10_000);
   });
@@ -305,12 +316,6 @@ type CommandArgument = {
    */
   answers: {
     /**
-     * Indicates if the contexts were loaded.
-     * If this is set, then automatically the contexts `bar`, `baz` and `foo` are selected in the corresponding dialog.
-     */
-    loadContexts?: boolean;
-
-    /**
      * Indicates if a reference connection was loaded.
      * If this is set, then the property file is set as the reference connection as well.
      */
@@ -318,8 +323,10 @@ type CommandArgument = {
 
     /**
      * Indicates the value that were selected by the quick pick.
+     * If you want the default selection (that means the values that were already selected when generating the items),
+     * then you should leave the array empty.
      */
-    quickPick?: string[];
+    quickPick?: string[][];
 
     /**
      * Indicates the value that was inputted in an input box
