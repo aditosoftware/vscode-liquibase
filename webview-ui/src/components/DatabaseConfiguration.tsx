@@ -1,12 +1,11 @@
 import { TextFieldType } from "@vscode/webview-ui-toolkit";
 import { VSCodeDivider, VSCodeTextField, VSCodeDropdown, VSCodeOption } from "@vscode/webview-ui-toolkit/react";
 import { DatabaseConnection } from "../../../src/configuration/data/DatabaseConnection";
-import { NO_PRE_CONFIGURED_DRIVER, PREDEFINED_DRIVERS, CustomDriver } from "../../../src/configuration/drivers";
+import { NO_PRE_CONFIGURED_DRIVER, PREDEFINED_DRIVERS, UrlParts } from "@aditosoftware/driver-dependencies";
 import { useEffect, useState } from "react";
 import { vscodeApiWrapper } from "../utilities/vscodeApiWrapper";
 import { MessageData, MessageType } from "../../../src/configuration/transfer";
-import { UrlParts } from "../../../src/configuration/data/UrlParts";
-import { CustomDrivers } from "../../../src/utilities/customDrivers";
+import { CustomDrivers, CustomDriver } from "../../../src/utilities/customDriver";
 /**
  * Properties for creating a database configuration
  */

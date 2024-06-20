@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import * as fs from "fs";
 import download from "download";
-import { PREDEFINED_DRIVERS } from "./configuration/drivers";
+import { PREDEFINED_DRIVERS } from "@aditosoftware/driver-dependencies";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**

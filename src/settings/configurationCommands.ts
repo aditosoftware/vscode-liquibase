@@ -15,10 +15,11 @@ import {
 } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
 import { ConnectionType } from "../input/ConnectionType";
-import { CustomDriverData, getCustomDrivers } from "../utilities/customDrivers";
-import { PREDEFINED_DRIVERS } from "../configuration/drivers";
+import { CustomDriverData } from "../utilities/customDriver";
+import { PREDEFINED_DRIVERS } from "@aditosoftware/driver-dependencies";
 import { resourcePath } from "../extension";
 import { Logger } from "@aditosoftware/vscode-logging";
+import { getCustomDrivers } from "../utilities/customDriverUtilities";
 
 /**
  * Edits an existing configuration.

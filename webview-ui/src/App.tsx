@@ -11,7 +11,7 @@ import {
   LiquibaseConfigurationData,
 } from "../../src/configuration/data/LiquibaseConfigurationData";
 import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnection";
-import { NO_PRE_CONFIGURED_DRIVER } from "../../src/configuration/drivers";
+import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";
 import { MessageData, MessageType } from "../../src/configuration/transfer";
 
 /**

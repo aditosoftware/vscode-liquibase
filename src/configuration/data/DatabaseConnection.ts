@@ -1,8 +1,7 @@
 import { immerable } from "immer";
-import { PREDEFINED_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER, CustomDriver } from "../drivers";
+import { PREDEFINED_DRIVERS, Driver, NO_PRE_CONFIGURED_DRIVER, UrlParts } from "@aditosoftware/driver-dependencies";
 import { PropertiesEditor } from "properties-file/editor";
-import { UrlParts } from "./UrlParts";
-import { CustomDrivers } from "../../utilities/customDrivers";
+import { CustomDriver, CustomDrivers } from "../../utilities/customDriver";
 
 /**
  * The Database connection configuration with all the input that is needed for connecting to the database.
