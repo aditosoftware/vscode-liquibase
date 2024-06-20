@@ -1,42 +1,8 @@
 import path from "path";
 import fs from "fs";
 import { resourcePath } from "../extension";
+import { CustomDrivers, CustomDriverData } from "./customDriver";
 
-/**
- * Interface for the custom drivers.
- */
-export interface CustomDrivers {
-  /**
-   * The driver data.
-   */
-  [key: string]: CustomDriverData;
-}
-
-/**
- * Interface for the custom driver data.
- *
- */
-export interface CustomDriverData {
-  /**
-   * The driver class.
-   */
-  driverClass: string;
-
-  /**
-   * The default port.
-   */
-  port: number;
-
-  /**
-   * The jdbc name.
-   */
-  jdbcName: string;
-
-  /**
-   * The separator.
-   */
-  separator: string;
-}
 /**
  * Get all custom drivers from the resource folder.
  *

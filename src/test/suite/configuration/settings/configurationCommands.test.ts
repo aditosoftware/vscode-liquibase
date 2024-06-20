@@ -11,7 +11,7 @@ import Sinon from "sinon";
 import { ConnectionType } from "../../../../input/ConnectionType";
 import * as createAndAddConfiguration from "../../../../configuration/handle/createAndAddConfiguration";
 import * as handleLiquibaseFolder from "../../../../handleLiquibaseSettings";
-import { CustomDriverData } from "../../../../utilities/customDrivers";
+import { CustomDriverData } from "../../../../utilities/customDriver";
 import { setResourcePath } from "../../../../extension";
 import { InputBox, OpenDialog } from "@aditosoftware/vscode-input";
 
@@ -135,7 +135,7 @@ suite("configurationCommands", () => {
         } as vscode.Disposable;
       };
       const inputBoxWithAccept = copyInputBox as vscode.InputBox;
-      
+
       const inputBox = Sinon.stub(vscode.window, "createInputBox").returns(inputBoxWithAccept);
       const openDialog = Sinon.stub(vscode.window, "showOpenDialog").resolves([vscode.Uri.file("bar")]);
 

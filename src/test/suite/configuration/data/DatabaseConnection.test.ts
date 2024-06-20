@@ -1,6 +1,6 @@
 import assert from "assert";
 import { DatabaseConnection } from "../../../../configuration/data/DatabaseConnection";
-import { UrlParts } from "../../../../configuration/data/UrlParts";
+import { UrlParts } from "@aditosoftware/driver-dependencies";
 
 /**
  * Tests the class `DatabaseConnection`. Most of the methods are already tested by the tests for `LiquibaseConfigurationData`.

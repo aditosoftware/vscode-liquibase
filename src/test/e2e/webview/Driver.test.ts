@@ -1,5 +1,5 @@
 import { By } from "vscode-extension-tester";
-import { NO_PRE_CONFIGURED_DRIVER } from "../../../configuration/drivers";
+import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import assert from "assert";
