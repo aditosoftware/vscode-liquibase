@@ -226,7 +226,10 @@ function registerCommands(context: vscode.ExtensionContext): void {
                 iconPath: new vscode.ThemeIcon("question"),
                 tooltip: "Information what is possible with include objects",
               },
-              action: openLiquibaseDocumentation,
+              action: () =>
+                openLiquibaseDocumentation(
+                  "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
+                ),
             },
             inputBoxOptions: {
               title: "Choose any objects that should be included",

@@ -22,11 +22,11 @@ export async function openDocument(path: string): Promise<void> {
 
 /**
  * Opens the link to the liquibase documentation.
+ *
+ * @param url - that url that should be opened
  */
-export function openLiquibaseDocumentation(): void {
-  const uri = vscode.Uri.parse(
-    "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
-  );
+export function openLiquibaseDocumentation(url: string): void {
+  const uri = vscode.Uri.parse(url);
   vscode.env.openExternal(uri).then(
     () => {},
     (error) => {

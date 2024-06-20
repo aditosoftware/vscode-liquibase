@@ -90,7 +90,9 @@ suite("vscodeUtilities", () => {
     test("should open link", () => {
       const openExternalSpy = Sinon.spy(vscode.env, "openExternal");
 
-      openLiquibaseDocumentation();
+      openLiquibaseDocumentation(
+        "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
+      );
 
       Sinon.assert.calledOnce(openExternalSpy);
       Sinon.assert.calledWith(
@@ -110,7 +112,7 @@ suite("vscodeUtilities", () => {
       const openExternalStub = Sinon.stub(vscode.env, "openExternal");
       openExternalStub.returns(Promise.reject(false));
 
-      openLiquibaseDocumentation();
+      openLiquibaseDocumentation("foo");
 
       await new Promise((resolve) => setImmediate(resolve));
 
