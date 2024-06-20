@@ -7,6 +7,8 @@ import { PropertiesEditor } from "properties-file/editor";
 import { randomUUID } from "crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
 import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
+import assert from "assert";
+import { validateInput } from "../../extension";
 
 /**
  * Tests commands of the extension.
@@ -111,7 +113,7 @@ suite("Extension Test Suite", () => {
         selectReferenceConnection: true,
         quickPick: [[]],
         openDialog: [outputFolder],
-        inputBox: "diff.txt",
+        inputBox: ["diff.txt"],
       },
     },
     {
@@ -125,7 +127,8 @@ suite("Extension Test Suite", () => {
       command: "generate-changelog",
       answers: {
         openDialog: [outputFolder],
-        inputBox: "changelog.yaml",
+        quickPick: [[]],
+        inputBox: ["changelog.yaml", "MY_TABLE"],
       },
     },
     {
@@ -150,20 +153,20 @@ suite("Extension Test Suite", () => {
       command: "history",
       answers: {
         openDialog: [outputFolder],
-        inputBox: "history.txt",
+        inputBox: ["history.txt"],
         quickPick: [["TABULAR"]],
       },
     },
     {
       command: "tag",
       answers: {
-        inputBox: tag,
+        inputBox: [tag],
       },
     },
     {
       command: "tag-exists",
       answers: {
-        inputBox: tag,
+        inputBox: [tag],
       },
     },
     {
@@ -171,7 +174,7 @@ suite("Extension Test Suite", () => {
       answers: {
         openDialog: [changelogFile],
         quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
-        inputBox: tag,
+        inputBox: [tag],
       },
     },
     {
@@ -179,7 +182,7 @@ suite("Extension Test Suite", () => {
       answers: {
         openDialog: [changelogFile, outputFolder],
         quickPick: [[CHOOSE_CHANGELOG_OPTION], [contextLoaded], ["bar", "baz", "foo"]],
-        inputBox: "update-sql.sql",
+        inputBox: ["update-sql.sql"],
       },
     },
   ];
@@ -214,10 +217,10 @@ suite("Extension Test Suite", () => {
 
       // stub the showing of an input box
       const inputBox = Sinon.stub(vscode.window, "createInputBox");
-      if (commandArgument.answers.inputBox) {
+      commandArgument.answers.inputBox?.forEach((value, index) => {
         const copyInputBox = Object.create(realInput);
         copyInputBox.onDidAccept = (callback: () => void) => {
-          copyInputBox.value = commandArgument.answers.inputBox;
+          copyInputBox.value = value;
           callback();
           return {
             dispose: () => {},
@@ -225,42 +228,39 @@ suite("Extension Test Suite", () => {
         };
         const inputBoxWithAccept = copyInputBox as vscode.InputBox;
 
-        inputBox.onFirstCall().returns(inputBoxWithAccept);
-      }
+        inputBox.onCall(index).returns(inputBoxWithAccept);
+      });
 
       // stub the showing of an open dialog
       const openDialog = Sinon.stub(vscode.window, "showOpenDialog");
-      if (commandArgument.answers.openDialog) {
-        for (let callCount = 0; callCount < commandArgument.answers.openDialog.length; callCount++) {
-          openDialog.onCall(callCount).resolves([vscode.Uri.file(commandArgument.answers.openDialog[callCount])]);
-        }
-      }
+      commandArgument.answers.openDialog?.forEach((value, index) => {
+        openDialog.onCall(index).resolves([vscode.Uri.file(value)]);
+      });
 
       // stub the showing of a loading and normal quick pick created by the vscode-input.
       const loadingQuickPick = Sinon.stub(vscode.window, "createQuickPick");
-      if (commandArgument.answers.quickPick) {
-        commandArgument.answers.quickPick.forEach((value, index) => {
-          const copyElementWithAccept = Object.create(realQuickPick);
-          copyElementWithAccept.onDidAccept = (callback: () => void) => {
-            callback();
-            return {
-              dispose: () => {},
-            } as vscode.Disposable;
-          };
-          // and transforms this any element back to an vscode.QuickPick, so it can be returned by createQuickPick
-          const quickPickWithAccept = copyElementWithAccept as vscode.QuickPick<vscode.QuickPickItem>;
 
-          if (value.length !== 0) {
-            Sinon.stub(quickPickWithAccept, "selectedItems").get(() => {
-              return value.map((pValue) => {
-                return { label: pValue, picked: true } as vscode.QuickPickItem;
-              });
+      commandArgument.answers.quickPick?.forEach((value, index) => {
+        const copyElementWithAccept = Object.create(realQuickPick);
+        copyElementWithAccept.onDidAccept = (callback: () => void) => {
+          callback();
+          return {
+            dispose: () => {},
+          } as vscode.Disposable;
+        };
+        // and transforms this any element back to an vscode.QuickPick, so it can be returned by createQuickPick
+        const quickPickWithAccept = copyElementWithAccept as vscode.QuickPick<vscode.QuickPickItem>;
+
+        if (value.length !== 0) {
+          Sinon.stub(quickPickWithAccept, "selectedItems").get(() => {
+            return value.map((pValue) => {
+              return { label: pValue, picked: true } as vscode.QuickPickItem;
             });
-          }
+          });
+        }
 
-          loadingQuickPick.onCall(index).returns(quickPickWithAccept);
-        });
-      }
+        loadingQuickPick.onCall(index).returns(quickPickWithAccept);
+      });
 
       // stub the showing of the info message
       const infoMessage = Sinon.stub(vscode.window, "showInformationMessage");
@@ -273,30 +273,30 @@ suite("Extension Test Suite", () => {
       await vscode.commands.executeCommand(`liquibase.${commandArgument.command}`);
 
       // This is the message that indicates that the command was executed successfully.
-      const successMessage = `Liquibase command '${commandArgument.command}' was executed successfully.`;
-
-      // liquibase will be executed in child thread, therefore we need to wait for it to be done
-      const maxTimeout = 5_000;
-      const waitTimeout = 500;
-      for (let tryCount = 0; tryCount < maxTimeout / waitTimeout; tryCount++) {
-        // wait a bit
-        await new Promise((r) => setTimeout(r, waitTimeout));
-
-        if (infoMessage.calledWith(successMessage)) {
-          // check if the info message was written, then end waiting
-          break;
-        }
-      }
+      await waitForCommandExecution(commandArgument.command, infoMessage);
 
       // after all the waiting, assert the correct calling of the elements.
       Sinon.assert.called(infoMessage);
       Sinon.assert.calledWith(infoMessage);
 
       Sinon.assert.callCount(quickPick, quickPickCount);
-      Sinon.assert.callCount(inputBox, commandArgument.answers.inputBox ? 1 : 0);
+      Sinon.assert.callCount(inputBox, commandArgument.answers.inputBox?.length ?? 0);
       Sinon.assert.callCount(loadingQuickPick, commandArgument.answers.quickPick?.length ?? 0);
       Sinon.assert.callCount(openDialog, commandArgument.answers.openDialog?.length ?? 0);
     }).timeout(10_000);
+  });
+
+  [
+    { input: "", expected: "Objects to include must not be empty" },
+    { input: " ", expected: "Objects to include must not be empty" },
+    { input: "x", expected: null },
+  ].forEach((pArgument) => {
+    /**
+     * Tests that the input is validated correctly.
+     */
+    test(`should validate input for value '${pArgument.input}'`, () => {
+      assert.strictEqual(validateInput(pArgument.input), pArgument.expected);
+    });
   });
 });
 
@@ -331,7 +331,7 @@ type CommandArgument = {
     /**
      * Indicates the value that was inputted in an input box
      */
-    inputBox?: string;
+    inputBox?: string[];
 
     /**
      * Indicates the values that were selected by the open dialog.
@@ -339,3 +339,26 @@ type CommandArgument = {
     openDialog?: string[];
   };
 };
+
+/**
+ * Waits for the command execution.
+ *
+ * @param command - the command that is currently executed
+ * @param infoMessage - the stub to the info message
+ */
+async function waitForCommandExecution(command: string, infoMessage: Sinon.SinonStub): Promise<void> {
+  const successMessage = `Liquibase command '${command}' was executed successfully.`;
+
+  // liquibase will be executed in child thread, therefore we need to wait for it to be done
+  const maxTimeout = 5000;
+  const waitTimeout = 500;
+  for (let tryCount = 0; tryCount < maxTimeout / waitTimeout; tryCount++) {
+    // wait a bit
+    await new Promise((r) => setTimeout(r, waitTimeout));
+
+    if (infoMessage.calledWith(successMessage)) {
+      // check if the info message was written, then end waiting
+      break;
+    }
+  }
+}

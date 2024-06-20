@@ -19,3 +19,22 @@ export async function openDocument(path: string): Promise<void> {
     });
   }
 }
+
+/**
+ * Opens the link to the liquibase documentation.
+ *
+ * @param url - that url that should be opened
+ */
+export function openLiquibaseDocumentation(url: string): void {
+  const uri = vscode.Uri.parse(url);
+  vscode.env.openExternal(uri).then(
+    () => {},
+    (error) => {
+      Logger.getLogger().error({
+        message: "Error opening the documentation to include-objects",
+        error,
+        notifyUser: true,
+      });
+    }
+  );
+}
