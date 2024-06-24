@@ -144,6 +144,9 @@ function registerCommands(context: vscode.ExtensionContext): void {
           },
           confirmButtonName: "Drop-all",
         }),
+        createCmdArgs: (dialogValues) => {
+          return setRequireForceAndForceParameter(dialogValues);
+        },
       },
     ]),
 
@@ -396,6 +399,25 @@ function registerCommands(context: vscode.ExtensionContext): void {
 }
 
 /**
+ * Sets the '--requireForce' and '--force' arguments if the confirmation was set.
+ *
+ * @param dialogValues - the dialog values to check if the confirmation was set
+ * @returns - the '--requireForce' and '--force' arguments or an empty array if the confirmation was not set
+ */
+export function setRequireForceAndForceParameter(dialogValues: DialogValues): string[] {
+  if (dialogValues.inputValues.get("confirmation") === undefined) {
+    return [];
+  } else if (
+    dialogValues.inputValues.get("confirmation")?.[0] &&
+    dialogValues.inputValues.get("confirmation")?.[0] === "true"
+  ) {
+    return ["--requireForce", "--force"];
+  }
+
+  return [];
+}
+
+/**
  * Validates an input that it was given.
  *
  * @param value - the value that should be validated
@@ -490,9 +512,7 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
     vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration)
   );
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.drivers", displayAvailableDrivers)
-  );
+  context.subscriptions.push(vscode.commands.registerCommand("liquibase.drivers", displayAvailableDrivers));
 }
 
 /**

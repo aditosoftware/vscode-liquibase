@@ -8,7 +8,8 @@ import { randomUUID } from "crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
 import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
 import assert from "assert";
-import { validateInput } from "../../extension";
+import { setRequireForceAndForceParameter, validateInput } from "../../extension";
+import { DialogValues } from "@aditosoftware/vscode-input";
 
 /**
  * Tests commands of the extension.
@@ -296,6 +297,50 @@ suite("Extension Test Suite", () => {
      */
     test(`should validate input for value '${pArgument.input}'`, () => {
       assert.strictEqual(validateInput(pArgument.input), pArgument.expected);
+    });
+  });
+
+  /**
+   * Tests the setting of the requireForce and force parameter.
+   */
+  suite("setRequireForceAndForceParameter", () => {
+    /**
+     * Tests the setting of the requireForce and force parameter.
+     */
+    test("should set requireForce and force", () => {
+      const dialog = new DialogValues();
+      dialog.addValue("confirmation", true);
+
+      const result = setRequireForceAndForceParameter(dialog);
+
+      assert.deepStrictEqual(
+        result,
+        ["--requireForce", "--force"],
+        `The result ${result} should contain the requireForce and force parameter.`
+      );
+    });
+
+    /**
+     * Tests if the requireForce and force parameter is not set if confirmation is 'false'.
+     */
+    test("should not set requireForce and force if confirmation is 'false'", () => {
+      const dialog = new DialogValues();
+      dialog.addValue("confirmation", false);
+
+      const result = setRequireForceAndForceParameter(dialog);
+
+      assert.deepStrictEqual(result, [], `The result ${result} should be an empty array.`);
+    });
+
+    /**
+     * Tests if an empty dialog does not set requireForce and force.
+     */
+    test("should not set requireForce and force if no dialog value available", () => {
+      const dialog = new DialogValues();
+
+      const result = setRequireForceAndForceParameter(dialog);
+
+      assert.deepStrictEqual(result, [], `The result ${result} should be an empty array.`);
     });
   });
 });

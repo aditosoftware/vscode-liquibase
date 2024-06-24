@@ -34,6 +34,13 @@ suite("Drop-all", function () {
       0,
       `Table 'person' DOES exist, while it shouldn't: ${databaseInformation}`
     );
+
+    const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
+
+    assert.ok(
+      outputPanelText.includes("--requireForce --force"),
+      "Liquibase execution output does not contain '--requireForce' and '--force'"
+    );
   });
 
   /**
