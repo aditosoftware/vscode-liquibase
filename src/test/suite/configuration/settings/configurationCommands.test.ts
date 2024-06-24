@@ -405,6 +405,27 @@ suite("configurationCommands", () => {
       });
     });
   });
+
+  /**
+   * Tests the removal of driver files.
+   */
+  suite("removeDriverFiles", () => {
+    /**
+     * Tests the removal of driver files.
+     */
+    test("should remove driver files", () => {
+      const driverName = crypto.randomUUID();
+      const driverFile = path.join(tempPath, driverName + ".jar");
+      fs.writeFileSync(driverFile, "");
+      const driverJSON = path.join(tempPath, driverName + ".json");
+      fs.writeFileSync(driverJSON, "");
+
+      configurationCommand.removeDriverFiles(driverName);
+
+      assert.ok(!fs.existsSync(driverFile));
+      assert.ok(!fs.existsSync(driverJSON));
+    });
+  });
 });
 
 /**

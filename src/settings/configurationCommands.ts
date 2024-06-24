@@ -269,9 +269,8 @@ export function deleteDriver(driverName: string): void {
   ];
   handleMultiStepInput(input)
     .then((dialogValues) => {
-      if (dialogValues && dialogValues.confirmation) {
-        fs.rmSync(path.join(resourcePath, driverName + ".jar"));
-        fs.rmSync(path.join(resourcePath, driverName + ".json"));
+      if (dialogValues && dialogValues.inputValues.get("confirmation")?.[0] === "true") {
+        removeDriverFiles(driverName);
       }
       displayAvailableDrivers(); //re-open the previous view
     })
@@ -521,4 +520,14 @@ export function validateInputBoxPortValue(value: string): vscode.InputBoxValidat
   } else {
     return null;
   }
+}
+
+/**
+ * Removes the driver files from the resource folder.
+ *
+ * @param driverName - the name of the driver
+ */
+export function removeDriverFiles(driverName: string): void {
+  fs.rmSync(path.join(resourcePath, driverName + ".jar"));
+  fs.rmSync(path.join(resourcePath, driverName + ".json"));
 }

@@ -303,7 +303,7 @@
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
-    "@aditosoftware/vscode-input": "^1.0.3",
+    "@aditosoftware/vscode-input": "^1.0.4",
     "@aditosoftware/vscode-logging": "^1.0.0",
     "@aditosoftware/driver-dependencies": "^1.0.3",
     "download": "^8.0.0",
