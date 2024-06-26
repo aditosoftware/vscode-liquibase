@@ -1,7 +1,7 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import * as fs from "fs";
-import { VSBrowser } from "vscode-extension-tester";
+import { InputBox } from "vscode-extension-tester";
 
 /**
  * Tests the converting from one format to another format.
@@ -44,24 +44,24 @@ suite("convert format", () => {
     });
   });
 
-  // FIXME RMB e2e tests!
-  // LiquibaseGUITestUtils.createRmbArguments(   "Converts a file from one liquibase format to another").forEach((pArgument) => {
-  //   /**
-  //    * Test case for executing the 'Unexpected Changesets' command from RMB.
-  //    */
-  //   test(`should execute 'Unexpected Changesets' command from ${pArgument.description}`, async function () {
-  //     await pArgument.command(configurationName);
+  formats.forEach((pFormat) => {
+    LiquibaseGUITestUtils.createRmbArguments("Converts a file from one liquibase format to another").forEach(
+      (pArgument) => {
+        /**
+         * Tests that the converting via RMB does work.
+         */
+        test(`should execute converting of changelog to ${pFormat} from ${pArgument.description}`, async function () {
+          const input = await pArgument.command();
 
-  //     assert.ok(
-  //       await LiquibaseGUITestUtils.waitForCommandExecution(
-  //         "Liquibase command 'unexpected-changesets' was executed successfully."
-  //       ),
-  //       "Notification did NOT show"
-  //     );
-  //   });
-  // });
-
-  // TODO fail-Fälle auch?
+          await assertConvertingWithNoChangelogSelection(
+            input,
+            pFormat,
+            `Converting the changelogs to ${pFormat} was executed successfully. Please check the files for correctness.`
+          );
+        });
+      }
+    );
+  });
 });
 
 /**
@@ -78,8 +78,6 @@ async function assertConverting(
   format: string,
   expectedCommandEndMessage: string
 ): Promise<void> {
-  const tempOutput = LiquibaseGUITestUtils.generateTemporaryFolder();
-
   const input = await LiquibaseGUITestUtils.startCommandExecution({
     command: convertCommand,
   });
@@ -87,15 +85,30 @@ async function assertConverting(
   // the input
   if (fs.statSync(toConvert).isDirectory()) {
     await LiquibaseGUITestUtils.selectFolder(input, toConvert);
-    await VSBrowser.instance.takeScreenshot("04.png");
   } else {
     await input.setText(toConvert);
     await input.selectQuickPick("changelog.xml");
   }
 
-  await VSBrowser.instance.takeScreenshot("05.png");
-
   // the output
+  await assertConvertingWithNoChangelogSelection(input, format, expectedCommandEndMessage);
+}
+
+/**
+ * Asserts that the converting does work.
+ * This method does not do any changelog input. This should be done before (either by RMB or setting the input).
+ *
+ * @param input - the input where all inputs should be taken
+ * @param format - the format that should be converted to
+ * @param expectedCommandEndMessage - the expected message that should be given when the command was executed
+ */
+async function assertConvertingWithNoChangelogSelection(
+  input: InputBox,
+  format: string,
+  expectedCommandEndMessage: string
+): Promise<void> {
+  const tempOutput = LiquibaseGUITestUtils.generateTemporaryFolder();
+
   await LiquibaseGUITestUtils.selectFolder(input, tempOutput);
 
   // the format
@@ -110,8 +123,12 @@ async function assertConverting(
 
   assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(expectedCommandEndMessage));
 
-  const files = fs.readdirSync(tempOutput);
+  await LiquibaseGUITestUtils.waitUntil(
+    () => fs.readdirSync(tempOutput).length !== 0,
+    `waiting for file to be there in ${tempOutput}`
+  );
 
-  assert.ok(files.length === 1, "one file should be there" + files);
+  const files = fs.readdirSync(tempOutput);
+  assert.ok(files.length === 1, `one file should be there in ${tempOutput}: ${files}`);
   assert.ok(files[0].endsWith(format.toLowerCase()), `file ${files[0]} should have new extension`);
 }

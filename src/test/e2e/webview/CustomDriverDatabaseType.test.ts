@@ -8,10 +8,18 @@ import assert from "assert";
  */
 suite("Custom Drivers", () => {
   /**
+   * Opens the workspace before the tests.
+   */
+  suiteSetup(async () => {
+    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
+  });
+
+  /**
    * Tests that the change from no driver to a custom driver works as expected.
    */
   test("should correctly change to custom drivers", async function () {
     const customDriver = await LiquibaseGUITestUtils.createCustomDriver();
+
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
       const databaseTypeSelection = await webView.findWebElement(By.id("dbConfig_databaseTypeSelection"));
 
