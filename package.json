@@ -124,6 +124,16 @@
         "category": "Liquibase"
       },
       {
+        "command": "liquibase.convertFormatFile",
+        "title": "Converts a file from one liquibase format to another",
+        "category": "Liquibase"
+      },
+      {
+        "command": "liquibase.convertFormatFolder",
+        "title": "Converts a folder and its subfolders from one liquibase format to another",
+        "category": "Liquibase"
+      },
+      {
         "command": "liquibase.openCacheFile",
         "title": "Opens the file with the recently loaded elements",
         "category": "Liquibase: Cache"
@@ -228,6 +238,9 @@
         },
         {
           "command": "liquibase.update-sql"
+        },
+        {
+          "command": "liquibase.convertFormatFile"
         }
       ],
       "liquibase.configurationMenu": [

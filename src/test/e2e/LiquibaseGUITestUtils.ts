@@ -110,8 +110,23 @@ export class LiquibaseGUITestUtils {
   /**
    * Opens the workspace.
    */
-  static async openWorkspace(): Promise<void> {
+  private static async openWorkspace(): Promise<void> {
     await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
+  }
+
+  /**
+   * Opens the workspace and initializes the extension by calling an simple command.
+   *
+   * This is done in order to not having the initialize during the real command execution.
+   */
+  static async openWorkspaceAndInitializeExtension(): Promise<void> {
+    await LiquibaseGUITestUtils.openWorkspace();
+
+    const prompt = await new Workbench().openCommandPrompt();
+    await prompt.setText(">liquibase.initialize");
+    await prompt.confirm();
+
+    await LiquibaseGUITestUtils.waitForExtensionToActivate();
   }
 
   // #endregion
@@ -630,6 +645,7 @@ export class LiquibaseGUITestUtils {
   //#region common used commands
   /**
    * Removes the whole cache.
+   * 
    * @param checkForCacheToBeThere - if `true`, then during the command execution it will check if there is a cache entry to remove
    */
   static async removeWholeCache(checkForCacheToBeThere?: boolean): Promise<void> {

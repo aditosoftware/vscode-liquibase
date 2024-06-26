@@ -290,7 +290,7 @@ suite("Extension Test Suite", () => {
 
       // after all the waiting, assert the correct calling of the elements.
       Sinon.assert.called(infoMessage);
-      Sinon.assert.calledWith(infoMessage);
+      Sinon.assert.calledWith(infoMessage, successMessage);
 
       Sinon.assert.callCount(quickPick, quickPickCount);
       Sinon.assert.callCount(inputBox, commandArgument.answers.inputBox ? 1 : 0);
