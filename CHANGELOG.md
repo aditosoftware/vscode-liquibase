@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Setting to clear the output "clearOutputChannelOnStart" was added
 - Added execution time for commands
 - Added a "help"-button to the "Advanced properties" inside the visual Liquibase configurator
-- Added a command to convert a file or a folder from one liquibase format to another 
+- Added a command to convert a file or a folder from one liquibase format to another format
 
 ### Changed
 
