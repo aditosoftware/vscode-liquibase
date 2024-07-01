@@ -67,7 +67,10 @@ export class WebviewTestUtils {
    */
   static async openAndExecuteOnWebview(toExecute: (webView: WebView) => Promise<void>): Promise<void> {
     await LiquibaseGUITestUtils.clearNotifications();
-    await new EditorView().closeAllEditors();
+    const editorView = new EditorView();
+    if (await editorView.isDisplayed()) {
+      await editorView.closeAllEditors();
+    }
 
     const webView = await this.openWebview();
 

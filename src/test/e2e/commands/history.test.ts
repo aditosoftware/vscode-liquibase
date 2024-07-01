@@ -3,6 +3,7 @@ import fs from "fs";
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import { EditorView, TextEditor } from "vscode-extension-tester";
 
 /**
  * Test suite for the 'history' command.
@@ -27,6 +28,8 @@ suite("History", async function () {
    */
   ["TABULAR", "TEXT"].forEach((pHistoryOption) => {
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
+      await new EditorView().closeAllEditors();
+
       const fileName = `history_${pHistoryOption}.txt`;
 
       const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "history", configurationName });
@@ -40,6 +43,11 @@ suite("History", async function () {
       await input.confirm();
 
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'history' was executed successfully");
+
+      const textEditor = new TextEditor();
+      const filePath = await textEditor.getFilePath();
+
+      assert.ok(filePath.includes(fileName), `Editor should be for our file: ${fileName}`);
 
       const historyFile = path.join(temporaryFolder, fileName);
       await LiquibaseGUITestUtils.waitUntil(
