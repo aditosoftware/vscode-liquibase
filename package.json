@@ -316,9 +316,9 @@
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
-    "@aditosoftware/vscode-input": "^1.0.4",
-    "@aditosoftware/vscode-logging": "^1.0.0",
     "@aditosoftware/driver-dependencies": "^1.0.3",
+    "@aditosoftware/vscode-input": "^1.0.4",
+    "@aditosoftware/vscode-logging": "^1.0.1",
     "download": "^8.0.0",
     "immer": "^10.0.3",
     "properties-file": "^3.3.18"
@@ -339,6 +339,6 @@
     "rimraf": "^5.0.5",
     "sinon": "^17.0.1",
     "typescript": "^5.3.3",
-    "vscode-extension-tester": "^8.3.0"
+    "vscode-extension-tester": "^8.3.1"
   }
 }

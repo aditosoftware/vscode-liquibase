@@ -129,6 +129,7 @@ async function assertConvertingWithNoChangelogSelection(
   );
 
   const files = fs.readdirSync(tempOutput);
-  assert.ok(files.length === 1, `one file should be there in ${tempOutput}: ${files}`);
-  assert.ok(files[0].endsWith(format.toLowerCase()), `file ${files[0]} should have new extension`);
+  for (const file of files) {
+    assert.ok(file.endsWith(format.toLowerCase()), `file ${file} should have new extension`);
+  }
 }

@@ -172,6 +172,10 @@ export class WebviewTestUtils {
 
       await button.click();
     });
+
+    if (config.buttonToClick === "saveButton") {
+      await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${config.name} was successfully saved.`);
+    }
   }
 }
 

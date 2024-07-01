@@ -120,6 +120,8 @@ export class LiquibaseGUITestUtils {
    * This is done in order to not having the initialize during the real command execution.
    */
   static async openWorkspaceAndInitializeExtension(): Promise<void> {
+    await new EditorView().closeAllEditors();
+
     await LiquibaseGUITestUtils.openWorkspace();
 
     const prompt = await new Workbench().openCommandPrompt();

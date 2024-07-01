@@ -41,7 +41,12 @@ suite("History", async function () {
 
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'history' was executed successfully");
 
-      assert.ok(fs.existsSync(path.join(temporaryFolder, fileName)));
+      const historyFile = path.join(temporaryFolder, fileName);
+      await LiquibaseGUITestUtils.waitUntil(
+        () => fs.existsSync(historyFile),
+        `History file ${historyFile} should exist`
+      );
+      assert.ok(fs.existsSync(historyFile), `History file ${historyFile} should exist`);
     });
   });
 
