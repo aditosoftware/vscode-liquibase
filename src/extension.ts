@@ -28,7 +28,7 @@ import {
 import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { readUrl } from "./configuration/data/readFromProperties";
-import { openDocument } from "./utilities/vscodeUtilities";
+import { openDocument, openLiquibaseDocumentation } from "./utilities/vscodeUtilities";
 import { generateContextInputs } from "./handleContexts";
 import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
 import { CacheHandler, CacheRemover } from "./cache/";
@@ -165,6 +165,9 @@ function registerCommands(context: vscode.ExtensionContext): void {
           },
           confirmButtonName: "Drop-all",
         }),
+        createCmdArgs: (dialogValues) => {
+          return setRequireForceAndForceParameter(dialogValues);
+        },
       },
     ]),
 
@@ -205,47 +208,19 @@ function registerCommands(context: vscode.ExtensionContext): void {
           }),
           createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
         },
-        {
-          input: new QuickPick({
-            name: "diffTypes",
-            title: "Choose any diff types",
-            //all possible diffTypes for the diff dialog
-            generateItems: () => [
-              { label: "catalogs", description: "" },
-              { label: "columns", description: "default", picked: true },
-              { label: "data", description: "" },
-              { label: "foreignkeys", description: "default", picked: true },
-              { label: "indexes", description: "default", picked: true },
-              { label: "primarykeys", description: "default", picked: true },
-              { label: "sequences", description: "" },
-              { label: "tables", description: "default", picked: true },
-              { label: "uniqueconstraints", description: "default", picked: true },
-              { label: "views", description: "default", picked: true },
-            ],
-            allowMultiple: true,
-          }),
-          cmdArgs: "--diff-types",
-        },
+        generateDiffTypes(),
       ],
       {
         afterCommandAction: openFileAfterCommandExecution,
       }
     ),
 
-    //TODO: Generate-Changelog -> more steps and user-input
+    // Generate-Changelog
     registerLiquibaseCommand(
       "generate-changelog",
       [
         ...generatePropertyFileDialogOptions(false, false),
-        // This needs a separate context query, because it is only used for generating new files and not getting old files
-        // FIXME: better context handling at generate-changelog!!!!
-        // {
-        //   input: new InputBox("context", {
-        //     title: "The context all the changelogs should get",
-        //     value: " ", // TODO empty value gets cancelled. How to improve?
-        //   }),
-        //   cmdArgs: "--context-filter",
-        // },
+
         {
           input: new OpenDialog({
             name: folderSelectionName,
@@ -255,7 +230,6 @@ function registerCommands(context: vscode.ExtensionContext): void {
               canSelectMany: false,
             },
           }),
-          cmdArgs: "--data-output-directory",
         },
         {
           input: new InputBox({
@@ -267,6 +241,29 @@ function registerCommands(context: vscode.ExtensionContext): void {
             },
           }),
           createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
+        },
+        generateDiffTypes("The types for which the changelog should be generated"),
+        {
+          input: new InputBox({
+            name: "includeObjects",
+            customButton: {
+              button: {
+                iconPath: new vscode.ThemeIcon("question"),
+                tooltip: "Information what is possible with include objects",
+              },
+              action: () =>
+                openLiquibaseDocumentation(
+                  "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
+                ),
+            },
+            inputBoxOptions: {
+              title: "Choose any objects that should be included",
+              placeHolder: "The tables for which you want the changelog generated",
+              ignoreFocusOut: true,
+              validateInput,
+            },
+          }),
+          cmdArgs: "--include-objects",
         },
       ],
       {
@@ -420,6 +417,68 @@ function registerCommands(context: vscode.ExtensionContext): void {
       }
     )
   );
+}
+
+/**
+ * Sets the '--requireForce' and '--force' arguments if the confirmation was set.
+ *
+ * @param dialogValues - the dialog values to check if the confirmation was set
+ * @returns - the '--requireForce' and '--force' arguments or an empty array if the confirmation was not set
+ */
+export function setRequireForceAndForceParameter(dialogValues: DialogValues): string[] {
+  if (dialogValues.inputValues.get("confirmation") === undefined) {
+    return [];
+  } else if (
+    dialogValues.inputValues.get("confirmation")?.[0] &&
+    dialogValues.inputValues.get("confirmation")?.[0] === "true"
+  ) {
+    return ["--requireForce", "--force"];
+  }
+
+  return [];
+}
+
+/**
+ * Validates an input that it was given.
+ *
+ * @param value - the value that should be validated
+ * @returns the validation message or `null`, when every value was ok
+ */
+export function validateInput(value: string): string | null {
+  if (value.trim() === "") {
+    return "Objects to include must not be empty";
+  }
+  return null;
+}
+
+/**
+ * Generates an input for the `--diff-types` and pre-selects the default types.
+ *
+ * @param title - the title that should be set in the dialog
+ * @returns the pickPanelConfig with all the diff types
+ */
+function generateDiffTypes(title: string = "Choose any diff types"): PickPanelConfig {
+  return {
+    input: new QuickPick({
+      name: "diffTypes",
+      title,
+      //all possible diffTypes for the diff dialog
+      generateItems: () => [
+        { label: "catalogs", description: "" },
+        { label: "columns", description: "default", picked: true },
+        { label: "data", description: "" },
+        { label: "foreignkeys", description: "default", picked: true },
+        { label: "indexes", description: "default", picked: true },
+        { label: "primarykeys", description: "default", picked: true },
+        { label: "sequences", description: "" },
+        { label: "tables", description: "default", picked: true },
+        { label: "uniqueconstraints", description: "default", picked: true },
+        { label: "views", description: "default", picked: true },
+      ],
+      allowMultiple: true,
+    }),
+    cmdArgs: "--diff-types",
+  };
 }
 
 /**

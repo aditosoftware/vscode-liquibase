@@ -15,10 +15,11 @@ import {
 } from "@aditosoftware/vscode-input";
 import { readFullValues } from "../configuration/data/readFromProperties";
 import { ConnectionType } from "../input/ConnectionType";
-import { CustomDriverData, getCustomDrivers } from "../utilities/customDrivers";
-import { PREDEFINED_DRIVERS } from "../configuration/drivers";
+import { CustomDriverData } from "../utilities/customDriver";
+import { PREDEFINED_DRIVERS } from "@aditosoftware/driver-dependencies";
 import { resourcePath } from "../extension";
 import { Logger } from "@aditosoftware/vscode-logging";
+import { getCustomDrivers } from "../utilities/customDriverUtilities";
 
 /**
  * Edits an existing configuration.
@@ -268,9 +269,8 @@ export function deleteDriver(driverName: string): void {
   ];
   handleMultiStepInput(input)
     .then((dialogValues) => {
-      if (dialogValues && dialogValues.confirmation) {
-        fs.rmSync(path.join(resourcePath, driverName + ".jar"));
-        fs.rmSync(path.join(resourcePath, driverName + ".json"));
+      if (dialogValues && dialogValues.inputValues.get("confirmation")?.[0] === "true") {
+        removeDriverFiles(driverName);
       }
       displayAvailableDrivers(); //re-open the previous view
     })
@@ -522,4 +522,14 @@ export function validateInputBoxPortValue(value: string): vscode.InputBoxValidat
   } else {
     return null;
   }
+}
+
+/**
+ * Removes the driver files from the resource folder.
+ *
+ * @param driverName - the name of the driver
+ */
+export function removeDriverFiles(driverName: string): void {
+  fs.rmSync(path.join(resourcePath, driverName + ".jar"));
+  fs.rmSync(path.join(resourcePath, driverName + ".json"));
 }

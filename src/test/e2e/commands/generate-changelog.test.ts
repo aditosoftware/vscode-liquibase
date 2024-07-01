@@ -43,6 +43,12 @@ suite("generate changelog", function () {
     // name of the changelog, just use the default
     await input.confirm();
 
+    // diff-types
+    await input.confirm();
+
+    await input.setText("test_table");
+    await input.confirm();
+
     await LiquibaseGUITestUtils.waitForCommandExecution(
       "Liquibase command 'generate-changelog' was executed successfully"
     );

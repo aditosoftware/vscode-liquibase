@@ -1,6 +1,5 @@
 import assert, { fail } from "assert";
-import { PREDEFINED_DRIVERS, Driver } from "../../configuration/drivers";
-import { UrlParts } from "../../configuration/data/UrlParts";
+import { PREDEFINED_DRIVERS, Driver, UrlParts } from "@aditosoftware/driver-dependencies";
 
 /**
  * Tests the url handling of the drivers.

@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { TestUtils } from "../TestUtils";
 import Sinon from "sinon";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
-import { openDocument } from "../../../utilities/vscodeUtilities";
+import { openDocument, openLiquibaseDocumentation } from "../../../utilities/vscodeUtilities";
 import path from "path";
 import * as vscode from "vscode";
 
@@ -77,6 +77,49 @@ suite("vscodeUtilities", () => {
           done();
         })
         .catch(done);
+    });
+  });
+
+  /**
+   * Tests that the link to the liquibase documentation will be opened correctly.
+   */
+  suite("openLiquibaseDocumentation", () => {
+    /**
+     * Tests that the opening works correctly.
+     */
+    test("should open link", () => {
+      const openExternalSpy = Sinon.spy(vscode.env, "openExternal");
+
+      openLiquibaseDocumentation(
+        "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
+      );
+
+      Sinon.assert.calledOnce(openExternalSpy);
+      Sinon.assert.calledWith(
+        openExternalSpy,
+        vscode.Uri.parse(
+          "https://docs.liquibase.com/workflows/liquibase-community/including-and-excluding-objects-from-a-database.html"
+        )
+      );
+    });
+
+    /**
+     * Tests that an error while opening the link will work correctly and shows an error message to the user.
+     */
+    test("should log error when opening has an error", async () => {
+      const errorMessage = Sinon.spy(vscode.window, "showErrorMessage");
+
+      const openExternalStub = Sinon.stub(vscode.env, "openExternal");
+      openExternalStub.returns(Promise.reject(false));
+
+      openLiquibaseDocumentation("foo");
+
+      await new Promise((resolve) => setImmediate(resolve));
+
+      Sinon.assert.calledOnce(openExternalStub);
+
+      Sinon.assert.calledOnce(errorMessage);
+      Sinon.assert.calledWith(errorMessage, "Error opening the documentation to include-objects");
     });
   });
 });

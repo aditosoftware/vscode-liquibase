@@ -1,4 +1,4 @@
-import { CustomDrivers } from "../../utilities/customDrivers";
+import { CustomDrivers } from "../../utilities/customDriver";
 
 /**
  * The liquibase settings that are needed for the configuration of the `liquibase.properties` files.

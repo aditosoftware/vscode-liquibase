@@ -11,7 +11,7 @@ import Sinon from "sinon";
 import { ConnectionType } from "../../../../input/ConnectionType";
 import * as createAndAddConfiguration from "../../../../configuration/handle/createAndAddConfiguration";
 import * as handleLiquibaseFolder from "../../../../handleLiquibaseSettings";
-import { CustomDriverData } from "../../../../utilities/customDrivers";
+import { CustomDriverData } from "../../../../utilities/customDriver";
 import { setResourcePath } from "../../../../extension";
 import { InputBox, OpenDialog } from "@aditosoftware/vscode-input";
 
@@ -135,7 +135,7 @@ suite("configurationCommands", () => {
         } as vscode.Disposable;
       };
       const inputBoxWithAccept = copyInputBox as vscode.InputBox;
-      
+
       const inputBox = Sinon.stub(vscode.window, "createInputBox").returns(inputBoxWithAccept);
       const openDialog = Sinon.stub(vscode.window, "showOpenDialog").resolves([vscode.Uri.file("bar")]);
 
@@ -403,6 +403,27 @@ suite("configurationCommands", () => {
       test(`should validate input box port value ${input.input}`, () => {
         assert.strictEqual(configurationCommand.validateInputBoxPortValue(input.input)?.message, input.expected);
       });
+    });
+  });
+
+  /**
+   * Tests the removal of driver files.
+   */
+  suite("removeDriverFiles", () => {
+    /**
+     * Tests the removal of driver files.
+     */
+    test("should remove driver files", () => {
+      const driverName = crypto.randomUUID();
+      const driverFile = path.join(tempPath, driverName + ".jar");
+      fs.writeFileSync(driverFile, "");
+      const driverJSON = path.join(tempPath, driverName + ".json");
+      fs.writeFileSync(driverJSON, "");
+
+      configurationCommand.removeDriverFiles(driverName);
+
+      assert.ok(!fs.existsSync(driverFile));
+      assert.ok(!fs.existsSync(driverJSON));
     });
   });
 });

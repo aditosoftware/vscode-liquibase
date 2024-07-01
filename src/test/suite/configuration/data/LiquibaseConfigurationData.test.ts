@@ -1,7 +1,7 @@
 import assert from "assert";
 import { LiquibaseConfigurationData } from "../../../../configuration/data/LiquibaseConfigurationData";
 import { TestUtils } from "../../TestUtils";
-import { NO_PRE_CONFIGURED_DRIVER } from "../../../../configuration/drivers";
+import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";
 
 /**
  * Tests the class `LiquibaseConfigurationData`.
