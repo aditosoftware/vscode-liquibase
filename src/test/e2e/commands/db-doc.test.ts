@@ -48,7 +48,9 @@ suite("db-doc", function () {
     );
 
     // Assert that a file of the generated documentation exists.
-    assert.ok(fs.existsSync(path.join(dbDocFolder, "index.html")));
+    const dbDocIndex = path.join(dbDocFolder, "index.html");
+    await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(dbDocIndex), "db-doc index file should exists");
+    assert.ok(fs.existsSync(path.join(dbDocFolder, "index.html")), "index file should be there");
   });
 
   /**
