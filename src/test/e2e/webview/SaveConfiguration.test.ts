@@ -13,7 +13,7 @@ suite("save configuration", () => {
    * Opens the workspace before all tests.
    */
   suiteSetup("open workspace", async () => {
-    await LiquibaseGUITestUtils.openWorkspace();
+    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
   });
 
   /**

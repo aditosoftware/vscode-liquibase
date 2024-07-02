@@ -110,8 +110,25 @@ export class LiquibaseGUITestUtils {
   /**
    * Opens the workspace.
    */
-  static async openWorkspace(): Promise<void> {
+  private static async openWorkspace(): Promise<void> {
     await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
+  }
+
+  /**
+   * Opens the workspace and initializes the extension by calling an simple command.
+   *
+   * This is done in order to not having the initialize during the real command execution.
+   */
+  static async openWorkspaceAndInitializeExtension(): Promise<void> {
+    await new EditorView().closeAllEditors();
+
+    await LiquibaseGUITestUtils.openWorkspace();
+
+    const prompt = await new Workbench().openCommandPrompt();
+    await prompt.setText(">liquibase.initialize");
+    await prompt.confirm();
+
+    await LiquibaseGUITestUtils.waitForExtensionToActivate();
   }
 
   // #endregion
@@ -493,12 +510,12 @@ export class LiquibaseGUITestUtils {
   static createRmbArguments(name: string, contextOption?: ContextOptions): RmbArgument[] {
     return [
       {
-        command: (configurationName: string) =>
+        command: (configurationName?: string) =>
           LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog(name, configurationName, contextOption),
         description: "RMB in file",
       },
       {
-        command: (configurationName: string) =>
+        command: (configurationName?: string) =>
           LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer(name, configurationName, contextOption),
         description: "RMB in file explorer",
       },
@@ -630,6 +647,7 @@ export class LiquibaseGUITestUtils {
   //#region common used commands
   /**
    * Removes the whole cache.
+   *
    * @param checkForCacheToBeThere - if `true`, then during the command execution it will check if there is a cache entry to remove
    */
   static async removeWholeCache(checkForCacheToBeThere?: boolean): Promise<void> {
@@ -727,6 +745,10 @@ export class LiquibaseGUITestUtils {
    * @returns the name of the created driver
    */
   static async createCustomDriver(): Promise<string> {
+    const jarName = randomUUID() + ".jar";
+    const driverJar = path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, jarName);
+    fs.writeFileSync(driverJar, "");
+
     const driverName = randomUUID();
 
     const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "drivers..." });
@@ -734,9 +756,9 @@ export class LiquibaseGUITestUtils {
     await input.selectQuickPick("Add New Driver");
     await input.confirm();
 
-    await input.setText(path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "dummy.jar")); //Resourcepath
-    await input.confirm();
-    await input.confirm();
+    //resource path
+    await input.setText(driverJar);
+    await input.selectQuickPick(jarName);
 
     await input.setText(driverName);
     await input.confirm();
@@ -753,6 +775,8 @@ export class LiquibaseGUITestUtils {
     await input.setText(";");
     await input.confirm();
 
+    await LiquibaseGUITestUtils.waitForCommandExecution("Driver was successfully created");
+
     return driverName;
   }
 }
@@ -765,7 +789,7 @@ type RmbArgument = {
    * The command itself.
    * It returns a InputBox for further configuration.
    */
-  command: (configurationName: string) => Promise<InputBox>;
+  command: (configurationName?: string) => Promise<InputBox>;
 
   /**
    * The description of the argument.

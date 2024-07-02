@@ -34,6 +34,7 @@ import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/
 import { CacheHandler, CacheRemover } from "./cache/";
 import { removeConfiguration } from "./settings/removeConfiguration";
 import { folderSelectionName } from "./constants";
+import { convertFormats } from "./convertFormats";
 
 /**
  * The path where all resources (jars) are located from the extension.
@@ -106,6 +107,26 @@ function registerCommands(context: vscode.ExtensionContext): void {
 
   // Register all commands that are needed for handling liquibase properties
   registerCommandsForLiquibasePropertiesHandling(context);
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.convertFormatFolder", async () => await convertFormats(false))
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.convertFormatFile", async (...commandArgs) => {
+      let selectedFile: vscode.Uri | undefined = undefined;
+
+      // commandArgs will be filled, when called from right button menu.
+      if (commandArgs) {
+        for (const commandArg of commandArgs) {
+          if (commandArg instanceof vscode.Uri) {
+            selectedFile = commandArg;
+          }
+        }
+      }
+
+      await convertFormats(true, selectedFile);
+    })
+  );
 
   // Register all commands that are used for showing/deleting the cache
   context.subscriptions.push(

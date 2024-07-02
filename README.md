@@ -18,7 +18,19 @@ The recently loaded contexts are saved per database connection. That means, if y
 
 You can see the file where the recently loaded contexts are stored by executing the command `Liquibase: Cache: Opens the file with the recently loaded elements`.
 
-These elements can be deleted via the `Liquibase: Cache: Removes any values from the recently loaded elements` command
+These elements can be deleted via the `Liquibase: Cache: Removes any values from the recently loaded elements` command.
+
+## Converting changelogs from one liquibase format to another format
+
+With the two commands `Liquibase: Converts a file from one liquibase format to another` and `Liquibase: Converts a folder and its subfolders from one liquibase format to another`, you can convert changelogs from one format to another.
+
+**NOTE:** It is very important, that you check to produced results by the command. We do not guarantee the accuracy of the files.
+
+Restrictions:
+
+- Files with `include` / `includeAll` will not be transformed to the new format, due to the limitations of Liquibase. But all path given in the `file` attribute in the `include` elements will be transformed to a new path, if the old path was transformed as well.
+
+- When transforming to YAML or JSON files with `preConditions` will produce invalid results ([Liquibase Issue #4379](https://github.com/liquibase/liquibase/issues/4379))
 
 ## View logs
 

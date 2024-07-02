@@ -1,7 +1,7 @@
 import path from "path";
 import fs from "fs";
 import assert from "assert";
-import { By, Workbench } from "vscode-extension-tester";
+import { By } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
@@ -13,13 +13,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    await LiquibaseGUITestUtils.openWorkspace();
-
-    const prompt = await new Workbench().openCommandPrompt();
-    await prompt.setText(">liquibase.initialize");
-    await prompt.confirm();
-
-    await LiquibaseGUITestUtils.waitForExtensionToActivate();
+    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
   });
 
   /**

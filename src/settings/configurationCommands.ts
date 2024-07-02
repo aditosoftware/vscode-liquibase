@@ -449,6 +449,8 @@ export function updateDriver(oldDriverName: string, driverName: string, driver: 
 export function copyAndCreateDriver(driverFilePath: string, driverName: string, driver: CustomDriverData): void {
   fs.copyFileSync(driverFilePath, path.join(resourcePath, driverName + ".jar")); // Copy the driver to the resource folder
   writeConfigToJSON(driverName, driver);
+
+  Logger.getLogger().info({ message: "Driver was successfully created", notifyUser: true });
 }
 
 /**

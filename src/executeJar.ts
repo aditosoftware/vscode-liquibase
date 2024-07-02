@@ -38,45 +38,69 @@ export function executeJar(
   propertyPath: string,
   args: string[] = []
 ): Thenable<number> {
+  // classpath elements needed for execution of the jar
+  // the classpath is built from the root path and the workspace folder
+  const cp = [path.join(rootPath, "*"), getLiquibaseFolder()].join(getClasspathSeparator());
+
+  const argsArray: string[] = [
+    "-cp",
+    cp,
+    "liquibase.integration.commandline.LiquibaseCommandLine",
+    operation,
+    `--defaults-file=${propertyPath}`,
+    ...args,
+  ];
+
+  return executeJarAsync(`Executing Liquibase '${operation}'`, `Liquibase command '${operation}'`, argsArray, [0, 1]);
+}
+
+/**
+ * Executes a jar async.
+ *
+ * This will write any text that was written by the called program from `system.out` or `system.err` to the logs.
+ *
+ * @param progressTitle - the title for the progress
+ * @param whatToExecute - what is executed. This will be shown in the logs  as `${whatToExecute} will be executed`
+ * @param argsArray - the arguments that need to be added for this command
+ * @param allowedCodes - the allowed error codes. If any of this codes were given by the program call, then it was successful, otherwise not
+ * @returns the error code of the program. this will be any of the `allowedCodes`
+ */
+export function executeJarAsync<ErrorCode extends number>(
+  progressTitle: string,
+  whatToExecute: string,
+  argsArray: string[],
+  allowedCodes: ErrorCode[]
+): Thenable<ErrorCode> {
   return vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
       cancellable: false,
-      title: `Executing Liquibase '${operation}'`,
+      title: progressTitle,
     },
     async (progress) => {
-      return new Promise<number>((resolve, reject) => {
+      return new Promise<ErrorCode>((resolve, reject) => {
         const javaExecutable = getJavaExecutable(reject);
         if (!javaExecutable) {
           return;
         }
 
-        // classpath elements needed for execution of the jar
-        // the classpath is built from the root path and the workspace folder
-        const cp = [path.join(rootPath, "*"), getLiquibaseFolder()].join(getClasspathSeparator());
-
-        const argsArray: string[] = [
+        const commandArguments = [
           // force liquibase to use english locale, because other I18N are not good
           "-Duser.language=en",
           // set encoding to utf-8, because otherwise special characters will not be displayed correctly
           "-Dfile.encoding=UTF-8",
-          "-cp",
-          cp,
-          "liquibase.integration.commandline.LiquibaseCommandLine",
-          operation,
-          `--defaults-file=${propertyPath}`,
-          ...args,
+          ...argsArray,
         ];
 
-        const childProcess = spawn(javaExecutable, argsArray);
+        const childProcess = spawn(javaExecutable, commandArguments);
         const startTime = new Date().getTime();
 
         if (getClearOutputChannelOnStartSetting()) {
           Logger.getLogger().clear();
         }
 
-        Logger.getLogger().info({ message: `Liquibase command '${operation}' will be executed` });
-        Logger.getLogger().info({ message: `${javaExecutable} ${argsArray.join(" ")}` });
+        Logger.getLogger().info({ message: `${whatToExecute} will be executed` });
+        Logger.getLogger().info({ message: `${javaExecutable} ${commandArguments.join(" ")}` });
 
         let stdoutData = "";
         let stderrData = "";
@@ -92,8 +116,8 @@ export function executeJar(
         });
 
         childProcess.on("close", (code) => {
-          if (code === 0 || code === 1) {
-            resolve(code);
+          if (code !== null && allowedCodes.includes(code as ErrorCode)) {
+            resolve(code as ErrorCode);
           } else {
             const error = new CustomError(`Child process exited with code ${code}`);
             error.stdout = stdoutData;
@@ -116,7 +140,7 @@ export function executeJar(
           const formattedDuration = `${minutes.toString().padStart(2, "0")}:${seconds
             .toString()
             .padStart(2, "0")}:${milliseconds.toString().padStart(3, "0")}`;
-          Logger.getLogger().info({ message: `Liquibase command '${operation}' finished in ${formattedDuration} min` });
+          Logger.getLogger().info({ message: `${whatToExecute} finished in ${formattedDuration} min` });
         });
       });
     }
@@ -148,18 +172,12 @@ export async function loadContextsFromChangelogFile(
       return [];
     }
 
-    // classpath elements needed for execution of the jar
-    const cp = [path.join(resourcePath, "*"), path.join(libFolder, "*"), getLiquibaseFolder()].join(
-      getClasspathSeparator()
-    );
-
     // all arguments for the jar execution
     const args = [
       // set encoding to utf-8, because otherwise special characters will not be displayed correctly from liquibase
       "-Dfile.encoding=UTF-8",
-      "-cp",
-      cp,
-      "de.adito.context.ContextResolver",
+      ...createBasicArgsForLiquibaseCLI(),
+      "context",
       changelogFile,
     ];
 
@@ -212,6 +230,25 @@ export async function loadContextsFromChangelogFile(
       reject(error);
     }
   });
+}
+
+/**
+ * Creates the basic arguments for any call to the LiquibaseExtendedCli
+ *
+ * You need to give after the arguments the command name and the command arguments.
+ *
+ * @example
+ * Creating arguments for command `convert`:
+ * ```ts
+ * [...createBasicArgsForLiquibaseCLI(), "convert", "--format", format, input, output],
+ * ```
+ * @returns the basic args
+ */
+export function createBasicArgsForLiquibaseCLI(): string[] {
+  const cp = [path.join(resourcePath, "*"), path.join(libFolder, "*"), getLiquibaseFolder()].join(
+    getClasspathSeparator()
+  );
+  return ["-cp", cp, "de.adito.LiquibaseExtendedCli"];
 }
 
 /**

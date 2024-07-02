@@ -21,7 +21,7 @@ suite("editExistingLiquibaseConfiguration", () => {
    * Opens the workspace before all tests.
    */
   suiteSetup(async () => {
-    await LiquibaseGUITestUtils.openWorkspace();
+    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
   });
 
   /**
@@ -44,7 +44,7 @@ suite("editExistingLiquibaseConfiguration", () => {
     await prompt.confirm();
     await LiquibaseGUITestUtils.openAndSelectRMBItemFromAlreadyOpenedFile("Edit existing Liquibase Configuration");
 
-    await shouldEditExistingConfiguration();
+    await shouldEditExistingConfiguration(configurationName);
   });
 
   /**
@@ -58,7 +58,7 @@ suite("editExistingLiquibaseConfiguration", () => {
       propertiesFile
     );
 
-    await shouldEditExistingConfiguration();
+    await shouldEditExistingConfiguration(configurationName);
   });
 
   /**
@@ -72,7 +72,7 @@ suite("editExistingLiquibaseConfiguration", () => {
       configurationName,
     });
 
-    await shouldEditExistingConfiguration();
+    await shouldEditExistingConfiguration(configurationName);
   });
 });
 
@@ -81,8 +81,9 @@ suite("editExistingLiquibaseConfiguration", () => {
  * The command for editing need to be called before calling this method.
  *
  * This method will check that the webview was opened and changes one value and checks that the changed value can be saved correctly.
+ * @param configurationName - the name under which the configuration should be saved
  */
-async function shouldEditExistingConfiguration(): Promise<void> {
+async function shouldEditExistingConfiguration(configurationName: string): Promise<void> {
   assert.ok(await WebviewTestUtils.checkForOpenedWebview());
 
   // init the WebView page object
@@ -100,6 +101,8 @@ async function shouldEditExistingConfiguration(): Promise<void> {
   } finally {
     await webView.switchBack();
   }
+
+  await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${configurationName} was successfully saved.`);
 
   // check that the text was changed
   const text = await new TextEditor().getText();

@@ -12,7 +12,7 @@ suite("Drivers ...", function () {
    * Sets up the test suite before running any tests.
    */
   suiteSetup(async function () {
-    await LiquibaseGUITestUtils.openWorkspace();
+    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
     //create a dummy jar file
     fs.writeFileSync(path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "dummy.jar"), "");
   });
