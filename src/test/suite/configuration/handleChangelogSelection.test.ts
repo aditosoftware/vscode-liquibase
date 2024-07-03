@@ -11,6 +11,10 @@ import { chooseFileForChangelog } from "../../../configuration/handleChangelogSe
 import { LiquibaseConfigurationPanel } from "../../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../../../configuration/transfer";
 import { isWindows } from "../../../utilities/osUtilities";
+import chai from "chai";
+import chaiString from "chai-string";
+
+chai.use(chaiString);
 
 /**
  * Tests the changelog selection.
@@ -88,7 +92,7 @@ suite("handleChangelogSelection", () => {
 
           const transferredData: LiquibaseConfigurationData = transferMessage.firstCall.args[1];
 
-          assert.ok(transferredData.changelogFile.includes("changelog.xml"), transferredData.changelogFile);
+          chai.expect(transferredData.changelogFile).to.contain("changelog.xml");
 
           done();
         })

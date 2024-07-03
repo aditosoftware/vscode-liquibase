@@ -1,8 +1,11 @@
 import path from "path";
-import assert from "assert";
 import fs from "fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Test suite for the "generate changelog" command.
@@ -52,7 +55,12 @@ suite("generate changelog", function () {
     await LiquibaseGUITestUtils.waitForCommandExecution(
       "Liquibase command 'generate-changelog' was executed successfully"
     );
-    assert.ok(fs.existsSync(path.join(temporaryFolder, "changelog.xml")), "File does NOT exist");
+    const newChangelog = path.join(temporaryFolder, "changelog.xml");
+    await LiquibaseGUITestUtils.waitUntil(
+      () => fs.existsSync(newChangelog),
+      `New changelog should exist at ${newChangelog}`
+    );
+    chai.assert.pathExists(newChangelog);
   });
 
   /**

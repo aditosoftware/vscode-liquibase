@@ -4,6 +4,10 @@ import assert from "assert";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Test suite for the Right Click Menu functionality.
@@ -50,7 +54,12 @@ suite("update-sql: Right Click Menu", function () {
         ),
         "Notification did NOT show up"
       );
-      assert.ok(fs.existsSync(path.join(temporaryFolder, "update.sql")), "Did NOT create a SQL File");
+      const updateFile = path.join(temporaryFolder, "update.sql");
+      await LiquibaseGUITestUtils.waitUntil(
+        () => fs.existsSync(updateFile),
+        `Update file should exist under ${updateFile}`
+      );
+      chai.assert.pathExists(updateFile);
     });
   });
 

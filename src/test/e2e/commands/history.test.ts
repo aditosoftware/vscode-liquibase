@@ -1,9 +1,14 @@
 import path from "path";
 import fs from "fs";
-import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { EditorView, TextEditor } from "vscode-extension-tester";
+import chai from "chai";
+import chaiFs from "chai-fs";
+import chaiString from "chai-string";
+
+chai.use(chaiFs);
+chai.use(chaiString);
 
 /**
  * Test suite for the 'history' command.
@@ -47,14 +52,14 @@ suite("History", async function () {
       const textEditor = new TextEditor();
       const filePath = await textEditor.getFilePath();
 
-      assert.ok(filePath.includes(fileName), `Editor should be for our file: ${fileName}`);
+      chai.expect(filePath).to.contain(fileName);
 
       const historyFile = path.join(temporaryFolder, fileName);
       await LiquibaseGUITestUtils.waitUntil(
         () => fs.existsSync(historyFile),
         `History file ${historyFile} should exist`
       );
-      assert.ok(fs.existsSync(historyFile), `History file ${historyFile} should exist`);
+      chai.assert.pathExists(historyFile);
     });
   });
 

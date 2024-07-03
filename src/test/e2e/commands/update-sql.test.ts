@@ -4,6 +4,10 @@ import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Test suite for the 'update-sql' command.
@@ -50,7 +54,12 @@ suite("Update-sql", function () {
       await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update-sql' was executed successfully."),
       "Notification did NOT show up"
     );
-    assert.ok(fs.existsSync(path.join(temporaryFolder, "update.sql")), "Did NOT create a SQL File");
+    const updateFile = path.join(temporaryFolder, "update.sql");
+    await LiquibaseGUITestUtils.waitUntil(
+      () => fs.existsSync(updateFile),
+      `SQL file should be created at ${updateFile}`
+    );
+    chai.assert.pathExists(updateFile);
   });
 
   /**

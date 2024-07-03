@@ -26,9 +26,7 @@ suite("save configuration", () => {
       await saveButton.click();
     });
 
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists("Required value 'name of configuration' is missing")
-    );
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Required value 'name of configuration' is missing"));
   });
 
   /**
@@ -39,9 +37,7 @@ suite("save configuration", () => {
 
     await saveSimpleConnection(name);
 
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
-    );
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${name} was successfully saved.`));
 
     // get the text editor and check the file path
     const textEditor = new TextEditor();
@@ -61,16 +57,14 @@ suite("save configuration", () => {
     // first, save successfully a simple connection
     await saveSimpleConnection(name);
 
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
-    );
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${name} was successfully saved.`));
 
     // then try to save it again
     await saveSimpleConnection(name);
 
-    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(
-      `There is already a configuration named ${name}. Do you want to replace it?`
-    );
+    const successMessage = `There is already a configuration named ${name}. Do you want to replace it?`;
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(successMessage));
+    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(successMessage);
     assert.ok(notification, "notification should be there");
 
     const actions = await notification.getActions();
@@ -95,16 +89,14 @@ suite("save configuration", () => {
     // first, save successfully a simple connection
     await saveSimpleConnection(name);
 
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
-    );
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${name} was successfully saved.`));
 
     // then try to save it again
     await saveSimpleConnection(name);
 
-    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(
-      `There is already a configuration named ${name}. Do you want to replace it?`
-    );
+    const successMessage = `There is already a configuration named ${name}. Do you want to replace it?`;
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(successMessage));
+    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(successMessage);
     assert.ok(notification, "notification should be there");
 
     const actions = await notification.getActions();

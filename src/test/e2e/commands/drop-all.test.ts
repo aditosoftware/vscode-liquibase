@@ -2,6 +2,12 @@ import assert from "assert";
 import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import chai from "chai";
+import chaiFs from "chai-fs";
+import chaiString from "chai-string";
+
+chai.use(chaiFs);
+chai.use(chaiString);
 
 /**
  * Test suite for the 'drop-all' command.
@@ -37,10 +43,7 @@ suite("Drop-all", function () {
 
     const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
 
-    assert.ok(
-      outputPanelText.includes("--requireForce --force"),
-      "Liquibase execution output does not contain '--requireForce' and '--force'"
-    );
+    chai.expect(outputPanelText).to.contain("--requireForce --force");
   });
 
   /**

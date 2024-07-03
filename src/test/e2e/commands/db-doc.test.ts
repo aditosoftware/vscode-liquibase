@@ -4,6 +4,10 @@ import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { randomUUID } from "crypto";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * This suite of tests is designed to validate the functionality of the 'db-doc' command.
@@ -50,7 +54,7 @@ suite("db-doc", function () {
     // Assert that a file of the generated documentation exists.
     const dbDocIndex = path.join(dbDocFolder, "index.html");
     await LiquibaseGUITestUtils.waitUntil(() => fs.existsSync(dbDocIndex), "db-doc index file should exists");
-    assert.ok(fs.existsSync(path.join(dbDocFolder, "index.html")), "index file should be there");
+    chai.assert.pathExists(dbDocFolder);
   });
 
   /**

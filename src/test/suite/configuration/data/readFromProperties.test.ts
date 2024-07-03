@@ -10,6 +10,10 @@ import {
 } from "../../../../configuration/data/LiquibaseConfigurationData";
 import { LiquibaseSettings } from "../../../../configuration/data/TransferSettings";
 import { DatabaseConnection } from "../../../../configuration/data/DatabaseConnection";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 suite("readFromProperties", () => {
   let tempPath: string;
@@ -93,7 +97,7 @@ suite("readFromProperties", () => {
      * Tests the reading from a not existing file.
      */
     test("should read nothing from not existing file", () => {
-      assert.ok(!fs.existsSync(fileName), "file should not exist");
+      chai.assert.notPathExists(fileName);
 
       assert.deepStrictEqual(readFullValues(name, fileName, liquibaseSettings), expected);
     });

@@ -41,7 +41,7 @@ suite("open cache", () => {
 
     // check that the cache is not there and the user is notified about it
     assert.ok(
-      LiquibaseGUITestUtils.assertIfNotificationExists(
+      await LiquibaseGUITestUtils.waitForCommandExecution(
         /File .*cache\.json could not be opened, because it does not exist./
       )
     );

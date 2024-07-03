@@ -6,6 +6,10 @@ import assert from "assert";
 import { TransferDataForCommand } from "../../../../registerLiquibaseCommand";
 import { PROPERTY_FILE } from "../../../../input/ConnectionType";
 import * as fs from "fs";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 suite("testConfiguration", () => {
   /**
@@ -52,8 +56,8 @@ suite("testConfiguration", () => {
           "the data and the tempFilePath from the third argument should be the same"
         );
 
-        assert.ok(fs.existsSync(deleteTempFiles.tempFolder), "the temp folder should exist");
-        assert.ok(fs.existsSync(deleteTempFiles.tempFilePath), "the temp file should exist");
+        chai.assert.pathExists(deleteTempFiles.tempFolder);
+        chai.assert.pathExists(deleteTempFiles.tempFilePath);
 
         assert.deepStrictEqual(
           fs.readFileSync(data, "utf-8"),
@@ -64,8 +68,8 @@ suite("testConfiguration", () => {
         // execute the after command action manually
         deleteTempFiles.executeAfterCommandAction();
 
-        assert.ok(!fs.existsSync(deleteTempFiles.tempFolder), "temp folder should no longer exist");
-        assert.ok(!fs.existsSync(deleteTempFiles.tempFilePath), "temp file should no longer exist");
+        chai.assert.notPathExists(deleteTempFiles.tempFolder);
+        chai.assert.notPathExists(deleteTempFiles.tempFilePath);
 
         done();
       })

@@ -14,6 +14,10 @@ import * as handleLiquibaseFolder from "../../../../handleLiquibaseSettings";
 import { CustomDriverData } from "../../../../utilities/customDriver";
 import { setResourcePath } from "../../../../extension";
 import { InputBox, OpenDialog } from "@aditosoftware/vscode-input";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests the file `configurationCommands.ts`.
@@ -186,8 +190,9 @@ suite("configurationCommands", () => {
 
       configurationCommand.writeConfigToJSON(driverName, createCustomDriverData());
 
-      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".json")));
-      assert.strictEqual(fs.readFileSync(path.join(tempPath, driverName + ".json"), "utf-8"), expectedJSON);
+      const driverJson = path.join(tempPath, driverName + ".json");
+      chai.assert.pathExists(driverJson);
+      assert.strictEqual(fs.readFileSync(driverJson, "utf-8"), expectedJSON);
     });
   });
 
@@ -206,8 +211,8 @@ suite("configurationCommands", () => {
       fs.writeFileSync(customJarFilePath, "");
       configurationCommand.copyAndCreateDriver(customJarFilePath, driverName, createCustomDriverData());
 
-      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".jar")));
-      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".json")));
+      chai.assert.pathExists(path.join(tempPath, driverName + ".jar"));
+      chai.assert.pathExists(path.join(tempPath, driverName + ".json"));
     });
   });
 
@@ -229,8 +234,8 @@ suite("configurationCommands", () => {
 
       configurationCommand.updateDriver(driverName1, driverName2, createCustomDriverData());
 
-      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".jar")));
-      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".json")));
+      chai.assert.pathExists(path.join(tempPath, driverName2 + ".jar"));
+      chai.assert.pathExists(path.join(tempPath, driverName2 + ".json"));
     });
   });
 
@@ -267,9 +272,9 @@ suite("configurationCommands", () => {
 
       await new Promise((resolve) => setImmediate(resolve));
 
-      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".jar")));
-      assert.ok(fs.existsSync(path.join(tempPath, driverName + ".json")));
-      assert.ok(fs.existsSync(driverFile));
+      chai.assert.pathExists(path.join(tempPath, driverName + ".jar"));
+      chai.assert.pathExists(path.join(tempPath, driverName + ".json"));
+      chai.assert.pathExists(driverFile);
     });
 
     /**
@@ -293,17 +298,17 @@ suite("configurationCommands", () => {
 
       await new Promise((resolve) => setImmediate(resolve));
 
-      assert.ok(
-        !fs.existsSync(path.join(tempPath, driverName1 + ".jar")),
+      chai.assert.notPathExists(
+        path.join(tempPath, driverName1 + ".jar"),
         "old driver file " + driverName1 + ".jar should be deleted"
       );
-      assert.ok(
-        !fs.existsSync(path.join(tempPath, driverName1 + ".json")),
+      chai.assert.notPathExists(
+        path.join(tempPath, driverName1 + ".json"),
         "old driver json " + driverName1 + ".json should be deleted"
       );
-      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".jar")), "new driver file should exist");
-      assert.ok(fs.existsSync(path.join(tempPath, driverName2 + ".json")), "new driver json should exist");
-      assert.ok(fs.existsSync(driverFile));
+      chai.assert.pathExists(path.join(tempPath, driverName2 + ".jar"), "new driver file should exist");
+      chai.assert.pathExists(path.join(tempPath, driverName2 + ".json"), "new driver json should exist");
+      chai.assert.pathExists(driverFile);
     });
 
     /**
@@ -316,9 +321,9 @@ suite("configurationCommands", () => {
 
       configurationCommand.handleDriverInput(createDriverInputs("", driverVisualName), undefined, driverVisualName);
 
-      assert.ok(!fs.existsSync(path.join(tempPath, driverVisualName + ".jar")));
-      assert.ok(!fs.existsSync(path.join(tempPath, driverVisualName + ".json")));
-      assert.ok(fs.existsSync(driverFile));
+      chai.assert.notPathExists(path.join(tempPath, driverVisualName + ".jar"));
+      chai.assert.notPathExists(path.join(tempPath, driverVisualName + ".json"));
+      chai.assert.pathExists(driverFile);
     });
   });
 
@@ -422,8 +427,8 @@ suite("configurationCommands", () => {
 
       configurationCommand.removeDriverFiles(driverName);
 
-      assert.ok(!fs.existsSync(driverFile));
-      assert.ok(!fs.existsSync(driverJSON));
+      chai.assert.notPathExists(driverFile);
+      chai.assert.notPathExists(driverJSON);
     });
   });
 });

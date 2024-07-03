@@ -6,7 +6,10 @@ import {
 } from "../../handleLiquibaseSettings";
 import * as vscode from "vscode";
 import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";
-import * as fs from "fs";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests the handling of liquibase settings.
@@ -25,7 +28,7 @@ suite("handleLiquibaseSettings", () => {
       const actual = await getLiquibaseConfigurationPath();
 
       assert.ok(actual, "path should exist");
-      assert.ok(fs.existsSync(actual), actual);
+      chai.assert.pathExists(actual);
 
       assert.match(actual, /workspace[\\/]my[\\/]new[\\/]config[\\/]path$/);
     });
@@ -38,8 +41,8 @@ suite("handleLiquibaseSettings", () => {
 
       const actual = await getLiquibaseConfigurationPath();
 
-      assert.ok(actual, "path should exist");
-      assert.ok(fs.existsSync(actual), actual);
+      assert.ok(actual);
+      chai.assert.pathExists(actual);
 
       assert.match(actual, /workspace[\\/]data[\\/]liquibase$/);
     });

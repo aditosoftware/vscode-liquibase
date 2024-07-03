@@ -5,6 +5,10 @@ import * as vscode from "vscode";
 import path from "path";
 import assert from "assert";
 import * as fs from "fs";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests the converting from one format to another format.
@@ -149,7 +153,7 @@ suite("convert format", () => {
   test("should give warn message when one file could not be converted", async () => {
     const emptyFile = path.join(tempFolder, "empty.xml");
     fs.writeFileSync(emptyFile, "");
-    assert.ok(fs.existsSync(emptyFile), `file ${emptyFile} should exist`);
+    chai.assert.pathExists(emptyFile);
 
     const warnMessage = Sinon.stub(vscode.window, "showWarningMessage");
 
@@ -167,7 +171,7 @@ suite("convert format", () => {
    */
   test("should handle calling with not existing file", async () => {
     const invalidFile = path.join(tempFolder, "invalid.xml");
-    assert.ok(!fs.existsSync(invalidFile), `file ${invalidFile} should not exist`);
+    chai.assert.notPathExists(invalidFile);
 
     await assert.rejects(assertConverting(() => convertFormats(true), tempFolder, "YAML", invalidFile));
   });

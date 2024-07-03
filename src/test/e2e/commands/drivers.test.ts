@@ -1,8 +1,12 @@
-import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import path from "path";
 import fs from "fs";
 import { InputBox } from "vscode-extension-tester";
+import chai from "chai";
+
+import chaiString from "chai-string";
+
+chai.use(chaiString);
 
 /**
  * Test suite for the 'Drivers ...' command.
@@ -97,7 +101,7 @@ suite("Drivers ...", function () {
       allDrivers.push(await driver.getLabel());
     }
 
-    assert.ok(allDrivers.includes("visualName"), "Custom driver was not added");
+    chai.expect(allDrivers).to.include("visualName");
 
     await input.cancel();
   });
@@ -121,8 +125,6 @@ async function writeInput(input: InputBox, text: string): Promise<void> {
  * @param text - the text that should be contained in the enclosing element
  */
 async function assertEnclosingElementContainsText(input: InputBox, text: string): Promise<void> {
-  assert.ok(
-    (await input.getEnclosingElement().getText()).includes(text),
-    "Enclosing element does not contain the text '" + text + "'"
-  );
+  const enclosingElementText = await input.getEnclosingElement().getText();
+  chai.expect(enclosingElementText).to.contain(text);
 }

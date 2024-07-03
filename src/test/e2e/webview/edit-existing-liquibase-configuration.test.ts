@@ -81,6 +81,7 @@ suite("editExistingLiquibaseConfiguration", () => {
  * The command for editing need to be called before calling this method.
  *
  * This method will check that the webview was opened and changes one value and checks that the changed value can be saved correctly.
+ *
  * @param configurationName - the name under which the configuration should be saved
  */
 async function shouldEditExistingConfiguration(configurationName: string): Promise<void> {
