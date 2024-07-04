@@ -19,8 +19,6 @@ suite("History", async function () {
    */
   let configurationName: string;
 
-  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
-
   /**
    * Set up the test suite.
    */
@@ -33,6 +31,8 @@ suite("History", async function () {
    */
   ["TABULAR", "TEXT"].forEach((pHistoryOption) => {
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
+      const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+
       await new EditorView().closeAllEditors();
 
       const fileName = `history_${pHistoryOption}.txt`;
@@ -57,7 +57,8 @@ suite("History", async function () {
       const historyFile = path.join(temporaryFolder, fileName);
       await LiquibaseGUITestUtils.waitUntil(
         () => fs.existsSync(historyFile),
-        `History file ${historyFile} should exist`
+        `History file ${historyFile} should exist`,
+        10000
       );
       chai.assert.pathExists(historyFile);
     });
