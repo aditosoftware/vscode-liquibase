@@ -4,9 +4,9 @@ import fs from "fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
+import { EditorView } from "vscode-extension-tester";
 import chai from "chai";
 import chaiFs from "chai-fs";
-import { Editor, EditorView } from "vscode-extension-tester";
 
 chai.use(chaiFs);
 
