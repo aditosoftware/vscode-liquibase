@@ -14,6 +14,10 @@ import { LiquibaseConfigurationData } from "../../../../configuration/data/Liqui
 import { assertFileWasOpened } from "../../utilities/vscodeUtilities.test";
 import { setResourcePath } from "../../../../extension";
 import { LiquibaseConfigurationPanel } from "../../../../panels/LiquibaseConfigurationPanel";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests the creating of configurations.
@@ -72,7 +76,7 @@ suite("create and add configuration", () => {
 
       addToLiquibaseConfiguration("lorem", "ipsum")
         .then(() => {
-          assert.ok(!fs.existsSync(configPath), `config ${configPath} should still not exist`);
+          chai.assert.notPathExists(configPath);
 
           assertLogging(infoLog, errorLog, {
             error: [
@@ -94,11 +98,11 @@ suite("create and add configuration", () => {
         fs.rmSync(configPath);
       }
 
-      assert.ok(!fs.existsSync(configPath));
+      chai.assert.notPathExists(configPath);
 
       addToLiquibaseConfiguration("lorem", "ipsum")
         .then(() => {
-          assert.ok(fs.existsSync(configPath), `config ${configPath} should now exist`);
+          chai.assert.pathExists(configPath);
 
           const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
 
@@ -117,7 +121,7 @@ suite("create and add configuration", () => {
     test("should add to existing configuration", (done) => {
       fs.writeFileSync(configPath, "{}");
 
-      assert.ok(fs.existsSync(configPath));
+      chai.assert.pathExists(configPath);
 
       addToLiquibaseConfiguration("newElement", "/my/path/to/somewhere")
         .then(() => {
@@ -140,7 +144,7 @@ suite("create and add configuration", () => {
 
       const warnMessage = Sinon.replace(vscode.window, "showWarningMessage", Sinon.fake.resolves("No"));
 
-      assert.ok(fs.existsSync(configPath));
+      chai.assert.pathExists(configPath);
 
       addToLiquibaseConfiguration("key", "newValue", true)
         .then(() => {
@@ -167,7 +171,7 @@ suite("create and add configuration", () => {
 
       const warnMessage = Sinon.replace(vscode.window, "showWarningMessage", Sinon.fake.resolves("Yes"));
 
-      assert.ok(fs.existsSync(configPath));
+      chai.assert.pathExists(configPath);
 
       addToLiquibaseConfiguration("key", "newValue", true)
         .then(() => {
@@ -190,7 +194,7 @@ suite("create and add configuration", () => {
     test("should add existing key (do not check for existing)", (done) => {
       fs.writeFileSync(configPath, JSON.stringify({ key: "value" }));
 
-      assert.ok(fs.existsSync(configPath));
+      chai.assert.pathExists(configPath);
 
       addToLiquibaseConfiguration("key", "newValue", false)
         .then(() => {
@@ -284,7 +288,7 @@ suite("create and add configuration", () => {
         .then(() => {
           const liquibaseProperties = path.join(baseResourcePath, "data.liquibase.properties");
 
-          assert.ok(!fs.existsSync(liquibaseProperties), "properties file should not exist");
+          chai.assert.notPathExists(liquibaseProperties);
 
           const settingsContent = fs.readFileSync(configPath, "utf-8");
 
@@ -347,7 +351,7 @@ driver = org.mariadb.jdbc.Driver`;
 
       const liquibaseProperties = path.join(baseResourcePath, "data.liquibase.properties");
 
-      assert.ok(fs.existsSync(liquibaseProperties), "properties file should exists");
+      chai.assert.pathExists(liquibaseProperties);
 
       const settingsContent = fs.readFileSync(configPath, "utf-8");
 

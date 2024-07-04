@@ -1,9 +1,14 @@
 import path from "path";
 import fs from "fs";
-import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { EditorView, TextEditor } from "vscode-extension-tester";
+import chai from "chai";
+import chaiFs from "chai-fs";
+import chaiString from "chai-string";
+
+chai.use(chaiFs);
+chai.use(chaiString);
 
 /**
  * Test suite for the 'history' command.
@@ -13,8 +18,6 @@ suite("History", async function () {
    * The name of the configuration that was created during the setup.
    */
   let configurationName: string;
-
-  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
 
   /**
    * Set up the test suite.
@@ -28,6 +31,8 @@ suite("History", async function () {
    */
   ["TABULAR", "TEXT"].forEach((pHistoryOption) => {
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
+      const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+
       await new EditorView().closeAllEditors();
 
       const fileName = `history_${pHistoryOption}.txt`;
@@ -47,14 +52,15 @@ suite("History", async function () {
       const textEditor = new TextEditor();
       const filePath = await textEditor.getFilePath();
 
-      assert.ok(filePath.includes(fileName), `Editor should be for our file: ${fileName}`);
+      chai.expect(filePath).to.contain(fileName);
 
       const historyFile = path.join(temporaryFolder, fileName);
       await LiquibaseGUITestUtils.waitUntil(
         () => fs.existsSync(historyFile),
-        `History file ${historyFile} should exist`
+        `History file ${historyFile} should exist`,
+        10000
       );
-      assert.ok(fs.existsSync(historyFile), `History file ${historyFile} should exist`);
+      chai.assert.pathExists(historyFile);
     });
   });
 

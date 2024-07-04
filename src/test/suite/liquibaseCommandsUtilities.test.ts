@@ -9,9 +9,12 @@ import {
 } from "../../liquibaseCommandsUtilities";
 import { assertFileWasOpened } from "./utilities/vscodeUtilities.test";
 import path from "path";
-import * as fs from "fs";
 import * as vscode from "vscode";
 import Sinon from "sinon";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests the liquibaseCommandsUtilities.
@@ -95,16 +98,16 @@ suite("liquibaseCommandsUtilities", () => {
       const wrongColumns = path.join(dbDoc, "columns");
 
       // check before the test, that the wrong structure exist
-      assert.ok(fs.existsSync(tables), `tables should exist: ${tables}`);
-      assert.ok(fs.existsSync(wrongColumns), `wrong columns should exist before the test ${wrongColumns}`);
+      chai.assert.pathExists(tables, "tables");
+      chai.assert.pathExists(wrongColumns, "wrong columns");
 
       openIndexHtmlAfterCommandExecution(dialogValues)
         .then(() => {
-          const newColumns = fs.existsSync(path.join(tables, "columns"));
+          const newColumns = path.join(tables, "columns");
 
-          assert.ok(fs.existsSync(tables), `tables should still exist:  ${tables}`);
-          assert.ok(newColumns, `columns should have moved: ${newColumns}`);
-          assert.ok(!fs.existsSync(wrongColumns), `wrong columns should no longer exist:  ${wrongColumns}`);
+          chai.assert.pathExists(tables, "tables after move");
+          chai.assert.pathExists(newColumns, "new columns");
+          chai.assert.notPathExists(wrongColumns, "wrong columns should no longer exist");
 
           Sinon.assert.calledOnce(openExternal);
           Sinon.assert.calledWith(openExternal, vscode.Uri.file(path.join(dbDoc, "index.html")));

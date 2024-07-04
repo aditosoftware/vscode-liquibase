@@ -6,6 +6,10 @@ import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
 import { openDocument, openLiquibaseDocumentation } from "../../../utilities/vscodeUtilities";
 import path from "path";
 import * as vscode from "vscode";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests the vscode utility methods.
@@ -65,7 +69,7 @@ suite("vscodeUtilities", () => {
     test("should not open Document with invalid path", (done) => {
       const invalidPath = "invalidPath";
 
-      assert.ok(!fs.existsSync(invalidPath), "file does not exists");
+      chai.assert.notPathExists(invalidPath);
 
       openDocument(invalidPath)
         .then(() => {

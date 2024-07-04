@@ -52,7 +52,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
       await modalDialog.pushButton("Delete");
 
       assert.ok(
-        await LiquibaseGUITestUtils.assertIfNotificationExists(
+        await LiquibaseGUITestUtils.waitForCommandExecution(
           `Configuration was successfully removed with the option "${pArgument.removeOption}".`
         )
       );

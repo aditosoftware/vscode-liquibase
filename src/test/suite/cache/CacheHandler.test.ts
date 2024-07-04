@@ -6,6 +6,10 @@ import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { TestUtils } from "../TestUtils";
 import { randomUUID } from "crypto";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests various methods from the CacheHandler
@@ -43,7 +47,7 @@ suite("CacheHandler tests", () => {
        * Validate before the suite that the file does not exist.
        */
       suiteSetup("validate file path", () => {
-        assert.ok(!fs.existsSync(notExistentPath), `Path ${notExistentPath} should not exist`);
+        chai.assert.notPathExists(notExistentPath);
       });
 
       /**
@@ -72,7 +76,7 @@ suite("CacheHandler tests", () => {
        * Validate before the suite that the file does exist.
        */
       suiteSetup("validate file path", () => {
-        assert.ok(fs.existsSync(emptyFile), `Path ${emptyFile} should exist`);
+        chai.assert.pathExists(emptyFile);
       });
 
       /**
@@ -101,7 +105,7 @@ suite("CacheHandler tests", () => {
        * Validate before the suite that the file does exist.
        */
       suiteSetup("validate file path", () => {
-        assert.ok(fs.existsSync(cacheFile), `Path ${cacheFile} should exist`);
+        chai.assert.pathExists(cacheFile);
       });
 
       /**
@@ -222,7 +226,7 @@ suite("CacheHandler tests", () => {
     test("should write to not existing cache file", () => {
       const cacheLocation = path.join(temporaryResourcePath, "notExisting.json");
 
-      assert.ok(!fs.existsSync(cacheLocation), `Path ${cacheLocation} should not exist`);
+      chai.assert.notPathExists(cacheLocation);
 
       assertSaveOfContextToCache(defaultCache, cacheLocation);
     });
@@ -236,7 +240,7 @@ suite("CacheHandler tests", () => {
       // create the empty file
       writeCacheToLocation({}, cacheLocation);
 
-      assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
+      chai.assert.pathExists(cacheLocation);
 
       assertSaveOfContextToCache(defaultCache, cacheLocation);
     });
@@ -258,7 +262,7 @@ suite("CacheHandler tests", () => {
         cacheLocation
       );
 
-      assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
+      chai.assert.pathExists(cacheLocation);
 
       assertSaveOfContextToCache(
         {
@@ -290,7 +294,7 @@ suite("CacheHandler tests", () => {
         cacheLocation
       );
 
-      assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
+      chai.assert.pathExists(cacheLocation);
 
       assertSaveOfContextToCache(defaultCache, cacheLocation);
     });
@@ -463,7 +467,7 @@ suite("CacheHandler tests", () => {
     test("should work with not existent cache file", () => {
       const cacheLocation = path.join(temporaryResourcePath, "notExistentForRemoving.json");
 
-      assert.ok(!fs.existsSync(cacheLocation), `Path ${cacheLocation} should not exist`);
+      chai.assert.notPathExists(cacheLocation);
 
       const cacheHandler = new CacheHandler(cacheLocation);
 
@@ -479,13 +483,13 @@ suite("CacheHandler tests", () => {
       // create the cache location
       writeCacheToLocation({}, cacheLocation);
 
-      assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should not exist`);
+      chai.assert.pathExists(cacheLocation);
 
       const cacheHandler = new CacheHandler(cacheLocation);
       cacheHandler.removeCache();
 
       // test that the file was removed
-      assert.ok(!fs.existsSync(cacheLocation), `Path ${cacheLocation} should no longer not exist`);
+      chai.assert.notPathExists(cacheLocation);
 
       // assert the message was logged
       Sinon.assert.calledOnceWithExactly(infoStub, {

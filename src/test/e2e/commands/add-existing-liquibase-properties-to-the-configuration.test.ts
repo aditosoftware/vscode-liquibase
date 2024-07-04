@@ -4,6 +4,10 @@ import assert from "assert";
 import { By } from "vscode-extension-tester";
 import { randomUUID } from "crypto";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Test suite for adding an existing liquibase.properties file to the configuration.
@@ -45,7 +49,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
       }
     }, `waiting for ${settingsFile} to exist`);
 
-    assert.ok(fs.existsSync(settingsFile), "settings file does exist");
+    chai.assert.pathExists(settingsFile);
 
     // Get the content of the settings file
     const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));

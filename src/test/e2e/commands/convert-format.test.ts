@@ -1,7 +1,13 @@
-import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import * as fs from "fs";
 import { InputBox } from "vscode-extension-tester";
+import chai from "chai";
+import chaiFs from "chai-fs";
+import chaiString from "chai-string";
+import assert from "assert";
+
+chai.use(chaiFs);
+chai.use(chaiString);
 
 /**
  * Tests the converting from one format to another format.
@@ -130,6 +136,6 @@ async function assertConvertingWithNoChangelogSelection(
 
   const files = fs.readdirSync(tempOutput);
   for (const file of files) {
-    assert.ok(file.endsWith(format.toLowerCase()), `file ${file} should have new extension`);
+    chai.expect(file).to.endWith(format.toLowerCase());
   }
 }

@@ -3,6 +3,10 @@ import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ContextOptions, RemoveCacheOptions } from "../../../constants";
 import { ModalDialog } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
+import chai from "chai";
+import chaiString from "chai-string";
+
+chai.use(chaiString);
 
 /**
  * Tests the removing of the cache values.
@@ -51,7 +55,7 @@ suite("Removes any values from the recently loaded elements", () => {
     await LiquibaseGUITestUtils.removeWholeCache();
 
     assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists("Successfully removed all recently loaded elements.")
+      await LiquibaseGUITestUtils.waitForCommandExecution("Successfully removed all recently loaded elements.")
     );
   });
 
@@ -75,14 +79,11 @@ suite("Removes any values from the recently loaded elements", () => {
     const modalDialog = new ModalDialog();
     await modalDialog.pushButton("Delete");
 
+    const successMessage = /Successfully removed .* from the recently loaded elements./;
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(successMessage));
     // find a notification for successful removing an element
-    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(
-      /Successfully removed .* from the recently loaded elements./
-    );
+    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(successMessage);
     assert.ok(notification, "notification does exist");
-    assert.ok(
-      (await notification.getText()).includes(configurationName),
-      "notification has the name of the configuration inside its text"
-    );
+    chai.expect(await notification.getText()).to.contain(configurationName);
   });
 });

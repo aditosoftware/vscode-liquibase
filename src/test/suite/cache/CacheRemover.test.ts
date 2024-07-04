@@ -10,6 +10,10 @@ import { PROPERTY_FILE } from "../../../input/ConnectionType";
 import { TestUtils } from "../TestUtils";
 import { RemoveCacheOptions } from "../../../constants";
 import * as configReader from "../../../configuration/handle/readConfiguration";
+import chai from "chai";
+import chaiFs from "chai-fs";
+
+chai.use(chaiFs);
 
 /**
  * Tests the cache remover.
@@ -49,7 +53,7 @@ suite("CacheRemover tests", () => {
   test("should work with not existing cache file", (done) => {
     const cacheLocation = path.join(temporaryResourcePath, "notExisting.json");
 
-    assert.ok(!fs.existsSync(cacheLocation), `Path ${cacheLocation} should not exist`);
+    chai.assert.notPathExists(cacheLocation);
 
     const cacheHandler = new CacheHandler(cacheLocation);
     const cacheRemover = new CacheRemover(cacheHandler);
@@ -71,7 +75,7 @@ suite("CacheRemover tests", () => {
     const cacheLocation = path.join(temporaryResourcePath, "empty.json");
 
     fs.writeFileSync(cacheLocation, "{}");
-    assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
+    chai.assert.pathExists(cacheLocation);
 
     const cacheHandler = new CacheHandler(cacheLocation);
     const cacheRemover = new CacheRemover(cacheHandler);
@@ -111,7 +115,7 @@ suite("CacheRemover tests", () => {
           "path/to/connection/four.liquibase.properties": { contexts: ["g", "h"] },
         })
       );
-      assert.ok(fs.existsSync(cacheLocation), `Path ${cacheLocation} should exist`);
+      chai.assert.pathExists(cacheLocation);
 
       const cacheHandler = new CacheHandler(cacheLocation);
       cacheRemover = new CacheRemover(cacheHandler);
@@ -332,7 +336,7 @@ suite("CacheRemover tests", () => {
           Sinon.assert.calledOnce(showDialogQuickPick);
           Sinon.assert.calledOnce(showDialogConfirmationDialog);
 
-          assert.ok(!fs.existsSync(cacheLocation), `Cache file removed ${cacheLocation}`);
+          chai.assert.notPathExists(cacheLocation);
 
           done();
         })
@@ -356,7 +360,7 @@ suite("CacheRemover tests", () => {
           Sinon.assert.calledTwice(showDialogQuickPick);
           Sinon.assert.calledOnce(showDialogConfirmationDialog);
 
-          assert.ok(fs.existsSync(cacheLocation), `Cache file should be there ${cacheLocation}`);
+          chai.assert.pathExists(cacheLocation);
 
           const result = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" }));
           const keys = Object.keys(result);

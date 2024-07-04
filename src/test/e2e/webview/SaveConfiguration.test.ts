@@ -26,9 +26,7 @@ suite("save configuration", () => {
       await saveButton.click();
     });
 
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists("Required value 'name of configuration' is missing")
-    );
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Required value 'name of configuration' is missing"));
   });
 
   /**
@@ -39,9 +37,7 @@ suite("save configuration", () => {
 
     await saveSimpleConnection(name);
 
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
-    );
+    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${name} was successfully saved.`));
 
     // get the text editor and check the file path
     const textEditor = new TextEditor();
@@ -56,68 +52,18 @@ suite("save configuration", () => {
    * Tests that an existing connection can be successfully overwritten.
    */
   test("should overwrite existing configuration", async function () {
-    const name = randomUUID();
-
-    // first, save successfully a simple connection
-    await saveSimpleConnection(name);
-
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
+    await assertSavingOverExistingConfiguration(
+      0,
+      "Yes",
+      (name) => `Configuration for ${name} was successfully saved.`
     );
-
-    // then try to save it again
-    await saveSimpleConnection(name);
-
-    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(
-      `There is already a configuration named ${name}. Do you want to replace it?`
-    );
-    assert.ok(notification, "notification should be there");
-
-    const actions = await notification.getActions();
-
-    assert.strictEqual(actions.length, 2);
-
-    // confirm the replacing of the connection
-    const yesAction = await actions[0].getTitle();
-    assert.strictEqual(yesAction, "Yes");
-    await notification.takeAction(yesAction);
-
-    // and check that it was successfully saved
-    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${name} was successfully saved.`));
   });
 
   /**
    * Tests that the saving cancellation works, when a second configuration with the same name should be saved.
    */
   test("should cancel overwriting of existing configuration", async function () {
-    const name = randomUUID();
-
-    // first, save successfully a simple connection
-    await saveSimpleConnection(name);
-
-    assert.ok(
-      await LiquibaseGUITestUtils.assertIfNotificationExists(`Configuration for ${name} was successfully saved.`)
-    );
-
-    // then try to save it again
-    await saveSimpleConnection(name);
-
-    const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(
-      `There is already a configuration named ${name}. Do you want to replace it?`
-    );
-    assert.ok(notification, "notification should be there");
-
-    const actions = await notification.getActions();
-
-    assert.strictEqual(actions.length, 2);
-
-    // cancel the replacing of the connection
-    const noAction = await actions[1].getTitle();
-    assert.strictEqual(noAction, "No");
-    await notification.takeAction(noAction);
-
-    // and check that it was cancelled
-    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Saving cancelled`));
+    await assertSavingOverExistingConfiguration(1, "No", () => "Saving cancelled");
   });
 });
 
@@ -135,4 +81,44 @@ async function saveSimpleConnection(name: string): Promise<void> {
 
     await saveButton.click();
   });
+}
+
+/**
+ * Asserts that the saving of an existing configuration with the same name has the desired effect.
+ *
+ * @param actionIndex - the action in the dialog that should be used
+ * @param expectedActionName - the expected name of the action
+ * @param expectedMessage - the message that should be given to the user via notifications
+ */
+async function assertSavingOverExistingConfiguration(
+  actionIndex: 0 | 1,
+  expectedActionName: string,
+  expectedMessage: (name: string) => string
+): Promise<void> {
+  const name = randomUUID();
+
+  // first, save successfully a simple connection
+  await saveSimpleConnection(name);
+
+  assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${name} was successfully saved.`));
+
+  // then try to save it again
+  await saveSimpleConnection(name);
+
+  const successMessage = `There is already a configuration named ${name}. Do you want to replace it?`;
+  assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(successMessage));
+  const notification = await LiquibaseGUITestUtils.assertIfNotificationExists(successMessage);
+  assert.ok(notification, "notification should be there");
+
+  const actions = await notification.getActions();
+
+  assert.strictEqual(actions.length, 2);
+
+  // cancel the replacing of the connection
+  const noAction = await actions[actionIndex].getTitle();
+  assert.strictEqual(noAction, expectedActionName);
+  await notification.takeAction(noAction);
+
+  // and check that it was cancelled
+  assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(expectedMessage(name)));
 }

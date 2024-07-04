@@ -107,7 +107,7 @@ export class DockerTestUtils {
       switch (containerName) {
         case "mariadb":
           // install mysql to the container
-          await this.executeCommand(
+          await this.repeatCommand(
             `${this.docker} exec ${fullContainerName} sh -c "apt-get update && apt-get install -y ${dbExecutable}"`
           );
 
