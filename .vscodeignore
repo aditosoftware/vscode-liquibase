@@ -1,6 +1,10 @@
 # This file contains all the files/directories that should
 # be ignored (i.e. not included) in the final packaged extension.
 
+# ignore all ts files, because only js is relevant
+**/*.ts
+**/tsconfig.json
+
 # Ignore extension configs
 .vscode/**
 
@@ -8,25 +12,19 @@
 .vscode-test/**
 out/test/**
 .vscode-test.mjs
+coverage/**
 
 # Ignore source code
 src/**
 resources/**
-out/e2e/**
 
-
-# Ignore node_modules overhead
-# node_modules/**
+# ignoring out and node_modules, because the extension will be packed with webpack
+out/**
+node_modules/**
 
 # Ignore all webview-ui files except the build directory
-webview-ui/src/**
-webview-ui/public/**
-webview-ui/scripts/**
-webview-ui/index.html
-webview-ui/README.md
-webview-ui/package.json
-webview-ui/package-lock.json
-webview-ui/node_modules/**
+webview-ui/**
+!webview-ui/build/**
 
 # Ignore Misc
 .yarnrc
@@ -38,6 +36,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 .DS_Store
-
-# Ignore own temporary files
-NOTES.md
+.gitignore
+.mocharc.json
+eslint.config.mjs
+DEV_NOTES.md
