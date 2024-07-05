@@ -615,11 +615,11 @@ export class LiquibaseGUITestUtils {
       } else {
         lastChild = (await topLevelNode.findChildItem(child)) as TreeItem;
       }
-      assert.ok(lastChild);
+      assert.ok(lastChild, `Child ${child} was not found among the children ${children}`);
       await lastChild.expand();
     }
 
-    assert.ok(lastChild);
+    assert.ok(lastChild, `Last child was not found ${children}`);
 
     // Open context menu on file in explorer
     const menu = await lastChild.openContextMenu();
