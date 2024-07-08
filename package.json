@@ -1,7 +1,7 @@
 {
   "name": "liquibase",
   "displayName": "Liquibase",
-  "description": "Execute liquibase changelogs and create liquibase.properties",
+  "description": "Execute Liquibase changelogs and create liquibase.properties",
   "license": "MIT",
   "version": "0.0.4",
   "preview": true,
@@ -130,7 +130,7 @@
       },
       {
         "command": "liquibase.convertFormatFolder",
-        "title": "Converts a folder and its subfolders from one liquibase format to another",
+        "title": "Converts a folder recursively from one liquibase format to another",
         "category": "Liquibase"
       },
       {
@@ -175,7 +175,7 @@
         "liquibase.clearOutputChannelOnStart": {
           "type": "boolean",
           "default": true,
-          "markdownDescription": "Clears the output channel on start of the extension."
+          "markdownDescription": "Clears the output channel on the start of each command."
         }
       }
     },
@@ -254,7 +254,7 @@
       {
         "id": "liquibaseWalkthrough",
         "title": "Get started with Liquibase",
-        "description": "A short overview how to use the liquibase extension.",
+        "description": "A short overview how to use the Liquibase extension.",
         "steps": [
           {
             "id": "configureSetting",
@@ -262,12 +262,12 @@
             "media": {
               "markdown": "media/walkthrough/empty.md"
             },
-            "description": "First, you should configure your settings for the extension.\nAll the settings can be found under Liquibase.\n[Take me to the settings](command:workbench.action.openSettings?%22liquibase.%22)"
+            "description": "First, you should configure your settings for the extension.\nAll the settings can be found in the Liquibase section.\n[Take me to the settings](command:workbench.action.openSettings?%22liquibase.%22)"
           },
           {
             "id": "createLiquibaseProperties",
-            "title": "Create a liquibase property file",
-            "description": "In order to fully use this extension, you should create a liquibase.properties file. This is used for any command and stores the connection values to your database. The graphic editor will support you\nYou should **NOT** add this file to your version control system, because this file can contain sensitive information, such as passwords.\n[Create liquibase.properties](command:liquibase.createLiquibaseConfiguration)",
+            "title": "Create a Liquibase properties file",
+            "description": "In order to fully use this extension, you should create a liquibase.properties file. This is used for any command and stores the connection values to your database. The graphic editor will support you.\nYou should **NOT** add this file to your version control system, because this file can contain sensitive information, such as passwords.\n[Create liquibase.properties](command:liquibase.createLiquibaseConfiguration)",
             "media": {
               "markdown": "media/walkthrough/properties.md"
             },
@@ -278,7 +278,7 @@
           {
             "id": "runFirstUpdate",
             "title": "Run first command",
-            "description": "Now that you have created your liquibase properties file, you can now execute any command. You could run the `status` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
+            "description": "Now that you have created your Liquibase properties file, you can now execute any command. You could run the ``status`` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
             "media": {
               "markdown": "media/walkthrough/empty.md"
             },
@@ -288,11 +288,11 @@
           },
           {
             "id": "learnMoreAboutLiquibase",
-            "title": "Learn more about liquibase",
+            "title": "Learn more about Liquibase",
             "media": {
               "markdown": "media/walkthrough/empty.md"
             },
-            "description": "Read more about liquibase [in the official documentation](https://docs.liquibase.com/start/home.html).",
+            "description": "Read more about Liquibase [in the official documentation](https://docs.liquibase.com/start/home.html).",
             "completionEvents": [
               "onLink:https://docs.liquibase.com/start/home.htm"
             ]
