@@ -293,7 +293,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
       });
 
     // add custom drivers
-    if (drivers) {
+    if (drivers && Object.keys(drivers).length !== 0) {
       // add a divider between the pre-configured drivers and the custom drivers
       radioElements.push(<VSCodeDivider />);
 
