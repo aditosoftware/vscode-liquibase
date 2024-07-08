@@ -76,7 +76,7 @@ export class CustomDriver extends Driver {
       "",
       pCustomDriver.jdbcName,
       pCustomDriver.port,
-      pCustomDriver.driverClass,
+      pCustomDriver.separator,
       extractDatabaseNameBySeparator,
       buildDatabaseNameBySeparator,
       extractParameters
