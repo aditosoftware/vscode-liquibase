@@ -41,6 +41,32 @@ export class DockerTestUtils {
   private static readonly pool = this.createPool();
 
   /**
+   * The IP address used for any docker container.
+   * Do not get this field directly, use `getDockerIP` instead.
+   */
+  private static dockerIP: string | undefined;
+
+  /**
+   * Gets the IP address that should be used for any connections to the database.
+   *
+   * @returns the IP that should be used for the docker address
+   */
+  static getDockerIP(): string {
+    if (this.dockerIP) {
+      return this.dockerIP;
+    }
+
+    const dockerIPVariable = process.env.DOCKER_IP;
+    if (typeof dockerIPVariable === "undefined") {
+      this.dockerIP = "localhost";
+    } else {
+      this.dockerIP = dockerIPVariable.trim();
+    }
+
+    return this.dockerIP;
+  }
+
+  /**
    * Starts a docker container.
    *
    * You want to check the status of the container with `checkContainerStatus` afterwards.
@@ -208,7 +234,7 @@ export class DockerTestUtils {
    */
   static createPool(database?: string): mariadb.Pool {
     return mariadb.createPool({
-      host: "localhost",
+      host: DockerTestUtils.getDockerIP(),
       user: DockerTestUtils.username,
       password: DockerTestUtils.password,
       connectionLimit: 10,

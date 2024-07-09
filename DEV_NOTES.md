@@ -19,3 +19,7 @@ If you want to have the debug on `out` as usual, then you have to change the fol
 - `package.json`: `"main": "./out/extension.js"`
 
 **Do not commit those changes!**
+
+## Docker
+
+Default, docker will use `localhost` as docker ip. If you want a different ip, then you should set `DOCKER_IP`.

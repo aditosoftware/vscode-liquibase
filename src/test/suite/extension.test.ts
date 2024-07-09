@@ -60,7 +60,7 @@ suite("Extension Test Suite", () => {
     const properties = new PropertiesEditor("# written by the tests");
     properties.insert("username", DockerTestUtils.username);
     properties.insert("password", DockerTestUtils.password);
-    properties.insert("url", `jdbc:mariadb://localhost:3310/${DockerTestUtils.dbName}`);
+    properties.insert("url", `jdbc:mariadb://${DockerTestUtils.getDockerIP()}:3310/${DockerTestUtils.dbName}`);
 
     fs.writeFileSync(propertiesFile, properties.format());
 
