@@ -38,7 +38,7 @@ export class TestUtils {
     "user-data",
     "User",
     "globalStorage",
-    "undefined_publisher.liquibase"
+    "adito.liquibase"
   );
 
   /**
