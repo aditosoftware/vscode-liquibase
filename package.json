@@ -3,6 +3,7 @@
   "displayName": "Liquibase",
   "description": "Execute Liquibase changelogs and create liquibase.properties",
   "license": "MIT",
+  "publisher": "adito",
   "version": "0.0.4",
   "preview": true,
   "engines": {
