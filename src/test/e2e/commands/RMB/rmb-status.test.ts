@@ -24,7 +24,7 @@ suite("status: Right Click Menu", function () {
      * Test case for executing the 'status' command from RMB.
      */
     test(`should execute 'status' command from ${pArgument.description}`, async function () {
-      await pArgument.command(configurationName);
+      await pArgument.command(this, configurationName);
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully."),

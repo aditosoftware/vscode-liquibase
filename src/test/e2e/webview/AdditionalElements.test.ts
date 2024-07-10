@@ -110,7 +110,8 @@ suite("AdditionalElements", () => {
 
       const value = await webView.findWebElement(By.id("key;;;driver2;;;lorem"));
       await value.click();
-      await value.sendKeys(Key.chord(Key.CONTROL, "a"), Key.BACK_SPACE, "driver", Key.TAB);
+      const markAll = process.platform === "darwin" ? Key.chord(Key.COMMAND, "a") : Key.chord(Key.CONTROL, "a");
+      await value.sendKeys(markAll, Key.BACK_SPACE, "driver", Key.TAB);
 
       await WebviewTestUtils.assertMatchPreview(webView, /driver2 = lorem/); //should not edit the first inserted key-value pair
     });

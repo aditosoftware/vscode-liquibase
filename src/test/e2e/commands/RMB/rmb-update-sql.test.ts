@@ -39,7 +39,7 @@ suite("update-sql: Right Click Menu", function () {
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
       // then generate the changelog
-      const input = await pArgument.command(configurationName);
+      const input = await pArgument.command(this, configurationName);
       await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 
       // select the folder where the data should be written

@@ -37,12 +37,15 @@ suite("editExistingLiquibaseConfiguration", () => {
   /**
    * Tests that the configuration can be edited by RMB in the file.
    */
-  test("should be able to edit existing configuration via RMB from file", async () => {
+  test("should be able to edit existing configuration via RMB from file", async function () {
     // open the file of the configuration
     const prompt = await new Workbench().openCommandPrompt();
     await prompt.setText(propertiesFile);
     await prompt.confirm();
-    await LiquibaseGUITestUtils.openAndSelectRMBItemFromAlreadyOpenedFile("Edit existing Liquibase Configuration");
+    await LiquibaseGUITestUtils.openAndSelectRMBItemFromAlreadyOpenedFile(
+      "Edit existing Liquibase Configuration",
+      this
+    );
 
     await shouldEditExistingConfiguration(configurationName);
   });
@@ -50,9 +53,10 @@ suite("editExistingLiquibaseConfiguration", () => {
   /**
    * Tests that the configuration can be edited by RMB in the file explorer.
    */
-  test("should be able to edit existing configuration via RMB from file explorer", async () => {
+  test("should be able to edit existing configuration via RMB from file explorer", async function () {
     await LiquibaseGUITestUtils.openAndSelectRMBItemFromExplorer(
       "Edit existing Liquibase Configuration",
+      this,
       "data",
       "liquibase",
       propertiesFile

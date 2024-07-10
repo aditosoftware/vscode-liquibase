@@ -32,7 +32,7 @@ suite("validate: Right Click Menu", function () {
      * enters the configuration name, and verifies the success notification.
      */
     test(`should execute 'validate' command from ${pArgument.description}`, async function () {
-      await pArgument.command(configurationName);
+      await pArgument.command(this, configurationName);
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'validate' was executed successfully."),

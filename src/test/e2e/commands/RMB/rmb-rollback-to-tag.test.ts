@@ -36,7 +36,7 @@ suite("rollback-to-tag: Right Click Menu", function () {
       // Update all datasets
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.USE_RECENTLY_LOADED);
 
-      const input = await pArgument.command(configurationName);
+      const input = await pArgument.command(this, configurationName);
 
       // toggle the contexts
       await LiquibaseGUITestUtils.selectContext({ toggleAll: true });

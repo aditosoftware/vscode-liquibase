@@ -163,7 +163,7 @@ export class WebviewTestUtils {
       await databaseType.sendKeys(config.databaseType);
 
       const serverAddress = await webView.findWebElement(By.id("dbConfig_serverAddress"));
-      await serverAddress.sendKeys("localhost", Key.TAB);
+      await serverAddress.sendKeys(DockerTestUtils.getDockerIP(), Key.TAB);
 
       const port = await webView.findWebElement(By.id("dbConfig_port"));
       await port.sendKeys(config.port, Key.TAB);
