@@ -50,5 +50,6 @@
   },
   "peacock.color": "#6fb32c",
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
-  "editor.tabSize": 2
+  "editor.tabSize": 2,
+  "npm.exclude": ["**/vscode[a-zA-z]/**", "**/out/**"]
 }
