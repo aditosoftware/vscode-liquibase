@@ -396,6 +396,20 @@ export class LiquibaseGUITestUtils {
   //#region command execution
 
   /**
+   * Skips the test on macOS.
+   *
+   * This should happen when the test interacts with context menus
+   *
+   * @param mochaContext - the current mocha context
+   * @see https://github.com/redhat-developer/vscode-extension-tester/blob/main/KNOWN_ISSUES.md#macos-known-limitations-of-native-objects
+   */
+  static skipTestsOnMacOS(mochaContext: Mocha.Context): void {
+    if (process.platform === "darwin") {
+      mochaContext.skip();
+    }
+  }
+
+  /**
    * Executes a callback function for a matrix of options.
    *
    * @param callback - The function to be executed. It takes three parameters:
@@ -510,13 +524,18 @@ export class LiquibaseGUITestUtils {
   static createRmbArguments(name: string, contextOption?: ContextOptions): RmbArgument[] {
     return [
       {
-        command: (configurationName?: string) =>
-          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog(name, configurationName, contextOption),
+        command: (mochaContext: Mocha.Context, configurationName?: string) =>
+          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog(name, mochaContext, configurationName, contextOption),
         description: "RMB in file",
       },
       {
-        command: (configurationName?: string) =>
-          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer(name, configurationName, contextOption),
+        command: (mochaContext: Mocha.Context, configurationName?: string) =>
+          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer(
+            name,
+            mochaContext,
+            configurationName,
+            contextOption
+          ),
         description: "RMB in file explorer",
       },
     ];
@@ -528,18 +547,20 @@ export class LiquibaseGUITestUtils {
    * This method will open an changelog before executing the action.
    *
    * @param action - the action that should be called
+   * @param mochaContext - the current mocha context
    * @param configurationName - the name of the configuration that should be set as first value
    * @param contextOption - the context that should be set as second value
    * @returns the input box that can be used for setting other values in the dialogs
    */
   static async openAndSelectRMBItemFromChangelog(
     action: string,
+    mochaContext: Mocha.Context,
     configurationName?: string,
     contextOption?: ContextOptions
   ): Promise<InputBox> {
     await VSBrowser.instance.openResources(this.CHANGELOG_FILE);
 
-    await this.openAndSelectRMBItemFromAlreadyOpenedFile(action);
+    await this.openAndSelectRMBItemFromAlreadyOpenedFile(action, mochaContext);
 
     return LiquibaseGUITestUtils.inputBasicValuesForRMB(configurationName, contextOption);
   }
@@ -548,16 +569,18 @@ export class LiquibaseGUITestUtils {
    * Opens the Liquibase context menu in the explorer side bar on the changelog file and selects the given action.
    *
    * @param action - the name of the action
+   * @param mochaContext - the current mocha context
    * @param configurationName - the name of the configuration that should be set as first value
    * @param contextOption - the context that should be set as second value
    * @returns the input box that can be used for setting other values in the dialogs
    */
   static async openAndSelectRMBItemFromChangelogFromExplorer(
     action: string,
+    mochaContext: Mocha.Context,
     configurationName?: string,
     contextOption?: ContextOptions
   ): Promise<InputBox> {
-    await this.openAndSelectRMBItemFromExplorer(action, ".liquibase", "changelog.xml");
+    await this.openAndSelectRMBItemFromExplorer(action, mochaContext, ".liquibase", "changelog.xml");
 
     return LiquibaseGUITestUtils.inputBasicValuesForRMB(configurationName, contextOption);
   }
@@ -592,14 +615,19 @@ export class LiquibaseGUITestUtils {
    * Opens the explorer at a specific point and opens the context menu.
    *
    * @param action - the name of the action that should be executed
+   * @param mochaContext - the current mocha context
    * @param topLevelItem - the name of the top level folder in the explorer
    * @param children - all the children folders and the file that should be selected in the specific order
    */
   static async openAndSelectRMBItemFromExplorer(
     action: string,
+    mochaContext: Mocha.Context,
     topLevelItem: string,
     ...children: string[]
   ): Promise<void> {
+    // skip any RMB action on macOS
+    this.skipTestsOnMacOS(mochaContext);
+
     const explorer = await new SideBarView().getContent().getSection("workspace");
 
     // find the topLevelItem and expand it
@@ -634,8 +662,12 @@ export class LiquibaseGUITestUtils {
    * Opens the Liquibase context menu and selects the given action.
    *
    * @param action - the action that should be called
+   * @param mochaContext - the current mocha context
    */
-  static async openAndSelectRMBItemFromAlreadyOpenedFile(action: string): Promise<void> {
+  static async openAndSelectRMBItemFromAlreadyOpenedFile(action: string, mochaContext: Mocha.Context): Promise<void> {
+    // skip any RMB action on macOS
+    this.skipTestsOnMacOS(mochaContext);
+
     const editor = new TextEditor();
     const menu = await editor.openContextMenu();
     const liquibaseMenu = await menu.select("Liquibase");
@@ -789,7 +821,7 @@ type RmbArgument = {
    * The command itself.
    * It returns a InputBox for further configuration.
    */
-  command: (configurationName?: string) => Promise<InputBox>;
+  command: (mochaContext: Mocha.Context, configurationName?: string) => Promise<InputBox>;
 
   /**
    * The description of the argument.

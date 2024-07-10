@@ -31,7 +31,7 @@ suite("db-doc: Right Click Menu", function () {
     test(`should execute 'db-doc' command from ${pArgument.description}`, async function () {
       const directoryForDbDoc = LiquibaseGUITestUtils.generateTemporaryFolder();
 
-      const input = await pArgument.command(configurationName);
+      const input = await pArgument.command(this, configurationName);
 
       // Set the output directory for the generated documentation.
       await LiquibaseGUITestUtils.selectFolder(input, directoryForDbDoc);

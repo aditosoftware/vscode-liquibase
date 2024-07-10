@@ -24,7 +24,7 @@ suite("unexpected-changesets: Right Click Menu", function () {
      * Test case for executing the 'Unexpected Changesets' command from RMB.
      */
     test(`should execute 'Unexpected Changesets' command from ${pArgument.description}`, async function () {
-      await pArgument.command(configurationName);
+      await pArgument.command(this, configurationName);
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution(

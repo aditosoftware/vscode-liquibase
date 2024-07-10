@@ -24,7 +24,7 @@ suite("update: Right Click Menu", function () {
      * Test case to execute the 'update' command from RMB.
      */
     test(`should execute 'update' command from ${pArgument.description}`, async function () {
-      await pArgument.command(configurationName);
+      await pArgument.command(this, configurationName);
       // toggle the contexts
       await LiquibaseGUITestUtils.selectContext({ toggleAll: true });
 

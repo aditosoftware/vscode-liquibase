@@ -29,16 +29,7 @@
     "titleBar.activeBackground": "#6fb32c",
     "titleBar.activeForeground": "#15202b",
     "titleBar.inactiveBackground": "#6fb32c99",
-    "titleBar.inactiveForeground": "#15202b99",
-    "editorGroup.border": "#88d042",
-    "panel.border": "#88d042",
-    "sideBar.border": "#88d042",
-    "statusBar.border": "#6fb32c",
-    "statusBar.debuggingBackground": "#702cb3",
-    "statusBar.debuggingBorder": "#702cb3",
-    "statusBar.debuggingForeground": "#e7e7e7",
-    "tab.activeBorder": "#88d042",
-    "titleBar.border": "#6fb32c"
+    "titleBar.inactiveForeground": "#15202b99"
   },
   "editor.formatOnSave": true,
   "files.autoSave": "afterDelay",

@@ -57,7 +57,7 @@ suite("convert format", () => {
          * Tests that the converting via RMB does work.
          */
         test(`should execute converting of changelog to ${pFormat} from ${pArgument.description}`, async function () {
-          const input = await pArgument.command();
+          const input = await pArgument.command(this);
 
           await assertConvertingWithNoChangelogSelection(
             input,
