@@ -652,7 +652,7 @@ export class LiquibaseGUITestUtils {
     // Open context menu on file in explorer
     const menu = await lastChild.openContextMenu();
     // open the liquibase submenu
-    const liquibaseContextMenu = await menu.select("Liquibase...");
+    const liquibaseContextMenu = await menu.select("Liquibase");
     assert.ok(liquibaseContextMenu);
     // and select the action
     await liquibaseContextMenu.select(action);
@@ -670,7 +670,7 @@ export class LiquibaseGUITestUtils {
 
     const editor = new TextEditor();
     const menu = await editor.openContextMenu();
-    const liquibaseMenu = await menu.select("Liquibase...");
+    const liquibaseMenu = await menu.select("Liquibase");
     await liquibaseMenu?.select(action);
   }
 

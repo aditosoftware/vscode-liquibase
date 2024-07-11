@@ -183,11 +183,11 @@
     "submenus": [
       {
         "id": "liquibase.commandsMenu",
-        "label": "Liquibase..."
+        "label": "Liquibase"
       },
       {
         "id": "liquibase.configurationMenu",
-        "label": "Liquibase..."
+        "label": "Liquibase"
       }
     ],
     "menus": {
