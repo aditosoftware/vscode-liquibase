@@ -333,8 +333,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
               {
                 label: "TABULAR",
                 picked: true,
-                detail:
-                  "This groups changesets by deployment ID and displays other information in individual table cell.",
+                detail: "This displays the output as a table, grouped by deployment ID.",
               },
               { label: "TEXT", detail: "This displays the output as plain text." },
             ],
