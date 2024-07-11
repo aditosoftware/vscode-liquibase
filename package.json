@@ -126,12 +126,12 @@
       },
       {
         "command": "liquibase.convertFormatFile",
-        "title": "Converts a file from one liquibase format to another",
+        "title": "Convert a file from one liquibase format to another",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.convertFormatFolder",
-        "title": "Converts a folder recursively from one liquibase format to another",
+        "title": "Convert a folder recursively from one liquibase format to another",
         "category": "Liquibase"
       },
       {
