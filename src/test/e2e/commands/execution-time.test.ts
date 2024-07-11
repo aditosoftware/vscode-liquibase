@@ -23,7 +23,7 @@ suite("Execution time", function () {
    * Test case showing the execution time after the 'drop-all' command.
    */
   test("should show execution time after command execution", async function () {
-    await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all", configurationName });
+    await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all...", configurationName });
 
     const modalDialog = new ModalDialog();
     await modalDialog.pushButton("Drop-all");

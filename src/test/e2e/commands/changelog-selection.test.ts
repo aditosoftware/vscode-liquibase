@@ -99,7 +99,7 @@ suite("changelog-selection", () => {
  */
 async function startValidateExecution(expectedLabels: string[], configurationName: string): Promise<InputBox> {
   const input = await LiquibaseGUITestUtils.startCommandExecution({
-    command: "validate",
+    command: "validate...",
     configurationName,
   });
 

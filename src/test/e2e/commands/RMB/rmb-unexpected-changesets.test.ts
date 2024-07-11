@@ -19,21 +19,23 @@ suite("unexpected-changesets: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Unexpected Changesets", ContextOptions.NO_CONTEXT).forEach((pArgument) => {
-    /**
-     * Test case for executing the 'Unexpected Changesets' command from RMB.
-     */
-    test(`should execute 'Unexpected Changesets' command from ${pArgument.description}`, async function () {
-      await pArgument.command(this, configurationName);
+  LiquibaseGUITestUtils.createRmbArguments("Unexpected Changesets...", ContextOptions.NO_CONTEXT).forEach(
+    (pArgument) => {
+      /**
+       * Test case for executing the 'Unexpected Changesets' command from RMB.
+       */
+      test(`should execute 'Unexpected Changesets' command from ${pArgument.description}`, async function () {
+        await pArgument.command(this, configurationName);
 
-      assert.ok(
-        await LiquibaseGUITestUtils.waitForCommandExecution(
-          "Liquibase command 'unexpected-changesets' was executed successfully."
-        ),
-        "Notification did NOT show"
-      );
-    });
-  });
+        assert.ok(
+          await LiquibaseGUITestUtils.waitForCommandExecution(
+            "Liquibase command 'unexpected-changesets' was executed successfully."
+          ),
+          "Notification did NOT show"
+        );
+      });
+    }
+  );
 
   /**
    * Cleans up the test suite after running all tests.

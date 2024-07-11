@@ -37,7 +37,7 @@ suite("generate changelog", function () {
     );
 
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "generate changelog",
+      command: "generate changelog...",
       configurationName,
     });
 

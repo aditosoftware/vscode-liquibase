@@ -684,7 +684,7 @@ export class LiquibaseGUITestUtils {
    */
   static async removeWholeCache(checkForCacheToBeThere?: boolean): Promise<void> {
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Cache: Removes any values from the recently loaded elements",
+      command: "Cache: Removes any values from the recently loaded elements...",
     });
 
     if (
@@ -717,7 +717,7 @@ export class LiquibaseGUITestUtils {
     filterTextForContexts?: string
   ): Promise<void> {
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "update",
+      command: "update...",
       configurationName,
       changelogFile: true,
     });
@@ -739,7 +739,7 @@ export class LiquibaseGUITestUtils {
    * @param tagName - the name of the tag that should be created
    */
   static async executeCreateTag(configurationName: string, tagName: string): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag", configurationName });
+    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag...", configurationName });
 
     await input.setText(tagName);
     await input.confirm();

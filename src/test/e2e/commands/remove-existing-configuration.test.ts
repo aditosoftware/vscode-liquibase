@@ -41,7 +41,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
       const input = await LiquibaseGUITestUtils.startCommandExecution({
-        command: "Remove existing liquibase.properties from the configuration",
+        command: "Remove existing liquibase.properties from the configuration...",
         configurationName,
       });
 

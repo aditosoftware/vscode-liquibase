@@ -26,77 +26,77 @@
       },
       {
         "command": "liquibase.update",
-        "title": "Update",
+        "title": "Update...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.drop-all",
-        "title": "Drop-all",
+        "title": "Drop-all...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.validate",
-        "title": "Validate",
+        "title": "Validate...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.status",
-        "title": "Status",
+        "title": "Status...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.diff",
-        "title": "Diff",
+        "title": "Diff...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.db-doc",
-        "title": "Generate database documentation (db-doc)",
+        "title": "Generate database documentation (db-doc)...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.generate-changelog",
-        "title": "Generate Changelog",
+        "title": "Generate Changelog...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.unexpected-changesets",
-        "title": "Unexpected Changesets",
+        "title": "Unexpected Changesets...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.changelog-sync",
-        "title": "Changelog Sync",
+        "title": "Changelog Sync...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.clear-checksums",
-        "title": "Clear Checksums",
+        "title": "Clear Checksums...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.history",
-        "title": "History",
+        "title": "History...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.tag",
-        "title": "Create Tag",
+        "title": "Create Tag...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.tag-exists",
-        "title": "Tag Exists",
+        "title": "Tag Exists...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.rollback",
-        "title": "Rollback to Tag",
+        "title": "Rollback to Tag...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.update-sql",
-        "title": "Generate SQL File for incoming changes",
+        "title": "Generate SQL File for incoming changes...",
         "category": "Liquibase"
       },
       {
@@ -106,17 +106,17 @@
       },
       {
         "command": "liquibase.editExistingLiquibaseConfiguration",
-        "title": "Edit existing Liquibase Configuration",
+        "title": "Edit existing Liquibase Configuration...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.addExistingConfiguration",
-        "title": "Add existing liquibase.properties to the configuration",
+        "title": "Add existing liquibase.properties to the configuration...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.removeExistingConfiguration",
-        "title": "Remove existing liquibase.properties from the configuration",
+        "title": "Remove existing liquibase.properties from the configuration...",
         "category": "Liquibase"
       },
       {
@@ -126,12 +126,12 @@
       },
       {
         "command": "liquibase.convertFormatFile",
-        "title": "Convert a file from one liquibase format to another",
+        "title": "Convert a file from one liquibase format to another...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.convertFormatFolder",
-        "title": "Convert a folder recursively from one liquibase format to another",
+        "title": "Convert a folder recursively from one liquibase format to another...",
         "category": "Liquibase"
       },
       {
@@ -141,7 +141,7 @@
       },
       {
         "command": "liquibase.removeFromCache",
-        "title": "Removes any values from the recently loaded elements",
+        "title": "Removes any values from the recently loaded elements...",
         "category": "Liquibase: Cache"
       }
     ],

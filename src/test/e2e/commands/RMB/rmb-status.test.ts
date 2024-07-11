@@ -19,7 +19,7 @@ suite("status: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Status", ContextOptions.NO_CONTEXT).forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments("Status...", ContextOptions.NO_CONTEXT).forEach((pArgument) => {
     /**
      * Test case for executing the 'status' command from RMB.
      */

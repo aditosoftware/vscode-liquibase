@@ -26,7 +26,7 @@ suite("update-sql: Right Click Menu", function () {
   });
 
   LiquibaseGUITestUtils.createRmbArguments(
-    "Generate SQL File for incoming changes",
+    "Generate SQL File for incoming changes...",
     ContextOptions.LOAD_ALL_CONTEXT
   ).forEach((pArgument) => {
     /**

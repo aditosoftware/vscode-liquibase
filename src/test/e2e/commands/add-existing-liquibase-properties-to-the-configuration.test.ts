@@ -29,7 +29,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
 
     // Execute the command
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Add existing liquibase.properties to the configuration",
+      command: "Add existing liquibase.properties to the configuration...",
       configurationName,
     });
 

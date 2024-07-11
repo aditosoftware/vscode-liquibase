@@ -29,7 +29,7 @@ suite("Changelog Sync", function () {
       await DockerTestUtils.resetDB();
 
       const input = await LiquibaseGUITestUtils.startCommandExecution({
-        command: "Changelog Sync",
+        command: "Changelog Sync...",
         configurationName,
         changelogFile: true,
       });

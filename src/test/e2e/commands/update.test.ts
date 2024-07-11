@@ -27,7 +27,7 @@ suite("Update", function () {
       await DockerTestUtils.resetDB();
 
       const input = await LiquibaseGUITestUtils.startCommandExecution({
-        command: "update",
+        command: "update...",
         configurationName,
         changelogFile: true,
       });

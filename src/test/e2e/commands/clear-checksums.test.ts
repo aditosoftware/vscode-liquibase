@@ -28,14 +28,14 @@ suite("Clear Checksums", function () {
 
       // execute an update
       const input = await LiquibaseGUITestUtils.startCommandExecution({
-        command: "update",
+        command: "update...",
         configurationName,
         changelogFile: true,
       });
       await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
 
       // and then clear the checksums
-      await LiquibaseGUITestUtils.startCommandExecution({ command: "Clear Checksums", configurationName });
+      await LiquibaseGUITestUtils.startCommandExecution({ command: "Clear Checksums...", configurationName });
 
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution(

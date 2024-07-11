@@ -28,7 +28,7 @@ suite("convert format", () => {
      */
     test(`should convert folder to format ${pFormat}`, async () => {
       await assertConverting(
-        "Convert a folder and its subfolders from one liquibase format to another",
+        "Convert a folder and its subfolders from one liquibase format to another...",
         LiquibaseGUITestUtils.LIQUIBASE_FOLDER,
         pFormat,
         `Converting the changelogs to ${pFormat} was executed successfully. Please check the files for correctness.`
@@ -42,7 +42,7 @@ suite("convert format", () => {
      */
     test(`should convert file to format ${pFormat}`, async () => {
       await assertConverting(
-        "Convert a file from one liquibase format to another",
+        "Convert a file from one liquibase format to another...",
         LiquibaseGUITestUtils.CHANGELOG_FILE,
         pFormat,
         `Converting the changelogs to ${pFormat} was executed successfully. Please check the files for correctness.`
@@ -51,7 +51,7 @@ suite("convert format", () => {
   });
 
   formats.forEach((pFormat) => {
-    LiquibaseGUITestUtils.createRmbArguments("Convert a file from one liquibase format to another").forEach(
+    LiquibaseGUITestUtils.createRmbArguments("Convert a file from one liquibase format to another...").forEach(
       (pArgument) => {
         /**
          * Tests that the converting via RMB does work.

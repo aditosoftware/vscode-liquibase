@@ -19,7 +19,7 @@ suite("update: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Update", ContextOptions.LOAD_ALL_CONTEXT).forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments("Update...", ContextOptions.LOAD_ALL_CONTEXT).forEach((pArgument) => {
     /**
      * Test case to execute the 'update' command from RMB.
      */

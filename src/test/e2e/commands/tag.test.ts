@@ -22,7 +22,7 @@ suite("Tag", function () {
    * Test case for executing the 'tag' command.
    */
   test("should execute 'tag' command", async function () {
-    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag", configurationName });
+    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag...", configurationName });
 
     await input.setText("test");
     await input.confirm();
