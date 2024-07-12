@@ -39,7 +39,7 @@ suite("Update-sql", function () {
 
     // execute the update-sql command
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Generate SQL File for incoming changes",
+      command: "Generate SQL File for incoming changes...",
       configurationName,
       changelogFile: true,
     });

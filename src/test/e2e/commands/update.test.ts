@@ -26,15 +26,16 @@ suite("Update", function () {
     test("should execute 'update' with context type '" + option + "' command with " + key, async function () {
       await DockerTestUtils.resetDB();
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution({
-        command: "update",
-        configurationName,
-        changelogFile: true,
-      });
-
-      await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
-
-      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully");
+      await LiquibaseGUITestUtils.executeCommandInMatrixExecution(
+        "update",
+        {
+          command: "update...",
+          configurationName,
+          changelogFile: true,
+        },
+        option,
+        exec
+      );
 
       const databaseInformation = await DockerTestUtils.executeMariaDBSQL(
         "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"

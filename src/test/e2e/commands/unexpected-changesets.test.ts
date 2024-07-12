@@ -1,4 +1,3 @@
-import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
@@ -27,18 +26,15 @@ suite("Unexpected Changesets", function () {
       async function () {
         await DockerTestUtils.resetDB();
 
-        const input = await LiquibaseGUITestUtils.startCommandExecution({
-          command: "unexpected changesets",
-          configurationName,
-          changelogFile: true,
-        });
-
-        await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
-
-        assert.ok(
-          await LiquibaseGUITestUtils.waitForCommandExecution(
-            "Liquibase command 'unexpected-changesets' was executed successfully."
-          )
+        await LiquibaseGUITestUtils.executeCommandInMatrixExecution(
+          "unexpected-changesets",
+          {
+            command: "unexpected changesets...",
+            configurationName,
+            changelogFile: true,
+          },
+          option,
+          exec
         );
       }
     );

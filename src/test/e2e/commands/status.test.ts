@@ -1,4 +1,3 @@
-import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
@@ -23,16 +22,15 @@ suite("Status", function () {
    */
   LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
     test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
-      const input = await LiquibaseGUITestUtils.startCommandExecution({
-        command: "status",
-        configurationName,
-        changelogFile: true,
-      });
-
-      await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
-
-      assert.ok(
-        await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'status' was executed successfully.")
+      await LiquibaseGUITestUtils.executeCommandInMatrixExecution(
+        "status",
+        {
+          command: "status...",
+          configurationName,
+          changelogFile: true,
+        },
+        option,
+        exec
       );
     });
   });

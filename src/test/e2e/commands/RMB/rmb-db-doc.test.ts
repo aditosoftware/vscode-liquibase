@@ -22,7 +22,7 @@ suite("db-doc: Right Click Menu", function () {
   });
 
   LiquibaseGUITestUtils.createRmbArguments(
-    "Generate database documentation (db-doc)",
+    "Generate database documentation (db-doc)...",
     ContextOptions.NO_CONTEXT
   ).forEach((pArgument) => {
     /**

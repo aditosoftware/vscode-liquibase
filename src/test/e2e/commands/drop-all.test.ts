@@ -73,7 +73,7 @@ async function executeDropAll(
   buttonPushed: "Drop-all" | "Cancel",
   result: boolean
 ): Promise<void> {
-  await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all", configurationName });
+  await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all...", configurationName });
 
   const modalDialog = new ModalDialog();
   await modalDialog.pushButton(buttonPushed);

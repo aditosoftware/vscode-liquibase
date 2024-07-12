@@ -69,7 +69,7 @@ suite("Clear Output Channel On Start", function () {
  * @param configurationName - the name of the configuration
  */
 async function executeDropAll(configurationName: string): Promise<void> {
-  await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all", configurationName });
+  await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all...", configurationName });
 
   const modalDialog = new ModalDialog();
   await modalDialog.pushButton("Drop-all");
@@ -85,7 +85,7 @@ async function executeDropAll(configurationName: string): Promise<void> {
  * @param configurationName - the name of the configuration
  */
 async function executeCreateTag(configurationName: string): Promise<void> {
-  const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag", configurationName });
+  const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag...", configurationName });
 
   // input the tag name
   await input.setText(randomUUID());

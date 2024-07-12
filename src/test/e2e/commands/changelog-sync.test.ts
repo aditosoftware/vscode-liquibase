@@ -1,4 +1,3 @@
-import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
@@ -28,18 +27,15 @@ suite("Changelog Sync", function () {
     test("should execute 'Changelog Sync' with context type '" + option + "' command with " + key, async function () {
       await DockerTestUtils.resetDB();
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution({
-        command: "Changelog Sync",
-        configurationName,
-        changelogFile: true,
-      });
-
-      await LiquibaseGUITestUtils.selectContextsInMatrixExecution(input, option, exec);
-
-      assert.ok(
-        await LiquibaseGUITestUtils.waitForCommandExecution(
-          "Liquibase command 'changelog-sync' was executed successfully."
-        )
+      await LiquibaseGUITestUtils.executeCommandInMatrixExecution(
+        "changelog-sync",
+        {
+          command: "Changelog Sync...",
+          configurationName,
+          changelogFile: true,
+        },
+        option,
+        exec
       );
     });
   });

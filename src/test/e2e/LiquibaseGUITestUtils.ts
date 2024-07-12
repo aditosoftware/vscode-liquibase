@@ -143,15 +143,7 @@ export class LiquibaseGUITestUtils {
    * - `changelogFile` - if the changelog file should be automatically selected
    * @returns the input box for the commands
    */
-  static async startCommandExecution({
-    command,
-    configurationName,
-    changelogFile,
-  }: {
-    command: string;
-    configurationName?: string;
-    changelogFile?: boolean;
-  }): Promise<InputBox> {
+  static async startCommandExecution({ command, configurationName, changelogFile }: CommandStart): Promise<InputBox> {
     const center = await this.clearNotifications();
 
     // we need an input box to open
@@ -434,13 +426,39 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
+   * Executes a command, selects the contexts during the matrix execution and checks if the commands finishes.
+   *
+   * @param commandName - the name of the command. This is not identical to `startCommand.command`,
+   * because the name from the start command is the user friendly name,
+   * and this is the technical name that is written in the success message
+   * @param startCommand - the options for starting the command execution
+   * @param option - the option what type of context should be used
+   * @param toggleContexts - the function to toggle the contexts
+   * @returns the inputBox on which more inputs can be done
+   */
+  static async executeCommandInMatrixExecution(
+    commandName: string,
+    startCommand: CommandStart,
+    option: string,
+    toggleContexts: () => Promise<void>
+  ): Promise<void> {
+    const input = await LiquibaseGUITestUtils.startCommandExecution(startCommand);
+
+    await this.selectContextsInMatrixExecution(input, option, toggleContexts);
+
+    await LiquibaseGUITestUtils.waitForCommandExecution(
+      `Liquibase command '${commandName}' was executed successfully.`
+    );
+  }
+
+  /**
    * Selects the what type of context and the contexts itself in the matrixExecution.
    *
    * @param input - the inputBox on which the elements should be put into
    * @param option - the option what type of context should be used
    * @param toggleContexts - the function to toggle the contexts
    */
-  static async selectContextsInMatrixExecution(
+  private static async selectContextsInMatrixExecution(
     input: InputBox,
     option: string,
     toggleContexts: () => Promise<void>
@@ -684,7 +702,7 @@ export class LiquibaseGUITestUtils {
    */
   static async removeWholeCache(checkForCacheToBeThere?: boolean): Promise<void> {
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Cache: Removes any values from the recently loaded elements",
+      command: "Cache: Removes any values from the recently loaded elements...",
     });
 
     if (
@@ -717,7 +735,7 @@ export class LiquibaseGUITestUtils {
     filterTextForContexts?: string
   ): Promise<void> {
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "update",
+      command: "update...",
       configurationName,
       changelogFile: true,
     });
@@ -739,7 +757,7 @@ export class LiquibaseGUITestUtils {
    * @param tagName - the name of the tag that should be created
    */
   static async executeCreateTag(configurationName: string, tagName: string): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag", configurationName });
+    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag...", configurationName });
 
     await input.setText(tagName);
     await input.confirm();
@@ -827,4 +845,24 @@ type RmbArgument = {
    * The description of the argument.
    */
   description: string;
+};
+
+/**
+ * The elements that should be given on a command start.
+ */
+type CommandStart = {
+  /**
+   * The name of the command.
+   */
+  command: string;
+
+  /**
+   * The name of the configuration, if it should be selected.
+   */
+  configurationName?: string;
+
+  /**
+   * If a changelog file should be given.
+   */
+  changelogFile?: boolean;
 };

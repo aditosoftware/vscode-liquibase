@@ -43,7 +43,7 @@ suite("editExistingLiquibaseConfiguration", () => {
     await prompt.setText(propertiesFile);
     await prompt.confirm();
     await LiquibaseGUITestUtils.openAndSelectRMBItemFromAlreadyOpenedFile(
-      "Edit existing Liquibase Configuration",
+      "Edit existing Liquibase Configuration...",
       this
     );
 
@@ -55,7 +55,7 @@ suite("editExistingLiquibaseConfiguration", () => {
    */
   test("should be able to edit existing configuration via RMB from file explorer", async function () {
     await LiquibaseGUITestUtils.openAndSelectRMBItemFromExplorer(
-      "Edit existing Liquibase Configuration",
+      "Edit existing Liquibase Configuration...",
       this,
       "data",
       "liquibase",
@@ -72,7 +72,7 @@ suite("editExistingLiquibaseConfiguration", () => {
     await new EditorView().closeAllEditors();
 
     await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Edit existing Liquibase Configuration",
+      command: "Edit existing Liquibase Configuration...",
       configurationName,
     });
 
