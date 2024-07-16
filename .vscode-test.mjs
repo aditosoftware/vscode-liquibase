@@ -9,4 +9,8 @@ export default defineConfig({
     ui: "tdd",
     retries: 3,
   },
+  coverage: {
+    // coverage exclusion currently does not work: https://github.com/microsoft/vscode-test-cli/issues/40
+    exclude: ["dist", "**/dist/**", /dist/],
+  },
 });

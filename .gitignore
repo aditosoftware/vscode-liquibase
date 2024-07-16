@@ -3,6 +3,7 @@ dist
 node_modules
 .vscode-test/
 *.vsix
+assets/
 
 # results from local testing of pipeline elements
 coverage
