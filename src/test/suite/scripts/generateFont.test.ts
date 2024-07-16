@@ -128,6 +128,13 @@ suite("generateFont", () => {
   });
 });
 
+/**
+ * Asserts an error case by checking that the `generateFont` method rejects an call with the given error.
+ *
+ * @param tempDir - the path to the temporary directory
+ * @param expectedErrorMessage - the expected error message
+ * @param packageJson - the content that should be written to the `package.json`. If `undefined` was given, then no `package.json` was written.
+ */
 async function assertErrorCase(
   tempDir: string,
   expectedErrorMessage: string,
@@ -141,6 +148,14 @@ async function assertErrorCase(
   });
 }
 
+/**
+ * Creates the data for the tests.
+ *
+ * This includes a `media/icons` folder with `my-logo.svg` inside and a `package.json` with the given content.
+ *
+ * @param tempDir - the path to the temporary directory
+ * @param packageJson - the content that should be written to the `package.json`. If `undefined` was given, then no `package.json` was written.
+ */
 function createData(tempDir: string, packageJson?: MinimalPackageJson): void {
   // create a dummy svg icon
   const iconsFolder = path.join("media", "icons");
