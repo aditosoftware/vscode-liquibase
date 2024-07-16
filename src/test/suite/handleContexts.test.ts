@@ -21,8 +21,6 @@ suite("handleContexts", () => {
   suiteSetup("create temp dir and resources", async function () {
     this.timeout(10_000);
 
-    await TestUtils.initExtension();
-
     TestUtils.init();
 
     tempDir = TestUtils.createTempFolderForTests("contexts");

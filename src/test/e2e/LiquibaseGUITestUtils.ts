@@ -44,11 +44,6 @@ export class LiquibaseGUITestUtils {
    */
   static outputPanel: OutputView;
 
-  /**
-   * Information, if the extension is active.
-   */
-  static extensionActive: boolean = false;
-
   //#region setup tests
 
   /**
@@ -73,8 +68,6 @@ export class LiquibaseGUITestUtils {
 
     // create a configuration
     const configurationName = await this.createConfiguration({ addChangelog: addChangelog });
-    // after we have successfully created a config via the webview, the extension is definitely active
-    this.extensionActive = true;
 
     // and close all editors
     await new EditorView().closeAllEditors();
@@ -110,25 +103,10 @@ export class LiquibaseGUITestUtils {
   /**
    * Opens the workspace.
    */
-  private static async openWorkspace(): Promise<void> {
-    await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
-  }
-
-  /**
-   * Opens the workspace and initializes the extension by calling an simple command.
-   *
-   * This is done in order to not having the initialize during the real command execution.
-   */
-  static async openWorkspaceAndInitializeExtension(): Promise<void> {
+  static async openWorkspace(): Promise<void> {
     await new EditorView().closeAllEditors();
 
-    await LiquibaseGUITestUtils.openWorkspace();
-
-    const prompt = await new Workbench().openCommandPrompt();
-    await prompt.setText(">liquibase.initialize");
-    await prompt.confirm();
-
-    await LiquibaseGUITestUtils.waitForExtensionToActivate();
+    await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
   }
 
   // #endregion
@@ -167,9 +145,6 @@ export class LiquibaseGUITestUtils {
     await prompt.setText(">Liquibase: " + command);
     await prompt.confirm();
 
-    // then wait until the Activating Extensions from the status bar disappears
-    await LiquibaseGUITestUtils.waitForExtensionToActivate();
-
     // input the configuration name
     if (configurationName) {
       await input.setText(configurationName);
@@ -187,29 +162,6 @@ export class LiquibaseGUITestUtils {
     }
 
     return input;
-  }
-
-  /**
-   * Waits until the extension was activated.
-   */
-  static async waitForExtensionToActivate(): Promise<void> {
-    if (this.extensionActive) {
-      return;
-    }
-
-    await this.openOutputPanel();
-
-    await VSBrowser.instance.driver.wait(
-      async () => {
-        const text = await this.outputPanel.getText();
-
-        return text.includes("Liquibase extension was initialized correctly");
-      },
-      5000,
-      "waiting for initialize message to occur"
-    );
-
-    this.extensionActive = true;
   }
 
   /**

@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import path from "path";
 import Sinon from "sinon";
-import { TestUtils } from "./TestUtils";
 import * as fs from "fs";
 import { PropertiesEditor } from "properties-file/editor";
 import { randomUUID } from "crypto";
@@ -61,9 +60,6 @@ suite("Extension Integration Test Suite", () => {
     properties.insert("url", `jdbc:mariadb://${DockerTestUtils.getDockerIP()}:3310/${DockerTestUtils.dbName}`);
 
     fs.writeFileSync(propertiesFile, properties.format());
-
-    // init the extension with a basic command
-    await TestUtils.initExtension();
   });
 
   /**

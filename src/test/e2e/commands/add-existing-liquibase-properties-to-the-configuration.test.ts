@@ -17,7 +17,7 @@ suite("Add existing liquibase.properties to the configuration", function () {
    * Set up the test suite.
    */
   suiteSetup(async function () {
-    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
+    await LiquibaseGUITestUtils.openWorkspace();
   });
 
   /**

@@ -125,16 +125,6 @@ export function createGeneralStatusBarItem(): vscode.StatusBarItem {
  * @param context - the context on which the commands should be registered
  */
 function registerCommands(context: vscode.ExtensionContext): void {
-  // add a dummy command for loading all resources
-  context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.initialize", () => {
-      Logger.getLogger().info({
-        message: "Triggered loading of all resources. Check logs afterwards.",
-        notifyUser: true,
-      });
-    })
-  );
-
   // Register all commands that are needed for handling liquibase properties
   registerCommandsForLiquibasePropertiesHandling(context);
 

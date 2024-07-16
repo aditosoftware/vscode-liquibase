@@ -21,7 +21,7 @@ suite("editExistingLiquibaseConfiguration", () => {
    * Opens the workspace before all tests.
    */
   suiteSetup(async () => {
-    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
+    await LiquibaseGUITestUtils.openWorkspace();
   });
 
   /**

@@ -14,7 +14,6 @@ import { CacheHandler } from "../../cache";
  * Utility class for tests.
  */
 export class TestUtils {
-  private static extensionInitialized: boolean = false;
 
   /**
    * The path to the out folder
@@ -85,21 +84,6 @@ export class TestUtils {
     } as unknown as vscode.ExtensionContext;
     Logger.initializeLogger(context, "Tests");
     initializeLogger(Logger.getLogger());
-  }
-
-  /**
-   * Inits the extension for the test.
-   *
-   * **Note**: This method has a 7 second timeout in order to initialize everything.
-   * You need the set the timeout for the setup higher, in order to let it execute.
-   */
-  static async initExtension(): Promise<void> {
-    if (this.extensionInitialized) {
-      return;
-    }
-    await vscode.commands.executeCommand("liquibase.initialize");
-    await new Promise((r) => setTimeout(r, 7_000));
-    this.extensionInitialized = true;
   }
 
   /**

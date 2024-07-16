@@ -22,11 +22,6 @@
   "contributes": {
     "commands": [
       {
-        "command": "liquibase.initialize",
-        "title": "Load all resources for the extension",
-        "category": "Liquibase"
-      },
-      {
         "command": "liquibase.update",
         "title": "Update",
         "category": "Liquibase"
