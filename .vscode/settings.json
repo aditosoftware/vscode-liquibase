@@ -51,5 +51,10 @@
   "peacock.color": "#6fb32c",
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "editor.tabSize": 2,
-  "npm.exclude": ["**/vscode[a-zA-z]/**", "**/out/**"]
+  "npm.exclude": ["**/vscode[a-zA-z]/**", "**/out/**"],
+  "extension-test-runner.extractSettings": {
+    "suite": ["describe", "suite"],
+    "test": ["it", "test"],
+    "extractWith": "syntax"
+  }
 }

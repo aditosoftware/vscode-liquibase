@@ -3,19 +3,20 @@
 "use strict";
 
 const path = require("path");
+const WebpackShellPluginNext = require("webpack-shell-plugin-next");
 
 /**@type {import('webpack').Configuration}*/
 const config = {
   target: "node",
+  mode: "none",
 
   entry: "./src/extension.ts",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "extension.js",
     libraryTarget: "commonjs2",
-    devtoolModuleFilenameTemplate: "../[resource-path]",
   },
-  devtool: "source-map",
+  devtool: "nosources-source-map",
 
   resolve: {
     extensions: [".ts", ".js"],
@@ -27,7 +28,7 @@ const config = {
     rules: [
       {
         test: /\.ts$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/, /scripts/],
         use: [
           {
             loader: "ts-loader",
@@ -40,6 +41,15 @@ const config = {
     vscode: "commonjs vscode",
     electron: "commonjs electron",
   },
+  plugins: [
+    // build the icons before the real build
+    new WebpackShellPluginNext({
+      onBeforeBuild: {
+        scripts: ["npm run build:icons"],
+        blocking: true,
+      },
+    }),
+  ],
 };
 
-module.exports = config;
+module.exports = [config];

@@ -34,7 +34,7 @@ suite("Basic webview tests", () => {
    * Tests that the changelog can be selected from the folder selection button.
    */
   test("should be able to select changelog", async () => {
-    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
+    await LiquibaseGUITestUtils.openWorkspace();
 
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
       const changelogSelection = await webView.findWebElement(By.id("changelogSelection"));

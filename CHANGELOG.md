@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Added a "help"-button to the "Advanced properties" inside the visual Liquibase configurator
 - Added diff-types and include-objects filter to generate-changelog command
 - Added a command to convert a file or a folder from one liquibase format to another format
+- Added a status bar item to execute all liquibase commands
 
 ### Changed
 

@@ -83,10 +83,40 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // and pass the logger to the input
   initializeLogger(Logger.getLogger());
 
+  // creates the items for the status bar
+  context.subscriptions.push(createGeneralStatusBarItem());
+
   // Perform any necessary prerequisites setup before executing the extension logic
   await prerequisites(context, resourcePath);
   // and register all commands
   registerCommands(context);
+}
+
+/**
+ * Creates a status bar items for the general Liquibase command.
+ *
+ * @returns - the status bar item. It need to added to the contexts subscriptions
+ */
+export function createGeneralStatusBarItem(): vscode.StatusBarItem {
+  const liquibaseGeneralStatusBar = vscode.window.createStatusBarItem(
+    "liquibase.general",
+    vscode.StatusBarAlignment.Left
+  );
+
+  liquibaseGeneralStatusBar.text = "$(liquibase-logo) Liquibase";
+  liquibaseGeneralStatusBar.name = "Liquibase Commands";
+  liquibaseGeneralStatusBar.tooltip = "Execute any Liquibase command";
+
+  // title is not needed for the command for the status bar, but required by the object
+  liquibaseGeneralStatusBar.command = {
+    command: "workbench.action.quickOpen",
+    title: "Open command palette",
+    arguments: [">Liquibase: "],
+  };
+  // show the status bar
+  liquibaseGeneralStatusBar.show();
+
+  return liquibaseGeneralStatusBar;
 }
 
 /**
@@ -95,16 +125,6 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
  * @param context - the context on which the commands should be registered
  */
 function registerCommands(context: vscode.ExtensionContext): void {
-  // add a dummy command for loading all resources
-  context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.initialize", () => {
-      Logger.getLogger().info({
-        message: "Triggered loading of all resources. Check logs afterwards.",
-        notifyUser: true,
-      });
-    })
-  );
-
   // Register all commands that are needed for handling liquibase properties
   registerCommandsForLiquibasePropertiesHandling(context);
 

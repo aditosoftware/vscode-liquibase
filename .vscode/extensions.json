@@ -6,6 +6,7 @@
     "ms-vscode.extension-test-runner",
     "SonarSource.sonarlint-vscode",
     "esbenp.prettier-vscode",
-    "tobermory.es6-string-html"
+    "tobermory.es6-string-html",
+    "stxr.iconfont-preview"
   ]
 }

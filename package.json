@@ -15,15 +15,12 @@
   "repository": {
     "type": "git"
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
-      {
-        "command": "liquibase.initialize",
-        "title": "Load all resources for the extension",
-        "category": "Liquibase"
-      },
       {
         "command": "liquibase.update",
         "title": "Update...",
@@ -288,6 +285,18 @@
             ]
           },
           {
+            "id": "commandsToRun",
+            "title": "Commands you can run",
+            "description": "There is a 'Liquibase' action in the status bar in the bottom, with which you can see all commands of the extension.\nAlternatively, you can list all commands by opening the Command Palette (default shortcut Ctrl + Shift + P) and filtering for ``Liquibase``.",
+            "media": {
+              "image": "media/walkthrough/statusBar.png",
+              "altText": "status bar item Liquibase in the bottom bar"
+            },
+            "completionEvents": [
+              "onCommand:workbench.action.quickOpen"
+            ]
+          },
+          {
             "id": "learnMoreAboutLiquibase",
             "title": "Learn more about Liquibase",
             "media": {
@@ -300,13 +309,23 @@
           }
         ]
       }
-    ]
+    ],
+    "icons": {
+      "liquibase-logo": {
+        "description": "The Liquibase icon",
+        "default": {
+          "fontPath": "./assets/liquibase_icons.woff",
+          "fontCharacter": "\\E001"
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
-    "package": "webpack --mode production",
+    "package": "webpack --mode production --devtool hidden-source-map",
     "webpack:compile": "webpack --mode development",
     "clean": "rimraf ./out  && rimraf ./dist",
+    "build:icons": "run-func out/scripts/generateFont.js generateFont",
     "compile": "tsc -p ./",
     "watch": "tsc --watch -p ./",
     "clean-compile": "npm run clean && npm run compile && npm run webpack:compile",
@@ -347,11 +366,14 @@
     "mariadb": "^3.3.0",
     "mkdirp": "^3.0.1",
     "rimraf": "^5.0.5",
+    "run-func": "^3.0.0",
     "sinon": "^17.0.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
     "vscode-extension-tester": "^8.3.1",
+    "webfont": "^11.2.26",
     "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-shell-plugin-next": "^2.3.1"
   }
 }

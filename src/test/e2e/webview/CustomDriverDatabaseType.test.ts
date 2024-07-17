@@ -11,7 +11,7 @@ suite("Custom Drivers", () => {
    * Opens the workspace before the tests.
    */
   suiteSetup(async () => {
-    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
+    await LiquibaseGUITestUtils.openWorkspace();
   });
 
   /**

@@ -19,7 +19,7 @@ suite("convert format", () => {
    * Opens the workspace before the tests
    */
   suiteSetup(async () => {
-    await LiquibaseGUITestUtils.openWorkspaceAndInitializeExtension();
+    await LiquibaseGUITestUtils.openWorkspace();
   });
 
   formats.forEach((pFormat) => {
