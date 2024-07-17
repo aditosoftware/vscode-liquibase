@@ -1,12 +1,15 @@
 import { DialogValues } from "@aditosoftware/vscode-input";
 import { activate, createGeneralStatusBarItem, setRequireForceAndForceParameter, validateInput } from "../../extension";
 import assert from "assert";
-import { expect } from "chai";
 import { Command } from "vscode";
 import * as vscode from "vscode";
 import { TestUtils } from "./TestUtils";
 import Sinon from "sinon";
-import { randomUUID } from "crypto";
+import * as fs from "fs";
+import chai, { expect } from "chai";
+import chaiString from "chai-string";
+
+chai.use(chaiString);
 
 /**
  * Tests the `extension.ts` file.
@@ -126,15 +129,11 @@ suite("extension tests", () => {
         update: async () => {},
       };
 
-      const names: string[] = [];
-
-      // don't register the commands real, because
+      // stub the register of the commands, because otherwise we would register commands that are already registered
       const registerCommand = Sinon.stub(vscode.commands, "registerCommand");
-      registerCommand.callsFake((command, callback, thisArgs) => {
-        const newCommandName = `${randomUUID()}-${command}`;
-        names.push(newCommandName);
-
-        return registerCommand.wrappedMethod.apply(vscode.commands, [newCommandName, callback, thisArgs]);
+      registerCommand.callsFake((command) => {
+        expect(command).to.startWith("liquibase.");
+        return { dispose() {} };
       });
 
       const context: vscode.ExtensionContext = {
@@ -150,6 +149,19 @@ suite("extension tests", () => {
 
       // check that there were any subscriptions registered
       expect(context.subscriptions).to.have.lengthOf.above(20);
+
+      const files = fs.readdirSync(tempDir);
+
+      // in our temp dir, we should have two log files
+      expect(files).to.contain("Liquibase.log");
+      expect(files).to.contain("error.log");
+
+      // all other files should be jar files
+      files
+        .filter((pFileName) => !pFileName.endsWith(".log"))
+        .forEach((pFileName) => {
+          expect(pFileName).to.endWith(".jar");
+        });
     });
   });
 });
