@@ -297,6 +297,18 @@
             ]
           },
           {
+            "id": "liquibaseOverviewActions",
+            "title": "Database Overview",
+            "description": "Sometimes, you want to have an overview about your whole database. For this, we have a useful command in the status bar labeled 'Overview'.\nThis will create an HTML report with a lot of useful information regarding your database and the changelogs.\nYou can see information about the current table structure, including columns and indexes.\nAlso, you can see the authors of every changeset referenced into the root changelog and any pending changes.",
+            "media": {
+              "image": "media/walkthrough/statusBarOverview.png",
+              "altText": "status bar item Liquibase Overview as book in the bottom bar"
+            },
+            "completionEvents": [
+              "onCommand:liquibase.db-doc"
+            ]
+          },
+          {
             "id": "learnMoreAboutLiquibase",
             "title": "Learn more about Liquibase",
             "media": {

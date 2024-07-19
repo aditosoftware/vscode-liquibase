@@ -3,8 +3,9 @@ import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
 import * as fs from "fs";
 import path from "path";
 import * as os from "os";
-import { TransferActionForCommand, TransferDataForCommand } from "../../registerLiquibaseCommand";
+import { TransferDataForCommand } from "../../registerLiquibaseCommand";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
+import { TransferActionForCommand } from "../../TransferActionForCommand";
 
 /**
  * Tests a existing liquibase configuration from a webview.
@@ -37,10 +38,7 @@ class DeleteTemporaryFiles extends TransferActionForCommand {
    * @param tempFolder - The temporary folder.
    * @param tempFilePath - The temporary file which is inside the temporary folder.
    */
-  constructor(
-    public tempFolder: string,
-    public tempFilePath: string
-  ) {
+  constructor(public tempFolder: string, public tempFilePath: string) {
     super();
   }
 

@@ -52,6 +52,24 @@ export async function getPathOfConfiguration(pConfigurationName: string): Promis
 }
 
 /**
+ * Gets the name of the configuration for a given path.
+ *
+ * @param configurationPath - the path of the configuration
+ * @returns the name of the configuration
+ */
+export async function getNameOfConfiguration(configurationPath: string): Promise<string | undefined> {
+  const configuration = await readConfiguration();
+  if (configuration) {
+    return Object.entries(configuration)
+      .filter((entry) => {
+        return entry[1] === configurationPath;
+      })
+      .map((entry) => entry[0])
+      .shift();
+  }
+}
+
+/**
  * Updates the values of the configuration.
  *
  * @param pOnUpdate - the function used for updating the json data. This data is given as key / value pairs

@@ -1,5 +1,6 @@
 import Sinon from "sinon";
 import {
+  getNameOfConfiguration,
   getPathOfConfiguration,
   readConfiguration,
   readLiquibaseConfigurationNames,
@@ -102,23 +103,38 @@ suite("read configuration", () => {
         .catch(done);
     });
 
-    [
-      { expected: undefined, configurationName: "five" },
-      { expected: "path/to/connection/four.liquibase.properties", configurationName: "four" },
-      { expected: "path/to/connection/three.liquibase.properties", configurationName: "three" },
-      { expected: "path/to/connection/two.liquibase.properties", configurationName: "two" },
-      { expected: "path/to/connection/one.liquibase.properties", configurationName: "one" },
-    ].forEach((pArgument) => {
+    const existingConfigurations = [
+      { configurationPath: "path/to/connection/four.liquibase.properties", configurationName: "four" },
+      { configurationPath: "path/to/connection/three.liquibase.properties", configurationName: "three" },
+      { configurationPath: "path/to/connection/two.liquibase.properties", configurationName: "two" },
+      { configurationPath: "path/to/connection/one.liquibase.properties", configurationName: "one" },
+    ];
+
+    [{ configurationPath: undefined, configurationName: "five" }, ...existingConfigurations].forEach((pArgument) => {
       /**
        * Tests that the reading of the configuration path works
        */
       test(`should read path of configuration (${pArgument.configurationName})`, (done) => {
         getPathOfConfiguration(pArgument.configurationName)
           .then((result) => {
-            assert.strictEqual(pArgument.expected, result);
+            assert.strictEqual(pArgument.configurationPath, result);
             done();
           })
           .catch(done);
+      });
+    });
+
+    [
+      ...existingConfigurations,
+      { configurationPath: "path/to/connection/five.liquibase.properties", configurationName: undefined },
+    ].forEach((pArgument) => {
+      /**
+       * Tests that the reading of the configuration names works
+       */
+      test(`should read path of configuration ${pArgument.configurationPath}`, async () => {
+        const result = await getNameOfConfiguration(pArgument.configurationPath);
+
+        assert.deepStrictEqual(result, pArgument.configurationName);
       });
     });
   });

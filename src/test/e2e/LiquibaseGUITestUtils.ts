@@ -137,7 +137,24 @@ export class LiquibaseGUITestUtils {
     await prompt.setText(">Liquibase: " + command);
     await prompt.confirm();
 
-    // input the configuration name
+    // input the configuration name and changelog file
+    await LiquibaseGUITestUtils.selectConfigurationAndChangelogFile(input, configurationName, changelogFile);
+
+    return input;
+  }
+
+  /**
+   * Selects the configuration file and selects the changelog file, if needed.
+   *
+   * @param input - the current input box
+   * @param configurationName - the name of the configuration that should be set
+   * @param changelogFile - if the changelog file should be automatically selected
+   */
+  static async selectConfigurationAndChangelogFile(
+    input: InputBox,
+    configurationName?: string,
+    changelogFile?: boolean
+  ): Promise<void> {
     if (configurationName) {
       await input.setText(configurationName);
       await input.confirm();
@@ -152,8 +169,6 @@ export class LiquibaseGUITestUtils {
       await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
       await input.selectQuickPick("changelog.xml");
     }
-
-    return input;
   }
 
   /**
