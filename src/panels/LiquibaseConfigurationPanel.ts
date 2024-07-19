@@ -8,6 +8,8 @@ import { testLiquibaseConnection } from "../configuration/handle/testConfigurati
 import { chooseFileForChangelog } from "../configuration/handleChangelogSelection";
 import { Logger, LoggingMessageWithLevel } from "@aditosoftware/vscode-logging";
 import { getCustomDrivers } from "../utilities/customDriverUtilities";
+import * as vscode from "vscode";
+import path from "path";
 /**
  * This class manages the state and behavior of LiquibaseConfiguration webview panels.
  *
@@ -73,6 +75,8 @@ export class LiquibaseConfigurationPanel {
           retainContextWhenHidden: true,
         }
       );
+
+      panel.iconPath = vscode.Uri.file(path.join(extensionUri.fsPath, "media", "icons", "liquibase-logo.svg"));
 
       LiquibaseConfigurationPanel.currentPanel = new LiquibaseConfigurationPanel(panel, extensionUri);
     }

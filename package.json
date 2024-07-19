@@ -1,17 +1,35 @@
 {
   "name": "liquibase",
   "displayName": "Liquibase",
-  "description": "Execute Liquibase changelogs and create liquibase.properties",
+  "description": "Execute Liquibase commands on changelogs and create liquibase.properties",
   "license": "MIT",
   "publisher": "adito",
   "version": "0.0.4",
-  "preview": true,
   "engines": {
     "vscode": "^1.84.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages"
   ],
+  "keywords": [
+    "Liquibase",
+    "Commands",
+    "CLI"
+  ],
+  "qna": "marketplace",
+  "extensionKind": [
+    "workspace"
+  ],
+  "icon": "media/icons/liquibase_logo.png",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": false,
+      "description": "This extension needs access to the workspace folders in order to read and execute Liquibase changelogs and write configurations."
+    }
+  },
+  "bugs": {
+    "email": "vscext.devs@aditosoftware.onmicrosoft.com"
+  },
   "repository": {
     "type": "git"
   },
