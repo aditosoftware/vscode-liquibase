@@ -5,6 +5,9 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { folderSelectionName } from "./constants";
+import { PROPERTY_FILE } from "./input/ConnectionType";
+import { getNameOfConfiguration } from "./configuration/handle/readConfiguration";
+import * as os from "os";
 
 /**
  * The name that should be used for any file name input.
@@ -91,6 +94,39 @@ export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogVal
 
     const fullPath = path.join(folder, "index.html");
     const uri = vscode.Uri.file(fullPath);
+
     await vscode.env.openExternal(uri);
+  }
+}
+
+/**
+ * Changes the folder of the output directory value to a subfolder of the configuration name.
+ *
+ * Also empties the subfolder, when it is filled with data.
+ *
+ * @param dialogValues - the current dialog values
+ */
+export async function changeAndEmptyOutputDirectory(dialogValues: DialogValues): Promise<void> {
+  const folder = dialogValues.inputValues.get(folderSelectionName)?.[0];
+
+  if (folder && folder.includes(os.tmpdir())) {
+    const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
+
+    let configurationName = "db-doc";
+
+    if (propertyFile) {
+      const name = await getNameOfConfiguration(propertyFile);
+      if (name) {
+        configurationName = name;
+      }
+    }
+
+    const subfolder = path.join(folder, configurationName);
+
+    if (fs.existsSync(subfolder)) {
+      fs.rmSync(subfolder, { recursive: true });
+    }
+
+    dialogValues.addValue(folderSelectionName, subfolder);
   }
 }

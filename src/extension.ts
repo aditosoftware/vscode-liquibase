@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as path from "path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
-import { PickPanelConfig, registerLiquibaseCommand } from "./registerLiquibaseCommand";
+import { PickPanelConfig, registerLiquibaseCommand, TransferDataForCommand } from "./registerLiquibaseCommand";
 import { HandleChangelogFileInput } from "./handleChangelogFileInput";
 import { LiquibaseConfigurationPanel } from "./panels/LiquibaseConfigurationPanel";
 import {
@@ -20,6 +20,7 @@ import {
   editExistingLiquibaseConfiguration,
 } from "./settings/configurationCommands";
 import {
+  changeAndEmptyOutputDirectory,
   fileName,
   generateCommandLineArgs,
   openFileAfterCommandExecution,
@@ -86,6 +87,8 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // creates the items for the status bar
   context.subscriptions.push(createGeneralStatusBarItem());
 
+  context.subscriptions.push(createOverviewStatusBarItem());
+
   // Perform any necessary prerequisites setup before executing the extension logic
   await prerequisites(context, resourcePath);
   // and register all commands
@@ -95,29 +98,99 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 /**
  * Creates a status bar items for the general Liquibase command.
  *
- * @returns - the status bar item. It need to added to the contexts subscriptions
+ * @returns the created status bar item
  */
 export function createGeneralStatusBarItem(): vscode.StatusBarItem {
-  const liquibaseGeneralStatusBar = vscode.window.createStatusBarItem(
-    "liquibase.general",
-    vscode.StatusBarAlignment.Left
-  );
+  return createStatusBarItem({
+    id: "liquibase.general",
+    text: "$(liquibase-logo) Liquibase",
+    name: "Liquibase Commands",
+    tooltip: "Execute any Liquibase command",
+    command: {
+      command: "workbench.action.quickOpen",
+      title: "Open command palette",
+      arguments: [">Liquibase: "],
+    },
+  });
+}
 
-  liquibaseGeneralStatusBar.text = "$(liquibase-logo) Liquibase";
-  liquibaseGeneralStatusBar.name = "Liquibase Commands";
-  liquibaseGeneralStatusBar.tooltip = "Execute any Liquibase command";
+/**
+ * Creates the status bar item for the overview action in the status bar.
+ *
+ * @returns the created status bar item
+ */
+export function createOverviewStatusBarItem(): vscode.StatusBarItem {
+  return createStatusBarItem({
+    id: "liquibase.overview",
+    text: "$(book)",
+    name: "Liquibase Overview",
+    tooltip: "Generate an overview of your Liquibase database",
+    command: {
+      command: "liquibase.db-doc",
+      title: "db-doc",
+      arguments: [new TransferDataForCommand(folderSelectionName, path.join(os.tmpdir(), "liquibase-overview"))],
+    },
+  });
+}
+
+/**
+ * Creates a status bar item with the given configuration.
+ *
+ * @param statusBarItemValues - the values that are needed for creating a status bar item
+ * @returns the created status bar item. You need to be add this item to `context.subscriptions`. Otherwise, the item will not be available.
+ */
+function createStatusBarItem(statusBarItemValues: StatusBarItemValues): vscode.StatusBarItem {
+  const statusBarItem = vscode.window.createStatusBarItem(statusBarItemValues.id, vscode.StatusBarAlignment.Left);
+
+  statusBarItem.text = statusBarItemValues.text;
+  statusBarItem.name = statusBarItemValues.name;
+  statusBarItem.tooltip = statusBarItemValues.tooltip;
 
   // title is not needed for the command for the status bar, but required by the object
-  liquibaseGeneralStatusBar.command = {
-    command: "workbench.action.quickOpen",
-    title: "Open command palette",
-    arguments: [">Liquibase: "],
-  };
-  // show the status bar
-  liquibaseGeneralStatusBar.show();
+  statusBarItem.command = statusBarItemValues.command;
 
-  return liquibaseGeneralStatusBar;
+  // show the status bar item
+  statusBarItem.show();
+
+  return statusBarItem;
 }
+
+/**
+ * The values that should be given when creating a status bar item.
+ */
+type StatusBarItemValues = {
+  /**
+   * the id for the status bar item
+   */
+  id: string;
+
+  /**
+   * The text to show for the entry. You can embed icons in the text by leveraging the syntax:
+   *
+   * `My text $(icon-name) contains icons like $(icon-name) this one.`
+   *
+   * Where the icon-name is taken from the ThemeIcon [icon set](https://code.visualstudio.com/api/references/icons-in-labels#icon-listing), e.g.
+   * `light-bulb`, `thumbsup`, `zap` etc.
+   */
+  text: string;
+
+  /**
+   * the name that is used for toggling the item regards its visibility
+   */
+  name: string;
+
+  /**
+   * the tooltip that should be shown when hovering over the element
+   */
+  tooltip: string;
+
+  /**
+   * the command that should be executed.
+   *
+   * **Note:**  Only the only the `command` and `arguments` elements are used.
+   */
+  command: vscode.Command;
+};
 
 /**
  * Registers all commands for the extension.
@@ -308,6 +381,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         },
       ],
       {
+        beforeCommandAction: changeAndEmptyOutputDirectory,
         afterCommandAction: openIndexHtmlAfterCommandExecution,
       }
     ),

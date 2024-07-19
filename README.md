@@ -4,6 +4,20 @@ A Visual Studio Code extension that supports executing Liquibase commands withou
 
 You can also create and edit `liquibase.properties` files, which are used as a foundation for any command execution.
 
+## Generate database documentation / Getting an overview about your database
+
+Sometimes, you want to have an overview about your whole database. For this, we have a useful command in the status bar labeled 'Overview'.
+
+This will create an HTML report with a lot of useful information regarding your database and the changelogs.
+
+You can see information about the current table structure, including columns and indexes.
+
+Also, you can see the authors of every changeset referenced into the root changelog and any pending changes.
+
+The overview command will be creating some HTML files in your OS temporary directory (e.g. Windows `%LOCALAPPDATA%\temp\liquibase-overview`). You can view the results by opening the `index.html` file in any web browser.
+
+If you want to control the storage location of the overview output, you can use the `Liquibase: Generate database documentation (db-doc)` command.
+
 ## Executing commands with and without contexts
 
 Many liquibase commands can be executed with a context. After a connection and a changelog file was selected, you might be prompted with a context selection. There you have different options:

@@ -2,6 +2,7 @@ import { DialogValues } from "@aditosoftware/vscode-input";
 import assert from "assert";
 import { folderSelectionName } from "../../constants";
 import {
+  changeAndEmptyOutputDirectory,
   fileName,
   generateCommandLineArgs,
   openFileAfterCommandExecution,
@@ -13,6 +14,11 @@ import * as vscode from "vscode";
 import Sinon from "sinon";
 import chai from "chai";
 import chaiFs from "chai-fs";
+import * as os from "os";
+import { PROPERTY_FILE } from "../../input/ConnectionType";
+import * as configurationReading from "../../configuration/handle/readConfiguration";
+import { randomUUID } from "crypto";
+import * as fs from "fs";
 
 chai.use(chaiFs);
 
@@ -29,6 +35,13 @@ suite("liquibaseCommandsUtilities", () => {
   suiteSetup("create dialog values", () => {
     dialogValues.addValue(folderSelectionName, folderPath);
     dialogValues.addValue(fileName, myFileName);
+  });
+
+  /**
+   * Restore all stubs.
+   */
+  teardown("restore stubs", () => {
+    Sinon.restore();
   });
 
   /**
@@ -81,13 +94,6 @@ suite("liquibaseCommandsUtilities", () => {
       openExternal = Sinon.stub(vscode.env, "openExternal");
     });
 
-    /**
-     * Restore all stubs.
-     */
-    teardown("restore stubs", () => {
-      Sinon.restore();
-    });
-
     test("should open and sort correctly", (done) => {
       const dbDoc = path.join(workspaceFolder, "db-doc");
 
@@ -130,4 +136,106 @@ suite("liquibaseCommandsUtilities", () => {
         .catch(done);
     });
   });
+
+  /**
+   * Tests the method `changeAndEmptyOutputDirectory`.
+   */
+  suite("changeAndEmptyOutputDirectory", () => {
+    /**
+     * Tests that nothing will be done, when no folder was given in the dialog values
+     */
+    test("should do nothing when no folder given", async () => {
+      await assertChangeAndEmptyOutputDirectory(new DialogValues(), new Map());
+    });
+
+    /**
+     * Tests that nothing will change when the folder selection has no folder with a temp dir given.
+     */
+    test("should do nothing when no folder within the temp dir is given", async () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(folderSelectionName, "/path/to/my/folder");
+
+      await assertChangeAndEmptyOutputDirectory(dialogValues, dialogValues.inputValues);
+    });
+
+    /**
+     * Tests that a missing properties file configuration will use the default name `db-doc`.
+     */
+    test("should work without properties file", async () => {
+      const folderSelection = path.join(os.tmpdir(), "foo");
+
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(folderSelectionName, folderSelection);
+
+      await assertChangeAndEmptyOutputDirectory(
+        dialogValues,
+        new Map([[folderSelectionName, [path.join(folderSelection, "db-doc")]]])
+      );
+    });
+
+    /**
+     * Tests that the folder selection change will work normally with a not existing folder.
+     */
+    test("should work with not before existing folder", async () => {
+      const folderSelection = path.join(os.tmpdir(), "foo");
+
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "bar");
+      dialogValues.addValue(folderSelectionName, folderSelection);
+
+      Sinon.stub(configurationReading, "getNameOfConfiguration").resolves("baz");
+
+      await assertChangeAndEmptyOutputDirectory(
+        dialogValues,
+        new Map([
+          [PROPERTY_FILE, ["bar"]],
+          [folderSelectionName, [path.join(folderSelection, "baz")]],
+        ])
+      );
+    });
+
+    /**
+     * Tests that the folder selection change will work with an existing folder.
+     * This folder should be deleted.
+     */
+    test("should work with existing folder", async () => {
+      const folderSelection = path.join(os.tmpdir(), randomUUID());
+
+      const expectedPath = path.join(folderSelection, "baz");
+
+      fs.mkdirSync(expectedPath, { recursive: true });
+      fs.writeFileSync(path.join(expectedPath, "myFile.txt"), "");
+
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "bar");
+      dialogValues.addValue(folderSelectionName, folderSelection);
+
+      Sinon.stub(configurationReading, "getNameOfConfiguration").resolves("baz");
+
+      await assertChangeAndEmptyOutputDirectory(
+        dialogValues,
+        new Map([
+          [PROPERTY_FILE, ["bar"]],
+          [folderSelectionName, [expectedPath]],
+        ])
+      );
+
+      chai.assert.notPathExists(expectedPath);
+    });
+  });
 });
+
+/**
+ * Checks that the method `changeAndEmptyOutputDirectory` will transform the dialog values as expected.
+ *
+ * @param dialogValues - the dialog values that should be passed to the method
+ * @param expected - the expected inputValues of the dialogValues
+ */
+async function assertChangeAndEmptyOutputDirectory(
+  dialogValues: DialogValues,
+  expected: Map<string, string[]>
+): Promise<void> {
+  await changeAndEmptyOutputDirectory(dialogValues);
+
+  assert.deepStrictEqual(dialogValues.inputValues, expected);
+}

@@ -1,6 +1,9 @@
 import assert from "assert";
-import { expect } from "chai";
-import { InputBox, StatusBar, WebElement } from "vscode-extension-tester";
+import { InputBox, StatusBar } from "vscode-extension-tester";
+import chai, { expect } from "chai";
+import chaiString from "chai-string";
+
+chai.use(chaiString);
 
 /**
  * Tests the general item in the status bar.
@@ -12,19 +15,8 @@ suite("general item in statusbar", () => {
   test("should have status bar and clicks it", async () => {
     const statusBar = new StatusBar();
 
-    const items = await statusBar.getItems();
-
-    // item can not be found via getItem(), therefore find the item this way
-    let liquibaseItem: undefined | WebElement;
-    for (const item of items) {
-      const text = await item.getText();
-
-      if (text.includes("Liquibase")) {
-        liquibaseItem = item;
-        break;
-      }
-    }
-    assert.ok(liquibaseItem, "item was found in status bar");
+    const liquibaseItem = await statusBar.getItem("liquibase-logo  Liquibase, Execute any Liquibase command");
+    assert.ok(liquibaseItem, "no item was found in status bar");
 
     await liquibaseItem.click();
 
