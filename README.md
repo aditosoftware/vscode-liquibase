@@ -1,10 +1,59 @@
 # Liquibase
 
-A Visual Studio Code extension that supports executing Liquibase commands without needing to use the command line.
+A Visual Studio Code extension that supports executing [Liquibase commands](https://docs.liquibase.com/commands/command-list.html) without needing to use the command line.
 
-You can also create and edit `liquibase.properties` files, which are used as a foundation for any command execution.
+You can also create and edit [`liquibase.properties`](https://docs.liquibase.com/concepts/connections/creating-config-properties.html) files, which are used as a foundation for any command execution.
 
-## Generate database documentation / Getting an overview about your database
+## Getting started
+
+### Creating a configuration
+
+All commands that execute Liquibase need a [`liquibase.properties`](https://docs.liquibase.com/concepts/connections/creating-config-properties.html) file. This file contains information about your database connection, including user name and password.
+
+You can create a new configuration via the `Liquibase: Create Liquibase Configuration` command.
+If you have pre-existing configurations, then you can use the `Liquibase: Add existing liquibase.properties to the configuration...` command to add this configuration to the workspace.
+
+All the created and added configurations will be stored in the folder `data/liquibase`. You can change this folder with the setting `liquibase.configurationPath`.
+
+**NOTE:** Do not add your configuration files and folder to your version control system. Instead, add them to your `.gitignore`.
+
+### Executing a command
+
+All commands can be accessed from the "Liquibase" item in the status bar.
+You can also access all commands by using the the command palette (`Ctrl` + `Shift` + `P`).
+
+If you execute any command, you notice a general pattern of inputs.
+
+1. Select the **configuration of your database**. This is needed for Liquibase to know how to access your database. Liquibase can also extract other parameters from it.
+2. Select the **changelog**. This is used for knowing what to execute. Not all commands require this option. If you call a command from a context menu, the changelog will be set to the file where you opened the context menu.
+3. Select the **contexts**. Some commands allow you to filter the changelogs by contexts. See ["Executing commands with and without contexts"](#executing-commands-with-and-without-contexts) for more details.
+4. Any **additional options** you need to give before you can execute the command.
+
+Some commands are accessible from the context menu. The context menu is available for all `xml`, `json`, `yaml`, `yml` and `sql` files, because those are the languages where you can write Liquibase changelogs. All commands are found in the _"Liquibase"_ sub menu. When executing a command from the command menu, it will use the current file as your changelog.
+
+## Supported Commands
+
+Currently, the following Liquibase commands are supported:
+
+> **Tip:** The link on the command itself will lead you to the Liquibase documentation.
+
+- [Update](https://docs.liquibase.com/commands/update/update.html)
+- [Drop-all](https://docs.liquibase.com/commands/utility/drop-all.html)
+- [Validate](https://docs.liquibase.com/commands/utility/validate.html)
+- [Status](https://docs.liquibase.com/commands/change-tracking/status.html)
+- [Diff](https://docs.liquibase.com/commands/inspection/diff.html)
+- [Generate database documentation (db-doc)](https://docs.liquibase.com/commands/utility/db-doc.html) - [more details](#generate-database-documentation--getting-an-overview-about-your-database)
+- [Generate Changelog](https://docs.liquibase.com/commands/inspection/generate-changelog.html)
+- [Unexpected Changesets](https://docs.liquibase.com/commands/change-tracking/unexpected-changesets.html)
+- [Changelog Sync](https://docs.liquibase.com/commands/utility/changelog-sync.html)
+- [Clear Checksums](https://docs.liquibase.com/commands/utility/clear-checksums.html)
+- [History](https://docs.liquibase.com/commands/change-tracking/history.html)
+- [Create Tag](https://docs.liquibase.com/commands/utility/tag.html)
+- [Tag Exists](https://docs.liquibase.com/commands/utility/tag-exists.html)
+- [Rollback to Tag](https://docs.liquibase.com/commands/rollback/rollback-by-tag.html)
+- [Generate SQL File for incoming changes](https://docs.liquibase.com/commands/update/update-sql.html)
+
+### Generate database documentation / Getting an overview about your database
 
 Sometimes, you want to have an overview about your whole database. For this, we have a useful command in the status bar labeled 'Overview'.
 
@@ -18,7 +67,7 @@ The overview command will be creating some HTML files in your OS temporary direc
 
 If you want to control the storage location of the overview output, you can use the `Liquibase: Generate database documentation (db-doc)` command.
 
-## Executing commands with and without contexts
+### Executing commands with and without contexts
 
 Many liquibase commands can be executed with a context. After a connection and a changelog file was selected, you might be prompted with a context selection. There you have different options:
 
@@ -36,9 +85,9 @@ These elements can be deleted via the `Liquibase: Cache: Removes any values from
 
 ## Converting changelogs from one liquibase format to another format
 
-With the two commands `Liquibase: Converts a file from one liquibase format to another` and `Liquibase: Converts a folder and its subfolders from one liquibase format to another`, you can convert changelogs from one format to another.
+With the two commands `Liquibase: Converts a file from one liquibase format to another` and `Liquibase: Converts a folder from one liquibase format to another`, you can convert changelogs from one format to another.
 
-**NOTE:** It is very important, that you check to produced results by the command. We do not guarantee the accuracy of the files.
+> **NOTE:** It is very important, that you check to produced results by the command. We do not guarantee the accuracy of the files.
 
 Restrictions:
 
@@ -48,6 +97,15 @@ Restrictions:
 
 ## View logs
 
-This extensions logs to the output under the name "Liquibase" and an separate log folder.
+This extension write to the output. It can be viewed by executing the command `Output: Focus on Output View` and then selecting the channel _"Liquibase"_.
 
-You can reach the log folder by executing the command `Developer: Open Extension Logs Folder` and then navigating to the liquibase folder.
+Logs will be also written to a log folder on your OS. You can reach the log folder by executing the command `Developer: Open Extension Logs Folder` and then navigating to the liquibase folder.
+
+## TODO
+
+- [ ] was wird gecacht
+- [ ] sind alle commands soweit abgedeckt
+- [ ] walkthough erwähnen?
+- [ ] commands alphabetisch sortieren
+- [ ] settings erwähnen?
+- [ ] fehlt sonst noch was?
