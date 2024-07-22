@@ -669,7 +669,7 @@ export class LiquibaseGUITestUtils {
    */
   static async removeWholeCache(checkForCacheToBeThere?: boolean): Promise<void> {
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Cache: Removes any values from the recently loaded elements...",
+      command: "Cache: Remove any values from the recently loaded elements...",
     });
 
     if (

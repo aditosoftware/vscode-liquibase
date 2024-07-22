@@ -79,9 +79,9 @@ Both "Load all contexts from the changelog file" and "Use any of the recently lo
 
 The recently loaded contexts are saved per database connection. That means, if you have three connections, then you have three sections of the contexts.
 
-You can see the file where the recently loaded contexts are stored by executing the command `Liquibase: Cache: Opens the file with the recently loaded elements`.
+You can see the file where the recently loaded contexts are stored by executing the command `Liquibase: Cache: Open the file with the recently loaded elements`.
 
-These elements can be deleted via the `Liquibase: Cache: Removes any values from the recently loaded elements` command.
+These elements can be deleted via the `Liquibase: Cache: Remove any values from the recently loaded elements` command.
 
 ## Converting changelogs from one liquibase format to another format
 

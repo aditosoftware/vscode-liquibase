@@ -11,7 +11,7 @@ chai.use(chaiString);
 /**
  * Tests the removing of the cache values.
  */
-suite("Removes any values from the recently loaded elements", () => {
+suite("Remove any values from the recently loaded elements", () => {
   /**
    * The name of the configuration that was created during the setup.
    */
@@ -41,7 +41,7 @@ suite("Removes any values from the recently loaded elements", () => {
 
     // then try to execute the command a second time
     await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Cache: Removes any values from the recently loaded elements...",
+      command: "Cache: Remove any values from the recently loaded elements...",
     });
 
     assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("There are no elements stored to remove"));
@@ -66,7 +66,7 @@ suite("Removes any values from the recently loaded elements", () => {
     await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
     const input = await LiquibaseGUITestUtils.startCommandExecution({
-      command: "Cache: Removes any values from the recently loaded elements...",
+      command: "Cache: Remove any values from the recently loaded elements...",
     });
 
     await input.setText(RemoveCacheOptions.REMOVE_CONNECTION);

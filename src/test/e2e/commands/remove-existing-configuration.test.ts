@@ -58,7 +58,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
       );
 
       await LiquibaseGUITestUtils.startCommandExecution({
-        command: "Cache: Opens the file with the recently loaded elements",
+        command: "Cache: Open the file with the recently loaded elements",
       });
       const text = await new TextEditor().getText();
       const cache = JSON.parse(text);
