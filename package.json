@@ -264,14 +264,6 @@
         "description": "A short overview how to use the Liquibase extension.",
         "steps": [
           {
-            "id": "configureSetting",
-            "title": "Configure your settings",
-            "media": {
-              "markdown": "media/walkthrough/empty.md"
-            },
-            "description": "First, you should configure your settings for the extension.\nAll the settings can be found in the Liquibase section.\n[Take me to the settings](command:workbench.action.openSettings?%22liquibase.%22)"
-          },
-          {
             "id": "createLiquibaseProperties",
             "title": "Create a Liquibase properties file",
             "description": "In order to fully use this extension, you should create a liquibase.properties file. This is used for any command and stores the connection values to your database. The graphic editor will support you.\nYou should **NOT** add this file to your version control system, because this file can contain sensitive information, such as passwords.\n[Create liquibase.properties](command:liquibase.createLiquibaseConfiguration)",
@@ -281,6 +273,14 @@
             "completionEvents": [
               "onCommand:liquibase.createLiquibaseConfiguration"
             ]
+          },
+          {
+            "id": "configureSetting",
+            "title": "Configure your settings",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "description": "Also, you should configure your settings for the extension.\nAll the settings can be found in the Liquibase section.\n[Take me to the settings](command:workbench.action.openSettings?%22liquibase.%22)"
           },
           {
             "id": "runFirstUpdate",
