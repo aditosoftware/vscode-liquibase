@@ -1,7 +1,7 @@
 {
   "name": "liquibase",
   "displayName": "Liquibase",
-  "description": "Execute Liquibase commands on changelogs and create liquibase.properties",
+  "description": "Execute Liquibase commands on changelogs and create liquibase.properties files",
   "license": "MIT",
   "publisher": "adito",
   "version": "0.0.4",
