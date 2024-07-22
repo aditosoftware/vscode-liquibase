@@ -18,14 +18,14 @@ If you have pre-existing configurations, then you can use the `Liquibase: Add ex
 
 All the created and added configurations will be stored in the folder `data/liquibase`. You can change this folder with the setting `liquibase.configurationPath`.
 
-> **NOTE:** Do not add your configuration files and folder to your version control system. Instead, add them to your `.gitignore`. These files contain sensitive information.
+> **NOTE:** Do not add your configuration files and folder to your version control system. Instead, add them to your `.gitignore`. These files contain **sensitive information**.
 
 You can later edit your configurations with the `Liquibase: Edit existing Liquibase Configuration` command. This command can be reached via the command palette or by opening the context menu in any `.properties` file.
 
 ### Executing a command
 
 All commands can be accessed from the "Liquibase" item in the status bar.
-You can also access all commands by using the the command palette (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
+You can also access all commands by using the the command palette. It can be accessed with the keyboard shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (macOS <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
 
 If you execute any command, you notice a general pattern of inputs. You will be always asked the following steps in this order:
 
@@ -90,7 +90,7 @@ The recently loaded contexts are saved per database connection. That means, if y
 
 With the two commands `Liquibase: Converts a file from one liquibase format to another` and `Liquibase: Converts a folder from one liquibase format to another`, you can convert changelogs from one format to another.
 
-> **NOTE:** It is very important, that you check to produced results by the command. We do not guarantee the accuracy of the files.
+> **NOTE:** It is very important, that you check to produced results by the command. We do not guarantee the completeness and correctness of the files.
 
 Restrictions:
 
