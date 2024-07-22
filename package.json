@@ -214,31 +214,40 @@
       ],
       "liquibase.commandsMenu": [
         {
-          "command": "liquibase.update"
+          "command": "liquibase.update",
+          "group": "1_CommonCommands"
         },
         {
-          "command": "liquibase.validate"
+          "command": "liquibase.validate",
+          "group": "1_CommonCommands"
         },
         {
-          "command": "liquibase.status"
+          "command": "liquibase.status",
+          "group": "2_OtherCommands"
         },
         {
-          "command": "liquibase.db-doc"
+          "command": "liquibase.changelog-sync",
+          "group": "2_OtherCommands"
         },
         {
-          "command": "liquibase.unexpected-changesets"
+          "command": "liquibase.rollback",
+          "group": "2_OtherCommands"
         },
         {
-          "command": "liquibase.changelog-sync"
+          "command": "liquibase.db-doc",
+          "group": "3_Generate"
         },
         {
-          "command": "liquibase.rollback"
+          "command": "liquibase.unexpected-changesets",
+          "group": "3_Generate"
         },
         {
-          "command": "liquibase.update-sql"
+          "command": "liquibase.update-sql",
+          "group": "3_Generate"
         },
         {
-          "command": "liquibase.convertFormatFile"
+          "command": "liquibase.convertFormatFile",
+          "group": "3_Generate"
         }
       ],
       "liquibase.configurationMenu": [
