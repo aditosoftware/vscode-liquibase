@@ -9,12 +9,12 @@ import { initializeLogger } from "@aditosoftware/vscode-input";
 import { setCacheHandler, setLibFolder, setResourcePath } from "../../extension";
 import assert from "assert";
 import { CacheHandler } from "../../cache";
+import Sinon from "sinon";
 
 /**
  * Utility class for tests.
  */
 export class TestUtils {
-
   /**
    * The path to the out folder
    */
@@ -100,5 +100,20 @@ export class TestUtils {
       },
       ConfigurationStatus.NEW
     );
+  }
+
+  /**
+   * Creates a stub of the info message, that will select the first item.
+   *
+   * @returns the created stub
+   */
+  static createInfoMessageStubWithSelection(): Sinon.SinonStub {
+    const infoMessage = Sinon.stub(vscode.window, "showInformationMessage");
+    // and answer every call with the first messageItem selected
+    infoMessage.callsFake(async (_message, _options, ...items) => {
+      return items[0];
+    });
+
+    return infoMessage;
   }
 }

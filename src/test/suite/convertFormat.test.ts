@@ -122,11 +122,7 @@ suite("convert format", () => {
     test(`should transform ${pArgument.format} with ${pArgument.fileSelection ? "file" : "folder"} ${
       pArgument.changelogLocation
     }  ${typeof pArgument.changelogLocation !== "string" ? "selected from rmb" : ""}`, async () => {
-      const infoMessage = Sinon.stub(vscode.window, "showInformationMessage");
-      // and answer every call with the first messageItem selected
-      infoMessage.callsFake(async (_message, _options, ...items) => {
-        return items[0];
-      });
+      const infoMessage = TestUtils.createInfoMessageStubWithSelection();
 
       await assertConverting(
         () =>

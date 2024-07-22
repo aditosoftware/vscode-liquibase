@@ -3,6 +3,7 @@ import { prerequisites } from "../../prerequisites";
 import { TestUtils } from "./TestUtils";
 import * as vscode from "vscode";
 import * as fs from "fs";
+import Sinon from "sinon";
 
 /**
  * Tests the file prerequisites.ts.
@@ -35,9 +36,18 @@ suite("prerequisites", () => {
   });
 
   /**
+   * Restore the stubs after the tests.
+   */
+  teardown("Restore stubs", () => {
+    Sinon.restore();
+  });
+
+  /**
    * Tests that the prerequisites are handled correctly.
    */
   test("should correctly handle prerequisites", (done) => {
+    const infoMessage = TestUtils.createInfoMessageStubWithSelection();
+
     const keyName = "liquibase-first-activation";
 
     // create dummy global state
@@ -70,6 +80,14 @@ suite("prerequisites", () => {
             // check that the jars were downloaded correctly
             const files = fs.readdirSync(tempDir);
             assert.deepStrictEqual(jars, files);
+
+            Sinon.assert.calledOnce(infoMessage);
+            Sinon.assert.calledWith(
+              infoMessage,
+              "Thank you for installing the Liquibase extension. Get started by completing the walkthrough.",
+              Sinon.match.any,
+              "Open Walkthrough"
+            );
 
             done();
           })

@@ -275,10 +275,18 @@
             ]
           },
           {
+            "id": "javaHome",
+            "title": "Set your JAVA_HOME",
+            "media": {
+              "markdown": "media/walkthrough/empty.md"
+            },
+            "description": "In order to be able to execute Liquibase commands, you need to set your ``JAVA_HOME`` environment variable.\nYou can use any JDK/JRE starting from Java 13 and onwards."
+          },
+          {
             "id": "configureSetting",
             "title": "Configure your settings",
             "media": {
-              "markdown": "media/walkthrough/empty.md"
+              "markdown": "media/walkthrough/settings.md"
             },
             "description": "Also, you should configure your settings for the extension.\nAll the settings can be found in the Liquibase section.\n[Take me to the settings](command:workbench.action.openSettings?%22liquibase.%22)"
           },

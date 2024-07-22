@@ -124,11 +124,7 @@ suite("registerLiquibaseCommand", () => {
      * Tests that the command will be handled correctly with exit code 0.
      */
     test("should handle exit code 0", () => {
-      const infoMessage = Sinon.stub(vscode.window, "showInformationMessage");
-      // answer every call with the first messageItem selected
-      infoMessage.callsFake(async (_message, _options, ...items) => {
-        return items[0];
-      });
+      const infoMessage = TestUtils.createInfoMessageStubWithSelection();
 
       handleResultsOfCommandExecuted(0, "test-command", new DialogValues(), [], {});
 
