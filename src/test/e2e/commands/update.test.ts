@@ -3,7 +3,6 @@ import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../constants";
 import { InputBox, Key, VSBrowser } from "vscode-extension-tester";
-import path from "path";
 
 /**
  * Test suite for the 'update' command.
@@ -72,10 +71,12 @@ suite("Update", function () {
   test("should execute 'update' with standard shortcut", async function () {
     await DockerTestUtils.resetDB();
 
-    // HOW THE FUCK IS THIS WORKING? HUH?
-    // https://github.com/redhat-developer/vscode-extension-tester/issues/1190
     const driverAction = VSBrowser.instance.driver.actions();
 
+    // Due to an issue with the VSCode driver, we need to "keyUp" unwanted keys manually
+    // when pressing "ALT". "ALT" is interpreted as "CONTROL" + "SHIFT" + "ALT".
+    // Our shortcut is "CONTROL" + "ALT" + "U", so we need to "keyUp" "SHIFT".
+    // https://github.com/redhat-developer/vscode-extension-tester/issues/1190
     if (process.platform === "darwin") {
       driverAction.keyDown(Key.COMMAND).keyDown(Key.ALT).keyUp(Key.CONTROL).keyUp(Key.SHIFT).sendKeys("u");
     } else {
@@ -86,11 +87,7 @@ suite("Update", function () {
 
     const input = await InputBox.create();
 
-    await input.setText(configurationName);
-    await input.confirm();
-
-    await input.setText(path.join(process.cwd(), "out", "temp", "workspace", ".liquibase", "changelog.xml"));
-    await input.confirm();
+    await LiquibaseGUITestUtils.selectConfigurationAndChangelogFile(input, configurationName, true);
 
     await input.selectQuickPick(ContextOptions.NO_CONTEXT);
 
@@ -98,7 +95,10 @@ suite("Update", function () {
       "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
     );
 
-    assert.ok(databaseInformation?.length >= 0, `Table 'person' DOES exist, while it should: ${databaseInformation}`);
+    assert.ok(
+      databaseInformation?.length === 0,
+      `Table 'person' DOES exist, while it should NOT: ${databaseInformation}`
+    );
   });
 
   /**
