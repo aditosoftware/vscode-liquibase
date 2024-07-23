@@ -280,7 +280,7 @@
             "media": {
               "markdown": "media/walkthrough/empty.md"
             },
-            "description": "In order to be able to execute Liquibase commands, you need to set your ``JAVA_HOME`` environment variable.\nYou can use any JDK/JRE starting from Java 13 and onwards."
+            "description": "In order to execute Liquibase commands, you need to set your ``JAVA_HOME`` environment variable.\nYou can use any JDK/JRE starting from Java 13 and onwards.\nWe recommend using JDK 21."
           },
           {
             "id": "configureSetting",
