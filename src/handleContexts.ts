@@ -33,7 +33,7 @@ export function generateContextInputs(): PickPanelConfig[] {
     {
       input: new QuickPick({
         name: contextPreDialog,
-        title: "Select context using for the command",
+        placeHolder: "Select context using for the command",
         generateItems: (currentResults: DialogValues) => {
           // reset the cache
           cache = [];
@@ -72,8 +72,7 @@ export function generateContextInputs(): PickPanelConfig[] {
     {
       input: new LoadingQuickPick({
         name: "context",
-        title: "Choose any context",
-        loadingTitle: "Loading contexts",
+        placeHolder: "Choose any context",
         generateItems: async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
         reloadItems: async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
         reloadTooltip: "Reload contexts from changelog",

@@ -119,6 +119,7 @@ export async function addCommandAction(
   try {
     // Handle the multi-step-input
     const dialogValues = await handleMultiStepInput(
+      action, // TODO korrekter titel?
       pickPanelConfigs.map((pConfig) => pConfig.input),
       preBuiltDialogValues
     );

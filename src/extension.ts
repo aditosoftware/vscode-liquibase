@@ -294,8 +294,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "The file name where your diff should be written",
-              placeHolder: "any file name",
+              placeHolder: "The file name where your diff should be written",
               value: "diff.txt",
             },
           }),
@@ -328,8 +327,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "Choose a File Name",
-              placeHolder: "any file name with an extension",
+              placeHolder: "Choose any file name with an extension",
               value: "changelog.xml",
             },
           }),
@@ -350,7 +348,6 @@ function registerCommands(context: vscode.ExtensionContext): void {
                 ),
             },
             inputBoxOptions: {
-              title: "Choose any objects that should be included",
               placeHolder: "The tables for which you want the changelog generated",
               ignoreFocusOut: true,
               validateInput,
@@ -412,8 +409,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "The file name where your history should be written",
-              placeHolder: "any file name with extension",
+              placeHolder: "The file name where your history should be written",
               value: "history.txt",
             },
           }),
@@ -422,7 +418,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         {
           input: new QuickPick({
             name: "historyFormat",
-            title: "Choose the desired history format",
+            placeHolder: "Choose the desired history format",
             generateItems: () => [
               {
                 label: "TABULAR",
@@ -446,7 +442,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         input: new InputBox({
           name: "tagName",
           inputBoxOptions: {
-            title: "Choose a name of new Tag",
+            placeHolder: "Choose a name of new Tag",
           },
         }),
         cmdArgs: "--tag",
@@ -459,7 +455,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         input: new InputBox({
           name: "tagName",
           inputBoxOptions: {
-            title: "Tag to check if it exists",
+            placeHolder: "Tag to check if it exists",
           },
         }),
         cmdArgs: "--tag",
@@ -472,7 +468,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         input: new InputBox({
           name: "tagName",
           inputBoxOptions: {
-            title: "Tag to rollback to",
+            placeHolder: "Tag to rollback to",
           },
         }),
         cmdArgs: "--tag",
@@ -497,8 +493,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "The file name where your update sql should be written",
-              placeHolder: "any filename with extension",
+              placeHolder: "The file name where your update sql should be written",
               value: "update-sql.sql",
             },
           }),
@@ -547,14 +542,14 @@ export function validateInput(value: string): string | null {
 /**
  * Generates an input for the `--diff-types` and pre-selects the default types.
  *
- * @param title - the title that should be set in the dialog
+ * @param placeHolder - the placeHolder that should be set in the dialog
  * @returns the pickPanelConfig with all the diff types
  */
-function generateDiffTypes(title: string = "Choose any diff types"): PickPanelConfig {
+function generateDiffTypes(placeHolder: string = "Choose any diff types"): PickPanelConfig {
   return {
     input: new QuickPick({
       name: "diffTypes",
-      title,
+      placeHolder,
       //all possible diffTypes for the diff dialog
       generateItems: () => [
         { label: "catalogs", description: "" },

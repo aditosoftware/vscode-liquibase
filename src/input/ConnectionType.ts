@@ -28,19 +28,13 @@ export class ConnectionType extends InputBase<ConnectionTypeOptions> {
   /**
    * @override
    */
-  async showDialog(
-    _currentResults: DialogValues,
-    currentStep: number,
-    maximumStep: number
-  ): Promise<string | undefined> {
+  async showDialog(_currentResults: DialogValues, title: string): Promise<string | undefined> {
     const configurations: vscode.QuickPickItem[] | undefined = await this.generateItems();
-
-    const title: string = `Select one ${this.inputOptions.name === REFERENCE_PROPERTY_FILE ? "reference " : ""}system`;
 
     if (configurations && configurations.length !== 0) {
       const selectedConnection: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(configurations, {
-        title: `${title} ${this.generateStepOutput(currentStep, maximumStep)}`,
-        placeHolder: "Pick any system",
+        title,
+        placeHolder: `Select one ${this.inputOptions.name === REFERENCE_PROPERTY_FILE ? "reference " : ""}system`,
         canPickMany: false,
       });
 
