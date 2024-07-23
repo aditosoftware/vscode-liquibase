@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Added a command to convert a file or a folder from one liquibase format to another format
 - Added a status bar item to execute all liquibase commands
 - Added an overview action in the status bar to create the db-doc of the database
+- Added a info message on first startup to inform the user about the existence of a walkthrough
 
 ### Changed
 

@@ -20,6 +20,9 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
     Logger.getLogger().info({ message: "Liquibase was executed for the first time" });
     await downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
 
+    // inform the user that a walkthrough exists
+    await informAboutWalkthrough();
+
     // Mark first activation as completed
     await context.globalState.update("liquibase-first-activation", true);
   }
@@ -64,6 +67,35 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
 
   // log a message after all prerequisites to show that the activate was done correctly
   Logger.getLogger().info({ message: "Liquibase extension was initialized correctly" });
+}
+
+/**
+ * Informs the user about the walkthrough and lets the user open it from the dialog.
+ */
+async function informAboutWalkthrough(): Promise<void> {
+  vscode.window
+    .showInformationMessage(
+      "Thank you for installing the Liquibase extension. Get started by completing the walkthrough.",
+      {},
+      "Open Walkthrough"
+    )
+    .then(
+      async (result) => {
+        if (result && result === "Open Walkthrough") {
+          await vscode.commands.executeCommand(
+            "workbench.action.openWalkthrough",
+            "adito.liquibase#liquibaseWalkthrough"
+          );
+        }
+      },
+      (error) => {
+        Logger.getLogger().error({
+          message: "error opening the walkthrough from the initial start",
+          error,
+          notifyUser: true,
+        });
+      }
+    );
 }
 
 /**
