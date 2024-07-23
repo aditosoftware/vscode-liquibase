@@ -91,6 +91,8 @@ suite("Update", function () {
 
     await input.selectQuickPick(ContextOptions.NO_CONTEXT);
 
+    await LiquibaseGUITestUtils.waitForCommandExecution(`Liquibase command 'update' was executed successfully.`);
+
     const databaseInformation = await DockerTestUtils.executeMariaDBSQL(
       "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
     );
@@ -99,6 +101,8 @@ suite("Update", function () {
       databaseInformation?.length === 0,
       `Table 'person' DOES exist, while it should NOT: ${databaseInformation}`
     );
+
+    await driverAction.keyUp(Key.ALT).keyUp(Key.SHIFT).keyUp(Key.CONTROL).keyUp(Key.COMMAND).keyUp(Key.META).perform();
   });
 
   /**
