@@ -206,6 +206,18 @@
       }
     ],
     "menus": {
+      "editor/title/context": [
+        {
+          "submenu": "liquibase.commandsMenu",
+          "when": "resourceLangId == xml || resourceLangId == json || resourceLangId == yaml || resourceLangId == yml || resourceLangId == sql",
+          "group": "Liquibase"
+        },
+        {
+          "submenu": "liquibase.configurationMenu",
+          "when": "resourceLangId == properties",
+          "group": "Liquibase"
+        }
+      ],
       "explorer/context": [
         {
           "submenu": "liquibase.commandsMenu",
@@ -365,7 +377,14 @@
           "fontCharacter": "\\E001"
         }
       }
-    }
+    },
+    "keybindings": [
+      {
+        "command": "liquibase.update",
+        "key": "ctrl+alt+u",
+        "mac": "cmd+alt+u"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
