@@ -214,7 +214,7 @@
         },
         {
           "submenu": "liquibase.configurationMenu",
-          "when": "resourceLangId == properties",
+          "when": "resourceLangId == properties || resourceLangId == java-properties",
           "group": "Liquibase"
         }
       ],
@@ -226,7 +226,7 @@
         },
         {
           "submenu": "liquibase.configurationMenu",
-          "when": "resourceLangId == properties",
+          "when": "resourceLangId == properties || resourceLangId == java-properties",
           "group": "Liquibase"
         }
       ],
@@ -238,7 +238,7 @@
         },
         {
           "submenu": "liquibase.configurationMenu",
-          "when": "resourceLangId == properties",
+          "when": "resourceLangId == properties || resourceLangId == java-properties",
           "group": "Liquibase"
         }
       ],
@@ -283,7 +283,7 @@
       "liquibase.configurationMenu": [
         {
           "command": "liquibase.editExistingLiquibaseConfiguration",
-          "when": "resourceLangId == properties"
+          "when": "resourceLangId == properties || resourceLangId == java-properties"
         }
       ]
     },
