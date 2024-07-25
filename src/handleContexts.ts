@@ -33,7 +33,7 @@ export function generateContextInputs(): PickPanelConfig[] {
     {
       input: new QuickPick({
         name: contextPreDialog,
-        placeHolder: "Select context using for the command",
+        placeHolder: "Select your context loading method",
         generateItems: (currentResults: DialogValues) => {
           // reset the cache
           cache = [];
@@ -72,7 +72,7 @@ export function generateContextInputs(): PickPanelConfig[] {
     {
       input: new LoadingQuickPick({
         name: "context",
-        placeHolder: "Choose any context",
+        placeHolder: "Choose any contexts",
         generateItems: async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
         reloadItems: async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
         reloadTooltip: "Reload contexts from changelog",
@@ -181,7 +181,7 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
             label: pCache,
           };
         }),
-        additionalTitle: "from recently loaded elements",
+        additionalPlaceholder: "from recently loaded elements",
       };
     } else if (result[0] === ContextOptions.LOAD_ALL_CONTEXT) {
       return await loadContextsFromChangelog(dialogValues);
@@ -199,10 +199,11 @@ async function loadContexts(dialogValues: DialogValues, cache: string[]): Promis
  */
 export async function loadContextsFromChangelog(dialogValues: DialogValues): Promise<QuickPickItems> {
   const items = await readContextValues(dialogValues);
-  return {
+  const quickPickItems: QuickPickItems = {
     items,
-    additionalTitle: "loaded from changelogs",
-  } as QuickPickItems;
+    additionalPlaceholder: "loaded from changelogs",
+  };
+  return quickPickItems;
 }
 
 /**

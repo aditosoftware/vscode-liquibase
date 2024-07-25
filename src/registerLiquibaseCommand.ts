@@ -71,30 +71,34 @@ export interface AdditionalCommandAction {
  * Registers a Liquibase command with VSCode, prompting the user with a series of pick panels
  * based on the provided configurations and then executes Liquibase update with the selected values.
  *
+ * @param title - the title that should be displayed over every input
  * @param action - Liquibase action to perform (e.g., "update").
  * @param pOriginPickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
  * @param additionalCommandAction - any optional additional elements for registering any command
  * @returns The registered command.
  */
 export function registerLiquibaseCommand(
+  title: string,
   action: string,
   pOriginPickPanelConfigs: ReadonlyArray<PickPanelConfig>,
   additionalCommandAction?: AdditionalCommandAction
 ): vscode.Disposable {
   return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
-    await addCommandAction(action, pOriginPickPanelConfigs, commandArgs, additionalCommandAction);
+    await addCommandAction(title, action, pOriginPickPanelConfigs, commandArgs, additionalCommandAction);
   });
 }
 
 /**
  * Adds the command action that should be registered by the command.
  *
+ * @param title - the title that should be displayed over every input
  * @param action - Liquibase action to perform (e.g., "update").
  * @param pOriginPickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
  * @param vscodeCommandArgs - the command arguments given by VSCode when trying to start the command execution
  * @param additionalCommandAction - any optional additional elements for registering any command
  */
 export async function addCommandAction(
+  title: string,
   action: string,
   pOriginPickPanelConfigs: ReadonlyArray<PickPanelConfig>,
   vscodeCommandArgs: VSCodeArguments,
@@ -119,7 +123,7 @@ export async function addCommandAction(
   try {
     // Handle the multi-step-input
     const dialogValues = await handleMultiStepInput(
-      action, // TODO korrekter titel?
+      title,
       pickPanelConfigs.map((pConfig) => pConfig.input),
       preBuiltDialogValues
     );

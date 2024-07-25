@@ -84,7 +84,7 @@ async function selectFromExistingConfigurations(pTitle: string): Promise<string 
   if (configurationNames && configurationNames.length !== 0) {
     const result: string | undefined = await vscode.window.showQuickPick(configurationNames, {
       title: pTitle,
-      placeHolder: "Pick your desired connection",
+      placeHolder: "Pick any connection",
     });
 
     if (result) {
@@ -114,7 +114,7 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
     new OpenDialog({
       name: locationKey,
       openDialogOptions: {
-        title: "Location of your existing liquibase.properties file",
+        openLabel: "Open properties file",
         canSelectFiles: true,
         canSelectFolders: false,
         canSelectMany: false,
@@ -149,6 +149,7 @@ export function displayAvailableDrivers(): void {
 
   const quickPick = vscode.window.createQuickPick();
   quickPick.items = getDrivers();
+  quickPick.placeholder = "Search all drivers";
   quickPick.ignoreFocusOut = false;
   quickPick.onDidAccept(() => {
     quickPick.selectedItems.forEach((selectedItem) => {
@@ -299,7 +300,7 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
           filters: {
             "Driver File": ["jar"],
           },
-          title: "Select the driver file you want to add",
+          openLabel: "Select the driver file",
         },
       })
     );
@@ -378,7 +379,7 @@ export const handleDriverInput = (
   oldDriverValues?: CustomDriverData,
   oldDriverName?: string
 ): void => {
-  handleMultiStepInput(`${oldDriverName ? "Edit the driver " + oldDriverName : "Create new driver"}`, inputs)
+  handleMultiStepInput(`${oldDriverName ? "Edit the driver '" + oldDriverName + "'" : "Add a new driver"}`, inputs)
     .then((dialogValues) => {
       if (dialogValues) {
         const driverFile = dialogValues.inputValues.get("driverFile")?.[0];

@@ -34,7 +34,7 @@ export async function removeConfiguration(): Promise<void> {
     new ConnectionType({ name: "propertyFile" }),
     new QuickPick({
       name: removeType,
-      placeHolder: "Choose how you wish to remove the configuration",
+      placeHolder: "Choose what you want to remove",
       generateItems: () => {
         return [
           {

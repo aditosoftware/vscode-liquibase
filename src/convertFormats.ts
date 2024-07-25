@@ -30,7 +30,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
         canSelectFiles: convertFile,
         canSelectFolders: !convertFile,
         defaultUri: vscode.Uri.file(getWorkFolder()),
-        title: `Select the ${convertFile ? "file" : "folder"} you want to convert`,
+        openLabel: `Select the ${convertFile ? "file" : "folder"} to convert`,
         filters: {
           Changelog: ["json", "sql", "xml", "yml", "yaml"],
           "All Files": ["*"],
@@ -46,7 +46,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
         canSelectFiles: false,
         canSelectFolders: true,
         defaultUri: vscode.Uri.file(getWorkFolder()),
-        title: "Select the folder where you want your new changelog to be written",
+        openLabel: "Select the output location",
       },
     }),
     new QuickPick({

@@ -113,11 +113,11 @@ suite("ConnectionType test", () => {
     [
       {
         connectionType: new ConnectionType({ name: "propertyFile" }),
-        expectedPlaceHolder: "Select one system",
+        expectedPlaceHolder: "Select your configuration",
       },
       {
         connectionType: new ConnectionType({ name: "referencePropertyFile" }),
-        expectedPlaceHolder: "Select one reference system",
+        expectedPlaceHolder: "Select your reference configuration",
       },
     ].forEach((pElement) => {
       /**
@@ -164,7 +164,7 @@ suite("ConnectionType test", () => {
 
           Sinon.assert.calledWithExactly(vscodeShowQuickPick, expectedQuickPickItems, {
             title,
-            placeHolder: "Select one system",
+            placeHolder: "Select your configuration",
             canPickMany: false,
           });
 

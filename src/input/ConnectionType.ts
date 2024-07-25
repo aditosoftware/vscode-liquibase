@@ -32,9 +32,13 @@ export class ConnectionType extends InputBase<ConnectionTypeOptions> {
     const configurations: vscode.QuickPickItem[] | undefined = await this.generateItems();
 
     if (configurations && configurations.length !== 0) {
+      const placeHolder = `Select your ${
+        this.inputOptions.name === REFERENCE_PROPERTY_FILE ? "reference " : ""
+      }configuration`;
+
       const selectedConnection: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(configurations, {
         title,
-        placeHolder: `Select one ${this.inputOptions.name === REFERENCE_PROPERTY_FILE ? "reference " : ""}system`,
+        placeHolder,
         canPickMany: false,
       });
 
