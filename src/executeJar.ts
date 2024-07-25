@@ -5,7 +5,11 @@ import { Logger } from "@aditosoftware/vscode-logging";
 import * as fs from "fs";
 import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
-import { getClearOutputChannelOnStartSetting, getLiquibaseFolder } from "./handleLiquibaseSettings";
+import {
+  getClearOutputChannelOnStartSetting,
+  getLiquibaseFolder,
+  getOpenOutputChannelOnCommandStartSetting,
+} from "./handleLiquibaseSettings";
 
 /**
  * The error that was given during the process execution.
@@ -97,6 +101,10 @@ export function executeJarAsync<ErrorCode extends number>(
 
         if (getClearOutputChannelOnStartSetting()) {
           Logger.getLogger().clear();
+        }
+
+        if (getOpenOutputChannelOnCommandStartSetting()) {
+          Logger.getLogger().showOutputChannel();
         }
 
         Logger.getLogger().info({ message: `${whatToExecute} will be executed` });

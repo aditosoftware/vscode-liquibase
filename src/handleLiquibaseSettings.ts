@@ -99,3 +99,13 @@ export function getClearOutputChannelOnStartSetting(): boolean {
   const configuration = vscode.workspace.getConfiguration(configurationName);
   return configuration.get("clearOutputChannelOnStart", true);
 }
+
+/**
+ * Returns the setting if the output channel should be opened on start.
+ *
+ * @returns `true` when the output channel should be opened on start, otherwise `false`
+ */
+export function getOpenOutputChannelOnCommandStartSetting(): boolean {
+  const configuration = vscode.workspace.getConfiguration(configurationName);
+  return configuration.get("openOutputChannelOnCommandStart", true);
+}

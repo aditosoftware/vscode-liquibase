@@ -3,6 +3,7 @@ import {
   getDefaultDatabaseForConfiguration,
   getLiquibaseConfigurationPath,
   getLiquibaseFolder,
+  getOpenOutputChannelOnCommandStartSetting,
 } from "../../handleLiquibaseSettings";
 import * as vscode from "vscode";
 import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";
@@ -99,6 +100,28 @@ suite("handleLiquibaseSettings", () => {
               assert.fail(reject);
             }
           );
+      });
+    });
+  });
+
+  /**
+   * Tests the method `getOpenOutputChannelOnCommandStartSetting`
+   */
+  suite("getOpenOutputChannelOnCommandStartSetting", () => {
+    [
+      { setSetting: undefined, expected: true },
+      { setSetting: false, expected: false },
+      { setSetting: true, expected: true },
+    ].forEach((pArgument) => {
+      /**
+       * Tests that the correct result will be returned for the given setting
+       */
+      test(`should return correct result for given setting${pArgument.setSetting}`, async () => {
+        await vscode.workspace
+          .getConfiguration()
+          .update("liquibase.openOutputChannelOnCommandStart", pArgument.setSetting);
+
+        assert.strictEqual(getOpenOutputChannelOnCommandStartSetting(), pArgument.expected);
       });
     });
   });
