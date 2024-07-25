@@ -84,7 +84,7 @@ async function selectFromExistingConfigurations(pTitle: string): Promise<string 
   if (configurationNames && configurationNames.length !== 0) {
     const result: string | undefined = await vscode.window.showQuickPick(configurationNames, {
       title: pTitle,
-      placeHolder: "Pick your desired connection",
+      placeHolder: "Pick any connection",
     });
 
     if (result) {
@@ -108,13 +108,13 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
     new InputBox({
       name: nameKey,
       inputBoxOptions: {
-        title: "The unique name for your configuration",
+        placeHolder: "The unique name for your configuration",
       },
     }),
     new OpenDialog({
       name: locationKey,
       openDialogOptions: {
-        title: "Location of your existing liquibase.properties file",
+        openLabel: "Open properties file",
         canSelectFiles: true,
         canSelectFolders: false,
         canSelectMany: false,
@@ -125,7 +125,7 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
     }),
   ];
 
-  const dialogValues = await handleMultiStepInput(inputs);
+  const dialogValues = await handleMultiStepInput("Add existing configuration", inputs);
 
   if (dialogValues) {
     const name = dialogValues.inputValues.get(nameKey)?.[0];
@@ -147,36 +147,37 @@ export function displayAvailableDrivers(): void {
     tooltip: "Reload",
   };
 
-  const quickpick = vscode.window.createQuickPick();
-  quickpick.items = getDrivers();
-  quickpick.ignoreFocusOut = false;
-  quickpick.onDidAccept(() => {
-    quickpick.selectedItems.forEach((selectedItem) => {
+  const quickPick = vscode.window.createQuickPick();
+  quickPick.items = getDrivers();
+  quickPick.placeholder = "Search all drivers";
+  quickPick.ignoreFocusOut = false;
+  quickPick.onDidAccept(() => {
+    quickPick.selectedItems.forEach((selectedItem) => {
       if (selectedItem.label === "Add New Driver") {
-        quickpick.dispose();
+        quickPick.dispose();
         modifyOrAddDriver();
       }
     });
   });
-  quickpick.title = "Available Drivers";
-  quickpick.buttons = [vscode.QuickInputButtons.Back, reload];
-  quickpick.onDidTriggerItemButton((selectedAction) => {
+  quickPick.title = "Available Drivers";
+  quickPick.buttons = [reload];
+  quickPick.onDidTriggerItemButton((selectedAction) => {
     if (selectedAction.button.tooltip === "delete") {
-      quickpick.dispose();
+      quickPick.dispose();
       deleteDriver(selectedAction.item.label);
     } else if (selectedAction.button.tooltip === "edit") {
-      quickpick.dispose();
+      quickPick.dispose();
       const driverJSON = getCustomDrivers();
       modifyOrAddDriver(driverJSON[selectedAction.item.label], selectedAction.item.label);
     }
   });
-  quickpick.onDidTriggerButton((button) => {
+  quickPick.onDidTriggerButton((button) => {
     if (button === reload) {
-      quickpick.dispose();
+      quickPick.dispose();
       displayAvailableDrivers();
     }
   });
-  quickpick.show();
+  quickPick.show();
 }
 
 /**
@@ -267,7 +268,7 @@ export function deleteDriver(driverName: string): void {
       confirmButtonName: "Delete Driver",
     }),
   ];
-  handleMultiStepInput(input)
+  handleMultiStepInput("Delete driver", input)
     .then((dialogValues) => {
       if (dialogValues && dialogValues.inputValues.get("confirmation")?.[0] === "true") {
         removeDriverFiles(driverName);
@@ -299,7 +300,7 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
           filters: {
             "Driver File": ["jar"],
           },
-          title: "Select the driver file you want to add",
+          openLabel: "Select the driver file",
         },
       })
     );
@@ -314,8 +315,7 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
         validateInput(value) {
           return validateInputBoxTextValue(value, "Driver name must not be empty");
         },
-        placeHolder: "Your Driver Name",
-        title: "Enter the visual name of the driver",
+        placeHolder: "Enter the visual name of the driver",
       },
     }),
     new InputBox({
@@ -326,8 +326,7 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
         validateInput(value) {
           return validateInputBoxTextValue(value, "JDBC name must not be empty");
         },
-        placeHolder: "jdbc:yourDriver://",
-        title: "Enter the jdbc name of the driver",
+        placeHolder: "Enter the jdbc name of the driver, e.g. jdbc:yourDriver://",
       },
     }),
     new InputBox({
@@ -338,8 +337,7 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
         validateInput(value) {
           return validateInputBoxTextValue(value, "Driver class must not be empty");
         },
-        placeHolder: "org.yourDriver.Driver",
-        title: "Enter the driver class of the driver",
+        placeHolder: "Enter the driver class of the driver, e.g. org.yourDriver.Driver",
       },
     }),
     new InputBox({
@@ -347,11 +345,10 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
       inputBoxOptions: {
         value: oldDriverValues?.port?.toString(),
         ignoreFocusOut: true,
-        placeHolder: "3306",
         validateInput: (input) => {
           return validateInputBoxPortValue(input);
         },
-        title: "Enter the default port of the driver",
+        placeHolder: "Enter the default port of the driver, e.g. 3306",
       },
     }),
     new InputBox({
@@ -362,8 +359,7 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
         validateInput(value) {
           return validateInputBoxTextValue(value, "Separator must not be empty");
         },
-        placeHolder: "/ or ; or , or : or - or _ or . or | or \\ or any other character",
-        title: "Enter the separator of the driver",
+        placeHolder: "Enter the separator of the driver, e.g. / or ; or any other character",
       },
     })
   );
@@ -383,7 +379,7 @@ export const handleDriverInput = (
   oldDriverValues?: CustomDriverData,
   oldDriverName?: string
 ): void => {
-  handleMultiStepInput(inputs)
+  handleMultiStepInput(`${oldDriverName ? "Edit the driver '" + oldDriverName + "'" : "Add a new driver"}`, inputs)
     .then((dialogValues) => {
       if (dialogValues) {
         const driverFile = dialogValues.inputValues.get("driverFile")?.[0];

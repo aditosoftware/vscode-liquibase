@@ -152,7 +152,8 @@ suite("configurationCommands", () => {
           Sinon.assert.calledOnce(inputBox);
           Sinon.assert.calledOnce(openDialog);
           Sinon.assert.calledWith(openDialog, {
-            title: "Location of your existing liquibase.properties file (Step 2 of 2)",
+            title: "Add existing configuration (Step 2 of 2)",
+            openLabel: "Open properties file",
             canSelectFiles: true,
             canSelectFolders: false,
             canSelectMany: false,
@@ -500,32 +501,37 @@ function createDriverInputs(
 ): [OpenDialog, InputBox, InputBox, InputBox, InputBox, InputBox] {
   const driverFileInput = new OpenDialog({
     name: "driverFile",
-    openDialogOptions: {},
+    openDialogOptions: { openLabel: "foo" },
   });
   Sinon.stub(driverFileInput, "showDialog").resolves([driverFilePath]);
 
   const visualName = new InputBox({
     name: "visualName",
+    inputBoxOptions: { placeHolder: "foo" },
   });
   Sinon.stub(visualName, "showDialog").resolves(visualNameOutput);
 
   const jdbcName = new InputBox({
     name: "jdbcName",
+    inputBoxOptions: { placeHolder: "foo" },
   });
   Sinon.stub(jdbcName, "showDialog").resolves("jdbcName");
 
   const driverClass = new InputBox({
     name: "driverClass",
+    inputBoxOptions: { placeHolder: "foo" },
   });
   Sinon.stub(driverClass, "showDialog").resolves("driverClass");
 
   const defaultPort = new InputBox({
     name: "defaultPort",
+    inputBoxOptions: { placeHolder: "foo" },
   });
   Sinon.stub(defaultPort, "showDialog").resolves("1");
 
   const separator = new InputBox({
     name: "separator",
+    inputBoxOptions: { placeHolder: "foo" },
   });
   Sinon.stub(separator, "showDialog").resolves("/");
 

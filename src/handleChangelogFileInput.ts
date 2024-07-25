@@ -39,8 +39,7 @@ export class HandleChangelogFileInput {
       {
         input: new QuickPick({
           name: this.CHANGELOG_QUICK_PICK_NAME,
-          placeholder: "Select one changelog",
-          title: "Select the changelog file for the command",
+          placeHolder: "Select the changelog file",
           generateItems: this.generateItemsForChangelogSelection,
           onBeforeInput: this.isExtraQueryForChangelogNeeded,
           onAfterInput: (dialogValues) => this.setExtraChangelogCorrectly(dialogValues, this.CHANGELOG_QUICK_PICK_NAME),
@@ -55,6 +54,7 @@ export class HandleChangelogFileInput {
             canSelectFiles: true,
             canSelectFolders: false,
             canSelectMany: false,
+            openLabel: "Select the changelog",
             filters: {
               Changelog: ["xml", "json", "yaml", "yml", "sql"],
               "All Files": ["*"],

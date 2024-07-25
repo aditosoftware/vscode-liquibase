@@ -204,7 +204,7 @@ alter table person add column country varchar(2)
  */
 function assertLoadContexts(dialogValues: DialogValues, expectedItems: vscode.QuickPickItem[], done: Mocha.Done): void {
   const expected: QuickPickItems = {
-    additionalTitle: "loaded from changelogs",
+    additionalPlaceholder: "loaded from changelogs",
     items: expectedItems,
   };
 

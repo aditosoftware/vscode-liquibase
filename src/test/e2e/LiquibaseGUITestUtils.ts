@@ -19,6 +19,10 @@ import { DockerTestUtils } from "../suite/DockerTestUtils";
 import path from "path";
 import * as fs from "fs";
 import { CHOOSE_CHANGELOG_OPTION, ContextOptions, RemoveCacheOptions } from "../../constants";
+import chai from "chai";
+import chaiString from "chai-string";
+
+chai.use(chaiString);
 
 /**
  * General Util methods for e2e / GUI tests with Liquibase.
@@ -457,6 +461,8 @@ export class LiquibaseGUITestUtils {
       // if it is there, select it
       await input.selectQuickPick(lastFolderName);
     }
+
+    chai.assert.include(await input.getText(), folderName, "check that folder selection is correct");
 
     // then confirm normally the dialog
     await input.confirm();

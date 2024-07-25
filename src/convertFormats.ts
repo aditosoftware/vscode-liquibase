@@ -30,7 +30,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
         canSelectFiles: convertFile,
         canSelectFolders: !convertFile,
         defaultUri: vscode.Uri.file(getWorkFolder()),
-        title: `Select the ${convertFile ? "file" : "folder"} you want to convert`,
+        openLabel: `Select the ${convertFile ? "file" : "folder"} to convert`,
         filters: {
           Changelog: ["json", "sql", "xml", "yml", "yaml"],
           "All Files": ["*"],
@@ -46,12 +46,12 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
         canSelectFiles: false,
         canSelectFolders: true,
         defaultUri: vscode.Uri.file(getWorkFolder()),
-        title: "Select the folder where you want your new changelog to be written",
+        openLabel: "Select the output location",
       },
     }),
     new QuickPick({
       name: formatKey,
-      title: "The new format for your changelogs",
+      placeHolder: "The new format for your changelogs",
       allowMultiple: false,
       generateItems: () => {
         return [{ label: "JSON" }, { label: "SQL" }, { label: "XML" }, { label: "YAML" }] as vscode.QuickPickItem[];
@@ -61,8 +61,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
     new InputBox({
       name: databaseTypeKey,
       inputBoxOptions: {
-        title: "The database type for your new SQL files",
-        placeHolder: "mariadb, mssql, postgresql, ...",
+        placeHolder: "The database type for your new SQL files, e.g. mariadb, mssql, postgresql, ...",
       },
       onBeforeInput: (dialogValues) => {
         return dialogValues.inputValues.get(formatKey)?.[0] === "SQL";
@@ -70,7 +69,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
     }),
   ];
 
-  const dialogValues = await handleMultiStepInput(inputElements);
+  const dialogValues = await handleMultiStepInput("Convert your changelogs to a new format", inputElements);
 
   if (dialogValues) {
     const input = selectedFile?.fsPath ?? dialogValues.inputValues.get(inputKey)?.[0];

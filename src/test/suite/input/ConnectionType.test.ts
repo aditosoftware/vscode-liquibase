@@ -11,6 +11,8 @@ import * as vscode from "vscode";
 suite("ConnectionType test", () => {
   const connectionType = new ConnectionType({ name: "propertyFile" });
 
+  const title = "My title";
+
   let readConfigurationStub: Sinon.SinonStub;
 
   /**
@@ -59,7 +61,7 @@ suite("ConnectionType test", () => {
       readConfigurationStub.resolves(undefined);
 
       connectionType
-        .showDialog(new DialogValues(), 2, 4)
+        .showDialog(new DialogValues(), title)
         .then((result) => {
           assert.deepStrictEqual(undefined, result);
 
@@ -111,11 +113,11 @@ suite("ConnectionType test", () => {
     [
       {
         connectionType: new ConnectionType({ name: "propertyFile" }),
-        expectedTitle: "Select one system (Step 2 of 4)",
+        expectedPlaceHolder: "Select your configuration",
       },
       {
         connectionType: new ConnectionType({ name: "referencePropertyFile" }),
-        expectedTitle: "Select one reference system (Step 2 of 4)",
+        expectedPlaceHolder: "Select your reference configuration",
       },
     ].forEach((pElement) => {
       /**
@@ -131,13 +133,13 @@ suite("ConnectionType test", () => {
         });
 
         pElement.connectionType
-          .showDialog(new DialogValues(), 2, 4)
+          .showDialog(new DialogValues(), title)
           .then((result) => {
             assert.deepStrictEqual("my selected detail", result);
 
             Sinon.assert.calledWithExactly(vscodeShowQuickPick, expectedQuickPickItems, {
-              title: pElement.expectedTitle,
-              placeHolder: "Pick any system",
+              title,
+              placeHolder: pElement.expectedPlaceHolder,
               canPickMany: false,
             });
 
@@ -156,13 +158,13 @@ suite("ConnectionType test", () => {
       vscodeShowQuickPick.resolves(undefined);
 
       connectionType
-        .showDialog(new DialogValues(), 2, 4)
+        .showDialog(new DialogValues(), title)
         .then((result) => {
           assert.deepStrictEqual(undefined, result);
 
           Sinon.assert.calledWithExactly(vscodeShowQuickPick, expectedQuickPickItems, {
-            title: "Select one system (Step 2 of 4)",
-            placeHolder: "Pick any system",
+            title,
+            placeHolder: "Select your configuration",
             canPickMany: false,
           });
 

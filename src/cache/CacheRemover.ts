@@ -54,16 +54,16 @@ export class CacheRemover {
       return;
     }
 
-    const result = await handleMultiStepInput([
+    const result = await handleMultiStepInput("Remove from cache", [
       new QuickPick({
         name: CacheRemover.removeOption,
-        title: "Pick what you want to remove",
+        placeHolder: "Pick what you want to remove",
         generateItems: this.generateRemoveOptions,
       }),
 
       new QuickPick({
         name: PROPERTY_FILE,
-        title: "Select any number of connections you want to remove from the recently loaded elements",
+        placeHolder: "Select any number of connections you want to remove",
         generateItems: () => this.generatePropertiesForCacheRemoval(cache),
         allowMultiple: true,
         onBeforeInput: this.shouldShowPropertyFileSelection,
