@@ -192,6 +192,11 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "Clears the output channel on the start of each command."
+        },
+        "liquibase.openOutputChannelOnCommandStart": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Opens the output channel at the start of every command execution."
         }
       }
     },

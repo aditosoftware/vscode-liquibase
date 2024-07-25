@@ -82,7 +82,7 @@ export class LiquibaseGUITestUtils {
    * Opens the output panel with the channel Liquibase.
    */
   private static async openOutputPanel(): Promise<void> {
-    if (!this.outputPanel) {
+    if (!this.outputPanel || !(await new BottomBarPanel().isDisplayed())) {
       await VSBrowser.instance.driver.wait(
         async () => {
           try {
