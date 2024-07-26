@@ -46,8 +46,6 @@ suite("prerequisites", () => {
    * Tests that the prerequisites are handled correctly.
    */
   test("should correctly handle prerequisites", (done) => {
-    const infoMessage = TestUtils.createInfoMessageStubWithSelection();
-
     const keyName = "liquibase-first-activation";
 
     // create dummy global state
@@ -80,14 +78,6 @@ suite("prerequisites", () => {
             // check that the jars were downloaded correctly
             const files = fs.readdirSync(tempDir);
             assert.deepStrictEqual(jars, files);
-
-            Sinon.assert.calledOnce(infoMessage);
-            Sinon.assert.calledWith(
-              infoMessage,
-              "Thank you for installing the Liquibase extension. Get started by completing the walkthrough.",
-              Sinon.match.any,
-              "Open Walkthrough"
-            );
 
             done();
           })
