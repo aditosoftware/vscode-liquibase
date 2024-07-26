@@ -19,7 +19,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Added a command to convert a file or a folder from one liquibase format to another format
 - Added a status bar item to execute all liquibase commands
 - Added an overview action in the status bar to create the db-doc of the database
-- Added a info message on first startup to inform the user about the existence of a walkthrough
 - Opened the output channel per default, if a command was executed. Behavior can be changed with the setting `openOutputChannelOnCommandStart`
 - Added the selection of the contexts to the cache
 
@@ -34,6 +33,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - changed "Additional Elements" to "Advanced properties"
 - Upgraded "liquibase-core"-dependency from 4.24.0 to 4.28.0
 - changed changelog selection from a folder selection to a cached selection with the recent used changelogs saved
+- changed titles and placeholders in various inputs
 - Changed the order of the cache selection: "Use any of the recently loaded contexts" is now the top-most item, and "Do not use any contexts" is now the last item.
 
 ### Fixed

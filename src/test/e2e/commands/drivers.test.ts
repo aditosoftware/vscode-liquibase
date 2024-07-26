@@ -31,7 +31,7 @@ suite("Drivers ...", function () {
 
     await LiquibaseGUITestUtils.selectFolder(input, LiquibaseGUITestUtils.WORKSPACE_PATH);
 
-    await assertEnclosingElementContainsText(input, "Select the driver file you want to add (Step 1 of 6)");
+    await assertEnclosingElementContainsText(input, "Add a new driver (Step 1 of 6)");
     await assertEnclosingElementContainsText(input, "Please select a file.");
 
     await writeInput(input, path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "dummy.jar"));
@@ -41,7 +41,7 @@ suite("Drivers ...", function () {
 
     await writeInput(input, " ");
 
-    await assertEnclosingElementContainsText(input, "Enter the visual name of the driver (Step 2 of 6)");
+    await assertEnclosingElementContainsText(input, "Add a new driver (Step 2 of 6)");
     await assertEnclosingElementContainsText(input, "Driver name must not be empty");
 
     await writeInput(input, "visualName");
@@ -50,7 +50,7 @@ suite("Drivers ...", function () {
 
     await writeInput(input, " ");
 
-    await assertEnclosingElementContainsText(input, "Enter the jdbc name of the driver (Step 3 of 6)");
+    await assertEnclosingElementContainsText(input, "Add a new driver (Step 3 of 6)");
     await assertEnclosingElementContainsText(input, "JDBC name must not be empty");
 
     await writeInput(input, "jdbcName");
@@ -59,7 +59,7 @@ suite("Drivers ...", function () {
 
     await writeInput(input, " ");
 
-    await assertEnclosingElementContainsText(input, "Enter the driver class of the driver (Step 4 of 6)");
+    await assertEnclosingElementContainsText(input, "Add a new driver (Step 4 of 6)");
     await assertEnclosingElementContainsText(input, "Driver class must not be empty");
 
     await writeInput(input, "driverClass");
@@ -68,14 +68,14 @@ suite("Drivers ...", function () {
 
     await writeInput(input, " ");
 
-    await assertEnclosingElementContainsText(input, "Enter the default port of the driver (Step 5 of 6)");
+    await assertEnclosingElementContainsText(input, "Add a new driver (Step 5 of 6)");
     await assertEnclosingElementContainsText(input, "Port must not be empty");
 
     await writeInput(input, "a");
 
     // check for NaN
 
-    await assertEnclosingElementContainsText(input, "Enter the default port of the driver (Step 5 of 6)");
+    await assertEnclosingElementContainsText(input, "Add a new driver (Step 5 of 6)");
     await assertEnclosingElementContainsText(input, "Port must be a number");
 
     await writeInput(input, "1");
@@ -84,7 +84,7 @@ suite("Drivers ...", function () {
 
     await writeInput(input, " ");
 
-    await assertEnclosingElementContainsText(input, "Enter the separator of the driver (Step 6 of 6)");
+    await assertEnclosingElementContainsText(input, "Add a new driver (Step 6 of 6)");
     await assertEnclosingElementContainsText(input, "Separator must not be empty");
 
     await writeInput(input, "separator");

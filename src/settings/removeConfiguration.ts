@@ -34,7 +34,7 @@ export async function removeConfiguration(): Promise<void> {
     new ConnectionType({ name: "propertyFile" }),
     new QuickPick({
       name: removeType,
-      title: "Choose how you wish to remove the configuration",
+      placeHolder: "Choose what you want to remove",
       generateItems: () => {
         return [
           {
@@ -60,7 +60,7 @@ export async function removeConfiguration(): Promise<void> {
   ];
 
   try {
-    const dialogResult = await handleMultiStepInput(inputs);
+    const dialogResult = await handleMultiStepInput("Remove existing configuration", inputs);
     if (dialogResult) {
       await handleDialogResults(dialogResult);
     }

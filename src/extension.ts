@@ -34,7 +34,7 @@ import { generateContextInputs } from "./handleContexts";
 import { ConnectionType, PROPERTY_FILE, REFERENCE_PROPERTY_FILE } from "./input/ConnectionType";
 import { CacheHandler, CacheRemover } from "./cache/";
 import { removeConfiguration } from "./settings/removeConfiguration";
-import { folderSelectionName } from "./constants";
+import { folderSelectionName, selectOutputFolder } from "./constants";
 import { convertFormats } from "./convertFormats";
 
 /**
@@ -233,11 +233,11 @@ function registerCommands(context: vscode.ExtensionContext): void {
 
   // Command that will be executed when the extension command is triggered
   context.subscriptions.push(
-    registerLiquibaseCommand("update", [...generatePropertyFileDialogOptions(true, true)], {
+    registerLiquibaseCommand("Update your database", "update", [...generatePropertyFileDialogOptions(true, true)], {
       searchPathRequired: true,
     }),
 
-    registerLiquibaseCommand("drop-all", [
+    registerLiquibaseCommand("Drop every content from your database", "drop-all", [
       ...generatePropertyFileDialogOptions(false, false),
       {
         input: new ConfirmationDialog({
@@ -264,13 +264,21 @@ function registerCommands(context: vscode.ExtensionContext): void {
       },
     ]),
 
-    registerLiquibaseCommand("validate", [...generatePropertyFileDialogOptions(true, false)], {
-      searchPathRequired: true,
-    }),
+    registerLiquibaseCommand(
+      "Validate the content of your changelogs",
+      "validate",
+      [...generatePropertyFileDialogOptions(true, false)],
+      {
+        searchPathRequired: true,
+      }
+    ),
 
-    registerLiquibaseCommand("status", [...generatePropertyFileDialogOptions(true, true)]),
+    registerLiquibaseCommand("Find out the not deployed changesets", "status", [
+      ...generatePropertyFileDialogOptions(true, true),
+    ]),
 
     registerLiquibaseCommand(
+      "Compare two databases",
       "diff",
       [
         ...generatePropertyFileDialogOptions(false, false),
@@ -283,6 +291,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new OpenDialog({
             name: folderSelectionName,
             openDialogOptions: {
+              openLabel: selectOutputFolder,
               canSelectFiles: false,
               canSelectFolders: true,
               canSelectMany: false,
@@ -294,8 +303,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "The file name where your diff should be written",
-              placeHolder: "any file name",
+              placeHolder: "The file name under which your diff should be written, e.g. diff.txt",
               value: "diff.txt",
             },
           }),
@@ -310,6 +318,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
 
     // Generate-Changelog
     registerLiquibaseCommand(
+      "Generate a changelog from your database",
       "generate-changelog",
       [
         ...generatePropertyFileDialogOptions(false, false),
@@ -318,6 +327,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new OpenDialog({
             name: folderSelectionName,
             openDialogOptions: {
+              openLabel: selectOutputFolder,
               canSelectFiles: false,
               canSelectFolders: true,
               canSelectMany: false,
@@ -328,8 +338,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "Choose a File Name",
-              placeHolder: "any file name with an extension",
+              placeHolder: "The file name under which changelog should be written, e.g. changelog.xml",
               value: "changelog.xml",
             },
           }),
@@ -350,7 +359,6 @@ function registerCommands(context: vscode.ExtensionContext): void {
                 ),
             },
             inputBoxOptions: {
-              title: "Choose any objects that should be included",
               placeHolder: "The tables for which you want the changelog generated",
               ignoreFocusOut: true,
               validateInput,
@@ -365,6 +373,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
     ),
 
     registerLiquibaseCommand(
+      "Generate database documentation",
       "db-doc",
       [
         ...generatePropertyFileDialogOptions(true, false),
@@ -372,6 +381,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new OpenDialog({
             name: folderSelectionName,
             openDialogOptions: {
+              openLabel: selectOutputFolder,
               canSelectFiles: false,
               canSelectFolders: true,
               canSelectMany: false,
@@ -386,15 +396,25 @@ function registerCommands(context: vscode.ExtensionContext): void {
       }
     ),
 
-    registerLiquibaseCommand("unexpected-changesets", [...generatePropertyFileDialogOptions(true, true)], {
-      commandLineArgs: ["--verbose"],
-    }),
+    registerLiquibaseCommand(
+      "Find changelogs that are in the database but not in the current changelog",
+      "unexpected-changesets",
+      [...generatePropertyFileDialogOptions(true, true)],
+      {
+        commandLineArgs: ["--verbose"],
+      }
+    ),
 
-    registerLiquibaseCommand("changelog-sync", [...generatePropertyFileDialogOptions(true, true)]),
+    registerLiquibaseCommand("Mark not deployed changelogs as executed", "changelog-sync", [
+      ...generatePropertyFileDialogOptions(true, true),
+    ]),
 
-    registerLiquibaseCommand("clear-checksums", [...generatePropertyFileDialogOptions(false, false)]),
+    registerLiquibaseCommand("Clear the checksums of all changelogs in the database", "clear-checksums", [
+      ...generatePropertyFileDialogOptions(false, false),
+    ]),
 
     registerLiquibaseCommand(
+      "List all deployed changesets",
       "history",
       [
         ...generatePropertyFileDialogOptions(false, false),
@@ -402,6 +422,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new OpenDialog({
             name: folderSelectionName,
             openDialogOptions: {
+              openLabel: selectOutputFolder,
               canSelectFiles: false,
               canSelectFolders: true,
               canSelectMany: false,
@@ -412,8 +433,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "The file name where your history should be written",
-              placeHolder: "any file name with extension",
+              placeHolder: "The file name under which your history file should be written, e.g. history.txt",
               value: "history.txt",
             },
           }),
@@ -422,7 +442,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
         {
           input: new QuickPick({
             name: "historyFormat",
-            title: "Choose the desired history format",
+            placeHolder: "Choose the desired history format",
             generateItems: () => [
               {
                 label: "TABULAR",
@@ -440,39 +460,39 @@ function registerCommands(context: vscode.ExtensionContext): void {
       }
     ),
 
-    registerLiquibaseCommand("tag", [
+    registerLiquibaseCommand("Create a tag", "tag", [
       ...generatePropertyFileDialogOptions(false, false),
       {
         input: new InputBox({
           name: "tagName",
           inputBoxOptions: {
-            title: "Choose a name of new Tag",
+            placeHolder: "Choose a name for the new tag",
           },
         }),
         cmdArgs: "--tag",
       },
     ]),
 
-    registerLiquibaseCommand("tag-exists", [
+    registerLiquibaseCommand("Check if a tag exists", "tag-exists", [
       ...generatePropertyFileDialogOptions(false, false),
       {
         input: new InputBox({
           name: "tagName",
           inputBoxOptions: {
-            title: "Tag to check if it exists",
+            placeHolder: "The name of the tag",
           },
         }),
         cmdArgs: "--tag",
       },
     ]),
 
-    registerLiquibaseCommand("rollback", [
+    registerLiquibaseCommand("Rollback to specific tag", "rollback", [
       ...generatePropertyFileDialogOptions(true, true),
       {
         input: new InputBox({
           name: "tagName",
           inputBoxOptions: {
-            title: "Tag to rollback to",
+            placeHolder: "Tag to rollback to",
           },
         }),
         cmdArgs: "--tag",
@@ -480,6 +500,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
     ]),
 
     registerLiquibaseCommand(
+      "Generate SQL File for incoming changes",
       "update-sql",
       [
         ...generatePropertyFileDialogOptions(true, true),
@@ -487,6 +508,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new OpenDialog({
             name: folderSelectionName,
             openDialogOptions: {
+              openLabel: selectOutputFolder,
               canSelectFiles: false,
               canSelectFolders: true,
               canSelectMany: false,
@@ -497,8 +519,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
           input: new InputBox({
             name: fileName,
             inputBoxOptions: {
-              title: "The file name where your update sql should be written",
-              placeHolder: "any filename with extension",
+              placeHolder: "The file name under which your update sql should be written",
               value: "update-sql.sql",
             },
           }),
@@ -547,14 +568,14 @@ export function validateInput(value: string): string | null {
 /**
  * Generates an input for the `--diff-types` and pre-selects the default types.
  *
- * @param title - the title that should be set in the dialog
+ * @param placeHolder - the placeHolder that should be set in the dialog
  * @returns the pickPanelConfig with all the diff types
  */
-function generateDiffTypes(title: string = "Choose any diff types"): PickPanelConfig {
+function generateDiffTypes(placeHolder: string = "Choose any diff types"): PickPanelConfig {
   return {
     input: new QuickPick({
       name: "diffTypes",
-      title,
+      placeHolder,
       //all possible diffTypes for the diff dialog
       generateItems: () => [
         { label: "catalogs", description: "" },

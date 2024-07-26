@@ -24,6 +24,8 @@ import { TransferActionForCommand } from "../../TransferActionForCommand";
  * Tests the class `registerLiquibaseCommand`.
  */
 suite("registerLiquibaseCommand", () => {
+  const inputBoxOptions = { placeHolder: "placeHolder" };
+
   /**
    * Inits the logger before all tests.
    */
@@ -53,7 +55,7 @@ suite("registerLiquibaseCommand", () => {
      * Tests that the call to the method without any configuration does work
      */
     test("should work without configuration", async () => {
-      await assert.doesNotReject(addCommandAction("test-command", [], []));
+      await assert.doesNotReject(addCommandAction("my title", "test-command", [], []));
     });
 
     /**
@@ -68,6 +70,7 @@ suite("registerLiquibaseCommand", () => {
 
       await assert.doesNotReject(
         addCommandAction(
+          "my title",
           "test-command",
           [
             {
@@ -83,12 +86,13 @@ suite("registerLiquibaseCommand", () => {
      * Tests that everything works when a input step was cancelled.
      */
     test("should work when command was cancelled", async () => {
-      const inputBox = new InputBox({ name: "foo" });
+      const inputBox = new InputBox({ name: "foo", inputBoxOptions });
 
       Sinon.stub(inputBox, "showDialog").resolves(undefined);
 
       await assert.doesNotReject(
         addCommandAction(
+          "my title",
           "test-command",
           [
             {
@@ -106,7 +110,7 @@ suite("registerLiquibaseCommand", () => {
     test("should execute before command action", async () => {
       let called = false;
 
-      await addCommandAction("test-command", [], [], {
+      await addCommandAction("my title", "test-command", [], [], {
         beforeCommandAction: async () => {
           called = true;
         },
@@ -240,7 +244,7 @@ suite("registerLiquibaseCommand", () => {
         [new TransferDataForCommand("foo", "bar")],
         [
           {
-            input: new InputBox({ name: "foo" }),
+            input: new InputBox({ name: "foo", inputBoxOptions }),
           },
         ]
       );
@@ -381,7 +385,7 @@ suite("registerLiquibaseCommand", () => {
           input: new ConnectionType({ name: PROPERTY_FILE }),
         },
         {
-          input: new InputBox({ name: "bar" }),
+          input: new InputBox({ name: "bar", inputBoxOptions }),
           cmdArgs: "--my-args",
           createCmdArgs: () => ["--additional-arg=true", "--force=true"],
         },

@@ -274,7 +274,7 @@ alter table person add column country varchar(2)
           { label: "baz", picked: true },
           { label: "foo", picked: true },
         ],
-        additionalTitle: "from recently loaded elements",
+        additionalPlaceholder: "from recently loaded elements",
       };
 
       const dialogValues = new DialogValues();
@@ -296,7 +296,7 @@ alter table person add column country varchar(2)
     test("should load contexts from changelog", async () => {
       const expected: QuickPickItems = {
         items: [],
-        additionalTitle: "loaded from changelogs",
+        additionalPlaceholder: "loaded from changelogs",
       };
 
       const dialogValues = new DialogValues();
@@ -408,7 +408,7 @@ alter table person add column country varchar(2)
  */
 function assertLoadContexts(dialogValues: DialogValues, expectedItems: vscode.QuickPickItem[], done: Mocha.Done): void {
   const expected: QuickPickItems = {
-    additionalTitle: "loaded from changelogs",
+    additionalPlaceholder: "loaded from changelogs",
     items: expectedItems,
   };
 
