@@ -67,6 +67,13 @@ export class WebviewTestUtils {
    */
   static async openAndExecuteOnWebview(toExecute: (webView: WebView) => Promise<void>): Promise<void> {
     await LiquibaseGUITestUtils.clearNotifications();
+
+    // if we have any remaining input fields, close them
+    const input = new InputBox();
+    if (await input.isDisplayed()) {
+      await input.cancel();
+    }
+
     const editorView = new EditorView();
     if (await editorView.isDisplayed()) {
       await editorView.closeAllEditors();
