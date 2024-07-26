@@ -13,7 +13,7 @@ import * as fs from "fs";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
 import assert from "assert";
 import { setCacheHandler } from "../../../../extension";
-import { CacheHandler } from "../../../../cache";
+import { Cache, CacheHandler } from "../../../../cache";
 import { RemoveConfigurationOptions } from "../../../../constants";
 
 /**
@@ -71,18 +71,36 @@ suite("removeConfiguration", () => {
     const settingsFile = path.join(tempDir, "settings.json");
     fs.writeFileSync(settingsFile, JSON.stringify({ foo: propertyFile, bar: "baz" }));
 
+    const cache: Cache = {
+      [propertyFile]: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b"] },
+          },
+          {
+            path: "baz",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b"], selectedContexts: ["a"] },
+          },
+        ],
+      },
+      bar: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: {
+              loadedContexts: ["b", "a", "r"],
+            },
+          },
+        ],
+      },
+    };
+
     const cacheFile = path.join(tempDir, "cache.json");
-    fs.writeFileSync(
-      cacheFile,
-      JSON.stringify({
-        [propertyFile]: {
-          contexts: ["a", "b"],
-        },
-        bar: {
-          contexts: ["b", "a", "r"],
-        },
-      })
-    );
+    fs.writeFileSync(cacheFile, JSON.stringify(cache));
 
     files = { tempDir, propertyFile, settingsFile, cacheFile };
 
@@ -257,13 +275,23 @@ function assertDeletion(
 
       Sinon.assert.neverCalledWith(stubs.loggerErrorStub);
 
-      assert.deepStrictEqual(
-        {
-          bar: {
-            contexts: ["b", "a", "r"],
-          },
+      const expectedCache: Cache = {
+        bar: {
+          changelogs: [
+            {
+              path: "foo",
+              lastUsed: 1,
+              contexts: {
+                loadedContexts: ["b", "a", "r"],
+              },
+            },
+          ],
         },
+      };
+
+      assert.deepStrictEqual(
         JSON.parse(fs.readFileSync(files.cacheFile, "utf-8")),
+        expectedCache,
         "cache file content"
       );
 

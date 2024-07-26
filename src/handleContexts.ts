@@ -9,11 +9,12 @@ import { cacheHandler } from "./extension";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
 import { ContextOptions } from "./constants";
 import { HandleChangelogFileInput } from "./handleChangelogFileInput";
+import { ContextSelection } from "./cache";
 
 /**
  * The name of the pre selection dialog of the contexts.
  */
-const contextPreDialog = "contextPre";
+export const contextPreDialog = "contextPre";
 
 /**
  * Indicator in any context command argument to not use any context.
@@ -27,7 +28,7 @@ const NO_CONTEXT_USED = "###NO_CONTEXT_USED###";
  * @returns - the `PickPanelConfig` for the context selection. This will be always created.
  */
 export function generateContextInputs(): PickPanelConfig[] {
-  let cache: string[] = [];
+  let contextCacheInfo: ContextCacheInformation | undefined;
 
   return [
     {
@@ -35,35 +36,10 @@ export function generateContextInputs(): PickPanelConfig[] {
         name: contextPreDialog,
         title: "Select context using for the command",
         generateItems: (currentResults: DialogValues) => {
-          // reset the cache
-          cache = [];
-
           // load the cache values
-          let cachedContexts: string | undefined;
-          ({ cachedContexts, cache } = loadCacheForPropertyFile(currentResults));
+          contextCacheInfo = loadCacheForPropertyFile(currentResults);
 
-          const items: vscode.QuickPickItem[] = [
-            {
-              label: ContextOptions.NO_CONTEXT,
-              detail: "This will only execute any changeset that does not have any context",
-              iconPath: new vscode.ThemeIcon("search-remove"),
-            },
-            {
-              label: ContextOptions.LOAD_ALL_CONTEXT,
-              detail: "The loading might take a while.",
-              iconPath: new vscode.ThemeIcon("sync"),
-            },
-          ];
-
-          if (cachedContexts) {
-            items.push({
-              label: ContextOptions.USE_RECENTLY_LOADED,
-              detail: cachedContexts,
-              iconPath: new vscode.ThemeIcon("list-selection"),
-            });
-          }
-
-          return items;
+          return generateItemsForContextPreDialog(contextCacheInfo);
         },
       }),
       createCmdArgs: generateCmdArgsForPreContextSelection,
@@ -74,15 +50,76 @@ export function generateContextInputs(): PickPanelConfig[] {
         name: "context",
         title: "Choose any context",
         loadingTitle: "Loading contexts",
-        generateItems: async (dialogValues: DialogValues) => await loadContexts(dialogValues, cache),
+        generateItems: async (dialogValues: DialogValues) =>
+          await loadContexts(dialogValues, contextCacheInfo?.contexts ?? {}),
         reloadItems: async (dialogValues: DialogValues) => await loadContextsFromChangelog(dialogValues),
         reloadTooltip: "Reload contexts from changelog",
         allowMultiple: true,
         onBeforeInput: showContextSelection,
+        onAfterInput: (dialogValues) => saveSelectedContexts(dialogValues, contextCacheInfo),
       }),
       createCmdArgs: createCmdArgsForContextSelection,
     },
   ];
+}
+
+/**
+ * Generates the items for the context pre dialog.
+ *
+ * The recently loaded context section will only be visible, when there are loaded elements.
+ *
+ * @param contextCacheInfo - the information loaded from the cache
+ * @returns the items
+ */
+export function generateItemsForContextPreDialog(contextCacheInfo?: ContextCacheInformation): vscode.QuickPickItem[] {
+  const items: vscode.QuickPickItem[] = [];
+
+  if (
+    contextCacheInfo &&
+    contextCacheInfo.contexts.loadedContexts &&
+    contextCacheInfo.contexts.loadedContexts.length !== 0
+  ) {
+    const cachedContexts = contextCacheInfo.contexts.loadedContexts.join(", ");
+    items.push({
+      label: ContextOptions.USE_RECENTLY_LOADED,
+      detail: cachedContexts,
+      iconPath: new vscode.ThemeIcon("list-selection"),
+    });
+  }
+
+  items.push({
+    label: ContextOptions.LOAD_ALL_CONTEXT,
+    detail: "The loading might take a while.",
+    iconPath: new vscode.ThemeIcon("sync"),
+  });
+
+  items.push({
+    label: ContextOptions.NO_CONTEXT,
+    detail: "This will only execute any changeset that does not have any context",
+    iconPath: new vscode.ThemeIcon("search-remove"),
+  });
+
+  return items;
+}
+
+/**
+ * Saves the selected contexts in the cache after the selection was confirmed by the user.
+ *
+ * @param dialogValues - the current dialog infos
+ * @param contextCacheInfo - the information about the contexts in the cache
+ */
+export function saveSelectedContexts(dialogValues: DialogValues, contextCacheInfo?: ContextCacheInformation): void {
+  const selectedContexts = dialogValues.inputValues.get("context");
+
+  if (selectedContexts && contextCacheInfo) {
+    contextCacheInfo.contexts.selectedContexts = selectedContexts;
+
+    cacheHandler.saveContexts(
+      contextCacheInfo.connectionLocation,
+      contextCacheInfo.changelogLocation,
+      contextCacheInfo.contexts
+    );
+  }
 }
 
 /**
@@ -124,25 +161,22 @@ function createCmdArgsForContextSelection(dialogValues: DialogValues): string[] 
  * @param currentResults - the current dialog values
  * @returns the cache values and an text for the details of the cache selection
  */
-function loadCacheForPropertyFile(currentResults: DialogValues): {
-  cachedContexts: string | undefined;
-  cache: string[];
-} {
-  const propertyFile = currentResults.inputValues.get(PROPERTY_FILE);
+function loadCacheForPropertyFile(currentResults: DialogValues): ContextCacheInformation | undefined {
+  const connectionLocation = currentResults.inputValues.get(PROPERTY_FILE)?.[0];
 
-  let cache: string[] = [];
+  const changelogLocation =
+    currentResults.uri?.fsPath ?? currentResults.inputValues.get(HandleChangelogFileInput.CHANGELOG_NAME)?.[0];
 
-  // read the contexts from the cache
-  let cachedContexts: string | undefined;
-  if (propertyFile && propertyFile[0]) {
-    cache = cacheHandler.readContexts(propertyFile[0]);
-    cachedContexts = "No recently loaded contexts";
-    if (cache && cache.length !== 0) {
-      // cached values are there, then join them together
-      cachedContexts = cache.join(", ");
-    }
+  if (connectionLocation && changelogLocation) {
+    // read the contexts from the cache
+    const contexts = cacheHandler.readContexts(connectionLocation, changelogLocation);
+
+    return {
+      connectionLocation,
+      changelogLocation,
+      contexts,
+    };
   }
-  return { cachedContexts, cache };
 }
 
 /**
@@ -171,20 +205,21 @@ function showContextSelection(dialogValues: DialogValues): boolean {
  * @param cache - the current values in the cache for the currently selected connection
  * @returns the context items for the quick pick
  */
-async function loadContexts(dialogValues: DialogValues, cache: string[]): Promise<QuickPickItems> {
-  const result = dialogValues.inputValues.get(contextPreDialog);
+export async function loadContexts(dialogValues: DialogValues, cache: ContextSelection): Promise<QuickPickItems> {
+  const result = dialogValues.inputValues.get(contextPreDialog)?.[0];
 
-  if (result && result[0]) {
-    if (result[0] === ContextOptions.USE_RECENTLY_LOADED) {
+  if (result) {
+    if (result === ContextOptions.USE_RECENTLY_LOADED && cache.loadedContexts) {
       return {
-        items: cache.map((pCache) => {
+        items: cache.loadedContexts.map((pCache) => {
           return {
             label: pCache,
+            picked: cache.selectedContexts?.includes(pCache),
           };
         }),
         additionalTitle: "from recently loaded elements",
       };
-    } else if (result[0] === ContextOptions.LOAD_ALL_CONTEXT) {
+    } else if (result === ContextOptions.LOAD_ALL_CONTEXT) {
       return await loadContextsFromChangelog(dialogValues);
     }
   }
@@ -242,4 +277,24 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
 
   // Return an empty array if 'changelogFile:' line is not found
   return contextValues;
+}
+
+/**
+ * The information regarding the context cache.
+ */
+interface ContextCacheInformation {
+  /**
+   * The connection location. This servers as key in the cache.
+   */
+  connectionLocation: string;
+
+  /**
+   * The location of the changelog. This is needed, because the contexts are saved under the changelog.
+   */
+  changelogLocation: string;
+
+  /**
+   * The contexts from the cache.
+   */
+  contexts: ContextSelection;
 }

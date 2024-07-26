@@ -176,12 +176,22 @@ suite("CacheRemover tests", () => {
     test("should generatePropertiesForCacheRemoval", async () => {
       const result = await cacheRemover["generatePropertiesForCacheRemoval"]({
         "path/to/connection/one.liquibase.properties": {
-          contexts: ["a", "b"],
-          changelogs: [],
+          changelogs: [
+            {
+              path: "foo",
+              lastUsed: 1,
+              contexts: { loadedContexts: ["a", "b", "c"], selectedContexts: ["a", "c"] },
+            },
+          ],
         },
         "path/to/connection/four.liquibase.properties": {
-          contexts: ["x", "y", "z"],
-          changelogs: [],
+          changelogs: [
+            {
+              path: "foo",
+              lastUsed: 1,
+              contexts: { loadedContexts: ["x", "y", "z"], selectedContexts: ["x", "y"] },
+            },
+          ],
         },
       });
 
