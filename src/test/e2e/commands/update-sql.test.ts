@@ -19,6 +19,8 @@ suite("Update-sql", function () {
    */
   let configurationName: string;
 
+  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+
   /**
    * Set up the test suite.
    */
@@ -27,12 +29,21 @@ suite("Update-sql", function () {
   });
 
   /**
+   * Clean up after the test suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+
+    fs.rmSync(temporaryFolder, { recursive: true });
+  });
+
+  /**
    * Test the execution of the 'Update SQL' command.
    */
   test("should execute 'Update SQL' command", async function () {
     await new EditorView().closeAllEditors();
 
-    const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+    LiquibaseGUITestUtils.removeContentOfFolder(temporaryFolder);
 
     // execute update to have some changes
     await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
@@ -64,12 +75,5 @@ suite("Update-sql", function () {
       10000
     );
     chai.assert.pathExists(updateFile);
-  });
-
-  /**
-   * Clean up after the test suite.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

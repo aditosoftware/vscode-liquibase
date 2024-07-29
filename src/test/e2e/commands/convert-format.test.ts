@@ -9,6 +9,8 @@ import assert from "assert";
 chai.use(chaiFs);
 chai.use(chaiString);
 
+const tempOutput = LiquibaseGUITestUtils.generateTemporaryFolder();
+
 /**
  * Tests the converting from one format to another format.
  */
@@ -20,6 +22,13 @@ suite("convert format", () => {
    */
   suiteSetup(async () => {
     await LiquibaseGUITestUtils.openWorkspace();
+  });
+
+  /**
+   * Removes the temporary output folder after all tests.
+   */
+  suiteTeardown("remove temporary folder", () => {
+    fs.rmSync(tempOutput, { recursive: true });
   });
 
   formats.forEach((pFormat) => {
@@ -113,7 +122,7 @@ async function assertConvertingWithNoChangelogSelection(
   format: string,
   expectedCommandEndMessage: string
 ): Promise<void> {
-  const tempOutput = LiquibaseGUITestUtils.generateTemporaryFolder();
+  LiquibaseGUITestUtils.removeContentOfFolder(tempOutput);
 
   await LiquibaseGUITestUtils.selectFolder(input, tempOutput);
 

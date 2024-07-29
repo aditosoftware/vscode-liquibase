@@ -16,6 +16,8 @@ suite("generate changelog", function () {
    */
   let configurationName: string;
 
+  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+
   /**
    * Setup function that runs before the test suite.
    */
@@ -24,12 +26,21 @@ suite("generate changelog", function () {
   });
 
   /**
+   * Teardown function that runs after the test suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+
+    fs.rmSync(temporaryFolder, { recursive: true });
+  });
+
+  /**
    * Test case for executing the "generate changelog" command.
    */
   test("should execute 'generate changelog' command", async function () {
     await DockerTestUtils.resetDB();
 
-    const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+    LiquibaseGUITestUtils.removeContentOfFolder(temporaryFolder);
 
     await DockerTestUtils.executeMariaDBSQL(
       "CREATE TABLE test_table (column1 char(36), column2 varchar(255))",
@@ -61,12 +72,5 @@ suite("generate changelog", function () {
       `New changelog should exist at ${newChangelog}`
     );
     chai.assert.pathExists(newChangelog);
-  });
-
-  /**
-   * Teardown function that runs after the test suite.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

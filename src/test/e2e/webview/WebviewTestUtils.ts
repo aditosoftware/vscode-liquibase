@@ -69,9 +69,14 @@ export class WebviewTestUtils {
     await LiquibaseGUITestUtils.clearNotifications();
 
     // if we have any remaining input fields, close them
-    const input = new InputBox();
-    if (await input.isDisplayed()) {
-      await input.cancel();
+    try {
+      const input = new InputBox();
+      if (await input.isDisplayed()) {
+        await input.cancel();
+      }
+    } catch (error) {
+      // if it does not work, just log the error and ignore it
+      console.error("error trying to cancel any input box", error);
     }
 
     const editorView = new EditorView();
