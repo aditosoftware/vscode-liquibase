@@ -52,6 +52,63 @@ suite("CacheHandler tests", () => {
     const cacheFile: string = path.join(temporaryResourcePath, "cache.json");
 
     /**
+     * The currently valid cache, that is written to `cache.json`.
+     *
+     * **NOTE**: If this format is no longer valid, add new tests with this format as legacy format
+     * and change this format to the new format afterwards.
+     */
+    const cache: Cache = {
+      "/path/to/project/data/liquibase/data.liquibase.properties": {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: {
+              loadedContexts: ["prod", "qs", "dev"],
+              selectedContexts: ["prod", "qs"],
+            },
+          },
+          {
+            path: "bar",
+            lastUsed: 2,
+            contexts: {
+              loadedContexts: ["prod", "qs", "dev"],
+              selectedContexts: [],
+            },
+          },
+        ],
+      },
+      "/path/to/project/data/liquibase/system.liquibase.properties": {
+        changelogs: [
+          {
+            path: "baz",
+            lastUsed: 3,
+            contexts: {
+              loadedContexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
+            },
+          },
+        ],
+      },
+    };
+
+    /**
+     * The expected argument when reading the second connection and the `baz` changelog.
+     */
+    const secondConnectionBazChangelog = {
+      expected: { loadedContexts: ["c1", "c2", "c3", "c4", "c5", "c6"] },
+      file: secondConnectionLocation,
+      changelog: "baz",
+    };
+    /**
+     * The expected argument when reading the first connection and no valid changelog.
+     */
+    const firstConnectionNoValidChangelog = { expected: {}, file: firstConnectionLocation, changelog: "noChangelog" };
+    /**
+     * The expected argument when reading no valid connection and no valid changelog.
+     */
+    const noConnectionNoValidChangelog = { expected: {}, file: "noConnectionLocation", changelog: "noChangelog" };
+
+    /**
      * Prepares some cache files before all tests.
      */
     suiteSetup("prepare cache files", () => {
@@ -92,41 +149,6 @@ suite("CacheHandler tests", () => {
       );
 
       // writes a currently valid cache file.
-      // NOTE: If this format is no longer valid, add new tests with this format as legacy format
-      // and change this format to the new format afterwards.
-      const cache: Cache = {
-        "/path/to/project/data/liquibase/data.liquibase.properties": {
-          changelogs: [
-            {
-              path: "foo",
-              lastUsed: 1,
-              contexts: {
-                loadedContexts: ["prod", "qs", "dev"],
-                selectedContexts: ["prod", "qs"],
-              },
-            },
-            {
-              path: "bar",
-              lastUsed: 2,
-              contexts: {
-                loadedContexts: ["prod", "qs", "dev"],
-                selectedContexts: [],
-              },
-            },
-          ],
-        },
-        "/path/to/project/data/liquibase/system.liquibase.properties": {
-          changelogs: [
-            {
-              path: "baz",
-              lastUsed: 3,
-              contexts: {
-                loadedContexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
-              },
-            },
-          ],
-        },
-      };
       fs.writeFileSync(cacheFile, JSON.stringify(cache), { encoding: "utf-8" });
     });
 
@@ -251,13 +273,9 @@ suite("CacheHandler tests", () => {
           file: firstConnectionLocation,
           changelog: "bar",
         },
-        {
-          expected: { loadedContexts: ["c1", "c2", "c3", "c4", "c5", "c6"] },
-          file: secondConnectionLocation,
-          changelog: "baz",
-        },
-        { expected: {}, file: firstConnectionLocation, changelog: "noChangelog" },
-        { expected: {}, file: "noConnectionLocation", changelog: "noChangelog" },
+        secondConnectionBazChangelog,
+        firstConnectionNoValidChangelog,
+        noConnectionNoValidChangelog,
       ].forEach((pElement) => {
         /**
          * Test that reading the contexts works. It also checks that the contexts are ordered.
@@ -286,41 +304,7 @@ suite("CacheHandler tests", () => {
        * You can also see at this point, that the contexts are not ordered.
        */
       test(`should read cache file`, () => {
-        const expected: Cache = {
-          "/path/to/project/data/liquibase/data.liquibase.properties": {
-            changelogs: [
-              {
-                path: "foo",
-                lastUsed: 1,
-                contexts: {
-                  loadedContexts: ["prod", "qs", "dev"],
-                  selectedContexts: ["prod", "qs"],
-                },
-              },
-              {
-                path: "bar",
-                lastUsed: 2,
-                contexts: {
-                  loadedContexts: ["prod", "qs", "dev"],
-                  selectedContexts: [],
-                },
-              },
-            ],
-          },
-          "/path/to/project/data/liquibase/system.liquibase.properties": {
-            changelogs: [
-              {
-                path: "baz",
-                lastUsed: 3,
-                contexts: {
-                  loadedContexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
-                },
-              },
-            ],
-          },
-        };
-
-        assert.deepStrictEqual(cacheHandler.readCache(), expected);
+        assert.deepStrictEqual(cacheHandler.readCache(), cache);
       });
 
       [
@@ -334,13 +318,9 @@ suite("CacheHandler tests", () => {
           file: firstConnectionLocation,
           changelog: "bar",
         },
-        {
-          expected: { loadedContexts: ["c1", "c2", "c3", "c4", "c5", "c6"] },
-          file: secondConnectionLocation,
-          changelog: "baz",
-        },
-        { expected: {}, file: firstConnectionLocation, changelog: "noChangelog" },
-        { expected: {}, file: "noConnectionLocation", changelog: "noChangelog" },
+        secondConnectionBazChangelog,
+        firstConnectionNoValidChangelog,
+        noConnectionNoValidChangelog,
       ].forEach((pElement) => {
         /**
          * Test that reading the contexts works. It also checks that the contexts are ordered.
