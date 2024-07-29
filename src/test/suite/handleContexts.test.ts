@@ -1,5 +1,13 @@
 import assert from "assert";
-import { loadContextsFromChangelog } from "../../handleContexts";
+import {
+  ContextCacheInformation,
+  contextPreDialog,
+  generateItemsForContextPreDialog,
+  loadCacheForPropertyFile,
+  loadContexts,
+  loadContextsFromChangelog,
+  saveSelectedContexts,
+} from "../../handleContexts";
 import { DialogValues, QuickPickItems } from "@aditosoftware/vscode-input";
 import * as vscode from "vscode";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
@@ -8,6 +16,12 @@ import path from "path";
 import * as fs from "fs";
 import * as lbSettings from "../../handleLiquibaseSettings";
 import Sinon from "sinon";
+import { setCacheHandler } from "../../extension";
+import { CacheHandler, ContextSelection } from "../../cache";
+import { randomUUID } from "crypto";
+import { ContextOptions } from "../../constants";
+import { HandleChangelogFileInput } from "../../handleChangelogFileInput";
+import { expect } from "chai";
 
 /**
  * Tests the file handleContexts
@@ -24,6 +38,13 @@ suite("handleContexts", () => {
     TestUtils.init();
 
     tempDir = TestUtils.createTempFolderForTests("contexts");
+  });
+
+  /**
+   * Restores all sinon stubs.
+   */
+  teardown(() => {
+    Sinon.restore();
   });
 
   /**
@@ -89,13 +110,6 @@ suite("handleContexts", () => {
 
       dialogValues = new DialogValues();
       dialogValues.addValue(PROPERTY_FILE, propertyFile);
-    });
-
-    /**
-     * Restores all sinon stubs.
-     */
-    teardown(() => {
-      Sinon.restore();
     });
 
     /**
@@ -191,6 +205,263 @@ alter table person add column country varchar(2)
 
       dialogValues.uri = vscode.Uri.file(jsonChangelog);
       assertLoadContexts(dialogValues, [], done);
+    });
+  });
+
+  /**
+   * Tests the saving of the selected contexts
+   */
+  suite("saveSelectedContexts", () => {
+    let saveMethod: Sinon.SinonSpy;
+
+    setup(() => {
+      const cacheLocation = path.join(tempDir, `${randomUUID()}.json`);
+      const cacheHandler = new CacheHandler(cacheLocation);
+      setCacheHandler(cacheHandler);
+
+      saveMethod = Sinon.spy(cacheHandler, "saveContexts");
+    });
+
+    /**
+     * Tests that nothing is saved, when there are no values from the dialog.
+     */
+    test("should not save when no values from dialog", () => {
+      saveSelectedContexts(new DialogValues(), { connectionLocation: "", changelogLocation: "", contexts: {} });
+
+      Sinon.assert.notCalled(saveMethod);
+    });
+
+    /**
+     * Tests that nothing is saved, when no contextCacheInfo is there.
+     */
+    test("should not save when no contextCacheInfo is there", () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue("context", "foo");
+
+      saveSelectedContexts(dialogValues);
+
+      Sinon.assert.notCalled(saveMethod);
+    });
+
+    /**
+     * Tests that the saving works when all necessary information are given.
+     */
+    test("should save when necessary information is there", () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue("context", ["c1", "c2"]);
+
+      saveSelectedContexts(dialogValues, {
+        connectionLocation: "foo",
+        changelogLocation: "bar",
+        contexts: { loadedContexts: ["c1", "c2", "c3"], selectedContexts: ["old", "values"] },
+      });
+
+      Sinon.assert.calledOnce(saveMethod);
+      Sinon.assert.calledWith(saveMethod, "foo", "bar", {
+        loadedContexts: ["c1", "c2", "c3"],
+        selectedContexts: ["c1", "c2"],
+      });
+    });
+  });
+
+  /**
+   * Tests the `loadContexts` method.
+   */
+  suite("loadContexts", () => {
+    /**
+     * Tests that the contexts are loaded from the changelog.
+     */
+    test("should load contexts from cache", async () => {
+      const expected: QuickPickItems = {
+        items: [
+          { label: "bar", picked: false },
+          { label: "baz", picked: true },
+          { label: "foo", picked: true },
+        ],
+        additionalPlaceholder: "from recently loaded elements",
+      };
+
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(contextPreDialog, ContextOptions.USE_RECENTLY_LOADED);
+
+      const cache: ContextSelection = {
+        loadedContexts: ["bar", "baz", "foo"],
+        selectedContexts: ["foo", "baz"],
+      };
+
+      const result = await loadContexts(dialogValues, cache);
+
+      assert.deepStrictEqual(result, expected);
+    });
+
+    /**
+     * Tests the the loading works, when it should be loaded from the changelog.
+     */
+    test("should load contexts from changelog", async () => {
+      const expected: QuickPickItems = {
+        items: [],
+        additionalPlaceholder: "loaded from changelogs",
+      };
+
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(contextPreDialog, ContextOptions.LOAD_ALL_CONTEXT);
+
+      const result = await loadContexts(dialogValues, {});
+
+      assert.deepStrictEqual(result, expected);
+    });
+
+    /**
+     * Tests that nothing will be loaded, when `ContextOptions.NO_CONTEXT` was given.
+     */
+    test("should not load contexts when no context should be used", async () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(contextPreDialog, ContextOptions.NO_CONTEXT);
+
+      const result = await loadContexts(dialogValues, {});
+
+      assert.deepStrictEqual(result, { items: [] });
+    });
+
+    /**
+     * Tests that nothing will be loaded, when no result of the context pre dialog is there.
+     */
+    test("should not load contexts when no context pre dialog result is there", async () => {
+      const result = await loadContexts(new DialogValues(), {});
+
+      assert.deepStrictEqual(result, { items: [] });
+    });
+  });
+
+  /**
+   * Tests the method `generateItemsForContextPreDialog`.
+   */
+  suite("generateItemsForContextPreDialog", () => {
+    const recentContexts: vscode.QuickPickItem = {
+      label: ContextOptions.USE_RECENTLY_LOADED,
+      detail: "baz, bar, foo",
+      iconPath: new vscode.ThemeIcon("list-selection"),
+    };
+    const loadContexts: vscode.QuickPickItem = {
+      label: ContextOptions.LOAD_ALL_CONTEXT,
+      detail: "The loading might take a while.",
+      iconPath: new vscode.ThemeIcon("sync"),
+    };
+    const noContexts: vscode.QuickPickItem = {
+      label: ContextOptions.NO_CONTEXT,
+      detail: "This will only execute any changeset that does not have any context",
+      iconPath: new vscode.ThemeIcon("search-remove"),
+    };
+
+    /**
+     * Tests that no recent elements will be shown, if there are no cache information.
+     */
+    test("should not include the recent element when no cache information is there", () => {
+      assert.deepStrictEqual(generateItemsForContextPreDialog(), [loadContexts, noContexts]);
+    });
+
+    /**
+     * Tests that no recent elements will be shown, if there are no `loadedContexts`.
+     */
+    test("should not include the recent element when no loaded contexts are there", () => {
+      assert.deepStrictEqual(
+        generateItemsForContextPreDialog({
+          connectionLocation: "",
+          changelogLocation: "",
+          contexts: { selectedContexts: ["foo", "bar"] },
+        }),
+        [loadContexts, noContexts]
+      );
+    });
+    /**
+     * Tests that no recent elements will be shown, if there are empty `loadedContexts`.
+     */
+    test("should not include the recent element when empty loaded contexts are there", () => {
+      assert.deepStrictEqual(
+        generateItemsForContextPreDialog({
+          connectionLocation: "",
+          changelogLocation: "",
+          contexts: { loadedContexts: [], selectedContexts: ["foo", "bar"] },
+        }),
+        [loadContexts, noContexts]
+      );
+    });
+
+    /**
+     * Tests that all items will be generated, when `loadedContexts` are there.
+     */
+    test("should generate all items", () => {
+      assert.deepStrictEqual(
+        generateItemsForContextPreDialog({
+          connectionLocation: "",
+          changelogLocation: "",
+          contexts: { loadedContexts: ["baz", "bar", "foo"], selectedContexts: ["foo", "bar"] },
+        }),
+        [recentContexts, loadContexts, noContexts]
+      );
+    });
+  });
+
+  /**
+   * Tests the method `loadCacheForPropertyFile`.
+   */
+  suite("loadCacheForPropertyFile", () => {
+    /**
+     * Tests that the cache will be loaded, when the changelog location was given as uri.
+     */
+    test("should load from uri", () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "foo");
+      dialogValues.uri = vscode.Uri.file(".");
+
+      const expected: ContextCacheInformation = {
+        connectionLocation: "foo",
+        changelogLocation: dialogValues.uri.fsPath,
+        contexts: {},
+      };
+
+      const result = loadCacheForPropertyFile(dialogValues);
+      assert.ok(result);
+      assert.deepStrictEqual(result, expected);
+    });
+
+    /**
+     * Tests that the values can be loaded, when connection and changelogs are given as inputs.
+     */
+    test("should load from input", () => {
+      // reset any cache handler that might or might not be there
+      setCacheHandler(new CacheHandler(path.join(tempDir, `${randomUUID()}.json`)));
+
+      const expected: ContextCacheInformation = {
+        connectionLocation: "foo",
+        changelogLocation: "bar",
+        contexts: {},
+      };
+
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "foo");
+      dialogValues.addValue(HandleChangelogFileInput.CHANGELOG_NAME, "bar");
+
+      const result = loadCacheForPropertyFile(dialogValues);
+      assert.ok(result);
+      assert.deepStrictEqual(result, expected);
+    });
+
+    /**
+     * Tests that nothing will be loaded, when all values are missing
+     */
+    test("should not load when all values missing", () => {
+      expect(loadCacheForPropertyFile(new DialogValues())).to.be.undefined;
+    });
+
+    /**
+     * Tests that nothing will be loaded, when the changelog location is missing
+     */
+    test("should not load when changelog location is missing", () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "foo");
+
+      expect(loadCacheForPropertyFile(dialogValues)).to.be.undefined;
     });
   });
 });

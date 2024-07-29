@@ -12,8 +12,10 @@ const MAX_CHANGELOGS_IN_CACHE = 5;
 export interface Connection {
   /**
    * The cached contexts of the cache.
+   *
+   * @deprecated this element will no longer be supported in writing. Instead, all data should be read and written from {@link Changelog.contexts}
    */
-  contexts: string[];
+  contexts?: string[];
 
   /**
    * The recently used changelog elements.
@@ -34,6 +36,26 @@ interface Changelog {
    * The path to the changelog.
    */
   path: string;
+
+  /**
+   * The selected contexts of each changelog.
+   */
+  contexts: ContextSelection;
+}
+
+/**
+ * The context selection.
+ */
+export interface ContextSelection {
+  /**
+   * The contexts that were loaded.
+   */
+  loadedContexts?: string[];
+
+  /**
+   * The context that were selected.
+   */
+  selectedContexts?: string[];
 }
 
 /**
@@ -74,20 +96,38 @@ export class CacheHandler {
    * Saves all given contexts in the cache. Any previous existing contexts will be removed from the cache.
    *
    * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
+   * @param changelogPath - the path to the changelog. This is needed, because contexts are saved for each changelog
    * @param contexts - the contexts that should be saved in the cache
    */
-  saveContexts(connectionLocation: string, contexts: string[]): void {
-    // first, read any existing cache
-    this.readCache();
+  saveContexts(connectionLocation: string, changelogPath: string, contexts: ContextSelection): void {
+    const loadedChangelogs = this.getChangelog(connectionLocation, changelogPath);
+    let existingChangelog = loadedChangelogs.existingChangelog;
 
-    this.addDummyElementForConnectionToCache(connectionLocation);
+    if (!existingChangelog) {
+      // if no changelog exists, write a dummy element.
+      existingChangelog = {
+        path: changelogPath,
+        lastUsed: new Date().getTime(),
+        contexts: {},
+      };
+      loadedChangelogs.changelogs.push(existingChangelog);
+    }
 
-    // remove any old contexts
-    this.cache[connectionLocation].contexts = [];
-    // and save the new cache values
-    this.cache[connectionLocation].contexts.push(...contexts);
+    // if we do not have any context object, then make one
+    if (!existingChangelog.contexts) {
+      existingChangelog.contexts = {};
+    }
 
-    // write the cache back to to file system
+    // save new loaded contexts
+    if (contexts.loadedContexts) {
+      existingChangelog.contexts.loadedContexts = contexts.loadedContexts;
+    }
+
+    // save new selected contexts
+    if (contexts.selectedContexts) {
+      existingChangelog.contexts.selectedContexts = contexts.selectedContexts;
+    }
+
     this.writeCache();
   }
 
@@ -100,7 +140,6 @@ export class CacheHandler {
     if (!this.cache[connectionLocation]) {
       // if no cache is there for the connection, then add an element
       this.cache[connectionLocation] = {
-        contexts: [],
         changelogs: [],
       };
     }
@@ -113,17 +152,7 @@ export class CacheHandler {
    * @param changelogPath - the absolute path to the changelog file
    */
   saveChangelog(connectionLocation: string, changelogPath: string): void {
-    this.readCache();
-
-    this.addDummyElementForConnectionToCache(connectionLocation);
-
-    let changelogs = this.cache[connectionLocation].changelogs;
-
-    if (!changelogs) {
-      changelogs = [];
-    }
-
-    const existingChangelog = changelogs.find((log) => log.path === changelogPath);
+    const { existingChangelog, changelogs } = this.getChangelog(connectionLocation, changelogPath);
 
     if (existingChangelog) {
       // update lastUsed, if we already have an element
@@ -133,6 +162,7 @@ export class CacheHandler {
       changelogs.push({
         lastUsed: new Date().getTime(),
         path: changelogPath,
+        contexts: {},
       });
     }
 
@@ -144,6 +174,34 @@ export class CacheHandler {
 
     // write the cache back to to file system
     this.writeCache();
+  }
+
+  /**
+   * Gets the given changelog from the cache.
+   *
+   * @param connectionLocation - the location to the liquibase.properties file
+   * @param changelogPath - the path of the changelog that should be given to the method caller
+   * @returns the changelog with the `changelogPath` if found and all other changelogs
+   */
+  private getChangelog(
+    connectionLocation: string,
+    changelogPath: string
+  ): {
+    existingChangelog: Changelog | undefined;
+    changelogs: Changelog[];
+  } {
+    this.readCache();
+
+    this.addDummyElementForConnectionToCache(connectionLocation);
+
+    let changelogs = this.cache[connectionLocation].changelogs;
+
+    if (!changelogs) {
+      changelogs = [];
+    }
+
+    const existingChangelog = changelogs.find((log) => log.path === changelogPath);
+    return { existingChangelog, changelogs };
   }
 
   /**
@@ -162,6 +220,8 @@ export class CacheHandler {
         // otherwise, just read and parse the cache
         const cacheContext = fs.readFileSync(this.cacheLocation, { encoding: "utf-8" });
         this.cache = JSON.parse(cacheContext) as Cache;
+
+        this.transformOldContextToNewContextSelection();
       }
 
       this.cacheLoaded = true;
@@ -171,20 +231,50 @@ export class CacheHandler {
   }
 
   /**
-   * Reads all contexts from the cache for one connection.
+   * Transforms the old `contexts` to the new `contextSelection`.
+   */
+  private transformOldContextToNewContextSelection(): void {
+    Object.values(this.cache).forEach((pCacheElement) => {
+      if (!pCacheElement.changelogs) {
+        pCacheElement.changelogs = [];
+      }
+
+      // The following block needs to contain deprecated code in order to migrate it.
+      /* eslint-disable deprecation/deprecation */
+      if (pCacheElement.contexts) {
+        // move the contexts to every changelog
+        pCacheElement.changelogs.forEach((pChangelog) => {
+          pChangelog.contexts = {
+            loadedContexts: pCacheElement.contexts,
+          };
+        });
+
+        // and delete the old contexts
+        delete pCacheElement.contexts;
+        /* eslint-enable deprecation/deprecation */
+      }
+    });
+  }
+
+  /**
+   * Reads all contexts from the cache for one connection and changelog.
    *
-   * If there is no cache, or no cache for this connection, then you will get an empty array.
+   * If there is no cache, or no cache for this connection, then you will get an empty element.
    *
    * @param connectionLocation - the location of the connection (= liquibase.properties file). This is used as a key in cache
-   * @returns an sorted array with all contexts of the given connection
+   * @param changelogLocation - the location of the changelog
+   * @returns the sorted loaded contexts and the selected contexts of the given connection and changelog
    */
-  readContexts(connectionLocation: string): string[] {
-    this.readCache();
+  readContexts(connectionLocation: string, changelogLocation: string): ContextSelection {
+    const existingChangelog = this.getChangelog(connectionLocation, changelogLocation).existingChangelog;
 
-    if (this.cache[connectionLocation]) {
-      return this.cache[connectionLocation].contexts.sort((a, b) => a.localeCompare(b));
+    if (existingChangelog && existingChangelog.contexts) {
+      // sort any loaded contexts
+      existingChangelog.contexts.loadedContexts?.sort((a, b) => a.localeCompare(b));
+
+      return existingChangelog.contexts;
     } else {
-      return [];
+      return {};
     }
   }
 

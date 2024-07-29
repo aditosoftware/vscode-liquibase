@@ -488,6 +488,22 @@ export class LiquibaseGUITestUtils {
     const inputBox = input || new InputBox();
 
     // wait until there are checkboxes loaded
+    await LiquibaseGUITestUtils.waitForCheckboxesToBeThere(inputBox);
+
+    if (filterForInput) {
+      await inputBox.setText(filterForInput);
+    }
+    await inputBox.toggleAllQuickPicks(toggleAll);
+
+    await inputBox.confirm();
+  }
+
+  /**
+   * Wait until the checkboxes of a quick pick are there.
+   *
+   * @param inputBox - the current input component
+   */
+  static async waitForCheckboxesToBeThere(inputBox: InputBox): Promise<void> {
     await VSBrowser.instance.driver.wait(
       async () => {
         const checkboxes = await inputBox.getCheckboxes();
@@ -496,13 +512,6 @@ export class LiquibaseGUITestUtils {
       5000,
       "waiting for input checkboxes"
     );
-
-    if (filterForInput) {
-      await inputBox.setText(filterForInput);
-    }
-    await inputBox.toggleAllQuickPicks(toggleAll);
-
-    await inputBox.confirm();
   }
 
   /**

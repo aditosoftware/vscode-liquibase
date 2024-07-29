@@ -19,7 +19,7 @@ import { MessageData, MessageType } from "../../src/configuration/transfer";
  *
  * @returns the created react element for the webview
  */
-function App(): JSX.Element {
+function App(): React.JSX.Element {
   const [data, updateData] = useImmer<LiquibaseConfigurationData>(
     // dummy data to create the element.
     // The data will be updated shortly after the view is created.
