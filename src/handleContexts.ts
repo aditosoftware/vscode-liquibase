@@ -63,7 +63,8 @@ export function generateContextInputs(): PickPanelConfig[] {
 }
 
 /**
- * Generates the items for the context pre dialog.
+ * Generates the items for the context pre-selection dialog. This dialog will let the user select if they want to use contexts and
+ * if they want to load the contexts or use the recently loaded contexts.
  *
  * The recently loaded context section will only be visible, when there are loaded elements.
  *
@@ -284,7 +285,7 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
  */
 export interface ContextCacheInformation {
   /**
-   * The connection location. This servers as key in the cache.
+   * The connection location. This serves as the key in the cache.
    */
   connectionLocation: string;
 
