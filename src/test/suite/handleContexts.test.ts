@@ -1,7 +1,9 @@
 import assert from "assert";
 import {
+  ContextCacheInformation,
   contextPreDialog,
   generateItemsForContextPreDialog,
+  loadCacheForPropertyFile,
   loadContexts,
   loadContextsFromChangelog,
   saveSelectedContexts,
@@ -18,6 +20,8 @@ import { setCacheHandler } from "../../extension";
 import { CacheHandler, ContextSelection } from "../../cache";
 import { randomUUID } from "crypto";
 import { ContextOptions } from "../../constants";
+import { HandleChangelogFileInput } from "../../handleChangelogFileInput";
+import { expect } from "chai";
 
 /**
  * Tests the file handleContexts
@@ -395,6 +399,66 @@ alter table person add column country varchar(2)
         }),
         [recentContexts, loadContexts, noContexts]
       );
+    });
+  });
+
+  /**
+   * Tests the method `loadCacheForPropertyFile`.
+   */
+  suite("loadCacheForPropertyFile", () => {
+    /**
+     * Tests that the cache will be loaded, when the changelog location was given as uri.
+     */
+    test("should load from uri", () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "foo");
+      dialogValues.uri = vscode.Uri.file(".");
+
+      const expected: ContextCacheInformation = {
+        connectionLocation: "foo",
+        changelogLocation: dialogValues.uri.fsPath,
+        contexts: {},
+      };
+
+      const result = loadCacheForPropertyFile(dialogValues);
+      assert.ok(result);
+      assert.deepStrictEqual(result, expected);
+    });
+
+    /**
+     * Tests that the values can be loaded, when connection and changelogs are given as inputs.
+     */
+    test("should load from input", () => {
+      const expected: ContextCacheInformation = {
+        connectionLocation: "foo",
+        changelogLocation: "bar",
+        contexts: {},
+      };
+
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "foo");
+      dialogValues.addValue(HandleChangelogFileInput.CHANGELOG_NAME, "bar");
+
+      const result = loadCacheForPropertyFile(dialogValues);
+      assert.ok(result);
+      assert.deepStrictEqual(result, expected);
+    });
+
+    /**
+     * Tests that nothing will be loaded, when all values are missing
+     */
+    test("should not load when all values missing", () => {
+      expect(loadCacheForPropertyFile(new DialogValues())).to.be.undefined;
+    });
+
+    /**
+     * Tests that nothing will be loaded, when the changelog location is missing
+     */
+    test("should not load when changelog location is missing", () => {
+      const dialogValues = new DialogValues();
+      dialogValues.addValue(PROPERTY_FILE, "foo");
+
+      expect(loadCacheForPropertyFile(dialogValues)).to.be.undefined;
     });
   });
 });

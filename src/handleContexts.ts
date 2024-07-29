@@ -160,7 +160,7 @@ function createCmdArgsForContextSelection(dialogValues: DialogValues): string[] 
  * @param currentResults - the current dialog values
  * @returns the cache values and an text for the details of the cache selection
  */
-function loadCacheForPropertyFile(currentResults: DialogValues): ContextCacheInformation | undefined {
+export function loadCacheForPropertyFile(currentResults: DialogValues): ContextCacheInformation | undefined {
   const connectionLocation = currentResults.inputValues.get(PROPERTY_FILE)?.[0];
 
   const changelogLocation =
@@ -282,7 +282,7 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
 /**
  * The information regarding the context cache.
  */
-interface ContextCacheInformation {
+export interface ContextCacheInformation {
   /**
    * The connection location. This servers as key in the cache.
    */
