@@ -25,7 +25,7 @@ suite("Status", function () {
       await LiquibaseGUITestUtils.executeCommandInMatrixExecution(
         "status",
         {
-          command: "status...",
+          command: "Find out the not deployed changesets (status)...",
           configurationName,
           changelogFile: true,
         },

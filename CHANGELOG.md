@@ -33,6 +33,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Upgraded "liquibase-core"-dependency from 4.24.0 to 4.28.0
 - changed changelog selection from a folder selection to a cached selection with the recent used changelogs saved
 - changed titles and placeholders in various inputs
+- improved the names of the commands `liquibase.history`, `liquibase.diff`, `liquibase.status`, `liquibase.changelog-sync` and `liquibase.clear-checksums` to be more user-friendly
 
 ### Fixed
 

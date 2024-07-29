@@ -56,12 +56,12 @@
       },
       {
         "command": "liquibase.status",
-        "title": "Status...",
+        "title": "Find out the not deployed changesets (status)...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.diff",
-        "title": "Diff...",
+        "title": "Compare two databases (diff)...",
         "category": "Liquibase"
       },
       {
@@ -81,17 +81,17 @@
       },
       {
         "command": "liquibase.changelog-sync",
-        "title": "Changelog Sync...",
+        "title": "Mark not deployed changelogs as executed (changelog-sync)...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.clear-checksums",
-        "title": "Clear Checksums...",
+        "title": "Clear the checksums of all changelogs in the database...",
         "category": "Liquibase"
       },
       {
         "command": "liquibase.history",
-        "title": "History...",
+        "title": "List all deployed changesets (history)...",
         "category": "Liquibase"
       },
       {
@@ -328,7 +328,7 @@
           {
             "id": "runFirstUpdate",
             "title": "Run first command",
-            "description": "Now that you have created your Liquibase properties file, you can now execute any command. You could run the ``status`` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
+            "description": "Now that you have created your Liquibase properties file, you can now execute any command. You could run the ``Find out the not deployed changesets (status)`` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
             "media": {
               "markdown": "media/walkthrough/empty.md"
             },

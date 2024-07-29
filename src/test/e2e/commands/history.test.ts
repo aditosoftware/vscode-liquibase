@@ -37,7 +37,10 @@ suite("History", async function () {
 
       const fileName = `history_${pHistoryOption}.txt`;
 
-      const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "history...", configurationName });
+      const input = await LiquibaseGUITestUtils.startCommandExecution({
+        command: "List all deployed changesets (history)...",
+        configurationName,
+      });
 
       await LiquibaseGUITestUtils.selectFolder(input, temporaryFolder);
 

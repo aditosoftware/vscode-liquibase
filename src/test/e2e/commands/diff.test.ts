@@ -79,7 +79,10 @@ async function executeCommand(fileName: string, configurationName: string, secon
 
   await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
-  const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "diff...", configurationName });
+  const input = await LiquibaseGUITestUtils.startCommandExecution({
+    command: "Compare two databases (diff)...",
+    configurationName,
+  });
 
   await input.setText(secondConfiguration);
   await input.confirm();
