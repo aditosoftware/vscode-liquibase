@@ -35,7 +35,7 @@ const valueIndicator = "value";
  * @param pProperties - the properties that are needed for the additional elements
  * @returns the created component
  */
-export function AdditionalElements(pProperties: AdditionalElementProps): JSX.Element {
+export function AdditionalElements(pProperties: AdditionalElementProps): React.JSX.Element {
   const [additionalElementValues, setAdditionalElementValues] = useState<Map<string, string>>(new Map());
 
   const [key, setKey] = useState<string>("");

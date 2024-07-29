@@ -213,7 +213,9 @@ export async function loadContextsFromChangelogFile(
         }
 
         // save the loaded context into the cache
-        cacheHandler.saveContexts(liquibasePropertiesPath, contexts);
+        cacheHandler.saveContexts(liquibasePropertiesPath, changelogFile, {
+          loadedContexts: contexts,
+        });
 
         // transform the elements to an quick pick array
         const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {

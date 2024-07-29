@@ -199,7 +199,10 @@ export class TransferDataForCommand {
    * This will be used to set the data and prevent the dialog element with data name.
    * @param data - The data which should be set for the given name.
    */
-  constructor(public name: string, public data: string | boolean | string[]) {}
+  constructor(
+    public name: string,
+    public data: string | boolean | string[]
+  ) {}
 }
 
 /**

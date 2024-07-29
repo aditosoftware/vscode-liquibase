@@ -20,27 +20,143 @@ suite("CacheHandler tests", () => {
    */
   const temporaryResourcePath = TestUtils.createTempFolderForTests("cache", "handle");
 
+  let clock: sinon.SinonFakeTimers;
+
   /**
    * Initialize the logger for the tests.
+   *
+   * Use a fake timer for the timestamps.
    */
-  suiteSetup("init logger", () => {
+  suiteSetup("init logger and fake timer", () => {
     TestUtils.initLoggerForTests();
+
+    clock = Sinon.useFakeTimers({ now: 10 });
+  });
+
+  /**
+   * Restore the fake timer.
+   */
+  suiteTeardown(() => {
+    clock.restore();
   });
 
   /**
    * Tests the reading of the cache and contexts.
    */
   suite("readCache and readContext", () => {
-    const baseResourcePath = path.join(TestUtils.basicPathToOut, "..", "src", "test", "resources", "cache");
-
     const firstConnectionLocation = "/path/to/project/data/liquibase/data.liquibase.properties";
     const secondConnectionLocation = "/path/to/project/data/liquibase/system.liquibase.properties";
+
+    const emptyFile: string = path.join(temporaryResourcePath, "empty.json");
+    const legacyCacheFile: string = path.join(temporaryResourcePath, "legacy.json");
+    const cacheFile: string = path.join(temporaryResourcePath, "cache.json");
+
+    /**
+     * The currently valid cache, that is written to `cache.json`.
+     *
+     * **NOTE**: If this format is no longer valid, add new tests with this format as legacy format
+     * and change this format to the new format afterwards.
+     */
+    const cache: Cache = {
+      "/path/to/project/data/liquibase/data.liquibase.properties": {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: {
+              loadedContexts: ["prod", "qs", "dev"],
+              selectedContexts: ["prod", "qs"],
+            },
+          },
+          {
+            path: "bar",
+            lastUsed: 2,
+            contexts: {
+              loadedContexts: ["prod", "qs", "dev"],
+              selectedContexts: [],
+            },
+          },
+        ],
+      },
+      "/path/to/project/data/liquibase/system.liquibase.properties": {
+        changelogs: [
+          {
+            path: "baz",
+            lastUsed: 3,
+            contexts: {
+              loadedContexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
+            },
+          },
+        ],
+      },
+    };
+
+    /**
+     * The expected argument when reading the second connection and the `baz` changelog.
+     */
+    const secondConnectionBazChangelog = {
+      expected: { loadedContexts: ["c1", "c2", "c3", "c4", "c5", "c6"] },
+      file: secondConnectionLocation,
+      changelog: "baz",
+    };
+    /**
+     * The expected argument when reading the first connection and no valid changelog.
+     */
+    const firstConnectionNoValidChangelog = { expected: {}, file: firstConnectionLocation, changelog: "noChangelog" };
+    /**
+     * The expected argument when reading no valid connection and no valid changelog.
+     */
+    const noConnectionNoValidChangelog = { expected: {}, file: "noConnectionLocation", changelog: "noChangelog" };
+
+    /**
+     * Prepares some cache files before all tests.
+     */
+    suiteSetup("prepare cache files", () => {
+      TestUtils.initLoggerForTests();
+
+      // prepare the caches for the tests
+      // prepare an empty cache
+      fs.writeFileSync(emptyFile, JSON.stringify({}), { encoding: "utf-8" });
+
+      // This cache format is no longer supported
+      fs.writeFileSync(
+        legacyCacheFile,
+        JSON.stringify({
+          "/path/to/project/data/liquibase/data.liquibase.properties": {
+            contexts: ["prod", "qs", "dev"],
+            changelogs: [
+              {
+                path: "foo",
+                lastUsed: 1,
+              },
+              {
+                path: "bar",
+                lastUsed: 2,
+              },
+            ],
+          },
+          "/path/to/project/data/liquibase/system.liquibase.properties": {
+            contexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
+            changelogs: [
+              {
+                path: "baz",
+                lastUsed: 3,
+              },
+            ],
+          },
+        }),
+        { encoding: "utf-8" }
+      );
+
+      // writes a currently valid cache file.
+      fs.writeFileSync(cacheFile, JSON.stringify(cache), { encoding: "utf-8" });
+    });
 
     /**
      * Tests the reading of a not existent file.
      */
     suite("should read not existing file", () => {
-      const notExistentPath = path.join(baseResourcePath, "notExistent.json");
+      const notExistentPath = path.join(temporaryResourcePath, "notExistent.json");
       const cacheHandler = new CacheHandler(notExistentPath);
 
       /**
@@ -61,7 +177,7 @@ suite("CacheHandler tests", () => {
        * Tests that reading contexts from a not existing file does work.
        */
       test(`should read contexts  with not existing file location`, () => {
-        assert.deepStrictEqual([], cacheHandler.readContexts(firstConnectionLocation));
+        assert.deepStrictEqual({}, cacheHandler.readContexts(firstConnectionLocation, "myChangelog"));
       });
     });
 
@@ -69,7 +185,6 @@ suite("CacheHandler tests", () => {
      * Tests the reading of an existing empty file.
      */
     suite("should read empty file", () => {
-      const emptyFile = path.join(baseResourcePath, "empty.json");
       const cacheHandler = new CacheHandler(emptyFile);
 
       /**
@@ -90,15 +205,91 @@ suite("CacheHandler tests", () => {
        * Tests that reading the contexts an empty file works.
        */
       test("should read contexts of empty file", () => {
-        assert.deepStrictEqual([], cacheHandler.readContexts(firstConnectionLocation));
+        assert.deepStrictEqual({}, cacheHandler.readContexts(firstConnectionLocation, "myChangelog"));
       });
     });
 
     /**
-     * Tests that reading an existing file with elements works.
+     * Tests that reading a legacy cache file with elements works.
      */
-    suite("should read filled file", () => {
-      const cacheFile = path.join(baseResourcePath, "cache.json");
+    suite("should read cache legacy file", () => {
+      const cacheHandler = new CacheHandler(legacyCacheFile);
+
+      /**
+       * Validate before the suite that the file does exist.
+       */
+      suiteSetup("validate file path", () => {
+        chai.assert.pathExists(legacyCacheFile);
+      });
+
+      /**
+       * Tests that reading a legacy cache file with content works.
+       * You can also see at this point, that the contexts are not ordered.
+       */
+      test(`should read legacy cache file`, () => {
+        const expected: Cache = {
+          "/path/to/project/data/liquibase/data.liquibase.properties": {
+            changelogs: [
+              {
+                path: "foo",
+                lastUsed: 1,
+                contexts: {
+                  loadedContexts: ["prod", "qs", "dev"],
+                },
+              },
+              {
+                path: "bar",
+                lastUsed: 2,
+                contexts: {
+                  loadedContexts: ["prod", "qs", "dev"],
+                },
+              },
+            ],
+          },
+          "/path/to/project/data/liquibase/system.liquibase.properties": {
+            changelogs: [
+              {
+                path: "baz",
+                lastUsed: 3,
+                contexts: {
+                  loadedContexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
+                },
+              },
+            ],
+          },
+        };
+
+        assert.deepStrictEqual(cacheHandler.readCache(), expected);
+      });
+
+      [
+        {
+          expected: { loadedContexts: ["dev", "prod", "qs"] },
+          file: firstConnectionLocation,
+          changelog: "foo",
+        },
+        {
+          expected: { loadedContexts: ["dev", "prod", "qs"] },
+          file: firstConnectionLocation,
+          changelog: "bar",
+        },
+        secondConnectionBazChangelog,
+        firstConnectionNoValidChangelog,
+        noConnectionNoValidChangelog,
+      ].forEach((pElement) => {
+        /**
+         * Test that reading the contexts works. It also checks that the contexts are ordered.
+         */
+        test(`should read contexts of legacy cache of ${pElement.file} and changelog ${pElement.changelog}`, () => {
+          assert.deepStrictEqual(cacheHandler.readContexts(pElement.file, pElement.changelog), pElement.expected);
+        });
+      });
+    });
+
+    /**
+     * Tests that reading an up-to-date cache file with elements works.
+     */
+    suite("should read  up-to-date cache file", () => {
       const cacheHandler = new CacheHandler(cacheFile);
 
       /**
@@ -109,37 +300,33 @@ suite("CacheHandler tests", () => {
       });
 
       /**
-       * Tests that reading a file with content works.
+       * Tests that reading a cache file with content works.
        * You can also see at this point, that the contexts are not ordered.
        */
-      test("should read cache file", () => {
-        const expected: Cache = {
-          "/path/to/project/data/liquibase/data.liquibase.properties": {
-            contexts: ["prod", "qs", "dev"],
-            changelogs: [],
-          },
-          "/path/to/project/data/liquibase/system.liquibase.properties": {
-            contexts: ["c3", "c1", "c5", "c2", "c6", "c4"],
-            changelogs: [],
-          },
-        };
-
-        assert.deepStrictEqual(expected, cacheHandler.readCache());
+      test(`should read cache file`, () => {
+        assert.deepStrictEqual(cacheHandler.readCache(), cache);
       });
 
       [
         {
-          expected: ["dev", "prod", "qs"],
+          expected: { loadedContexts: ["dev", "prod", "qs"], selectedContexts: ["prod", "qs"] },
           file: firstConnectionLocation,
+          changelog: "foo",
         },
-        { expected: ["c1", "c2", "c3", "c4", "c5", "c6"], file: secondConnectionLocation },
-        { expected: [], file: "noConnectionLocation" },
+        {
+          expected: { loadedContexts: ["dev", "prod", "qs"], selectedContexts: [] },
+          file: firstConnectionLocation,
+          changelog: "bar",
+        },
+        secondConnectionBazChangelog,
+        firstConnectionNoValidChangelog,
+        noConnectionNoValidChangelog,
       ].forEach((pElement) => {
         /**
          * Test that reading the contexts works. It also checks that the contexts are ordered.
          */
-        test(`should read contexts of ${pElement.file}`, () => {
-          assert.deepStrictEqual(pElement.expected, cacheHandler.readContexts(pElement.file));
+        test(`should read contexts of  ${pElement.file} and changelog ${pElement.changelog}`, () => {
+          assert.deepStrictEqual(cacheHandler.readContexts(pElement.file, pElement.changelog), pElement.expected);
         });
       });
     });
@@ -188,14 +375,13 @@ suite("CacheHandler tests", () => {
     test("should read cache with changelogs", () => {
       const cache: Cache = {
         myCacheLocation: {
-          contexts: [],
           changelogs: [
-            { path: "a", lastUsed: 1 },
-            { path: "s", lastUsed: 6 },
-            { path: "d", lastUsed: 4 },
-            { path: "f", lastUsed: 5 },
-            { path: "g", lastUsed: 3 },
-            { path: "h", lastUsed: 2 },
+            { path: "a", lastUsed: 1, contexts: {} },
+            { path: "s", lastUsed: 6, contexts: {} },
+            { path: "d", lastUsed: 4, contexts: {} },
+            { path: "f", lastUsed: 5, contexts: {} },
+            { path: "g", lastUsed: 3, contexts: {} },
+            { path: "h", lastUsed: 2, contexts: {} },
           ],
         },
       };
@@ -215,8 +401,16 @@ suite("CacheHandler tests", () => {
   suite("saveContexts", () => {
     const defaultCache: Cache = {
       myCacheLocation: {
-        contexts: ["a", "b"],
-        changelogs: [],
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 10,
+            contexts: {
+              loadedContexts: ["a", "b"],
+              selectedContexts: ["a"],
+            },
+          },
+        ],
       },
     };
 
@@ -225,6 +419,9 @@ suite("CacheHandler tests", () => {
      */
     test("should write to not existing cache file", () => {
       const cacheLocation = path.join(temporaryResourcePath, "notExisting.json");
+      if (fs.existsSync(cacheLocation)) {
+        fs.rmSync(cacheLocation);
+      }
 
       chai.assert.notPathExists(cacheLocation);
 
@@ -255,8 +452,13 @@ suite("CacheHandler tests", () => {
       writeCacheToLocation(
         {
           myOtherCacheLocation: {
-            contexts: ["x", "y", "z"],
-            changelogs: [],
+            changelogs: [
+              {
+                path: "foo",
+                lastUsed: 1,
+                contexts: { loadedContexts: ["x", "y", "z"] },
+              },
+            ],
           },
         },
         cacheLocation
@@ -267,8 +469,13 @@ suite("CacheHandler tests", () => {
       assertSaveOfContextToCache(
         {
           myOtherCacheLocation: {
-            contexts: ["x", "y", "z"],
-            changelogs: [],
+            changelogs: [
+              {
+                path: "foo",
+                lastUsed: 1,
+                contexts: { loadedContexts: ["x", "y", "z"] },
+              },
+            ],
           },
           ...defaultCache,
         },
@@ -287,8 +494,13 @@ suite("CacheHandler tests", () => {
       writeCacheToLocation(
         {
           myCacheLocation: {
-            contexts: ["x", "y", "z"],
-            changelogs: [],
+            changelogs: [
+              {
+                path: "foo",
+                lastUsed: 10,
+                contexts: { loadedContexts: ["x", "y", "z"] },
+              },
+            ],
           },
         },
         cacheLocation
@@ -304,30 +516,13 @@ suite("CacheHandler tests", () => {
    * Tests the method `saveChangelog`.
    */
   suite("saveChangelog", () => {
-    let clock: sinon.SinonFakeTimers;
-
-    /**
-     * Use a fake timer for the timestamps.
-     */
-    suiteSetup(() => {
-      clock = Sinon.useFakeTimers({ now: 10 });
-    });
-
-    /**
-     * Restore the fake timer.
-     */
-    suiteTeardown(() => {
-      clock.restore();
-    });
-
     /**
      * Tests that the changelogs can be written correctly to the cache.
      */
     test("should write changelog to cache", () => {
       const expectedCache: Cache = {
         myCacheLocation: {
-          contexts: [],
-          changelogs: [{ path: "lorem", lastUsed: 10 }],
+          changelogs: [{ path: "lorem", lastUsed: 10, contexts: {} }],
         },
       };
 
@@ -342,8 +537,7 @@ suite("CacheHandler tests", () => {
     test("should update timestamp for existing cache entry", () => {
       const expectedCache: Cache = {
         myCacheLocation: {
-          contexts: [],
-          changelogs: [{ path: "lorem", lastUsed: 10 }],
+          changelogs: [{ path: "lorem", lastUsed: 10, contexts: {} }],
         },
       };
 
@@ -352,8 +546,7 @@ suite("CacheHandler tests", () => {
       writeCacheToLocation(
         {
           myCacheLocation: {
-            contexts: [],
-            changelogs: [{ path: "lorem", lastUsed: 4 }],
+            changelogs: [{ path: "lorem", lastUsed: 4, contexts: {} }],
           },
         },
         cacheLocation
@@ -368,13 +561,12 @@ suite("CacheHandler tests", () => {
     test("should write fifth changelog element", () => {
       const expectedCache: Cache = {
         myCacheLocation: {
-          contexts: [],
           changelogs: [
-            { path: "lorem", lastUsed: 10 },
-            { path: "foobar", lastUsed: 4 },
-            { path: "baz", lastUsed: 3 },
-            { path: "bar", lastUsed: 2 },
-            { path: "foo", lastUsed: 1 },
+            { path: "lorem", lastUsed: 10, contexts: {} },
+            { path: "foobar", lastUsed: 4, contexts: {} },
+            { path: "baz", lastUsed: 3, contexts: {} },
+            { path: "bar", lastUsed: 2, contexts: {} },
+            { path: "foo", lastUsed: 1, contexts: {} },
           ],
         },
       };
@@ -384,12 +576,11 @@ suite("CacheHandler tests", () => {
       writeCacheToLocation(
         {
           myCacheLocation: {
-            contexts: [],
             changelogs: [
-              { path: "foo", lastUsed: 1 },
-              { path: "bar", lastUsed: 2 },
-              { path: "baz", lastUsed: 3 },
-              { path: "foobar", lastUsed: 4 },
+              { path: "foo", lastUsed: 1, contexts: {} },
+              { path: "bar", lastUsed: 2, contexts: {} },
+              { path: "baz", lastUsed: 3, contexts: {} },
+              { path: "foobar", lastUsed: 4, contexts: {} },
             ],
           },
         },
@@ -405,13 +596,12 @@ suite("CacheHandler tests", () => {
     test("should write sixth changelog element", () => {
       const expectedCache: Cache = {
         myCacheLocation: {
-          contexts: [],
           changelogs: [
-            { path: "lorem", lastUsed: 10 },
-            { path: "bar-baz", lastUsed: 5 },
-            { path: "foobar", lastUsed: 4 },
-            { path: "baz", lastUsed: 3 },
-            { path: "bar", lastUsed: 2 },
+            { path: "lorem", lastUsed: 10, contexts: {} },
+            { path: "bar-baz", lastUsed: 5, contexts: {} },
+            { path: "foobar", lastUsed: 4, contexts: {} },
+            { path: "baz", lastUsed: 3, contexts: {} },
+            { path: "bar", lastUsed: 2, contexts: {} },
           ],
         },
       };
@@ -421,13 +611,12 @@ suite("CacheHandler tests", () => {
       writeCacheToLocation(
         {
           myCacheLocation: {
-            contexts: [],
             changelogs: [
-              { path: "bar", lastUsed: 2 },
-              { path: "foobar", lastUsed: 4 },
-              { path: "baz", lastUsed: 3 },
-              { path: "foo", lastUsed: 1 },
-              { path: "bar-baz", lastUsed: 5 },
+              { path: "bar", lastUsed: 2, contexts: {} },
+              { path: "foobar", lastUsed: 4, contexts: {} },
+              { path: "baz", lastUsed: 3, contexts: {} },
+              { path: "foo", lastUsed: 1, contexts: {} },
+              { path: "bar-baz", lastUsed: 5, contexts: {} },
             ],
           },
         },
@@ -505,12 +694,72 @@ suite("CacheHandler tests", () => {
   suite("removeConnectionsFromCache", () => {
     const cacheLocation = path.join(temporaryResourcePath, "connectionRemove.json");
 
-    const c1: Cache = { c1: { contexts: ["a", "b", "c"], changelogs: [] } };
-    const c2: Cache = { c2: { contexts: ["a", "b", "c"], changelogs: [] } };
-    const c3: Cache = { c3: { contexts: ["a", "b", "c"], changelogs: [] } };
-    const c4: Cache = { c4: { contexts: ["a", "b", "c"], changelogs: [] } };
-    const c5: Cache = { c5: { contexts: ["a", "b", "c"], changelogs: [] } };
-    const c6: Cache = { c6: { contexts: ["a", "b", "c"], changelogs: [] } };
+    const c1: Cache = {
+      c1: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b", "c"], selectedContexts: ["a", "c"] },
+          },
+        ],
+      },
+    };
+    const c2: Cache = {
+      c2: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b", "c"], selectedContexts: ["a", "c"] },
+          },
+        ],
+      },
+    };
+    const c3: Cache = {
+      c3: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b", "c"], selectedContexts: ["a", "c"] },
+          },
+        ],
+      },
+    };
+    const c4: Cache = {
+      c4: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b", "c"], selectedContexts: ["a", "c"] },
+          },
+        ],
+      },
+    };
+    const c5: Cache = {
+      c5: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b", "c"], selectedContexts: ["a", "c"] },
+          },
+        ],
+      },
+    };
+    const c6: Cache = {
+      c6: {
+        changelogs: [
+          {
+            path: "foo",
+            lastUsed: 1,
+            contexts: { loadedContexts: ["a", "b", "c"], selectedContexts: ["a", "c"] },
+          },
+        ],
+      },
+    };
 
     /**
      * Creates the cache before each test.
@@ -609,7 +858,7 @@ suite("CacheHandler tests", () => {
  */
 function assertSaveOfContextToCache(expected: Cache, cacheLocation: string): void {
   const cacheHandler = new CacheHandler(cacheLocation);
-  cacheHandler.saveContexts("myCacheLocation", ["a", "b"]);
+  cacheHandler.saveContexts("myCacheLocation", "foo", { loadedContexts: ["a", "b"], selectedContexts: ["a"] });
 
   assertCacheContent(expected, cacheLocation);
 }
@@ -653,9 +902,9 @@ function assertRemoveConnectionOfCache(expected: Cache, cacheLocation: string, c
  * @param cacheLocation - the location where the cache should be read
  */
 function assertCacheContent(expected: Cache, cacheLocation: string): void {
-  const result = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" }));
+  const result: Cache = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" }));
 
-  assert.deepStrictEqual(expected, result);
+  assert.deepStrictEqual(result, expected);
 }
 
 /**
