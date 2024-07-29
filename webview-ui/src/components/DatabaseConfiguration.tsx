@@ -59,7 +59,7 @@ interface NewUrlValues extends UrlParts {
  * @param pProperties - the properties for creating the element
  * @returns the created element
  */
-export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): JSX.Element {
+export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): React.JSX.Element {
   const [serverAddress, setServerAddress] = useState<string>("localhost");
   const [port, setPort] = useState<number>(-1);
   const [databaseName, setDatabaseName] = useState<string>("data");
@@ -278,8 +278,8 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
    *
    * @returns the created `VSCodeRadio` elements
    */
-  function createDatabaseSelections(): JSX.Element[] {
-    const radioElements: JSX.Element[] = [];
+  function createDatabaseSelections(): React.JSX.Element[] {
+    const radioElements: React.JSX.Element[] = [];
     const drivers = customDrivers;
 
     // add all the pre-configured drivers drivers
@@ -331,7 +331,7 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
     pFieldName: keyof DatabaseConnection,
     pLabel: string,
     pPlaceholder?: string
-  ): JSX.Element {
+  ): React.JSX.Element {
     return (
       <VSCodeTextField
         id={pProperties.baseId + "_" + pFieldName.toString()}

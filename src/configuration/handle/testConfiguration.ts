@@ -38,7 +38,10 @@ class DeleteTemporaryFiles extends TransferActionForCommand {
    * @param tempFolder - The temporary folder.
    * @param tempFilePath - The temporary file which is inside the temporary folder.
    */
-  constructor(public tempFolder: string, public tempFilePath: string) {
+  constructor(
+    public tempFolder: string,
+    public tempFilePath: string
+  ) {
     super();
   }
 

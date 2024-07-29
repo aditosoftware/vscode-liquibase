@@ -418,7 +418,7 @@
     "properties-file": "^3.3.18"
   },
   "devDependencies": {
-    "@aditosoftware/eslint-config-adito-platform": "^1.0.1",
+    "@aditosoftware/eslint-config-adito-platform": "*",
     "@types/chai": "^4.3.16",
     "@types/chai-fs": "^2.0.5",
     "@types/chai-string": "^1.4.5",

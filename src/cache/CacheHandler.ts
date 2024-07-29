@@ -239,6 +239,8 @@ export class CacheHandler {
         pCacheElement.changelogs = [];
       }
 
+      // The following block needs to contain deprecated code in order to migrate it.
+      /* eslint-disable deprecation/deprecation */
       if (pCacheElement.contexts) {
         // move the contexts to every changelog
         pCacheElement.changelogs.forEach((pChangelog) => {
@@ -249,6 +251,7 @@ export class CacheHandler {
 
         // and delete the old contexts
         delete pCacheElement.contexts;
+        /* eslint-enable deprecation/deprecation */
       }
     });
   }
