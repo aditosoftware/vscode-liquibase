@@ -56,7 +56,7 @@
       },
       {
         "command": "liquibase.status",
-        "title": "Find out the not deployed changesets (status)...",
+        "title": "List the not deployed changesets (status)...",
         "category": "Liquibase"
       },
       {
@@ -328,7 +328,7 @@
           {
             "id": "runFirstUpdate",
             "title": "Run first command",
-            "description": "Now that you have created your Liquibase properties file, you can now execute any command. You could run the ``Find out the not deployed changesets (status)`` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
+            "description": "Now that you have created your Liquibase properties file, you can now execute any command. You could run the ``List the not deployed changesets (status)`` command to see the changes that are not already in the database.\nYou can use any Liquibase command from the command palette.\n[Run status command](command:liquibase.status)",
             "media": {
               "markdown": "media/walkthrough/empty.md"
             },

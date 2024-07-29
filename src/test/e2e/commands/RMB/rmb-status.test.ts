@@ -20,7 +20,7 @@ suite("status: Right Click Menu", function () {
   });
 
   LiquibaseGUITestUtils.createRmbArguments(
-    "Find out the not deployed changesets (status)...",
+    "List the not deployed changesets (status)...",
     ContextOptions.NO_CONTEXT
   ).forEach((pArgument) => {
     /**
