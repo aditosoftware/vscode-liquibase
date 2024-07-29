@@ -429,6 +429,9 @@ alter table person add column country varchar(2)
      * Tests that the values can be loaded, when connection and changelogs are given as inputs.
      */
     test("should load from input", () => {
+      // reset any cache handler that might or might not be there
+      setCacheHandler(new CacheHandler(path.join(tempDir, `${randomUUID()}.json`)));
+
       const expected: ContextCacheInformation = {
         connectionLocation: "foo",
         changelogLocation: "bar",
