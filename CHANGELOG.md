@@ -21,6 +21,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Added an overview action in the status bar to create the db-doc of the database
 - Opened the output channel per default, if a command was executed. Behavior can be changed with the setting `openOutputChannelOnCommandStart`
 - Added the selection of the contexts to the cache
+- Better output when conversion of files with include/includeAll is attempted 
+
 
 ### Changed
 
