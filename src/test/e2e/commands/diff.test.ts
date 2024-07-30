@@ -5,6 +5,8 @@ import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../constants";
 
+const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+
 /**
  * Test suite for the 'diff' command.
  */
@@ -24,6 +26,16 @@ suite("diff", function () {
 
     await DockerTestUtils.startContainer("postgres", postgresPort);
     await DockerTestUtils.checkContainerStatus("postgres");
+  });
+
+  /**
+   * Clean up after the test suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+    await DockerTestUtils.stopAndRemoveContainer("postgres");
+
+    fs.rmSync(temporaryFolder, { recursive: true });
   });
 
   /**
@@ -57,14 +69,6 @@ suite("diff", function () {
 
     await executeCommand("diffPostgres.txt", configurationName, secondConfiguration);
   });
-
-  /**
-   * Clean up after the test suite.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
-    await DockerTestUtils.stopAndRemoveContainer("postgres");
-  });
 });
 
 /**
@@ -75,7 +79,7 @@ suite("diff", function () {
  * @param secondConfiguration - the name of the second configuration
  */
 async function executeCommand(fileName: string, configurationName: string, secondConfiguration: string): Promise<void> {
-  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+  LiquibaseGUITestUtils.removeContentOfFolder(temporaryFolder);
 
   await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 

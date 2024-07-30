@@ -14,11 +14,22 @@ suite("db-doc: Right Click Menu", function () {
    */
   let configurationName: string;
 
+  const directoryForDbDoc = LiquibaseGUITestUtils.generateTemporaryFolder();
+
   /**
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
+  });
+
+  /**
+   * Teardown function that runs after the test suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+
+    fs.rmSync(directoryForDbDoc, { recursive: true });
   });
 
   LiquibaseGUITestUtils.createRmbArguments(
@@ -29,7 +40,7 @@ suite("db-doc: Right Click Menu", function () {
      * Test case to execute the 'db-doc' command from RMB.
      */
     test(`should execute 'db-doc' command from ${pArgument.description}`, async function () {
-      const directoryForDbDoc = LiquibaseGUITestUtils.generateTemporaryFolder();
+      LiquibaseGUITestUtils.removeContentOfFolder(directoryForDbDoc);
 
       const input = await pArgument.command(this, configurationName);
 
@@ -46,12 +57,5 @@ suite("db-doc: Right Click Menu", function () {
         "Did NOT create a DB-DOC Files"
       );
     });
-  });
-
-  /**
-   * Teardown function that runs after the test suite.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

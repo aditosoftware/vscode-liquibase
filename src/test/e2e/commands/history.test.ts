@@ -19,6 +19,8 @@ suite("History", async function () {
    */
   let configurationName: string;
 
+  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+
   /**
    * Set up the test suite.
    */
@@ -27,11 +29,20 @@ suite("History", async function () {
   });
 
   /**
+   * Clean up after the test suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+
+    fs.rmSync(temporaryFolder, { recursive: true });
+  });
+
+  /**
    * Test the 'history' command with TABULAR and TEXT output format.
    */
   ["TABULAR", "TEXT"].forEach((pHistoryOption) => {
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
-      const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+      LiquibaseGUITestUtils.removeContentOfFolder(temporaryFolder);
 
       await new EditorView().closeAllEditors();
 
@@ -65,12 +76,5 @@ suite("History", async function () {
       );
       chai.assert.pathExists(historyFile);
     });
-  });
-
-  /**
-   * Clean up after the test suite.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

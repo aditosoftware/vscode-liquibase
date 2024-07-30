@@ -18,11 +18,22 @@ suite("update-sql: Right Click Menu", function () {
    */
   let configurationName: string;
 
+  const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+
   /**
    * Setup function that runs before the test suite.
    */
   suiteSetup(async function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
+  });
+
+  /**
+   * Teardown function that runs after the test suite.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+
+    fs.rmSync(temporaryFolder, { recursive: true });
   });
 
   LiquibaseGUITestUtils.createRmbArguments(
@@ -33,7 +44,7 @@ suite("update-sql: Right Click Menu", function () {
      * Test case to execute the 'update-sql' command from RMB.
      */
     test(`should execute 'update-sql' command from ${pArgument.description}`, async function () {
-      const temporaryFolder = LiquibaseGUITestUtils.generateTemporaryFolder();
+      LiquibaseGUITestUtils.removeContentOfFolder(temporaryFolder);
 
       // first, update the database
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
@@ -61,12 +72,5 @@ suite("update-sql: Right Click Menu", function () {
       );
       chai.assert.pathExists(updateFile);
     });
-  });
-
-  /**
-   * Teardown function that runs after the test suite.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });

@@ -257,6 +257,17 @@ export class LiquibaseGUITestUtils {
     fs.mkdirSync(tempDir, { recursive: true });
     return tempDir;
   }
+
+  /**
+   * Removes every content from a folder without removing the folder itself.
+   *
+   * @param folder - the folder
+   */
+  static removeContentOfFolder(folder: string): void {
+    for (const file of fs.readdirSync(folder)) {
+      fs.rmSync(path.join(folder, file));
+    }
+  }
   //#endregion
 
   //#region command end
