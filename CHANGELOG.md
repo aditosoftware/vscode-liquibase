@@ -21,8 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Added an overview action in the status bar to create the db-doc of the database
 - Opened the output channel per default, if a command was executed. Behavior can be changed with the setting `openOutputChannelOnCommandStart`
 - Added the selection of the contexts to the cache
-- Better output when conversion of files with include/includeAll is attempted 
-
+- Better output when conversion of files with include/includeAll is attempted
 
 ### Changed
 
@@ -30,14 +29,15 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Used loading dialog for the contexts
 - Wording improved: changed cache to recently loaded
 - Moved logging into extra dependency
-- database url can be inputted in parts
-- removed "Classpath" from the visual Liquibase configurator
-- changed "Additional Elements" to "Advanced properties"
+- Database url can be inputted in parts
+- Removed "Classpath" from the visual Liquibase configurator
+- Changed "Additional Elements" to "Advanced properties"
 - Upgraded "liquibase-core"-dependency from 4.24.0 to 4.28.0
-- changed changelog selection from a folder selection to a cached selection with the recent used changelogs saved
-- changed titles and placeholders in various inputs
-- Changed the order of the cache selection: "Use any of the recently loaded contexts" is now the top-most item, and "Do not use any contexts" is now the last item.
-- improved the names of the commands `liquibase.history`, `liquibase.diff`, `liquibase.status`, `liquibase.changelog-sync` and `liquibase.clear-checksums` to be more user-friendly
+- Changed changelog selection from a folder selection to a cached selection with the recent used changelogs saved
+- Changed titles and placeholders in various inputs
+- Changed the order of the cache selection: "Use any of the recently loaded contexts" is now the top-most item, and "Do not use any contexts" is now the last item
+- Improved the names of the commands `liquibase.history`, `liquibase.diff`, `liquibase.status`, `liquibase.changelog-sync` and `liquibase.clear-checksums` to be more user-friendly
+- Changed order of the `Drivers...` menu to have add, delete and edit custom drivers on the top of the menu
 
 ### Fixed
 
