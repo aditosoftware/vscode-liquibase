@@ -199,6 +199,18 @@ export function getDrivers(): vscode.QuickPickItem[] {
   const drivers: vscode.QuickPickItem[] = [];
 
   drivers.push({
+    label: "New Driver",
+    kind: vscode.QuickPickItemKind.Separator,
+  });
+
+  drivers.push({
+    iconPath: new vscode.ThemeIcon("add"),
+    label: "Add New Driver",
+  });
+
+  getCustomDriversForView(drivers, [editDriver, deleteDriver]);
+
+  drivers.push({
     label: "Default Drivers",
     kind: vscode.QuickPickItemKind.Separator,
   });
@@ -210,18 +222,6 @@ export function getDrivers(): vscode.QuickPickItem[] {
       detail: value.driverClass,
       buttons: [],
     });
-  });
-
-  getCustomDriversForView(drivers, [editDriver, deleteDriver]);
-
-  drivers.push({
-    label: "New Driver",
-    kind: vscode.QuickPickItemKind.Separator,
-  });
-
-  drivers.push({
-    iconPath: new vscode.ThemeIcon("add"),
-    label: "Add New Driver",
   });
 
   return drivers;
@@ -246,6 +246,7 @@ export function getCustomDriversForView(drivers: vscode.QuickPickItem[], actions
         const driver = JSON.parse(fileContent);
         drivers.push({
           label: driver.name,
+          description: driver.jdbcName,
           detail: driver.driverClass,
           buttons: actions,
         });
