@@ -41,18 +41,20 @@ Some commands are accessible from the context menu. The context menu is availabl
 Currently, the following Liquibase commands are supported:
 
 > **Tip:** The link on the command itself will lead you to the Liquibase documentation. This will give you a better understanding of the technical details of each command.
+>
+> The name in brackets is the real name of the command given by Liquibase. This will be used, if the display name is different than the original name.
 
-- [Changelog Sync](https://docs.liquibase.com/commands/utility/changelog-sync.html)
-- [Clear Checksums](https://docs.liquibase.com/commands/utility/clear-checksums.html)
+- [Compare two databases (diff)](https://docs.liquibase.com/commands/inspection/diff.html)
+- [Clear the checksums of all changelogs in the database](https://docs.liquibase.com/commands/utility/clear-checksums.html)
 - [Create Tag](https://docs.liquibase.com/commands/utility/tag.html)
-- [Diff](https://docs.liquibase.com/commands/inspection/diff.html)
 - [Drop-all](https://docs.liquibase.com/commands/utility/drop-all.html)
 - [Generate Changelog](https://docs.liquibase.com/commands/inspection/generate-changelog.html)
 - [Generate database documentation (db-doc)](https://docs.liquibase.com/commands/utility/db-doc.html) - [more details in this documentation](#generate-database-documentation--getting-an-overview-about-your-database)
 - [Generate SQL File for incoming changes](https://docs.liquibase.com/commands/update/update-sql.html)
-- [History](https://docs.liquibase.com/commands/change-tracking/history.html)
+- [List all deployed changesets (history)](https://docs.liquibase.com/commands/change-tracking/history.html)
+- [List the not deployed changesets (status)](https://docs.liquibase.com/commands/change-tracking/status.html)
+- [Mark not deployed changelogs as executed (changelog-sync)](https://docs.liquibase.com/commands/utility/changelog-sync.html)
 - [Rollback to Tag](https://docs.liquibase.com/commands/rollback/rollback-by-tag.html)
-- [Status](https://docs.liquibase.com/commands/change-tracking/status.html)
 - [Tag Exists](https://docs.liquibase.com/commands/utility/tag-exists.html)
 - [Update](https://docs.liquibase.com/commands/update/update.html) - Default Keyboard shortcut: <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>U</kbd> (macOS <kbd>Cmd</kbd> + <kbd>Alt</kbd> + <kbd>U</kbd>)
 - [Unexpected Changesets](https://docs.liquibase.com/commands/change-tracking/unexpected-changesets.html)

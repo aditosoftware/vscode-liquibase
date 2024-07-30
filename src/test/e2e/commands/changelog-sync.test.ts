@@ -30,7 +30,7 @@ suite("Changelog Sync", function () {
       await LiquibaseGUITestUtils.executeCommandInMatrixExecution(
         "changelog-sync",
         {
-          command: "Changelog Sync...",
+          command: "Mark not deployed changelogs as executed (changelog-sync)...",
           configurationName,
           changelogFile: true,
         },

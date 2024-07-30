@@ -30,7 +30,10 @@ suite("Clear Checksums", function () {
     await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
     // and then clear the checksums
-    await LiquibaseGUITestUtils.startCommandExecution({ command: "Clear Checksums...", configurationName });
+    await LiquibaseGUITestUtils.startCommandExecution({
+      command: "Clear the checksums of all changelogs in the database...",
+      configurationName,
+    });
 
     assert.ok(
       await LiquibaseGUITestUtils.waitForCommandExecution(

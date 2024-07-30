@@ -22,7 +22,10 @@ suite("changelog-sync: Right Click Menu", function () {
   /**
    * Test case for executing the 'changelog sync' command via RMB.
    */
-  LiquibaseGUITestUtils.createRmbArguments("Changelog Sync...", ContextOptions.NO_CONTEXT).forEach((pArgument) => {
+  LiquibaseGUITestUtils.createRmbArguments(
+    "Mark not deployed changelogs as executed (changelog-sync)...",
+    ContextOptions.NO_CONTEXT
+  ).forEach((pArgument) => {
     test(`should execute 'changelog sync' command from ${pArgument.description}`, async function () {
       await pArgument.command(this, configurationName);
 

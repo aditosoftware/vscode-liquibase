@@ -273,7 +273,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
       }
     ),
 
-    registerLiquibaseCommand("Find out the not deployed changesets", "status", [
+    registerLiquibaseCommand("List the not deployed changesets", "status", [
       ...generatePropertyFileDialogOptions(true, true),
     ]),
 
