@@ -151,7 +151,7 @@ suite("convert format", () => {
     fs.writeFileSync(emptyFile, "");
     chai.assert.pathExists(emptyFile);
 
-    const warnMessage = Sinon.stub(vscode.window, "showWarningMessage");
+    const warnMessage = Sinon.spy(vscode.window, "showWarningMessage");
 
     await assertConverting(() => convertFormats(true), tempFolder, "YAML", emptyFile);
 
@@ -185,7 +185,6 @@ suite("convert format", () => {
  */
 async function assertConverting(
   call: () => Promise<void>,
-
   tempFolder: string,
   format: string,
   changelogLocation: string | vscode.Uri

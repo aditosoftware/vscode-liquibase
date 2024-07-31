@@ -288,8 +288,9 @@ function getJavaExecutable(reject: (reason?: unknown) => void): string | undefin
 function addToOutput(data: unknown, progress: vscode.Progress<{ message: string | undefined }>): void {
   const line: string = `${data}`;
 
-  // append any message to the output stream
-  Logger.getLogger().info({ message: line });
+  // append any message to the output stream.
+  // These messages should ignore any format
+  Logger.getLogger().info({ message: line, ignoreFormatForOutputChannel: true });
 
   if (!line.includes("WARNING: License service not loaded") && !line.includes("#####")) {
     // Filter out lines with warnings of liquibase service and ####.
