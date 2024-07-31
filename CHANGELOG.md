@@ -38,6 +38,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Changed the order of the cache selection: "Use any of the recently loaded contexts" is now the top-most item, and "Do not use any contexts" is now the last item
 - Improved the names of the commands `liquibase.history`, `liquibase.diff`, `liquibase.status`, `liquibase.changelog-sync` and `liquibase.clear-checksums` to be more user-friendly
 - Changed order of the `Drivers...` menu to have add, delete and edit custom drivers on the top of the menu
+- When logging during the command execution, the logs written to the output channel will be written without any timestamp or level
 
 ### Fixed
 
