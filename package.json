@@ -441,7 +441,7 @@
     "sinon": "^17.0.1",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
-    "vscode-extension-tester": "^8.3.1",
+    "vscode-extension-tester": "^8.5.0",
     "webfont": "^11.2.26",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4",
