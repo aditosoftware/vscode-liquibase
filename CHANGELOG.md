@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 - Improved the names of the commands `liquibase.history`, `liquibase.diff`, `liquibase.status`, `liquibase.changelog-sync` and `liquibase.clear-checksums` to be more user-friendly
 - Changed order of the `Drivers...` menu to have add, delete and edit custom drivers on the top of the menu
 - When logging during the command execution, the logs written to the output channel will be written without any timestamp or level
+- Improved position of a few elements in the configuration
 
 ### Fixed
 

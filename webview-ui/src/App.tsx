@@ -1,5 +1,6 @@
 import { vscodeApiWrapper } from "./utilities/vscodeApiWrapper";
 import { VSCodeButton, VSCodeDivider, VSCodeLink, VSCodeTextField } from "@vscode/webview-ui-toolkit/react";
+import "react-tooltip/dist/react-tooltip.css";
 import "./App.css";
 import "./codicon.css";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ import {
 import { DatabaseConnection } from "../../src/configuration/data/DatabaseConnection";
 import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";
 import { MessageData, MessageType } from "../../src/configuration/transfer";
+import { Tooltip } from "react-tooltip";
 
 /**
  * The main Webview for the Liquibase Configuration.
@@ -144,21 +146,43 @@ function App(): React.JSX.Element {
               <legend>General information</legend>
               <section>
                 <VSCodeTextField autoFocus required value={data.name} onBlur={handleChangeName} id="nameInput">
-                  The name under which the configuration should be stored
+                  The name under which the configuration should be stored{" "}
+                  <VSCodeLink
+                    className="codicon codicon-question"
+                    data-tooltip-id="name-tooltip"
+                    data-tooltip-html="For instance the name <code>dev</code> will result in a <code>dev.liquibase.properties</code> file."></VSCodeLink>
+                  <section
+                    slot="end"
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}>
+                    .liquibase.properties
+                  </section>
+                  <Tooltip id="name-tooltip" className="tooltip-colors" classNameArrow="tooltip-colors" />
                 </VSCodeTextField>
-                <label htmlFor="nameInput">
-                  For instance the name <code>dev</code> will result in a <code>dev.liquibase.properties</code> file.
-                </label>
               </section>
               <VSCodeDivider />
               <section>
-                <VSCodeTextField value={data.changelogFile} onBlur={handleChangelogFileChange} id="changelogInput">
-                  The basic changelog file for any command
-                </VSCodeTextField>
-                <VSCodeButton appearance="secondary" onClick={handleChooseChangelog} id="changelogSelection">
-                  Choose changelog
-                  <span slot="start" className="codicon codicon-file-code"></span>
-                </VSCodeButton>
+                <div className="flexContainer">
+                  <VSCodeTextField
+                    value={data.changelogFile}
+                    onBlur={handleChangelogFileChange}
+                    id="changelogInput"
+                    style={{ marginRight: "5px" }}>
+                    The basic changelog file for any command
+                  </VSCodeTextField>
+                  <VSCodeButton
+                    appearance="secondary"
+                    onClick={handleChooseChangelog}
+                    id="changelogSelection"
+                    style={{ flexShrink: 0 }}>
+                    Choose changelog
+                    <span slot="start" className="codicon codicon-folder-opened"></span>
+                  </VSCodeButton>
+                </div>
               </section>
             </fieldset>
 

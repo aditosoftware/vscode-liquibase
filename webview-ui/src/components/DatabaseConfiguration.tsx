@@ -204,34 +204,6 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
         <fieldset id={pProperties.baseId + "_databaseConnection"}>
           <legend>Database url</legend>
 
-          {pProperties.databaseConnection?.databaseType !== NO_PRE_CONFIGURED_DRIVER && (
-            <>
-              <VSCodeTextField
-                id={pProperties.baseId + "_serverAddress"}
-                value={serverAddress}
-                onBlur={handleServerAddress}>
-                server address
-              </VSCodeTextField>
-              <VSCodeTextField id={pProperties.baseId + "_port"} value={port.toString()} onBlur={handlePort}>
-                port
-              </VSCodeTextField>
-              <VSCodeTextField
-                id={pProperties.baseId + "_databaseName"}
-                value={databaseName}
-                onBlur={handleDatabaseName}>
-                database name
-              </VSCodeTextField>
-            </>
-          )}
-
-          {createInput(
-            pProperties,
-            "text",
-            "url",
-            "The url of the database",
-            "For example: jdbc:mariadb://localhost:3306/data"
-          )}
-
           <div className="dropdown-container">
             <label htmlFor="databaseTypeSelection">Database type for the configuration</label>
             <VSCodeDropdown
@@ -255,6 +227,40 @@ export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): 
               {createDatabaseSelections()}
             </VSCodeDropdown>
           </div>
+
+          {pProperties.databaseConnection?.databaseType !== NO_PRE_CONFIGURED_DRIVER && (
+            <div className="flexContainer">
+              <VSCodeTextField
+                id={pProperties.baseId + "_serverAddress"}
+                className="tripleInput"
+                value={serverAddress}
+                onBlur={handleServerAddress}>
+                server address
+              </VSCodeTextField>
+              <VSCodeTextField
+                id={pProperties.baseId + "_port"}
+                className="tripleInput"
+                value={port.toString()}
+                onBlur={handlePort}>
+                port
+              </VSCodeTextField>
+              <VSCodeTextField
+                id={pProperties.baseId + "_databaseName"}
+                className="tripleInput"
+                value={databaseName}
+                onBlur={handleDatabaseName}>
+                database name
+              </VSCodeTextField>
+            </div>
+          )}
+
+          {createInput(
+            pProperties,
+            "text",
+            "url",
+            "The url of the database",
+            "For example: jdbc:mariadb://localhost:3306/data"
+          )}
 
           {pProperties.databaseConnection?.databaseType === NO_PRE_CONFIGURED_DRIVER && (
             <>

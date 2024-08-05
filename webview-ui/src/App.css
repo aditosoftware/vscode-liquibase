@@ -44,3 +44,32 @@ vscode-text-field[required]::part(label)::after {
   content: "*";
   color: var(--vscode-errorForeground);
 }
+
+/* Style toolips in vscode colors. */
+.tooltip-colors {
+  background-color: var(--vscode-input-background);
+  color: var(--vscode-foreground);
+}
+
+.flexContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: end;
+}
+
+/*#region Styles for the triple input of server address, port andd database name */
+.tripleInput {
+  flex: 1;
+  margin: 0 5px;
+}
+
+.tripleInput:first-child {
+  margin-left: 0;
+}
+
+.tripleInput:last-child {
+  margin-right: 0;
+}
+/*#endregion RegionName*/
