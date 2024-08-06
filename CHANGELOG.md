@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 
 ## [Unreleased]
 
+## 1.0.0
+
 ### Added
 
 - Better support when changelogs without any contexts are loaded and cached

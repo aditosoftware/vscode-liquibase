@@ -40,3 +40,4 @@ vsc-extension-quickstart.md
 .mocharc.json
 eslint.config.mjs
 DEV_NOTES.md
+.gitlab
