@@ -153,7 +153,7 @@ suite("configurationCommands", () => {
           Sinon.assert.calledOnce(openDialog);
           Sinon.assert.calledWith(openDialog, {
             title: "Add existing configuration (Step 2 of 2)",
-            openLabel: "Open properties file",
+            openLabel: "Append",
             canSelectFiles: true,
             canSelectFolders: false,
             canSelectMany: false,

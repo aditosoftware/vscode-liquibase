@@ -10,6 +10,7 @@ import { getWorkFolder } from "./handleChangelogFileInput";
 import * as vscode from "vscode";
 import { createBasicArgsForLiquibaseCLI, executeJarAsync } from "./executeJar";
 import { Logger } from "@aditosoftware/vscode-logging";
+import { selectOutputFolder } from "./constants";
 
 const inputKey = "input";
 const outputKey = "output";
@@ -30,7 +31,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
         canSelectFiles: convertFile,
         canSelectFolders: !convertFile,
         defaultUri: vscode.Uri.file(getWorkFolder()),
-        openLabel: `Select the ${convertFile ? "file" : "folder"} to convert`,
+        openLabel: `Submit ${convertFile ? "File" : "Folder"} for Conversion`,
         filters: {
           Changelog: ["json", "sql", "xml", "yml", "yaml"],
           "All Files": ["*"],
@@ -46,7 +47,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
         canSelectFiles: false,
         canSelectFolders: true,
         defaultUri: vscode.Uri.file(getWorkFolder()),
-        openLabel: "Select the output location",
+        openLabel: selectOutputFolder,
       },
     }),
     new QuickPick({
