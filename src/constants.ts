@@ -61,7 +61,7 @@ export const folderSelectionName = "folderSelection";
 /**
  * The label that should be used for the folder selection.
  */
-export const selectOutputFolder = "Select output folder";
+export const selectOutputFolder = "Save";
 
 /**
  * Name of the option to choose a custom changelog from the dialogs.

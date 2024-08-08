@@ -114,7 +114,7 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
     new OpenDialog({
       name: locationKey,
       openDialogOptions: {
-        openLabel: "Open properties file",
+        openLabel: "Append",
         canSelectFiles: true,
         canSelectFolders: false,
         canSelectMany: false,
@@ -301,7 +301,7 @@ export const modifyOrAddDriver = (oldDriverValues?: CustomDriverData, oldDriverN
           filters: {
             "Driver File": ["jar"],
           },
-          openLabel: "Select the driver file",
+          openLabel: "Submit Driver",
         },
       })
     );

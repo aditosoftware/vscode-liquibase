@@ -54,7 +54,7 @@ export class HandleChangelogFileInput {
             canSelectFiles: true,
             canSelectFolders: false,
             canSelectMany: false,
-            openLabel: "Select the changelog",
+            openLabel: "Submit Changelog",
             filters: {
               Changelog: ["xml", "json", "yaml", "yml", "sql"],
               "All Files": ["*"],
