@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 ### Changed
 
 - Changed the labels of a few OpenDialog buttons
+- Improved extension icon so that it also looks good in dark themes
 
 ## 1.0.0
 
