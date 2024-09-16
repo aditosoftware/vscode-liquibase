@@ -4,6 +4,13 @@ All notable changes to the "Liquibase" extension will be documented in this file
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added repository information to the package.json
+- Added images to README.md
+
 ## 1.0.1
 
 ### Changed

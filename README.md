@@ -25,6 +25,9 @@ You can later edit your configurations with the `Liquibase: Edit existing Liquib
 ### Executing a command
 
 All commands can be accessed from the "Liquibase" item in the status bar.
+
+![Status bar of Liquibase Extension](/media/walkthrough/statusBarOverview.png)
+
 You can also access all commands by using the the command palette. It can be accessed with the keyboard shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (macOS <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
 
 If you execute any command, you notice a general pattern of inputs. You will be always asked the following steps in this order:
