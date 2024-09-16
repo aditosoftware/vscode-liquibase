@@ -1,0 +1,47 @@
+name: Build Project
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Check Node.js version
+        run: node -v
+
+      - name: Check npm versions
+        run: npm -v
+
+      - name: Run clean install
+        run: npm ci
+
+      - run: xvfb-run -a npm test
+        if: runner.os == 'Linux'
+      - run: npm test
+        if: runner.os != 'Linux'
+
+      - name: run e2e tests
+        run: xvfb-run -a npm run test:e2e -- --storage ./out/test-resources/${{ matrix.node-version }}
+        if: runner.os == 'Linux'
+
+      - name: npm e2e tests
+        run: npm run test:e2e -- --storage ./out/test-resources/${{ matrix.node-version }}
+        if: runner.os != 'Linux'
+
+      - name: "Upload e2e screenshots"
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots
+          path: ./out/test-resources/**/screenshots/**
+          retention-days: 5
+          if-no-files-found: ignore
