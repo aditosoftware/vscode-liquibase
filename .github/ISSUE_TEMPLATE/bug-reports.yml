@@ -1,0 +1,77 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+        ⚠️ Do not share security issues here, instead use the **Report a vulnerability** in the security tab.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe exactly what happened to have this bug appear.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: Describe what you expect to happen.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: Steps to reproduce
+      description: |
+        Describe the steps to reproduce this bug.
+        This will be automatically formatted into code, so no need for backticks.
+      placeholder: |
+        1.
+        2.
+        3.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating System
+      description: What OS are you using?
+      placeholder: Windows 10, macOS 14.6.1, ubuntu 24, ...
+    validations:
+      required: true
+  - type: input
+    id: database-version
+    attributes:
+      label: Database type and version
+      description: What database type and version are you using?
+      placeholder: MariaDB 11.5, PostgreSQL 16.4, ...
+  - type: input
+    id: liquibase-version
+    attributes:
+      label: Liquibase version
+      description: What version of vscode-liquibase are you using?
+      placeholder: 1.0.2
+    validations:
+      required: true
+  - type: input
+    id: vscode-version
+    attributes:
+      label: VSCode version
+      description: What version of VSCode are you using?
+      placeholder: 1.93.0
+    validations:
+      required: true
