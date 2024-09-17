@@ -37,11 +37,11 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           # Update Ubuntu and install Docker in WSL
-          wsl sudo apt-get update
-          wsl sudo apt-get install -y docker.io
+          sudo apt-get update
+          sudo apt-get install -y docker.io
 
           # Start Docker Daemon
-          wsl sudo service docker start
+          sudo service docker start
 
       - name: Check Docker Version
         shell: wsl-bash {0}
