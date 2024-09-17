@@ -1,6 +1,6 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { TextEditor, VSBrowser } from "vscode-extension-tester";
+import { TextEditor } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
 import { Connection, ContextSelection } from "../../../cache";
