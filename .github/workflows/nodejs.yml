@@ -37,7 +37,7 @@ jobs:
         if: runner.os == 'Windows'
         run: |
           wsl -l -v
-          wsl --set-version Ubuntu
+          wsl --set-version Ubuntu 2
 
       - name: Install and Run Docker in WSL
         shell: wsl-bash {0}
