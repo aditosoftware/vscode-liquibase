@@ -32,6 +32,10 @@ jobs:
         with:
           distribution: Ubuntu-20.04
           use-cache: true
+      
+      - name: update wsl version
+        if: runner.os == 'Windows'
+        run: wsl --set-version  Ubuntu-20.04 2
 
       - name: Install and Run Docker in WSL
         shell: wsl-bash {0}
@@ -57,6 +61,8 @@ jobs:
 
           # check docker status
           sudo service docker status
+
+        
 
       - name: check docker installation (sudo)
         run: wsl sudo docker run hello-world
