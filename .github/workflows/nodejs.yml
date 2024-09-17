@@ -36,14 +36,20 @@ jobs:
           # Update the WSL
           wsl --update
 
+          # list all distros
+          wsl --list
+
+          # list all available distros
+          wsl --list --online
+
           # Set WSL Version 2 as default
           wsl --set-default-version 2
 
           # Install Ubuntu WSL distribution
-          wsl --install Ubuntu
+          wsl --install Ubuntu-22.04 
 
-          # Set Ubuntu 20.04 as default distribution (optional, if multiple distributions are installed)
-          wsl --set-default Ubuntu
+          # Set Ubuntu as default distribution (optional, if multiple distributions are installed)
+          wsl --set-default Ubuntu-22.04 
 
           # Update Ubuntu and install Docker in WSL
           wsl sudo apt-get update
