@@ -26,52 +26,16 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Enable WSL and Virtual Machine Platform
+      - name: Set up WSL for Windows
         if: runner.os == 'Windows'
-        run: |
-          dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-          dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-
-      - name: Check WSL Version and Status
-        if: runner.os == 'Windows'
-        run: |
-          wsl --list --verbose
-          wsl --list --online
-          wsl --status
-
-      - name: Update WSL
-        if: runner.os == 'Windows'
-        run: wsl --update
-
-      - name: Install Ubuntu 22.04
-        if: runner.os == 'Windows'
-        run: wsl --install -d Ubuntu-22.04
+        uses: Vampire/setup-wsl@v3
+        with:
+          distribution: Ubuntu-20.04
 
       - name: Install and Run Docker in WSL
+        shell: wsl-bash {0}
         if: runner.os == 'Windows'
         run: |
-          # Enable WSL and Virtual Machine Platform
-          dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-          dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-
-          # Update the WSL
-          wsl --update
-
-          # list all distros
-          wsl --list
-
-          # list all available distros
-          wsl --list --online
-
-          # Set WSL Version 2 as default
-          wsl --set-default-version 2
-
-          # Install Ubuntu WSL distribution
-          wsl --install Ubuntu-22.04 
-
-          # Set Ubuntu as default distribution (optional, if multiple distributions are installed)
-          wsl --set-default Ubuntu-22.04 
-
           # Update Ubuntu and install Docker in WSL
           wsl sudo apt-get update
           wsl sudo apt-get install -y docker.io
@@ -80,7 +44,8 @@ jobs:
           wsl sudo service docker start
 
       - name: Check Docker Version
-        run: wsl docker --version
+        shell: wsl-bash {0}
+        run: docker --version
         if: runner.os == 'Windows'
 
       - name: Check Docker Version
