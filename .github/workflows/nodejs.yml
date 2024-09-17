@@ -31,6 +31,7 @@ jobs:
         uses: Vampire/setup-wsl@v3
         with:
           distribution: Ubuntu-20.04
+          use-cache: true
 
       - name: Install and Run Docker in WSL
         shell: wsl-bash {0}
@@ -53,6 +54,10 @@ jobs:
 
           # Start Docker Daemon
           sudo service docker start
+
+      - name: check docker installation
+        run: wsl docker run hello-world
+        if: runner.os == 'Windows'
 
       - name: Check Docker Version
         shell: wsl-bash {0}
