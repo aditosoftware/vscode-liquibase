@@ -11,7 +11,7 @@ jobs:
         # os: [macos-latest, ubuntu-latest, windows-latest]
         # TODO use all versions and os
         node-version: [22.x]
-        os: [ubuntu-latest]
+        os: [windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,32 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Print Docker Version
+      - name: Install and Run Docker in WSL
+        if: runner.os == 'Windows'
+        run: |
+          # Enable WSL and Virtual Machine Platform
+          dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+          dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+          # Set WSL Version 2 as default
+          wsl --set-default-version 2
+
+          # Install Ubuntu WSL distribution
+          wsl --install
+
+          # Update Ubuntu and install Docker in WSL
+          wsl sudo apt-get update
+          wsl sudo apt-get install -y docker.io
+
+          # Start Docker Daemon
+          wsl sudo service docker start
+
+      - name: Check Docker Version
+        run: wsl docker --version
+        if: runner.os == 'Windows'
+
+      - name: Check Docker Version
+        if: runner.os != 'Windows'
         run: docker --version
 
       - name: Check Node.js version
@@ -44,14 +69,15 @@ jobs:
         if: runner.os != 'Linux'
 
       - name: run e2e tests
-        run: xvfb-run -a npm run test:e2e -- --storage ./out/test-resources/${{ matrix.node-version }}
+        run: xvfb-run -a npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
         if: runner.os == 'Linux'
 
       - name: npm e2e tests
-        run: npm run test:e2e -- --storage ./out/test-resources/${{ matrix.node-version }}
+        run: npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
         if: runner.os != 'Linux'
 
       - name: "Upload e2e screenshots"
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: e2e-screenshots
