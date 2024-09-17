@@ -20,9 +20,16 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Set up JDK for Liquibase  CLI
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+          cache: maven
+
       - name: Print Docker Version
         run: docker --version
-      
+
       - name: Check Node.js version
         run: node -v
 
