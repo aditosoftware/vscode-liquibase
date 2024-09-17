@@ -25,7 +25,6 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-          cache: maven
 
       - name: Print Docker Version
         run: docker --version
