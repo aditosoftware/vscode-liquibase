@@ -55,6 +55,13 @@ jobs:
           # Start Docker Daemon
           sudo service docker start
 
+          # check docker status
+          sudo service docker status
+
+      - name: check docker installation (sudo)
+        run: wsl sudo docker run hello-world
+        if: runner.os == 'Windows'
+
       - name: check docker installation
         run: wsl docker run hello-world
         if: runner.os == 'Windows'
