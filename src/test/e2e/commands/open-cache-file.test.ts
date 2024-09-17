@@ -100,7 +100,6 @@ suite("open cache", () => {
 
     await input.setText(ContextOptions.USE_RECENTLY_LOADED);
     await input.confirm();
-    await VSBrowser.instance.takeScreenshot("00");
 
     await LiquibaseGUITestUtils.waitForCheckboxesToBeThere(input);
     const quickPicks = await input.getCheckboxes();
