@@ -11,7 +11,10 @@ jobs:
         # os: [macos-latest, ubuntu-latest, windows-latest]
         # TODO use all versions and os
         node-version: [22.x]
-        os: [windows-latest]
+        # No windows runner, because in this extension, we have a lot of tests that need docker in the WSL.
+        # Sadly, the setup-wsl (https://github.com/Vampire/setup-wsl) and the current windows runners only support WSL 1.
+        # Therefore, we can not install and start a docker container in the WSL.
+        os: [macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -26,59 +29,13 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Set up WSL for Windows
-        if: runner.os == 'Windows'
-        uses: Vampire/setup-wsl@v3
-        with:
-          distribution: Ubuntu-20.04
-          use-cache: true
-
-      - name: update wsl version
-        if: runner.os == 'Windows'
+      - name: Set up docker for macOS
+        if: runner.os == 'macOS'
         run: |
-          wsl -l -v
-          wsl --set-version Ubuntu 2
-
-      - name: Install and Run Docker in WSL
-        shell: wsl-bash {0}
-        if: runner.os == 'Windows'
-        run: |
-          # Update Ubuntu and install Docker in WSL
-          sudo apt-get update -qqq
-          sudo apt-get install -y ca-certificates curl
-          sudo install -m 0755 -d /etc/apt/keyrings
-          sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-          sudo chmod a+r /etc/apt/keyrings/docker.asc
-
-          echo \
-            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
-            $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          sudo apt-get update
-
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
-          # Start Docker Daemon
-          sudo service docker start
-
-          # check docker status
-          sudo service docker status
-
-      - name: check docker installation (sudo)
-        run: wsl sudo docker run hello-world
-        if: runner.os == 'Windows'
-
-      - name: check docker installation
-        run: wsl docker run hello-world
-        if: runner.os == 'Windows'
+          brew install docker
+          colima start
 
       - name: Check Docker Version
-        shell: wsl-bash {0}
-        run: docker --version
-        if: runner.os == 'Windows'
-
-      - name: Check Docker Version
-        if: runner.os != 'Windows'
         run: docker --version
 
       - name: Check Node.js version
