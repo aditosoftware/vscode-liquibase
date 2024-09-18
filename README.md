@@ -26,7 +26,7 @@ You can later edit your configurations with the `Liquibase: Edit existing Liquib
 
 All commands can be accessed from the "Liquibase" item in the status bar.
 
-![Status bar of Liquibase Extension](/media/walkthrough/statusBarOverview.png)
+![Status bar item of Liquibase Extension](/media/walkthrough/statusBar.png)
 
 You can also access all commands by using the the command palette. It can be accessed with the keyboard shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (macOS <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
 
@@ -52,7 +52,7 @@ Currently, the following Liquibase commands are supported:
 - [Create Tag](https://docs.liquibase.com/commands/utility/tag.html)
 - [Drop-all](https://docs.liquibase.com/commands/utility/drop-all.html)
 - [Generate Changelog](https://docs.liquibase.com/commands/inspection/generate-changelog.html)
-- [Generate database documentation (db-doc)](https://docs.liquibase.com/commands/utility/db-doc.html) - [more details in this documentation](#generate-database-documentation--getting-an-overview-about-your-database)
+- [Generate database documentation (db-doc)](https://docs.liquibase.com/commands/utility/db-doc.html) - [more details below](#generate-database-documentation--getting-an-overview-about-your-database)
 - [Generate SQL File for incoming changes](https://docs.liquibase.com/commands/update/update-sql.html)
 - [List all deployed changesets (history)](https://docs.liquibase.com/commands/change-tracking/history.html)
 - [List the not deployed changesets (status)](https://docs.liquibase.com/commands/change-tracking/status.html)
@@ -68,6 +68,8 @@ Every command that needs a changelog file, can be executed by right clicking on 
 ### Generate database documentation / Getting an overview about your database
 
 Sometimes, you want to have an overview about your whole database. For this, we have a useful command in the status bar labeled _"Overview"_.
+
+![Status bar item for the overview of Liquibase Extension](/media/walkthrough/statusBarOverview.png)
 
 This will create an HTML report with a lot of useful information regarding your database and the changelogs.
 
