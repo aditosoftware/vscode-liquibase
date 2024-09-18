@@ -7,14 +7,13 @@ jobs:
   build:
     strategy:
       matrix:
-        # node-version: [18.x, 20.x, 22.x]
-        # os: [macos-latest, ubuntu-latest, windows-latest]
-        # TODO use all versions and os
-        node-version: [22.x]
         # No windows runner, because in this extension, we have a lot of tests that need docker in the WSL.
         # Sadly, the setup-wsl (https://github.com/Vampire/setup-wsl) and the current windows runners only support WSL 1.
         # Therefore, we can not install and start a docker container in the WSL.
-        os: [macos-13]
+
+        # Currently, no macOS runner, because during the setup of docker, this runner hangs: https://github.com/douglascamata/setup-docker-macos-action/issues/37
+        os: [ubuntu-latest]
+        node-version: [18.x, 20.x, 22.x]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -28,10 +27,6 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-
-      - name: Set up docker for macOS
-        if: runner.os == 'macOS'
-        uses: douglascamata/setup-docker-macos-action@v1-alpha.13
 
       - name: Check Docker Version
         run: docker --version
