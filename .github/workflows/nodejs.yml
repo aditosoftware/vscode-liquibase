@@ -57,7 +57,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-screenshots
+          name: e2e-screenshots-${{ matrix.os }}-${{ matrix.node-version }}
           path: ./out/test-resources/**/screenshots/**
           retention-days: 5
           if-no-files-found: ignore
