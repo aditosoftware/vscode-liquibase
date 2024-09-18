@@ -1,0 +1,63 @@
+name: Build Project
+
+on:
+  pull_request:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        # No windows runner, because in this extension, we have a lot of tests that need docker in the WSL.
+        # Sadly, the setup-wsl (https://github.com/Vampire/setup-wsl) and the current windows runners only support WSL 1.
+        # Therefore, we can not install and start a docker container in the WSL.
+
+        # Currently, no macOS runner, because during the setup of docker, this runner hangs: https://github.com/douglascamata/setup-docker-macos-action/issues/37
+        os: [ubuntu-latest]
+        node-version: [18.x, 20.x, 22.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Set up JDK for Liquibase  CLI
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: temurin
+
+      - name: Check Docker Version
+        run: docker --version
+
+      - name: Check Node.js version
+        run: node -v
+
+      - name: Check npm versions
+        run: npm -v
+
+      - name: Run clean install
+        run: npm ci
+
+      - run: xvfb-run -a npm test
+        if: runner.os == 'Linux'
+      - run: npm test
+        if: runner.os != 'Linux'
+
+      - name: run e2e tests
+        run: xvfb-run -a npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
+        if: runner.os == 'Linux'
+
+      - name: npm e2e tests
+        run: npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
+        if: runner.os != 'Linux'
+
+      - name: "Upload e2e screenshots"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-screenshots-${{ matrix.os }}-${{ matrix.node-version }}
+          path: ./out/test-resources/**/screenshots/**
+          retention-days: 5
+          if-no-files-found: ignore

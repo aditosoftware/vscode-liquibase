@@ -4,7 +4,7 @@
   "description": "Execute Liquibase commands on changelogs and create liquibase.properties files",
   "license": "MIT",
   "publisher": "adito",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "engines": {
     "vscode": "^1.84.0"
   },
@@ -28,11 +28,14 @@
     }
   },
   "bugs": {
-    "email": "vscext.devs@aditosoftware.onmicrosoft.com"
+    "email": "vscext.devs@aditosoftware.onmicrosoft.com",
+    "url": "https://github.com/aditosoftware/vscode-liquibase/issues"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "https://github.com/aditosoftware/vscode-liquibase.git"
   },
+  "homepage": "https://github.com/aditosoftware/vscode-liquibase/blob/main/README.md",
   "activationEvents": [
     "onStartupFinished"
   ],
@@ -410,41 +413,41 @@
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
-    "@aditosoftware/driver-dependencies": "^1.0.3",
-    "@aditosoftware/vscode-input": "^2.0.0",
-    "@aditosoftware/vscode-logging": "^1.0.2",
+    "@aditosoftware/driver-dependencies": "^1.0.4",
+    "@aditosoftware/vscode-input": "^2.0.1",
+    "@aditosoftware/vscode-logging": "^1.0.3",
     "download": "^8.0.0",
-    "immer": "^10.0.3",
-    "properties-file": "^3.3.18"
+    "immer": "^10.1.1",
+    "properties-file": "^3.5.7"
   },
   "devDependencies": {
     "@aditosoftware/eslint-config-adito-platform": "latest",
-    "@types/chai": "^4.3.17",
+    "@types/chai": "^4.3.19",
     "@types/chai-fs": "^2.0.5",
     "@types/chai-string": "^1.4.5",
     "@types/download": "^8.0.5",
-    "@types/mocha": "^10.0.7",
+    "@types/mocha": "^10.0.8",
     "@types/node": "20.x",
     "@types/sinon": "^17.0.3",
     "@types/vscode": "^1.84.0",
-    "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.3.9",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
     "chai": "^4.5.0",
     "chai-fs": "^2.0.0",
     "chai-string": "^1.5.0",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.0.1",
     "copyfiles": "^2.4.1",
-    "mariadb": "^3.3.0",
+    "mariadb": "^3.3.1",
     "mkdirp": "^3.0.1",
-    "rimraf": "^5.0.5",
+    "rimraf": "^6.0.1",
     "run-func": "^3.0.0",
-    "sinon": "^17.0.1",
+    "sinon": "^19.0.2",
     "ts-loader": "^9.5.1",
     "typescript": "^5.3.3",
-    "vscode-extension-tester": "^8.5.0",
+    "vscode-extension-tester": "^8.7.0",
     "webfont": "^11.2.26",
-    "webpack": "^5.92.1",
+    "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4",
-    "webpack-shell-plugin-next": "^2.3.1"
+    "webpack-shell-plugin-next": "^2.3.2"
   }
 }

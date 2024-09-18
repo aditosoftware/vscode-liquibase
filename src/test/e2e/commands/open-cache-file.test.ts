@@ -1,6 +1,6 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { TextEditor, VSBrowser } from "vscode-extension-tester";
+import { TextEditor } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
 import { Connection, ContextSelection } from "../../../cache";
@@ -100,7 +100,6 @@ suite("open cache", () => {
 
     await input.setText(ContextOptions.USE_RECENTLY_LOADED);
     await input.confirm();
-    await VSBrowser.instance.takeScreenshot("00");
 
     await LiquibaseGUITestUtils.waitForCheckboxesToBeThere(input);
     const quickPicks = await input.getCheckboxes();

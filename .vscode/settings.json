@@ -8,10 +8,6 @@
   },
   // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
   "typescript.tsc.autoDetect": "off",
-  "sonarlint.connectedMode.project": {
-    "connectionId": "SonarQube",
-    "projectKey": "plattform-designer-vscode-liquibase"
-  },
   "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#88d042",
     "activityBar.background": "#88d042",

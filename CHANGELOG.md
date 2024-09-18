@@ -4,6 +4,34 @@ All notable changes to the "Liquibase" extension will be documented in this file
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.2
+
+### Added
+
+- Added repository information to the package.json
+- Added images to README.md
+
+### Changed
+
+- Upgraded dependencies:
+  - @aditosoftware/driver-dependencies to 1.0.4
+  - @aditosoftware/vscode-input to 2.0.1
+  - @aditosoftware/vscode-logging to 1.0.3
+  - immer to 10.1.1
+  - properties-file to 3.5.7
+- Upgraded devDependencies:
+  - @types/chai to 4.3.19
+  - @types/mocha to 10.0.8
+  - @vscode/test-cli to 0.0.10
+  - @vscode/test-electron to 2.4.1
+  - concurrently to 9.0.1
+  - mariadb to 3.3.1
+  - rimraf to 6.0.1
+  - sinon to 19.0.2
+  - vscode-extension-tester to 8.7.0
+  - webpack to 5.94.0
+  - webpack-shell-plugin-next to 2.3.2"
+
 ## 1.0.1
 
 ### Changed

@@ -1,0 +1,21 @@
+name: Feature Request
+description: Request a new feature.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a new feature!
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Describe the feature here
+    validations:
+      required: true
+  - type: textarea
+    id: implementation-ideas
+    attributes:
+      label: Implementation ideas
+      description: If you have any implementation ideas, you can share them here.
