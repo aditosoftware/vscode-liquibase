@@ -1,8 +1,6 @@
 import { exec } from "child_process";
 import { isWindows } from "../../utilities/osUtilities";
 import mariadb from "mariadb";
-import { VSBrowser } from "vscode-extension-tester";
-import { randomUUID } from "crypto";
 
 /**
  * Creates and manages a maria docker container for tests.
