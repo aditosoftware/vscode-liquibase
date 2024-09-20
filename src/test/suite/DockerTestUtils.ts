@@ -117,13 +117,9 @@ export class DockerTestUtils {
    * Checks the status of the specified container and the availability of the database within it.
    *
    * @param containerName - The name of the container to check.
-   * @param dbExecutable - The executable for the database client.
    * @returns A Promise that resolves when the container status and database availability are checked.
    */
-  static async checkContainerStatus(
-    containerName: string = "mariadb",
-    dbExecutable: string = "mysql-client"
-  ): Promise<void> {
+  static async checkContainerStatus(containerName: string = "mariadb"): Promise<void> {
     const fullContainerName = this.containerNamePrefix + containerName;
 
     // check if container is running
@@ -134,7 +130,7 @@ export class DockerTestUtils {
         case "mariadb":
           // install mysql to the container
           await this.repeatCommand(
-            `${this.docker} exec ${fullContainerName} sh -c "apt-get update && apt-get install -y ${dbExecutable}"`
+            `${this.docker} exec ${fullContainerName} sh -c "apt-get update && apt-get install -y mysql-client"`
           );
 
           // check if database is available
@@ -147,10 +143,11 @@ export class DockerTestUtils {
         case "postgres":
           await this.repeatCommand(`${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "SELECT 1;"`);
 
-          //
-          await this.executeCommand(
+          // create the needed schema
+          await this.repeatCommand(
             `${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "CREATE SCHEMA ${this.dbName};"`
           );
+
           break;
 
         default:
