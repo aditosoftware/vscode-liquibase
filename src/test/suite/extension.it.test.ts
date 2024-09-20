@@ -35,7 +35,7 @@ suite("Extension Integration Test Suite", () => {
    * Also creates a properties file for the test.
    */
   suiteSetup("init extension and properties file", async function () {
-    this.timeout(80_000);
+    this.timeout(180_000);
 
     // start a maria db container and wait for its status
     await DockerTestUtils.startContainer();
