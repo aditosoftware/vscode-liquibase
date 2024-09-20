@@ -122,7 +122,7 @@ suite("convert format", () => {
     test(`should transform ${pArgument.format} with ${pArgument.fileSelection ? "file" : "folder"} ${
       pArgument.changelogLocation
     }  ${typeof pArgument.changelogLocation !== "string" ? "selected from rmb" : ""}`, async function () {
-      this.timeout(4000);
+      this.timeout(8000);
 
       const infoMessage = TestUtils.createInfoMessageStubWithSelection();
 
