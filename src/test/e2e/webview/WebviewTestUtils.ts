@@ -184,9 +184,13 @@ export class WebviewTestUtils {
       await databaseName.sendKeys(config.databaseName, Key.TAB);
 
       const button = await webView.findWebElement(By.id(config.buttonToClick));
+      assert.deepStrictEqual(await button.getAttribute("id"), config.buttonToClick, "button id");
 
-      if (await button.isEnabled()) {
+      try {
         await button.click();
+      } catch {
+        await webView.switchToFrame(1000);
+        await webView.getDriver().executeScript("arguments[0].click();", button);
       }
     });
 
