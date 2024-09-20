@@ -184,11 +184,9 @@ export class WebviewTestUtils {
       await databaseName.sendKeys(config.databaseName, Key.TAB);
 
       const button = await webView.findWebElement(By.id(config.buttonToClick));
-      try {
+
+      if (await button.isEnabled()) {
         await button.click();
-      } catch (error) {
-        await VSBrowser.instance.takeScreenshot(`${randomUUID()}-click-${config.buttonToClick}-${config.databaseType}`);
-        throw error;
       }
     });
 

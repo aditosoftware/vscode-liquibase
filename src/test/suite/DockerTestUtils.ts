@@ -143,22 +143,13 @@ export class DockerTestUtils {
 
         // check if database is available
         case "postgres":
-          try {
-            await this.repeatCommand(`${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "SELECT 1;"`);
-          } catch (error) {
-            await VSBrowser.instance.takeScreenshot(`${randomUUID()}-status-check`);
-            throw error;
-          }
+          await this.repeatCommand(`${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "SELECT 1;"`);
 
           // create the needed schema
-          try {
-            await this.repeatCommand(
-              `${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "CREATE SCHEMA ${this.dbName};"`
-            );
-          } catch (error) {
-            await VSBrowser.instance.takeScreenshot(`${randomUUID()}-create-schema`);
-            throw error;
-          }
+          await this.repeatCommand(
+            `${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "CREATE SCHEMA ${this.dbName};"`
+          );
+
           break;
 
         default:
