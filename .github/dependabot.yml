@@ -9,5 +9,8 @@ updates:
     directory: "/"
     reviewers:
       - "rH4rtinger"
+    ignore:
+      # ignore @types/vscode, because it needs to be updated together with engine.vscode
+      - dependency-name: "@types/vscode"
     schedule:
       interval: "weekly"
