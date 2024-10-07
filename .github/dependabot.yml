@@ -8,6 +8,6 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     reviewers:
-      - "aditosoftware/devs-designer"
+      - "rH4rtinger"
     schedule:
       interval: "weekly"
