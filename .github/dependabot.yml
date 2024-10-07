@@ -8,6 +8,9 @@ updates:
   - package-ecosystem: "npm"
     directory: "/"
     reviewers:
-      - "aditosoftware/devs-designer"
+      - "rH4rtinger"
+    ignore:
+      # ignore @types/vscode, because it needs to be updated together with engine.vscode
+      - dependency-name: "@types/vscode"
     schedule:
       interval: "weekly"
