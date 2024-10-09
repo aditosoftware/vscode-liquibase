@@ -58,7 +58,7 @@ jobs:
       - run: xvfb-run -a npm test
         if: runner.os == 'Linux' && matrix.node-version != '22.x'
       - run: npm test
-        if: runner.os != 'ubuntu-latest'
+        if: runner.os != 'Linux'
       - name: Run tests with coverage
         run: xvfb-run -a npm test  -- --coverage --coverage-output ./coverage --coverage-reporter lcovonly --reporter mocha-multi-reporters  --reporter-options configFile=config.json
         if: runner.os == 'Linux' && matrix.node-version == '22.x'
