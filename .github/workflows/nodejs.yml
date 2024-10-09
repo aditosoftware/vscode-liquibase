@@ -47,25 +47,25 @@ jobs:
 
       - name: Install Mocha reporters
         run: npm install -d mocha-multi-reporters mocha-junit-reporter mocha-sonarqube-reporter
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+        if: matrix.os == 'Linux' && matrix.node-version == '22.x'
       - name: create mocha config
         run: |
           echo '{
             "reporterEnabled": "spec, mocha-junit-reporter, mocha-sonarqube-reporter"
           }' > config.json
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+        if: matrix.os == 'Linux' && matrix.node-version == '22.x'
 
       - run: xvfb-run -a npm test
-        if: runner.os == 'ubuntu-latest' && matrix.node-version != '22.x'
+        if: runner.os == 'Linux' && matrix.node-version != '22.x'
       - run: npm test
         if: runner.os != 'ubuntu-latest'
       - name: Run tests with coverage
         run: xvfb-run -a npm test  -- --coverage --coverage-output ./coverage --coverage-reporter lcovonly --reporter mocha-multi-reporters  --reporter-options configFile=config.json
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+        if: matrix.os == 'Linux' && matrix.node-version == '22.x'
 
       - name: Upload coverage as artifact
         uses: actions/upload-artifact@v4
-        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+        if: matrix.os == 'Linux' && matrix.node-version == '22.x'
         with:
           name: coverage
           path: coverage/lcov.info
