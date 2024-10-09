@@ -75,9 +75,36 @@ jobs:
           java-version: 21
           distribution: temurin
 
+      - name: Restore cached node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
+
       - name: run e2e tests
         run: xvfb-run -a npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
-        if: runner.os == 'Linux'
+        if: runner.os == 'Linux' && matrix.node-version != '22.x'
+
+      - name: Install Mocha reporters
+        run: npm install -d mocha-multi-reporters mocha-junit-reporter mocha-sonarqube-reporter
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+      - name: create mocha config
+        run: |
+          echo '{
+            "reporterEnabled": "spec, mocha-junit-reporter, mocha-sonarqube-reporter"
+          }' > config.json
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+      - name: Run tests with coverage
+        run: xvfb-run -a npm test  -- --coverage --coverage-output ./coverage --coverage-reporter lcovonly --reporter mocha-multi-reporters  --reporter-options configFile=config.json
+        if: matrix.os == 'ubuntu-latest' && matrix.node-version == '22.x'
+
+      - name: Upload coverage as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov.info
 
       - name: npm e2e tests
         run: npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
@@ -115,15 +142,11 @@ jobs:
       - name: Run ESLint
         run: npm run lint -- --format json --output-file eslint-results.json || true
 
-      - name: Install Mocha reporters
-        run: npm install -d mocha-multi-reporters mocha-junit-reporter mocha-sonarqube-reporter
-      - name: create mocha config
-        run: |
-          echo '{
-            "reporterEnabled": "spec, mocha-junit-reporter, mocha-sonarqube-reporter"
-          }' > config.json
-      - name: Run tests with coverage
-        run: xvfb-run -a npm test  -- --coverage --coverage-output ./coverage --coverage-reporter lcovonly --reporter mocha-multi-reporters  --reporter-options configFile=config.json
+      - name: Download node_modules artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: coverage/lcov.info
 
       - name: Analyze with SonarCloud
         uses: SonarSource/sonarcloud-github-action@master
