@@ -54,7 +54,7 @@ jobs:
       - name: create mocha config
         run: |
           echo '{
-            "reporterEnabled": "spec, mocha-junit-reporter, mocha-reporter-sonarqube"
+            "reporterEnabled": "spec, mocha-junit-reporter, mocha-reporter-sonarqube",
             "mochaReporterSonarqubeReporterOptions": {
               "filename": "report.xml"
               }
