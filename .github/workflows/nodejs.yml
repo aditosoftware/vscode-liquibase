@@ -69,6 +69,10 @@ jobs:
         run: xvfb-run -a npm test  -- --coverage --coverage-output ./coverage --coverage-reporter lcovonly --reporter mocha-reporter-sonarqube  --reporter-options filename=report.xml
         if: runner.os == 'Linux' && matrix.node-version == '22.x'
 
+      - name: check report
+        run: ls | grep .xml
+        if: runner.os == 'Linux' && matrix.node-version == '22.x'
+
       - name: Upload coverage as artifact
         uses: actions/upload-artifact@v4
         if: runner.os == 'Linux' && matrix.node-version == '22.x'
