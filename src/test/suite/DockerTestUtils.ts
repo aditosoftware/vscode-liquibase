@@ -164,7 +164,7 @@ export class DockerTestUtils {
    * @returns the result of the command
    */
   private static async repeatCommand(command: string): Promise<string | undefined> {
-    const maxRetries = 10;
+    const maxRetries = 20;
     for (let i = 1; i <= maxRetries; i++) {
       await new Promise((r) => setTimeout(r, 500));
       try {
