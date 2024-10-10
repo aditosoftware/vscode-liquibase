@@ -48,39 +48,13 @@ jobs:
       - name: Run clean install
         run: npm ci
 
-      - name: Install Mocha reporters
-        run: npm install -d mocha-multi-reporters mocha-junit-reporter mocha-reporter-sonarqube
-        if: runner.os == 'Linux' && matrix.node-version == '22.x'
-      - name: create mocha config
-        run: |
-          echo '{
-            "reporterEnabled": "spec, mocha-junit-reporter, mocha-reporter-sonarqube",
-            "mochaReporterSonarqubeReporterOptions": {
-              "filename": "report.xml"
-              }
-          }' > config.json
-        if: runner.os == 'Linux' && matrix.node-version == '22.x'
 
-      - run: xvfb-run -a npm test
-        if: runner.os == 'Linux' && matrix.node-version != '22.x'
-      - run: npm test
+      - name: Run tests on Linux
+        run: xvfb-run -a npm test
+        if: runner.os == 'Linux'
+      - name: Run tests on macOS and Windows
+        run: npm test
         if: runner.os != 'Linux'
-      - name: Run tests with coverage
-        run: xvfb-run -a npm test  -- --coverage --coverage-output ./coverage --coverage-reporter lcovonly --reporter mocha-reporter-sonarqube  --reporter-options filename=report.xml
-        if: runner.os == 'Linux' && matrix.node-version == '22.x'
-
-      - name: check report
-        run: ls | grep .xml
-        if: runner.os == 'Linux' && matrix.node-version == '22.x'
-
-      - name: Upload coverage as artifact
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'Linux' && matrix.node-version == '22.x'
-        with:
-          name: coverage
-          path: |
-            coverage/lcov.info
-            report.xml
 
   e2e-tests:
     needs: build
@@ -161,20 +135,6 @@ jobs:
       - name: Run ESLint
         run: npm run lint -- --format json --output-file eslint-results.json || true
 
-      - name: Download node_modules artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage
-          path: |
-            coverage/lcov.info
-            report.xml
-
-      - name: check xunit
-        run: cat report.xml
-
-      - name: exists coverage
-        run: ls -R coverage
-
       - name: Analyze with SonarCloud
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -183,6 +143,3 @@ jobs:
           args: -Dsonar.projectKey=aditosoftware_vscode-liquibase
             -Dsonar.organization=aditosoftware
             -Dsonar.eslint.reportPaths=eslint-results.json
-            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.tests=src/test/suite
-            -Dsonar.junit.reportPaths=xunit.xml
