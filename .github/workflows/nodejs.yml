@@ -38,6 +38,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
+            src/webview-ui/build
+            src/webview-ui/node-modules
           key: node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
@@ -99,6 +101,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
+            src/webview-ui/build
+            src/webview-ui/node-modules
           key: node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
@@ -137,6 +141,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
+            src/webview-ui/build
+            src/webview-ui/node-modules
           key: node_modules-ubuntu-latest-node-22.x-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-ubuntu-latest-node-22.x
@@ -148,6 +154,9 @@ jobs:
         with:
           name: coverage
           path: coverage/lcov.info
+
+      - name: exists coverage
+        run: ls -R coverage
 
       - name: Analyze with SonarCloud
         uses: SonarSource/sonarcloud-github-action@master
