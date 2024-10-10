@@ -49,12 +49,15 @@ jobs:
         run: npm ci
 
       - name: Install Mocha reporters
-        run: npm install -d mocha-multi-reporters mocha-junit-reporter mocha-sonarqube-reporter
+        run: npm install -d mocha-multi-reporters mocha-junit-reporter mocha-reporter-sonarqube
         if: runner.os == 'Linux' && matrix.node-version == '22.x'
       - name: create mocha config
         run: |
           echo '{
-            "reporterEnabled": "spec, mocha-junit-reporter, mocha-sonarqube-reporter"
+            "reporterEnabled": "spec, mocha-junit-reporter, mocha-reporter-sonarqube"
+            "mochaReporterSonarqubeReporterOptions": {
+              "filename": "report.xml"
+              }
           }' > config.json
         if: runner.os == 'Linux' && matrix.node-version == '22.x'
 
@@ -73,7 +76,7 @@ jobs:
           name: coverage
           path: |
             coverage/lcov.info
-            xunit.xml
+            report.xml
 
   e2e-tests:
     needs: build
@@ -160,10 +163,10 @@ jobs:
           name: coverage
           path: |
             coverage/lcov.info
-            xunit.xml
+            report.xml
 
       - name: check xunit
-        run: cat xunit.xml
+        run: cat report.xml
 
       - name: exists coverage
         run: ls -R coverage
