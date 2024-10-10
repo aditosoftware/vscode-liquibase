@@ -99,12 +99,12 @@ suite("configurationCommands", () => {
       Sinon.stub(handleLiquibaseFolder, "getLiquibaseConfigurationPath").resolves("myFolder");
       Sinon.stub(ConnectionType, "suggestCreationOfConfiguration").resolves();
 
-      assert.ok(!LiquibaseConfigurationPanel.currentPanel, "no current panel created");
+      assert.ok(!LiquibaseConfigurationPanel["currentPanel"], "no current panel created");
 
       configurationCommand
         .editExistingLiquibaseConfiguration(undefined, extensionContext)
         .then(() => {
-          const currentPanel = LiquibaseConfigurationPanel.currentPanel;
+          const currentPanel = LiquibaseConfigurationPanel["currentPanel"];
           assert.ok(!currentPanel, "panel is not created");
 
           done();
@@ -112,7 +112,7 @@ suite("configurationCommands", () => {
         .catch(done)
         .finally(() => {
           // dispose manually after the tests
-          LiquibaseConfigurationPanel.currentPanel?.dispose();
+          LiquibaseConfigurationPanel["currentPanel"]?.dispose();
         });
     });
   });
@@ -448,12 +448,12 @@ function assertEditExistingLiquibaseConfiguration(
 ): void {
   Sinon.stub(handleLiquibaseFolder, "getLiquibaseFolder").returns("myFolder");
 
-  assert.ok(!LiquibaseConfigurationPanel.currentPanel, "no current panel created");
+  assert.ok(!LiquibaseConfigurationPanel["currentPanel"], "no current panel created");
 
   configurationCommand
     .editExistingLiquibaseConfiguration(uri, extensionContext)
     .then(() => {
-      const currentPanel = LiquibaseConfigurationPanel.currentPanel;
+      const currentPanel = LiquibaseConfigurationPanel["currentPanel"];
       assert.ok(currentPanel, "panel was created");
       const webviewPanel = currentPanel["_panel"];
       assert.ok(webviewPanel.visible, "panel is visible");
@@ -462,7 +462,7 @@ function assertEditExistingLiquibaseConfiguration(
       if (uri) {
         LiquibaseConfigurationPanel.render(uri);
 
-        assert.ok(LiquibaseConfigurationPanel.currentPanel?.["_panel"], "panel is still visible");
+        assert.ok(LiquibaseConfigurationPanel["currentPanel"]?.["_panel"], "panel is still visible");
       }
 
       done();
@@ -470,7 +470,7 @@ function assertEditExistingLiquibaseConfiguration(
     .catch(done)
     .finally(() => {
       // dispose manually after the tests
-      LiquibaseConfigurationPanel.currentPanel?.dispose();
+      LiquibaseConfigurationPanel["currentPanel"]?.dispose();
     });
 }
 

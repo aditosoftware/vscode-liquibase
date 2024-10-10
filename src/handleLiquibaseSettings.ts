@@ -87,7 +87,7 @@ export function getDefaultDatabaseForConfiguration(): string {
     NO_PRE_CONFIGURED_DRIVER
   );
 
-  return defaultDatabaseForConfiguration ? defaultDatabaseForConfiguration : NO_PRE_CONFIGURED_DRIVER;
+  return defaultDatabaseForConfiguration || NO_PRE_CONFIGURED_DRIVER;
 }
 
 /**

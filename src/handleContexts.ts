@@ -74,11 +74,7 @@ export function generateContextInputs(): PickPanelConfig[] {
 export function generateItemsForContextPreDialog(contextCacheInfo?: ContextCacheInformation): vscode.QuickPickItem[] {
   const items: vscode.QuickPickItem[] = [];
 
-  if (
-    contextCacheInfo &&
-    contextCacheInfo.contexts.loadedContexts &&
-    contextCacheInfo.contexts.loadedContexts.length !== 0
-  ) {
+  if (contextCacheInfo?.contexts.loadedContexts && contextCacheInfo?.contexts.loadedContexts.length !== 0) {
     const cachedContexts = contextCacheInfo.contexts.loadedContexts.join(", ");
     items.push({
       label: ContextOptions.USE_RECENTLY_LOADED,
@@ -132,10 +128,8 @@ export function saveSelectedContexts(dialogValues: DialogValues, contextCacheInf
  */
 function generateCmdArgsForPreContextSelection(dialogValues: DialogValues): string[] | undefined {
   const selected = dialogValues.inputValues.get(contextPreDialog);
-  if (selected && selected[0]) {
-    if (selected[0] === ContextOptions.NO_CONTEXT) {
-      return [`--contexts=${NO_CONTEXT_USED}`];
-    }
+  if (selected?.[0] === ContextOptions.NO_CONTEXT) {
+    return [`--contexts=${NO_CONTEXT_USED}`];
   }
 }
 
@@ -189,7 +183,7 @@ export function loadCacheForPropertyFile(currentResults: DialogValues): ContextC
 function showContextSelection(dialogValues: DialogValues): boolean {
   const result = dialogValues.inputValues.get(contextPreDialog);
 
-  if (result && result[0]) {
+  if (result?.[0]) {
     return result[0] !== ContextOptions.NO_CONTEXT;
   }
 

@@ -188,7 +188,7 @@ export class LiquibaseConfigurationData {
     }
 
     // and write the reference properties
-    if (this.referenceDatabaseConnection && this.referenceDatabaseConnection.hasData()) {
+    if (this.referenceDatabaseConnection?.hasData()) {
       this.referenceDatabaseConnection.writeDataForConnection(properties, true, pDisguisePassword);
     }
 

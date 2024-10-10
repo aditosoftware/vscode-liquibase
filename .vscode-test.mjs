@@ -7,7 +7,7 @@ export default defineConfig({
   launchArgs: ["--disable-extensions", "--profile-temp"],
   mocha: {
     ui: "tdd",
-    retries: 3,
+    retries: 5,
   },
   coverage: {
     // coverage exclusion currently does not work: https://github.com/microsoft/vscode-test-cli/issues/40

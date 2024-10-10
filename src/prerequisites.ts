@@ -76,7 +76,7 @@ async function downloadLiquibaseFiles(pathToResources: string, downloadUrls: str
   return new Promise<void>((resolve, reject) => {
     Promise.all(downloadUrls.map((url) => download(url, path.join(pathToResources))))
       .then(() => resolve())
-      .catch((error) => {
+      .catch((error: Error) => {
         Logger.getLogger().error({ message: "downloadLiquibaseFiles threw an error", error });
         reject(error);
       });

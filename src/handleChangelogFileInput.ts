@@ -105,31 +105,13 @@ export class HandleChangelogFileInput {
    */
   private static getChangelogFileFromProperties(dialogValues: DialogValues): string | undefined {
     const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE);
-    if (propertyFile && propertyFile[0]) {
+    if (propertyFile?.[0]) {
       const changelog = readChangelog(propertyFile[0]);
       if (changelog) {
         // if there is a changelog in in property-file, return it, so we can show it in the dialog
         return changelog;
       }
     }
-  }
-
-  /**
-   * Checks if the changelog needs to be put into by an extra open dialog.
-   *
-   * @param dialogValues - the current dialog values
-   * @returns `true` if an OpenDialog is needed for selecting the changelog
-   */
-  private static isChangelogFromOpenDialogNeeded(dialogValues: DialogValues): boolean {
-    if (this.isExtraQueryForChangelogNeeded(dialogValues)) {
-      const changelogPreSelection = dialogValues.inputValues.get(this.CHANGELOG_QUICK_PICK_NAME);
-      if (changelogPreSelection && changelogPreSelection[0]) {
-        // check, if the correct option was selected
-        return changelogPreSelection[0] === CHOOSE_CHANGELOG_OPTION;
-      }
-    }
-
-    return false;
   }
 
   /**
@@ -145,7 +127,7 @@ export class HandleChangelogFileInput {
 
     let changelogPath: string | undefined;
 
-    if (fileSelection && fileSelection[0]) {
+    if (fileSelection?.[0]) {
       if (fileSelection[0] === CHOOSE_CHANGELOG_OPTION) {
         // we are not having a correct values selected, but instead a dialog progression value
         // => we do not need to save anything

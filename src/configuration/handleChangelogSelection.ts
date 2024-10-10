@@ -21,7 +21,7 @@ export async function chooseFileForChangelog(data: LiquibaseConfigurationData): 
     },
   });
 
-  if (result && result[0]) {
+  if (result?.[0]) {
     const chosenFile = result[0].fsPath;
 
     // find out relative path

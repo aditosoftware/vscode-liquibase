@@ -59,7 +59,7 @@ interface NewUrlValues extends UrlParts {
  * @param pProperties - the properties for creating the element
  * @returns the created element
  */
-export function DatabaseConfiguration(pProperties: DatabaseConfigurationProps): React.JSX.Element {
+export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfigurationProps>): React.JSX.Element {
   const [serverAddress, setServerAddress] = useState<string>("localhost");
   const [port, setPort] = useState<number>(-1);
   const [databaseName, setDatabaseName] = useState<string>("data");

@@ -119,47 +119,6 @@ suite("handleChangelogInput", () => {
   });
 
   /**
-   * Tests the method `isChangelogFromOpenDialogNeeded`.
-   */
-  suite("isChangelogFromOpenDialogNeeded", () => {
-    /**
-     * Tests that no changelog is needed when uri is present
-     */
-    test("should not need changelog when uri is present", () => {
-      const dialogValues = new DialogValues();
-      dialogValues.uri = vscode.Uri.file("");
-
-      assert.strictEqual(HandleChangelogFileInput["isChangelogFromOpenDialogNeeded"](dialogValues), false);
-    });
-
-    [
-      {
-        description: "the changelog should be selected",
-        content: CHOOSE_CHANGELOG_OPTION,
-        expected: true,
-      },
-      {
-        description: "no changelog should be selected",
-        content: "foo",
-        expected: false,
-      },
-    ].forEach((pArgument) => {
-      /**
-       * Tests that the desired result will be returned, when the changelog selection was or was not selected
-       */
-      test(`should return ${pArgument.expected} when ${pArgument.description}`, () => {
-        const dialogValues = new DialogValues();
-        dialogValues.addValue(HandleChangelogFileInput.CHANGELOG_QUICK_PICK_NAME, pArgument.content);
-
-        assert.strictEqual(
-          HandleChangelogFileInput["isChangelogFromOpenDialogNeeded"](dialogValues),
-          pArgument.expected
-        );
-      });
-    });
-  });
-
-  /**
    * Tests the method `setExtraChangelogCorrectly`.
    */
   suite("setExtraChangelogCorrectly", () => {

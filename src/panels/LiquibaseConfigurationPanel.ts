@@ -21,9 +21,9 @@ import path from "path";
  * - Setting message listeners so data can be passed between the webview and extension
  */
 export class LiquibaseConfigurationPanel {
-  public static currentPanel: LiquibaseConfigurationPanel | undefined;
+  private static currentPanel: LiquibaseConfigurationPanel | undefined;
   private readonly _panel: WebviewPanel;
-  private _disposables: Disposable[] = [];
+  private readonly _disposables: Disposable[] = [];
 
   /**
    * The LiquibaseConfigurationPanel class private constructor (called only from the render method).
@@ -84,16 +84,15 @@ export class LiquibaseConfigurationPanel {
     // In all cases, transfer a message with the current data
     this.transferMessage(
       MessageType.INIT,
-      data
-        ? data
-        : LiquibaseConfigurationData.createDefaultData(
-            {
-              defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
-              liquibaseDirectoryInProject: getLiquibaseFolder(),
-              customDrivers: getCustomDrivers(),
-            },
-            ConfigurationStatus.NEW
-          )
+      data ||
+        LiquibaseConfigurationData.createDefaultData(
+          {
+            defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
+            liquibaseDirectoryInProject: getLiquibaseFolder(),
+            customDrivers: getCustomDrivers(),
+          },
+          ConfigurationStatus.NEW
+        )
     );
   }
 
@@ -212,12 +211,10 @@ export class LiquibaseConfigurationPanel {
             default:
               throw new Error(`Handling for command ${messageType} not found.`);
           }
+        } else if (messageData.messageType === MessageType.LOG_MESSAGE) {
+          Logger.getLogger().log(data);
         } else {
-          if (messageData.messageType === MessageType.LOG_MESSAGE) {
-            Logger.getLogger().log(data);
-          } else {
-            throw new Error(`Handling for command ${messageType} not found.`);
-          }
+          throw new Error(`Handling for command ${messageType} not found.`);
         }
       },
       undefined,

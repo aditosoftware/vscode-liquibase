@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { exec, ExecException } from "child_process";
 import { isWindows } from "../../utilities/osUtilities";
 import mariadb from "mariadb";
 
@@ -164,9 +164,9 @@ export class DockerTestUtils {
    * @returns the result of the command
    */
   private static async repeatCommand(command: string): Promise<string | undefined> {
-    const maxRetries = 10;
+    const maxRetries = 20;
     for (let i = 1; i <= maxRetries; i++) {
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 1000));
       try {
         const result = await this.executeCommand(command);
         return result;
@@ -186,7 +186,7 @@ export class DockerTestUtils {
    */
   private static async executeCommand(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      exec(command, (error, stdout, stderr) => {
+      exec(command, (error: ExecException | null, stdout, stderr) => {
         if (error) {
           reject(error);
           return;

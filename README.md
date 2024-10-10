@@ -1,3 +1,7 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=aditosoftware_vscode-liquibase&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=aditosoftware_vscode-liquibase)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aditosoftware_vscode-liquibase&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=aditosoftware_vscode-liquibase)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=aditosoftware_vscode-liquibase&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=aditosoftware_vscode-liquibase)
+
 # Liquibase
 
 A Visual Studio Code extension that supports executing [Liquibase commands](https://docs.liquibase.com/commands/command-list.html) without needing to use the command line.
