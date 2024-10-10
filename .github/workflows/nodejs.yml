@@ -71,7 +71,9 @@ jobs:
         if: runner.os == 'Linux' && matrix.node-version == '22.x'
         with:
           name: coverage
-          path: coverage/lcov.info
+          path: |
+            coverage/lcov.info
+            xunit.xml
 
   e2e-tests:
     needs: build
@@ -156,7 +158,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage
-          path: coverage/lcov.info
+          path: |
+            coverage/lcov.info
+            xunit.xml
+
+      - name: check xunit
+        run: cat xunit.xml
 
       - name: exists coverage
         run: ls -R coverage
@@ -170,3 +177,5 @@ jobs:
             -Dsonar.organization=aditosoftware
             -Dsonar.eslint.reportPaths=eslint-results.json
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.tests=src/test/suite
+            -Dsonar.junit.reportPaths=xunit.xml
