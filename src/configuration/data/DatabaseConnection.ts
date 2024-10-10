@@ -89,7 +89,7 @@ export class DatabaseConnection {
    */
   getValue(pName: keyof DatabaseConnection): string | undefined {
     if (typeof this[pName] === "string") {
-      return this[pName];
+      return this[pName] as string;
     }
   }
 
