@@ -170,4 +170,3 @@ jobs:
             -Dsonar.organization=aditosoftware
             -Dsonar.eslint.reportPaths=eslint-results.json
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
-            -Dsonar.tests=src/test

@@ -179,8 +179,7 @@ function App(): React.JSX.Element {
                     onClick={handleChooseChangelog}
                     id="changelogSelection"
                     style={{ flexShrink: 0 }}>
-                    Choose changelog
-                    <span slot="start" className="codicon codicon-folder-opened"></span>
+                    <span slot="start" className="codicon codicon-folder-opened"></span>Choose changelog
                   </VSCodeButton>
                 </div>
               </section>
@@ -202,8 +201,7 @@ function App(): React.JSX.Element {
                 disabled={referenceConnection}
                 onClick={() => handleAddRemoveReferenceConnection(true)}
                 appearance="secondary">
-                Add reference connection
-                <span slot="start" className="codicon codicon-add"></span>
+                <span slot="start" className="codicon codicon-add"></span>Add reference connection
               </VSCodeButton>
               <VSCodeButton
                 id="removeReferenceConnection"
@@ -212,8 +210,7 @@ function App(): React.JSX.Element {
                 disabled={!referenceConnection}
                 onClick={() => handleAddRemoveReferenceConnection(false)}
                 appearance="secondary">
-                <span slot="start" className="codicon codicon-remove"></span>
-                Remove reference connection
+                <span slot="start" className="codicon codicon-remove"></span>Remove reference connection
               </VSCodeButton>
             </section>
 
@@ -250,8 +247,7 @@ function App(): React.JSX.Element {
         <VSCodeDivider />
 
         <VSCodeButton id="saveButton" onClick={handleSaveConfiguration} appearance="primary" className="normalButton">
-          Save configuration
-          <span slot="start" className="codicon codicon-save"></span>
+          <span slot="start" className="codicon codicon-save"></span>Save configuration
         </VSCodeButton>
 
         <VSCodeButton
@@ -260,8 +256,7 @@ function App(): React.JSX.Element {
           appearance="secondary"
           formnovalidate={true}
           className="normalButton">
-          Test configuration
-          <span slot="start" className="codicon codicon-beaker"></span>
+          <span slot="start" className="codicon codicon-beaker"></span>Test configuration
         </VSCodeButton>
       </form>
     </main>

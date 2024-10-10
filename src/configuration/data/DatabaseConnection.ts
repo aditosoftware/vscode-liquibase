@@ -74,7 +74,7 @@ export class DatabaseConnection {
     if (driver) {
       // and extract the url parts
       return driver.extractUrlParts(this.url);
-    } else if (customDriver && customDriver[this.databaseType]) {
+    } else if (customDriver?.[this.databaseType]) {
       return new CustomDriver(customDriver[this.databaseType]).extractUrlParts(this.url);
     }
 
@@ -89,7 +89,7 @@ export class DatabaseConnection {
    */
   getValue(pName: keyof DatabaseConnection): string | undefined {
     if (typeof this[pName] === "string") {
-      return this[pName] as string;
+      return this[pName];
     }
   }
 
@@ -100,7 +100,7 @@ export class DatabaseConnection {
    * @param pValue - the value that should be set
    * @returns the updated element
    */
-  setValue(pName: keyof DatabaseConnection, pValue: string): DatabaseConnection {
+  setValue(pName: keyof DatabaseConnection, pValue: string): this {
     if (typeof this[pName] === "string") {
       (this[pName] as string) = pValue;
     }

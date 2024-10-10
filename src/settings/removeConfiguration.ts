@@ -149,7 +149,7 @@ export function generateDetailMessageForDeleteConfiguration(dialogValues: Dialog
       whatDeleted
         .get(deletionMode)
         ?.map((pElement) => "- " + pElement)
-        .join("\n") || "";
+        .join("\n") ?? "";
   }
 
   return `This will remove the configuration from the following:\n${deletedDetail}`;

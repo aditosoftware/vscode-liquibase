@@ -135,7 +135,7 @@ export function executeJarAsync<ErrorCode extends number>(
           }
         });
 
-        childProcess.on("error", (error) => {
+        childProcess.on("error", (error: Error) => {
           Logger.getLogger().error({ message: "Child process encountered an error", error });
           reject(error);
         });
@@ -233,11 +233,11 @@ export async function loadContextsFromChangelogFile(
           error: { stack: result.stderr },
           notifyUser: true,
         });
-        reject(`Error ${result.status}, ${result.error?.message}\n ${result.stderr}`);
+        reject(new Error(`Error ${result.status}, ${result.error?.message}\n ${result.stderr}`));
       }
     } catch (error) {
       Logger.getLogger().error({ message: "Error loading contexts", error, notifyUser: true });
-      reject(error);
+      reject(error as Error);
     }
   });
 }

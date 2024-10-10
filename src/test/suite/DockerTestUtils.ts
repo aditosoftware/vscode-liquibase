@@ -1,4 +1,4 @@
-import { exec } from "child_process";
+import { exec, ExecException } from "child_process";
 import { isWindows } from "../../utilities/osUtilities";
 import mariadb from "mariadb";
 
@@ -186,7 +186,7 @@ export class DockerTestUtils {
    */
   private static async executeCommand(command: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      exec(command, (error, stdout, stderr) => {
+      exec(command, (error: ExecException | null, stdout, stderr) => {
         if (error) {
           reject(error);
           return;
