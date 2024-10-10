@@ -38,8 +38,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-            src/webview-ui/build
-            src/webview-ui/node-modules
+            webview-ui/build
+            webview-ui/node-modules
           key: node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
@@ -100,9 +100,10 @@ jobs:
       - name: Restore cached node_modules
         uses: actions/cache@v4
         with:
-          path: node_modules
-            src/webview-ui/build
-            src/webview-ui/node-modules
+          path: |
+            node_modules
+            webview-ui/build
+            webview-ui/node-modules
           key: node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
@@ -141,8 +142,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-            src/webview-ui/build
-            src/webview-ui/node-modules
+            webview-ui/build
+            webview-ui/node-modules
           key: node_modules-ubuntu-latest-node-22.x-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-ubuntu-latest-node-22.x
@@ -167,3 +168,4 @@ jobs:
             -Dsonar.organization=aditosoftware
             -Dsonar.eslint.reportPaths=eslint-results.json
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.tests=src/test,out/test
