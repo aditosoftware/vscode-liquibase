@@ -84,7 +84,7 @@ export class CacheRemover {
 
     const toRemove = result.inputValues.get(CacheRemover.removeOption);
 
-    if (toRemove && toRemove[0]) {
+    if (toRemove?.[0]) {
       this.handleRemoval(toRemove[0], result);
     }
   }
@@ -170,9 +170,9 @@ export class CacheRemover {
 
     // Build the details
     let detail = "";
-    if (toRemove && toRemove[0]) {
+    if (toRemove?.[0]) {
       // add information about the remove option
-      detail = CacheRemover.removeOptions.get(toRemove[0]) || "";
+      detail = CacheRemover.removeOptions.get(toRemove[0]) ?? "";
     }
 
     if (propertyFiles) {
@@ -193,7 +193,7 @@ export class CacheRemover {
   private shouldShowPropertyFileSelection(currentResults: DialogValues): boolean {
     const toRemove = currentResults.inputValues.get(CacheRemover.removeOption);
 
-    if (toRemove && toRemove[0]) {
+    if (toRemove?.[0]) {
       return toRemove[0] !== RemoveCacheOptions.WHOLE_CACHE;
     } else {
       return false;

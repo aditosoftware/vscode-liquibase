@@ -109,7 +109,7 @@ export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogVal
 export async function changeAndEmptyOutputDirectory(dialogValues: DialogValues): Promise<void> {
   const folder = dialogValues.inputValues.get(folderSelectionName)?.[0];
 
-  if (folder && folder.includes(os.tmpdir())) {
+  if (folder?.includes(os.tmpdir())) {
     const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
 
     let configurationName = "db-doc";

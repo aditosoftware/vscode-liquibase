@@ -114,7 +114,7 @@ suite("vscodeUtilities", () => {
       const errorMessage = Sinon.spy(vscode.window, "showErrorMessage");
 
       const openExternalStub = Sinon.stub(vscode.env, "openExternal");
-      openExternalStub.returns(Promise.reject(false));
+      openExternalStub.returns(Promise.reject(new Error()));
 
       openLiquibaseDocumentation("foo");
 

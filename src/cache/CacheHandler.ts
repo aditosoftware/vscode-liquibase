@@ -268,7 +268,7 @@ export class CacheHandler {
   readContexts(connectionLocation: string, changelogLocation: string): ContextSelection {
     const existingChangelog = this.getChangelog(connectionLocation, changelogLocation).existingChangelog;
 
-    if (existingChangelog && existingChangelog.contexts) {
+    if (existingChangelog?.contexts) {
       // sort any loaded contexts
       existingChangelog.contexts.loadedContexts?.sort((a, b) => a.localeCompare(b));
 
@@ -287,7 +287,7 @@ export class CacheHandler {
   readChangelogs(connectionLocation: string): string[] {
     const cache = this.readCache();
 
-    if (cache[connectionLocation] && cache[connectionLocation].changelogs) {
+    if (cache[connectionLocation]?.changelogs) {
       return cache[connectionLocation].changelogs
         .toSorted((a, b) => b.lastUsed - a.lastUsed)
         .map((pChangelog) => pChangelog.path);
