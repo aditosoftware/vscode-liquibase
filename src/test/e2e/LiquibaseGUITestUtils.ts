@@ -694,16 +694,22 @@ export class LiquibaseGUITestUtils {
    * @param checkForCacheToBeThere - if `true`, then during the command execution it will check if there is a cache entry to remove
    */
   static async removeWholeCache(checkForCacheToBeThere?: boolean): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution({
+    let input = await LiquibaseGUITestUtils.startCommandExecution({
       command: "Cache: Remove any values from the recently loaded elements...",
     });
 
-    if (
-      checkForCacheToBeThere &&
-      (await this.waitForCommandExecution("There are no elements stored to remove", false))
-    ) {
-      // no cache elements there, just return
-      return;
+    if (checkForCacheToBeThere) {
+      if (await this.waitForCommandExecution("There are no elements stored to remove", false)) {
+        // no cache elements there, just return
+        return;
+      }
+
+      // if the notifications were checked and the input is no longer displayed, reopen the command
+      if (!(await input.isDisplayed())) {
+        input = await LiquibaseGUITestUtils.startCommandExecution({
+          command: "Cache: Remove any values from the recently loaded elements...",
+        });
+      }
     }
 
     await input.setText(RemoveCacheOptions.WHOLE_CACHE);
