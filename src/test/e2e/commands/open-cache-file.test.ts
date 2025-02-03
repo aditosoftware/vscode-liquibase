@@ -55,7 +55,7 @@ suite("open cache", () => {
     const expectedConnectionFromCache: Connection = {
       changelogs: [
         {
-          path: LiquibaseGUITestUtils.CHANGELOG_FILE.toLowerCase(),
+          path: LiquibaseGUITestUtils.CHANGELOG_FILE.toLocaleLowerCase(),
           lastUsed: 1,
           contexts: {
             loadedContexts: ["bar", "baz", "foo"],
@@ -87,6 +87,7 @@ suite("open cache", () => {
     // sanitize the result to remove the lastUsed from the changelogs
     cacheForKey.changelogs.forEach((pChangelog) => {
       pChangelog.lastUsed = 1;
+      pChangelog.path = pChangelog.path.toLocaleLowerCase();
     });
 
     assert.deepStrictEqual(cacheForKey, expectedConnectionFromCache);

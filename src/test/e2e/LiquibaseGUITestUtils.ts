@@ -264,8 +264,12 @@ export class LiquibaseGUITestUtils {
    * @param folder - the folder
    */
   static removeContentOfFolder(folder: string): void {
-    for (const file of fs.readdirSync(folder)) {
-      fs.rmSync(path.join(folder, file));
+    try {
+      for (const file of fs.readdirSync(folder)) {
+        fs.rmSync(path.join(folder, file));
+      }
+    } catch (err) {
+      console.error(err);
     }
   }
   //#endregion
