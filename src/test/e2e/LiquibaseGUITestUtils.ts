@@ -22,7 +22,9 @@ import * as fs from "fs";
 import { CHOOSE_CHANGELOG_OPTION, ContextOptions, RemoveCacheOptions } from "../../constants";
 import chai from "chai";
 import chaiString from "chai-string";
+import chaiFs from "chai-fs";
 
+chai.use(chaiFs);
 chai.use(chaiString);
 
 /**
@@ -110,6 +112,8 @@ export class LiquibaseGUITestUtils {
    */
   static async openWorkspace(): Promise<void> {
     await new EditorView().closeAllEditors();
+
+    chai.assert.pathExists(this.WORKSPACE_PATH, `Path ${this.WORKSPACE_PATH} should exist`);
 
     await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
 
