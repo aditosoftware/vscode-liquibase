@@ -12,7 +12,7 @@ jobs:
         # Therefore, we can not install and start a docker container in the WSL.
 
         # Currently, no macOS runner, because during the setup of docker, this runner hangs: https://github.com/douglascamata/setup-docker-macos-action/issues/37
-        os: [ubuntu-22.04]
+        os: [ubuntu-latest]
         node-version: [20.x, 22.x]
     runs-on: ${{ matrix.os }}
     steps:
@@ -48,7 +48,6 @@ jobs:
       - name: Run clean install
         run: npm ci
 
-
       - name: Run tests on Linux
         run: xvfb-run -a npm test
         if: runner.os == 'Linux'
@@ -66,7 +65,7 @@ jobs:
 
         # Currently, no macOS runner, because during the setup of docker, this runner hangs: https://github.com/douglascamata/setup-docker-macos-action/issues/37
         node-version: [20.x, 22.x]
-        os: [ubuntu-22.04]
+        os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
