@@ -11,6 +11,7 @@ import {
   VSBrowser,
   Workbench,
   TreeItem,
+  ActivityBar,
 } from "vscode-extension-tester";
 import assert from "assert";
 import { randomUUID } from "crypto";
@@ -111,6 +112,12 @@ export class LiquibaseGUITestUtils {
     await new EditorView().closeAllEditors();
 
     await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
+
+    const control = await new ActivityBar().getViewControl("Explorer");
+    if (control) {
+      await control.openView();
+    }
+    await VSBrowser.instance.takeScreenshot("open-workspace-" + randomUUID());
   }
 
   // #endregion
