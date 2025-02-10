@@ -50,7 +50,7 @@ export class WebviewTestUtils {
           return false;
         }
       },
-      10_000,
+      2_000,
       "waiting for the webview to open"
     );
   }
