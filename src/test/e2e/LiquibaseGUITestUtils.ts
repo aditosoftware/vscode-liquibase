@@ -11,7 +11,6 @@ import {
   VSBrowser,
   Workbench,
   TreeItem,
-  ActivityBar,
 } from "vscode-extension-tester";
 import assert from "assert";
 import { randomUUID } from "crypto";
@@ -73,6 +72,9 @@ export class LiquibaseGUITestUtils {
     // open the workspace
     await this.openWorkspace();
 
+    // we need to wait a bit, otherwise we can not create the config
+    await this.wait(1000);
+
     // create a configuration
     const configurationName = await this.createConfiguration({ addChangelog: addChangelog });
 
@@ -113,15 +115,14 @@ export class LiquibaseGUITestUtils {
   static async openWorkspace(): Promise<void> {
     await new EditorView().closeAllEditors();
 
-    chai.assert.pathExists(this.WORKSPACE_PATH, `Path ${this.WORKSPACE_PATH} should exist`);
+    const prompt = await new Workbench().openCommandPrompt();
 
-    await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
+    const input = await InputBox.create();
 
-    const control = await new ActivityBar().getViewControl("Explorer");
-    if (control) {
-      await control.openView();
-    }
-    await VSBrowser.instance.takeScreenshot("open-workspace-" + randomUUID());
+    await prompt.setText(">workbench.action.files.openFolder");
+    await prompt.confirm();
+
+    await this.selectFolder(input, this.WORKSPACE_PATH);
   }
 
   // #endregion
@@ -276,7 +277,7 @@ export class LiquibaseGUITestUtils {
    */
   static removeContentOfFolder(folder: string): void {
     for (const file of fs.readdirSync(folder)) {
-      fs.rmSync(path.join(folder, file));
+      fs.rmSync(path.join(folder, file), { recursive: true, force: true });
     }
   }
   //#endregion
@@ -368,7 +369,7 @@ export class LiquibaseGUITestUtils {
         if (message.includes(text)) {
           return { notification };
         }
-      } else if (message.match(text)) {
+      } else if (RegExp(text).exec(message)) {
         return { notification };
       }
     }
@@ -580,7 +581,15 @@ export class LiquibaseGUITestUtils {
     configurationName?: string,
     contextOption?: ContextOptions
   ): Promise<InputBox> {
-    await VSBrowser.instance.openResources(this.CHANGELOG_FILE);
+    const prompt = await new Workbench().openCommandPrompt();
+
+    const input = await InputBox.create();
+
+    await prompt.setText(">workbench.action.files.openFile");
+    await prompt.confirm();
+
+    await input.setText(this.CHANGELOG_FILE);
+    await input.confirm();
 
     await this.openAndSelectRMBItemFromAlreadyOpenedFile(action, mochaContext);
 

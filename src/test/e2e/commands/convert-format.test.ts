@@ -28,7 +28,7 @@ suite("convert format", () => {
    * Removes the temporary output folder after all tests.
    */
   suiteTeardown("remove temporary folder", () => {
-    fs.rmSync(tempOutput, { recursive: true });
+    fs.rmSync(tempOutput, { recursive: true, force: true, maxRetries: 10 });
   });
 
   formats.forEach((pFormat) => {
