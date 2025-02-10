@@ -50,6 +50,11 @@ export class LiquibaseGUITestUtils {
    */
   static outputPanel: OutputView;
 
+  /**
+   * Indicates, if the workspace was opened once by the tests.
+   */
+  private static workspaceOpen: boolean = false;
+
   //#region setup tests
 
   /**
@@ -110,9 +115,14 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
-   * Opens the workspace.
+   * Opens the workspace, if it was not opened by any other test.
    */
   static async openWorkspace(): Promise<void> {
+    if (this.workspaceOpen) {
+      // If the workspace was opened before, do nothing
+      return;
+    }
+
     await new EditorView().closeAllEditors();
 
     const prompt = await new Workbench().openCommandPrompt();
@@ -123,6 +133,8 @@ export class LiquibaseGUITestUtils {
     await prompt.confirm();
 
     await this.selectFolder(input, this.WORKSPACE_PATH);
+
+    this.workspaceOpen = true;
   }
 
   // #endregion
