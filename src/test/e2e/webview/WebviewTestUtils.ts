@@ -92,7 +92,13 @@ export class WebviewTestUtils {
       // Switch webdriver back to the vscode window after each test.
       await webView.switchBack();
 
-      await new EditorView().closeAllEditors();
+      try {
+        // closing the liquibase config editor
+        await new EditorView().closeEditor("Liquibase Configuration");
+      } catch (error) {
+        // ignore any error, just log ist
+        console.error("error closing the config editor", error);
+      }
     }
   }
 
