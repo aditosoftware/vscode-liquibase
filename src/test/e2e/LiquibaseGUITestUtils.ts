@@ -14,7 +14,7 @@ import {
 } from "vscode-extension-tester";
 import assert from "assert";
 import { randomUUID } from "crypto";
-import { WebviewTestUtils } from "./webview/WebviewTestUtils";
+import { WebviewTestUtils } from "./01_webview/WebviewTestUtils";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
 import path from "path";
 import * as fs from "fs";
