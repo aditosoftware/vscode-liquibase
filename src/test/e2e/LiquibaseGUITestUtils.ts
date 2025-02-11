@@ -14,14 +14,16 @@ import {
 } from "vscode-extension-tester";
 import assert from "assert";
 import { randomUUID } from "crypto";
-import { WebviewTestUtils } from "./webview/WebviewTestUtils";
+import { WebviewTestUtils } from "./01_webview/WebviewTestUtils";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
 import path from "path";
 import * as fs from "fs";
 import { CHOOSE_CHANGELOG_OPTION, ContextOptions, RemoveCacheOptions } from "../../constants";
 import chai from "chai";
 import chaiString from "chai-string";
+import chaiFs from "chai-fs";
 
+chai.use(chaiFs);
 chai.use(chaiString);
 
 /**
@@ -48,6 +50,11 @@ export class LiquibaseGUITestUtils {
    */
   static outputPanel: OutputView;
 
+  /**
+   * Indicates, if the workspace was opened once by the tests.
+   */
+  private static workspaceOpen: boolean = false;
+
   //#region setup tests
 
   /**
@@ -69,6 +76,9 @@ export class LiquibaseGUITestUtils {
 
     // open the workspace
     await this.openWorkspace();
+
+    // we need to wait a bit, otherwise we can not create the config
+    await this.wait(1000);
 
     // create a configuration
     const configurationName = await this.createConfiguration({ addChangelog: addChangelog });
@@ -105,12 +115,26 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
-   * Opens the workspace.
+   * Opens the workspace, if it was not opened by any other test.
    */
   static async openWorkspace(): Promise<void> {
+    if (this.workspaceOpen) {
+      // If the workspace was opened before, do nothing
+      return;
+    }
+
     await new EditorView().closeAllEditors();
 
-    await VSBrowser.instance.openResources(this.WORKSPACE_PATH);
+    const prompt = await new Workbench().openCommandPrompt();
+
+    const input = await InputBox.create();
+
+    await prompt.setText(">workbench.action.files.openFolder");
+    await prompt.confirm();
+
+    await this.selectFolder(input, this.WORKSPACE_PATH);
+
+    this.workspaceOpen = true;
   }
 
   // #endregion
@@ -265,7 +289,7 @@ export class LiquibaseGUITestUtils {
    */
   static removeContentOfFolder(folder: string): void {
     for (const file of fs.readdirSync(folder)) {
-      fs.rmSync(path.join(folder, file));
+      fs.rmSync(path.join(folder, file), { recursive: true, force: true });
     }
   }
   //#endregion
@@ -357,7 +381,7 @@ export class LiquibaseGUITestUtils {
         if (message.includes(text)) {
           return { notification };
         }
-      } else if (message.match(text)) {
+      } else if (RegExp(text).exec(message)) {
         return { notification };
       }
     }
@@ -569,7 +593,15 @@ export class LiquibaseGUITestUtils {
     configurationName?: string,
     contextOption?: ContextOptions
   ): Promise<InputBox> {
-    await VSBrowser.instance.openResources(this.CHANGELOG_FILE);
+    const prompt = await new Workbench().openCommandPrompt();
+
+    const input = await InputBox.create();
+
+    await prompt.setText(">workbench.action.files.openFile");
+    await prompt.confirm();
+
+    await input.setText(this.CHANGELOG_FILE);
+    await input.confirm();
 
     await this.openAndSelectRMBItemFromAlreadyOpenedFile(action, mochaContext);
 
