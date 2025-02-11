@@ -1,6 +1,6 @@
 import assert from "assert";
 import { WebviewTestUtils } from "./WebviewTestUtils";
-import { By, InputBox, VSBrowser } from "vscode-extension-tester";
+import { By, InputBox } from "vscode-extension-tester";
 import path from "path";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
@@ -44,11 +44,8 @@ suite("Basic webview tests", () => {
       // swap out of the webview to fill in the folder
       await webView.switchBack();
 
-      await VSBrowser.instance.takeScreenshot("select_changelog_dialog");
-
       const input = new InputBox();
       await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-      await VSBrowser.instance.takeScreenshot("select_changelog_dialog_filled");
       await input.selectQuickPick(1);
 
       // swap back to the webview

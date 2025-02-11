@@ -1,4 +1,4 @@
-import { By, Key, VSBrowser, WebView } from "vscode-extension-tester";
+import { By, Key, WebView } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import assert from "assert";
 
@@ -11,7 +11,7 @@ suite("AdditionalElements", () => {
    */
   test("should add additional element", async function () {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
-      await addAdditionalElement(webView, "add_additional");
+      await addAdditionalElement(webView);
     });
   });
 
@@ -20,7 +20,7 @@ suite("AdditionalElements", () => {
    */
   test("should remove additional element", async function () {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
-      await addAdditionalElement(webView, "remove_additional");
+      await addAdditionalElement(webView);
 
       // find the delete button of the row and remove the content
       const removeButton = await webView.findWebElement(By.id("delete;;;lorem;;;ipsum"));
@@ -35,7 +35,7 @@ suite("AdditionalElements", () => {
    */
   test("should edit the key of additional element", async function () {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
-      await addAdditionalElement(webView, "edit_key");
+      await addAdditionalElement(webView);
 
       const key = await webView.findWebElement(By.id("key;;;lorem;;;ipsum"));
       // first click to start editing
@@ -52,7 +52,7 @@ suite("AdditionalElements", () => {
    */
   test("should edit the value of additional element", async function () {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
-      await addAdditionalElement(webView, "edit_val");
+      await addAdditionalElement(webView);
 
       const value = await webView.findWebElement(By.id("value;;;lorem;;;ipsum"));
       // first click to start editing
@@ -108,8 +108,6 @@ suite("AdditionalElements", () => {
       const addButton = await webView.findWebElement(By.id("addButton"));
       await addButton.click();
 
-      await VSBrowser.instance.takeScreenshot("old_value_before_edit");
-
       const value = await webView.findWebElement(By.id("key;;;driver2;;;lorem"));
       await value.click();
       const markAll = process.platform === "darwin" ? Key.chord(Key.COMMAND, "a") : Key.chord(Key.CONTROL, "a");
@@ -126,7 +124,7 @@ suite("AdditionalElements", () => {
  *
  * @param webView - the webview to which an additional element should be added
  */
-async function addAdditionalElement(webView: WebView, name: string): Promise<void> {
+async function addAdditionalElement(webView: WebView): Promise<void> {
   const keyInput = await webView.findWebElement(By.id("keyInput"));
   await keyInput.sendKeys("lorem", Key.TAB);
 
@@ -135,8 +133,6 @@ async function addAdditionalElement(webView: WebView, name: string): Promise<voi
 
   const addButton = await webView.findWebElement(By.id("addButton"));
   await addButton.click();
-
-  await VSBrowser.instance.takeScreenshot("add_" + name);
 
   await WebviewTestUtils.assertMatchPreview(webView, /lorem = ipsum/);
 }
