@@ -91,6 +91,8 @@ export class WebviewTestUtils {
     } finally {
       // Switch webdriver back to the vscode window after each test.
       await webView.switchBack();
+
+      await new EditorView().closeAllEditors();
     }
   }
 
