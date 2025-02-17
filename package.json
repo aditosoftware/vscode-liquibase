@@ -422,7 +422,7 @@
   },
   "devDependencies": {
     "@aditosoftware/eslint-config-adito-platform": "latest",
-    "@types/chai": "^4.3.19",
+    "@types/chai": "^5.0.1",
     "@types/chai-fs": "^2.0.5",
     "@types/chai-string": "^1.4.5",
     "@types/download": "^8.0.5",
@@ -432,7 +432,7 @@
     "@types/vscode": "^1.84.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
-    "chai": "^4.5.0",
+    "chai": "^5.2.0",
     "chai-fs": "^2.0.0",
     "chai-string": "^1.5.0",
     "concurrently": "^9.1.2",
