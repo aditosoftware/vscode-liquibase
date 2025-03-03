@@ -434,7 +434,7 @@
     "@vscode/test-electron": "^2.4.1",
     "chai": "^4.5.0",
     "chai-fs": "^2.0.0",
-    "chai-string": "^1.5.0",
+    "chai-string": "^2.0.0",
     "concurrently": "^9.1.2",
     "copyfiles": "^2.4.1",
     "mariadb": "^3.4.0",
