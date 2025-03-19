@@ -361,7 +361,6 @@ function registerCommands(context: vscode.ExtensionContext): void {
             inputBoxOptions: {
               placeHolder: "The tables for which you want the changelog generated",
               ignoreFocusOut: true,
-              validateInput,
             },
           }),
           cmdArgs: "--include-objects",
