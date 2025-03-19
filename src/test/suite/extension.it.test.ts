@@ -127,6 +127,14 @@ suite("Extension Integration Test Suite", () => {
       },
     },
     {
+      command: "generate-changelog",
+      answers: {
+        openDialog: [outputFolder],
+        quickPick: [[]],
+        inputBox: ["changelog.yaml", ""],
+      },
+    },
+    {
       command: "unexpected-changesets",
       answers: {
         openDialog: [changelogFile],

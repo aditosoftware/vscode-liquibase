@@ -414,7 +414,7 @@
   },
   "dependencies": {
     "@aditosoftware/driver-dependencies": "^1.0.4",
-    "@aditosoftware/vscode-input": "^2.0.1",
+    "@aditosoftware/vscode-input": "^2.0.2",
     "@aditosoftware/vscode-logging": "^1.0.3",
     "download": "^8.0.0",
     "immer": "^10.1.1",
