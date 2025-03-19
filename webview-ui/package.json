@@ -19,8 +19,8 @@
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "@types/vscode-webview": "^1.57.4",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "typescript": "^5.3.3",
-    "vite": "^5.4.14"
+    "vite": "^6.2.2"
   }
 }
