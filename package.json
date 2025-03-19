@@ -4,7 +4,7 @@
   "description": "Execute Liquibase commands on changelogs and create liquibase.properties files",
   "license": "MIT",
   "publisher": "adito",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engines": {
     "vscode": "^1.84.0"
   },
