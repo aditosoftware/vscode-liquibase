@@ -441,7 +441,7 @@
     "mkdirp": "^3.0.1",
     "rimraf": "^6.0.1",
     "run-func": "^3.0.0",
-    "sinon": "^19.0.2",
+    "sinon": "^20.0.0",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.2",
     "vscode-extension-tester": "^8.13.0",
