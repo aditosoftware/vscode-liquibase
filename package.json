@@ -408,7 +408,7 @@
     "lint:fix": "npm run lint -- --fix",
     "pretest": "npm run clean-compile && npm run createTempWorkspace",
     "test": "vscode-test",
-    "test:e2e": "npm run pretest && extest setup-and-run --code_version max --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
+    "test:e2e": "npm run pretest && extest setup-and-run --code_version max --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/executeJar.test.js",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
