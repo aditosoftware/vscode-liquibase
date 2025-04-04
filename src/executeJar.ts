@@ -10,6 +10,7 @@ import {
   getLiquibaseFolder,
   getOpenOutputChannelOnCommandStartSetting,
 } from "./handleLiquibaseSettings";
+import { getWorkFolder } from "./handleChangelogFileInput";
 
 /**
  * The error that was given during the process execution.
@@ -212,10 +213,20 @@ export async function loadContextsFromChangelogFile(
           Logger.getLogger().info({ message: "No contexts found. You can continue normal", notifyUser: true });
         }
 
-        // save the loaded context into the cache
-        cacheHandler.saveContexts(liquibasePropertiesPath, changelogFile, {
-          loadedContexts: contexts,
-        });
+        for (const file of fs.readdirSync(path.dirname(liquibasePropertiesPath))) {
+          if (file.endsWith(".properties")) {
+            const propertyFile = path.dirname(liquibasePropertiesPath) + path.sep + file;
+            const propertyFileContent = fs.readFileSync(propertyFile, { encoding: "utf-8" }).replaceAll("\\\\", "\\");
+
+            if (propertyFileContent.includes(path.relative(getWorkFolder(), changelogFile))) {
+              // save the loaded context into the cache
+              cacheHandler.saveContexts(propertyFile, changelogFile, {
+                loadedContexts: contexts,
+                selectedContexts: [""],
+              });
+            }
+          }
+        }
 
         // transform the elements to an quick pick array
         const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {
