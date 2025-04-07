@@ -7,10 +7,14 @@ import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
 import {
   getClearOutputChannelOnStartSetting,
+  getDefaultDatabaseForConfiguration,
   getLiquibaseFolder,
   getOpenOutputChannelOnCommandStartSetting,
 } from "./handleLiquibaseSettings";
 import { getWorkFolder } from "./handleChangelogFileInput";
+import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/handle/readConfiguration";
+import { readFullValues } from "./configuration/data/readFromProperties";
+import { getCustomDrivers } from "./utilities/customDriverUtilities";
 
 /**
  * The error that was given during the process execution.
@@ -213,20 +217,9 @@ export async function loadContextsFromChangelogFile(
           Logger.getLogger().info({ message: "No contexts found. You can continue normal", notifyUser: true });
         }
 
-        for (const file of fs.readdirSync(path.dirname(liquibasePropertiesPath))) {
-          if (file.endsWith(".properties")) {
-            const propertyFile = path.dirname(liquibasePropertiesPath) + path.sep + file;
-            const propertyFileContent = fs.readFileSync(propertyFile, { encoding: "utf-8" }).replaceAll("\\\\", "\\");
-
-            if (propertyFileContent.includes(path.relative(getWorkFolder(), changelogFile))) {
-              // save the loaded context into the cache
-              cacheHandler.saveContexts(propertyFile, changelogFile, {
-                loadedContexts: contexts,
-                selectedContexts: [""],
-              });
-            }
-          }
-        }
+        // save the loaded contexts to the cache
+        // this will save the contexts to all property files that point to the same changelog file
+        void setContextForCache(contexts, changelogFile);
 
         // transform the elements to an quick pick array
         const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {
@@ -251,6 +244,40 @@ export async function loadContextsFromChangelogFile(
       reject(error as Error);
     }
   });
+
+  /**
+   * Sets the context for the cache.
+   *
+   * @param contexts - the contexts that were loaded from the changelog file
+   * @param changelogFile - the absolute path to the changelog file
+   */
+  async function setContextForCache(contexts: string[], changelogFile: string): Promise<void> {
+    const names = await readLiquibaseConfigurationNames();
+    if (!names) {
+      return;
+    }
+    for (const configurationName of names) {
+      const propertyFile = await getPathOfConfiguration(configurationName);
+
+      if (!propertyFile) {
+        continue;
+      }
+
+      const data = readFullValues(configurationName, propertyFile, {
+        defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
+        liquibaseDirectoryInProject: getLiquibaseFolder(),
+        customDrivers: getCustomDrivers(),
+      });
+
+      if (data.changelogFile.includes(path.relative(getWorkFolder(), changelogFile))) {
+        // save the loaded context into the cache
+        cacheHandler.saveContexts(propertyFile, changelogFile, {
+          loadedContexts: contexts,
+          selectedContexts: [""],
+        });
+      }
+    }
+  }
 }
 
 /**

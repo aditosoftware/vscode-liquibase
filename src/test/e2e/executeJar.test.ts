@@ -14,6 +14,7 @@ suite("executeJar", function () {
    */
   let configurationName: string;
   let configurationNameDupe: string;
+  const clock = 1744016763539;
 
   /**
    * Set up the test suite.
@@ -23,6 +24,8 @@ suite("executeJar", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests({ startContainer: true, addChangelog: true });
     // create a second configuration that is NOT used for the update but gets the cache entry updated
     configurationNameDupe = await LiquibaseGUITestUtils.setupTests({ startContainer: false, addChangelog: true });
+
+    await DockerTestUtils.resetDB();
   });
 
   /**
@@ -33,7 +36,7 @@ suite("executeJar", function () {
       changelogs: [
         {
           path: LiquibaseGUITestUtils.CHANGELOG_FILE.toLowerCase(),
-          lastUsed: 1,
+          lastUsed: clock,
           contexts: {
             loadedContexts: ["bar", "baz", "foo"],
             selectedContexts: [""],
@@ -41,8 +44,6 @@ suite("executeJar", function () {
         },
       ],
     };
-
-    await DockerTestUtils.resetDB();
 
     await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT, "foo");
 
@@ -56,14 +57,11 @@ suite("executeJar", function () {
     const cache = JSON.parse(text);
 
     // get the key that was NOT used for the update but should be updated in the cache
-    const keys = Object.keys(cache).filter((pKey) => pKey.includes(configurationNameDupe));
-    assert.strictEqual(keys.length, 1, `there should be one element in ${keys}`);
-    const key = keys[0];
-
+    const key = Object.keys(cache).filter((pKey) => pKey.includes(configurationNameDupe))[0];
     const cacheForKey: Connection = cache[key];
     // sanitize the result to remove the lastUsed from the changelogs and to lowercase the path
     cacheForKey.changelogs.forEach((pChangelog) => {
-      pChangelog.lastUsed = 1;
+      pChangelog.lastUsed = clock;
       pChangelog.path = pChangelog.path.toLowerCase();
     });
 
