@@ -15,6 +15,7 @@ import { getWorkFolder } from "./handleChangelogFileInput";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "./configuration/handle/readConfiguration";
 import { readFullValues } from "./configuration/data/readFromProperties";
 import { getCustomDrivers } from "./utilities/customDriverUtilities";
+import { ContextSelection } from "./cache/CacheHandler";
 
 /**
  * The error that was given during the process execution.
@@ -164,13 +165,9 @@ export function executeJarAsync<ErrorCode extends number>(
  * Loads all contexts from a changelog file.
  *
  * @param changelogFile - the absolute path to the changelog file
- * @param liquibasePropertiesPath - the path to the liquibase properties file
  * @returns the quick pick items containing all changelogs
  */
-export async function loadContextsFromChangelogFile(
-  changelogFile: string,
-  liquibasePropertiesPath: string
-): Promise<vscode.QuickPickItem[]> {
+export async function loadContextsFromChangelogFile(changelogFile: string): Promise<vscode.QuickPickItem[]> {
   if (!fs.existsSync(changelogFile)) {
     Logger.getLogger().debug({ message: `File ${changelogFile} does not exist for context search` });
     return [];
@@ -219,7 +216,7 @@ export async function loadContextsFromChangelogFile(
 
         // save the loaded contexts to the cache
         // this will save the contexts to all property files that point to the same changelog file
-        void setContextForCache(contexts, changelogFile);
+        setContextForCache(contexts, changelogFile);
 
         // transform the elements to an quick pick array
         const contextValues: vscode.QuickPickItem[] = contexts.map((pContext: string) => {
@@ -246,37 +243,59 @@ export async function loadContextsFromChangelogFile(
   });
 
   /**
-   * Sets the context for the cache.
+   * Sets the context for all files that point to the same changelog file.
    *
    * @param contexts - the contexts that were loaded from the changelog file
    * @param changelogFile - the absolute path to the changelog file
    */
-  async function setContextForCache(contexts: string[], changelogFile: string): Promise<void> {
-    const names = await readLiquibaseConfigurationNames();
-    if (!names) {
-      return;
-    }
-    for (const configurationName of names) {
-      const propertyFile = await getPathOfConfiguration(configurationName);
+  function setContextForCache(contexts: string[], changelogFile: string): void {
+    readLiquibaseConfigurationNames()
+      .then((names) => {
+        if (!names) {
+          return;
+        }
+        for (const configurationName of names) {
+          getPathOfConfiguration(configurationName)
+            .then((propertyFile) => {
+              if (!propertyFile) {
+                return;
+              }
 
-      if (!propertyFile) {
-        continue;
-      }
+              const data = readFullValues(configurationName, propertyFile, {
+                defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
+                liquibaseDirectoryInProject: getLiquibaseFolder(),
+                customDrivers: getCustomDrivers(),
+              });
 
-      const data = readFullValues(configurationName, propertyFile, {
-        defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
-        liquibaseDirectoryInProject: getLiquibaseFolder(),
-        customDrivers: getCustomDrivers(),
-      });
+              const previousSelectedContexts: ContextSelection = cacheHandler.readContexts(
+                propertyFile,
+                data.changelogFile
+              );
 
-      if (data.changelogFile.includes(path.relative(getWorkFolder(), changelogFile))) {
-        // save the loaded context into the cache
-        cacheHandler.saveContexts(propertyFile, changelogFile, {
-          loadedContexts: contexts,
-          selectedContexts: [""],
+              if (data.changelogFile.includes(path.relative(getWorkFolder(), changelogFile))) {
+                // save the loaded context into the cache
+                cacheHandler.saveContexts(propertyFile, changelogFile, {
+                  loadedContexts: contexts,
+                  selectedContexts: previousSelectedContexts.selectedContexts ?? [""],
+                });
+              }
+            })
+            .catch((error) => {
+              Logger.getLogger().error({
+                message: `Error while reading configuration ${configurationName}`,
+                error,
+                notifyUser: true,
+              });
+            });
+        }
+      })
+      .catch((error) => {
+        Logger.getLogger().error({
+          message: "Error while reading configuration names",
+          error,
+          notifyUser: true,
         });
-      }
-    }
+      });
   }
 }
 
