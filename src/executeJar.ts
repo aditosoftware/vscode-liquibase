@@ -267,9 +267,10 @@ export async function loadContextsFromChangelogFile(changelogFile: string): Prom
                 customDrivers: getCustomDrivers(),
               });
 
+              //here you have to use the absolute path to the changelog file
               const previousSelectedContexts: ContextSelection = cacheHandler.readContexts(
                 propertyFile,
-                data.changelogFile
+                path.join(getWorkFolder(), data.changelogFile)
               );
 
               if (data.changelogFile.includes(path.relative(getWorkFolder(), changelogFile))) {
