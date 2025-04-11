@@ -265,7 +265,7 @@ export class CacheHandler {
    * @param changelogLocation - the location of the changelog
    * @returns the sorted loaded contexts and the selected contexts of the given connection and changelog
    */
-  readContexts(connectionLocation: string, changelogLocation: string): ContextSelection {
+  public readContexts(connectionLocation: string, changelogLocation: string): ContextSelection {
     const existingChangelog = this.getChangelog(connectionLocation, changelogLocation).existingChangelog;
 
     if (existingChangelog?.contexts) {
