@@ -273,7 +273,12 @@ export async function loadContextsFromChangelogFile(changelogFile: string): Prom
                 path.join(getWorkFolder(), data.changelogFile)
               );
 
-              if (data.changelogFile.includes(path.relative(getWorkFolder(), changelogFile))) {
+              const changelogsFromCache = cacheHandler.readChangelogs(propertyFile);
+
+              if (
+                data.changelogFile.includes(path.relative(getWorkFolder(), changelogFile)) ||
+                changelogsFromCache.includes(changelogFile)
+              ) {
                 // save the loaded context into the cache
                 cacheHandler.saveContexts(propertyFile, changelogFile, {
                   loadedContexts: contexts,
