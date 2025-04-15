@@ -254,7 +254,7 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
 
   if (changelog) {
     // we are in a right click menu, read the contexts from this file
-    return await loadContextsFromChangelogFile(changelog, liquibasePropertiesPath);
+    return await loadContextsFromChangelogFile(changelog);
   }
 
   // Read Liquibase changelog  lines from properties file content
@@ -266,7 +266,7 @@ async function readContextValues(currentResults: DialogValues): Promise<vscode.Q
   if (changelogs) {
     // Read and parse the specified XML file
     const possibleFile = path.join(getLiquibaseFolder(), path.normalize(changelogs.trim()));
-    const contexts = await loadContextsFromChangelogFile(possibleFile, liquibasePropertiesPath);
+    const contexts = await loadContextsFromChangelogFile(possibleFile);
     contextValues.push(...contexts);
   }
 

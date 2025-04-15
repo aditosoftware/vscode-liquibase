@@ -87,6 +87,7 @@ suite("open cache", () => {
     // sanitize the result to remove the lastUsed from the changelogs
     cacheForKey.changelogs.forEach((pChangelog) => {
       pChangelog.lastUsed = 1;
+      pChangelog.path = pChangelog.path.toLowerCase();
     });
 
     assert.deepStrictEqual(cacheForKey, expectedConnectionFromCache);

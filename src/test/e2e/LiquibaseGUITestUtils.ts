@@ -74,6 +74,8 @@ export class LiquibaseGUITestUtils {
       await DockerTestUtils.startContainer();
     }
 
+    this.removeContentOfFolder(path.join(this.WORKSPACE_PATH, "data", "liquibase"));
+
     // open the workspace
     await this.openWorkspace();
 
@@ -288,10 +290,13 @@ export class LiquibaseGUITestUtils {
    * @param folder - the folder
    */
   static removeContentOfFolder(folder: string): void {
-    for (const file of fs.readdirSync(folder)) {
-      fs.rmSync(path.join(folder, file), { recursive: true, force: true });
+    if (fs.existsSync(folder)) {
+      for (const file of fs.readdirSync(folder)) {
+        fs.rmSync(path.join(folder, file), { recursive: true, force: true });
+      }
     }
   }
+
   //#endregion
 
   //#region command end
