@@ -446,7 +446,7 @@
     "typescript": "^5.8.3",
     "vscode-extension-tester": "^8.13.0",
     "webfont": "^11.2.26",
-    "webpack": "^5.99.6",
+    "webpack": "^5.99.7",
     "webpack-cli": "^6.0.1",
     "webpack-shell-plugin-next": "^2.3.2"
   }
