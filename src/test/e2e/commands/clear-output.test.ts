@@ -1,5 +1,4 @@
 import assert from "assert";
-import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { randomUUID } from "crypto";
@@ -21,37 +20,37 @@ suite("Clear Output Channel On Start", function () {
   });
 
   /**
-   * Test case for not clearing the output after the 'drop-all' command.
+   * Test case for not clearing the output after the 'tag-exists' command.
    */
-  test("should not clear output after 'drop-all' command", async function () {
+  test("should not clear output after 'tag-exists' command", async function () {
     await LiquibaseGUITestUtils.setSetting("liquibase.clearOutputChannelOnStart", false);
 
     // execute a first command
-    await executeDropAll(configurationName);
+    await executeTagExists(configurationName);
 
     // execute a second command
     await executeCreateTag(configurationName);
 
     // check that the text is still in the output from the first command.
     const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
-    assert.match(outputPanelText, /Liquibase command 'drop-all' will be executed/);
+    assert.match(outputPanelText, /Liquibase command 'tag-exists' will be executed/);
   });
 
   /**
-   * Test case for clearing the output after the 'drop-all' command.
+   * Test case for clearing the output after the 'tag-exists' command.
    */
-  test("should clear output after 'drop-all' command", async function () {
+  test("should clear output after 'tag-exists' command", async function () {
     await LiquibaseGUITestUtils.setSetting("liquibase.clearOutputChannelOnStart", true);
 
     // execute a first command
-    await executeDropAll(configurationName);
+    await executeTagExists(configurationName);
 
     // execute a second command
     await executeCreateTag(configurationName);
 
     // check that there is no text of the first command in the output
     const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
-    assert.doesNotMatch(outputPanelText, /Liquibase command 'drop-all' will be executed/);
+    assert.doesNotMatch(outputPanelText, /Liquibase command 'tag-exists' will be executed/);
   });
 
   /**
@@ -64,18 +63,21 @@ suite("Clear Output Channel On Start", function () {
 });
 
 /**
- * Executes a 'drop-all' command.
+ * Executes a 'tag-exists' command.
  *
  * @param configurationName - the name of the configuration
  */
-async function executeDropAll(configurationName: string): Promise<void> {
-  await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all...", configurationName });
+async function executeTagExists(configurationName: string): Promise<void> {
+  const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "tag-exists...", configurationName });
 
-  const modalDialog = new ModalDialog();
-  await modalDialog.pushButton("Drop-all");
+  await input.setText(randomUUID());
+  await input.confirm();
+
+  // const modalDialog = new ModalDialog();
+  // await modalDialog.pushButton("Drop-all");
 
   assert.ok(
-    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully.")
+    await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag-exists' was executed successfully.")
   );
 }
 
