@@ -26,6 +26,22 @@ suite("Drop-all", function () {
   });
 
   /**
+   * Cleans up the test suite after running all tests.
+   */
+  suiteTeardown(async () => {
+    await DockerTestUtils.stopAndRemoveContainer();
+  });
+
+  teardown(async () => {
+    try {
+      const modalDialog = new ModalDialog();
+      await modalDialog.close();
+    } catch (e) {
+      console.error(`error while trying to close the dialog ${e}`);
+    }
+  });
+
+  /**
    * Test case for executing the 'drop-all' command.
    */
   test("should execute 'drop-all' command", async function () {
@@ -51,13 +67,6 @@ suite("Drop-all", function () {
    */
   test("should cancel execute 'drop-all' command", async function () {
     await executeDropAll(configurationName, "Cancel", false);
-  });
-
-  /**
-   * Cleans up the test suite after running all tests.
-   */
-  suiteTeardown(async () => {
-    await DockerTestUtils.stopAndRemoveContainer();
   });
 });
 

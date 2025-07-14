@@ -52,5 +52,12 @@
     "suite": ["describe", "suite"],
     "test": ["it", "test"],
     "extractWith": "syntax"
-  }
+  },
+  "extesterRunner.testFileGlob": "**/e2e/**/*.test.ts",
+  "extesterRunner.rootFolder": "src",
+  "extesterRunner.additionalArgs": [
+    "--extensions_dir ./out/e2e/extensions",
+    "--code_settings ./src/test/e2e/settings.json",
+    "--mocha_config .mocharc.json"
+  ]
 }
