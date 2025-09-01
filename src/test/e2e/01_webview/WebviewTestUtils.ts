@@ -87,6 +87,8 @@ export class WebviewTestUtils {
     const webView = await this.openWebview();
 
     try {
+      await LiquibaseGUITestUtils.wait();
+
       await toExecute(webView);
     } finally {
       // Switch webdriver back to the vscode window after each test.
