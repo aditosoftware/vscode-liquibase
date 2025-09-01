@@ -1,5 +1,4 @@
 import assert from "assert";
-import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
@@ -20,20 +19,20 @@ suite("Execution time", function () {
   });
 
   /**
-   * Test case showing the execution time after the 'drop-all' command.
+   * Test case showing the execution time after the 'tag' command.
    */
   test("should show execution time after command execution", async function () {
-    await LiquibaseGUITestUtils.startCommandExecution({ command: "drop-all...", configurationName });
+    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag...", configurationName });
 
-    const modalDialog = new ModalDialog();
-    await modalDialog.pushButton("Drop-all");
+    await input.setText("test");
+    await input.confirm();
 
     assert.ok(
-      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'drop-all' was executed successfully.")
+      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag' was executed successfully.")
     );
 
     const outputPanelText = await LiquibaseGUITestUtils.outputPanel.getText();
-    assert.match(outputPanelText, /Liquibase command 'drop-all' finished in \d{2}:\d{2}:\d{3} min/);
+    assert.match(outputPanelText, /Liquibase command 'tag' finished in \d{2}:\d{2}:\d{3} min/);
   });
 
   /**
