@@ -3,5 +3,5 @@
   "ui": "tdd",
   "timeout": 80000,
   "slow": 4000,
-  "retries": 5
+  "retries": 0
 }

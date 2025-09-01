@@ -32,6 +32,18 @@ suite("Remove any values from the recently loaded elements", () => {
   });
 
   /**
+   * Trying to close the modal dialog after each test, if it remains open.
+   */
+  teardown(async () => {
+    try {
+      const modalDialog = new ModalDialog();
+      await modalDialog.close();
+    } catch (e) {
+      console.error(`error while trying to close the dialog ${e}`);
+    }
+  });
+
+  /**
    * Tests that there are no elements to remove when there are no cached values.
    */
   test("should not remove anything when no elements are there", async () => {
