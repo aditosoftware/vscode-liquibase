@@ -36,6 +36,8 @@ suite("Basic webview tests", () => {
   test("should be able to select changelog", async () => {
     await LiquibaseGUITestUtils.openWorkspace();
 
+    await LiquibaseGUITestUtils.wait(2000);
+
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
       const changelogSelection = await webView.findWebElement(By.id("changelogSelection"));
 

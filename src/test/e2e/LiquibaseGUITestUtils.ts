@@ -809,7 +809,7 @@ export class LiquibaseGUITestUtils {
    *
    * @param timeout - the number of milliseconds that should be waited.
    */
-  private static async wait(timeout: number = 2000): Promise<void> {
+  public static async wait(timeout: number = 2000): Promise<void> {
     await new Promise((r) => setTimeout(r, timeout));
   }
 
