@@ -24,9 +24,18 @@ suite("Remove existing liquibase.properties from the configuration", function ()
 
   /**
    * Teardown function that runs after the test suite.
+   *
+   * It stops all docker containers and closes the modal dialog, if it is open.
    */
   teardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
+
+    try {
+      const modalDialog = new ModalDialog();
+      await modalDialog.close();
+    } catch (e) {
+      console.error(`error while trying to close the dialog ${e}`);
+    }
   });
 
   /**
