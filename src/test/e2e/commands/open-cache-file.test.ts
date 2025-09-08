@@ -1,6 +1,6 @@
 import assert from "assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import { TextEditor } from "vscode-extension-tester";
+import { ModalDialog, TextEditor } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
 import { Connection, ContextSelection } from "../../../cache";
@@ -26,6 +26,18 @@ suite("open cache", () => {
    */
   suiteTeardown(async () => {
     await DockerTestUtils.stopAndRemoveContainer();
+  });
+
+  /**
+   * Trying to close any opened model dialog after the test.
+   */
+  teardown(async () => {
+    try {
+      const modalDialog = new ModalDialog();
+      await modalDialog.close();
+    } catch (e) {
+      console.error(`error while trying to close the dialog ${e}`);
+    }
   });
 
   /**
