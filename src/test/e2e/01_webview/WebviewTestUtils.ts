@@ -15,9 +15,17 @@ export class WebviewTestUtils {
    */
   private static async openWebview(): Promise<WebView> {
     // command for opening the webview
-    await new Workbench().executeCommand("liquibase.createLiquibaseConfiguration");
+    try {
+      await new Workbench().executeCommand("liquibase.createLiquibaseConfiguration");
 
-    assert.ok(await this.checkForOpenedWebview());
+      assert.ok(await this.checkForOpenedWebview());
+    } catch (error) {
+      console.error("Error opening the webview, trying again...", error);
+
+      await new Workbench().executeCommand("liquibase.createLiquibaseConfiguration");
+
+      assert.ok(await this.checkForOpenedWebview());
+    }
 
     // clear all notifications after the webview was loaded
     await LiquibaseGUITestUtils.clearNotifications();
