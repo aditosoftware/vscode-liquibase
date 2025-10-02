@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
@@ -107,7 +107,7 @@ export class CacheHandler {
       // if no changelog exists, write a dummy element.
       existingChangelog = {
         path: changelogPath,
-        lastUsed: new Date().getTime(),
+        lastUsed: Date.now(),
         contexts: {},
       };
       loadedChangelogs.changelogs.push(existingChangelog);
@@ -156,11 +156,11 @@ export class CacheHandler {
 
     if (existingChangelog) {
       // update lastUsed, if we already have an element
-      existingChangelog.lastUsed = new Date().getTime();
+      existingChangelog.lastUsed = Date.now();
     } else {
       // otherwise, add a new element
       changelogs.push({
-        lastUsed: new Date().getTime(),
+        lastUsed: Date.now(),
         path: changelogPath,
         contexts: {},
       });
@@ -213,15 +213,15 @@ export class CacheHandler {
   readCache(): Cache {
     if (!this.cacheLoaded) {
       // if we have no cached elements, then try to read them
-      if (!fs.existsSync(this.cacheLocation)) {
-        // if no cache exists, just use an empty element
-        this.cache = {};
-      } else {
-        // otherwise, just read and parse the cache
+      if (fs.existsSync(this.cacheLocation)) {
+        // if the cache exists, just read and parse the cache
         const cacheContext = fs.readFileSync(this.cacheLocation, { encoding: "utf-8" });
         this.cache = JSON.parse(cacheContext) as Cache;
 
         this.transformOldContextToNewContextSelection();
+      } else {
+        // if no cache exists, just use an empty element
+        this.cache = {};
       }
 
       this.cacheLoaded = true;
@@ -234,7 +234,7 @@ export class CacheHandler {
    * Transforms the old `contexts` to the new `contextSelection`.
    */
   private transformOldContextToNewContextSelection(): void {
-    Object.values(this.cache).forEach((pCacheElement) => {
+    for (const pCacheElement of Object.values(this.cache)) {
       if (!pCacheElement.changelogs) {
         pCacheElement.changelogs = [];
       }
@@ -243,17 +243,17 @@ export class CacheHandler {
       /* eslint-disable @typescript-eslint/no-deprecated */
       if (pCacheElement.contexts) {
         // move the contexts to every changelog
-        pCacheElement.changelogs.forEach((pChangelog) => {
+        for (const pChangelog of pCacheElement.changelogs) {
           pChangelog.contexts = {
             loadedContexts: pCacheElement.contexts,
           };
-        });
+        }
 
         // and delete the old contexts
         delete pCacheElement.contexts;
         /* eslint-enable @typescript-eslint/no-deprecated */
       }
-    });
+    }
   }
 
   /**
@@ -321,7 +321,9 @@ export class CacheHandler {
   removeConnectionsFromCache(connections: string[]): void {
     this.readCache();
 
-    connections.forEach((pConnection) => delete this.cache[pConnection]);
+    for (const pConnection of connections) {
+      delete this.cache[pConnection];
+    }
 
     // write the cache back to to file system
     this.writeCache();

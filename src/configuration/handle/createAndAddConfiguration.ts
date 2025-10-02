@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
-import path from "path";
+import * as fs from "node:fs";
+import path from "node:path";
 import { getLiquibaseConfigurationPath } from "../../handleLiquibaseSettings";
 import { LiquibaseConfigurationData, ConfigurationStatus } from "../data/LiquibaseConfigurationData";
 import { LiquibaseConfigurationPanel } from "../../panels/LiquibaseConfigurationPanel";
@@ -68,7 +68,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
   if (pConfigurationData.status === ConfigurationStatus.NEW) {
     // check only for existing configuration when there is a new configuration file
     const existingConfigurations = await readLiquibaseConfigurationNames();
-    if (existingConfigurations && existingConfigurations.indexOf(name) !== -1) {
+    if (existingConfigurations?.includes(name)) {
       const shouldOverride = await checkForOverridingExistingConfiguration(name);
       if (!shouldOverride) {
         return;

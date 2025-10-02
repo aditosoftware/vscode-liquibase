@@ -1,8 +1,7 @@
-import assert from "assert";
+import assert from "node:assert";
 import { By, EditorView, InputBox, Key, VSBrowser, WebView, Workbench } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { randomUUID } from "crypto";
 
 /**
  * Utility class for the webview e2e tests.
@@ -58,7 +57,7 @@ export class WebviewTestUtils {
           return false;
         }
       },
-      2_000,
+      2000,
       "waiting for the webview to open"
     );
   }
@@ -154,15 +153,7 @@ export class WebviewTestUtils {
    *
    * @param config - the configuration that should be written
    */
-  static async addConfigurationDataToWebview(
-    config: Config = {
-      name: randomUUID(),
-      buttonToClick: "saveButton",
-      port: 3310,
-      databaseType: "MariaDB",
-      databaseName: DockerTestUtils.dbName,
-    }
-  ): Promise<void> {
+  static async addConfigurationDataToWebview(config: Config): Promise<void> {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
       const nameInput = await webView.findWebElement(By.id("nameInput"));
       await nameInput.sendKeys(config.name);

@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
-import path from "path";
+import * as fs from "node:fs";
+import path from "node:path";
 import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";
 import { Logger } from "@aditosoftware/vscode-logging";
 

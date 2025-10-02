@@ -1,4 +1,4 @@
-import { exec, ExecException } from "child_process";
+import { exec, ExecException } from "node:child_process";
 import { isWindows } from "../../utilities/osUtilities";
 import mariadb from "mariadb";
 
@@ -57,7 +57,7 @@ export class DockerTestUtils {
     }
 
     const dockerIPVariable = process.env.DOCKER_IP;
-    if (typeof dockerIPVariable === "undefined") {
+    if (dockerIPVariable === undefined) {
       this.dockerIP = "localhost";
     } else {
       this.dockerIP = dockerIPVariable.trim();

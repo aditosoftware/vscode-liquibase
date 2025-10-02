@@ -135,7 +135,8 @@ export class DatabaseConnection {
     pDisguisePassword: boolean
   ): void {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
-    Object.entries(this).forEach(([key, value]) => {
+
+    for (const [key, value] of Object.entries(this)) {
       if (key && value && key !== "databaseType" && typeof value === "string") {
         let val: string = value;
 
@@ -145,7 +146,8 @@ export class DatabaseConnection {
 
         properties.insert(pReferenceConnection ? DatabaseConnection.createReferenceKey(key) : key, val);
       }
-    });
+    }
+
     this.writeDriverConfigurationAndDownload(properties, pReferenceConnection);
   }
 

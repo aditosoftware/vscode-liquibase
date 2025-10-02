@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { InputBox, StatusBar } from "vscode-extension-tester";
 import chai, { expect } from "chai";
 import chaiString from "chai-string";

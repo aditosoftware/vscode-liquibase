@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import chai from "chai";
@@ -34,7 +34,7 @@ suite("generate changelog", function () {
     fs.rmSync(temporaryFolder, { recursive: true });
   });
 
-  ["test_table", ""].forEach((tableNameInput) => {
+  for (const tableNameInput of ["test_table", ""]) {
     /**
      * Test case for executing the "generate changelog" command.
      */
@@ -74,5 +74,5 @@ suite("generate changelog", function () {
       );
       chai.assert.pathExists(newChangelog);
     });
-  });
+  }
 });

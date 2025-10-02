@@ -1,13 +1,13 @@
-import path from "path";
+import path from "node:path";
 import { DialogValues } from "@aditosoftware/vscode-input";
 import { openDocument } from "./utilities/vscodeUtilities";
 import * as vscode from "vscode";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { folderSelectionName } from "./constants";
 import { PROPERTY_FILE } from "./input/ConnectionType";
 import { getNameOfConfiguration } from "./configuration/handle/readConfiguration";
-import * as os from "os";
+import * as os from "node:os";
 
 /**
  * The name that should be used for any file name input.

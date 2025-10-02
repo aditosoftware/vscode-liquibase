@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ModalDialog, TextEditor } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
@@ -97,10 +97,10 @@ suite("open cache", () => {
     // get the cache for our key and check that the contexts are there
     const cacheForKey: Connection = cache[key];
     // sanitize the result to remove the lastUsed from the changelogs
-    cacheForKey.changelogs.forEach((pChangelog) => {
+    for (const pChangelog of cacheForKey.changelogs) {
       pChangelog.lastUsed = 1;
       pChangelog.path = pChangelog.path.toLowerCase();
-    });
+    }
 
     assert.deepStrictEqual(cacheForKey, expectedConnectionFromCache);
 

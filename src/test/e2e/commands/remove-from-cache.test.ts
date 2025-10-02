@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ContextOptions, RemoveCacheOptions } from "../../../constants";
 import { ModalDialog } from "vscode-extension-tester";

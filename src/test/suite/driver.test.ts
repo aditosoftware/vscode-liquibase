@@ -1,4 +1,4 @@
-import assert, { fail } from "assert";
+import assert, { fail } from "node:assert";
 import { PREDEFINED_DRIVERS, Driver, UrlParts } from "@aditosoftware/driver-dependencies";
 
 /**
@@ -175,7 +175,7 @@ suite("url handling", () => {
       );
     });
 
-    testCases.forEach((pCase) => {
+    for (const pCase of testCases) {
       /**
        * Makes tests for any test case of the drivers regarding extracting and building urls.
        */
@@ -203,7 +203,7 @@ suite("url handling", () => {
           if (driverFromMap) {
             driver = driverFromMap;
           } else {
-            fail(`Driver ${pCase} was not found in the map of all drivers`);
+            fail(`Driver ${pCase.driver} was not found in the map of all drivers`);
           }
         });
 
@@ -225,7 +225,7 @@ suite("url handling", () => {
           );
         });
       });
-    });
+    }
 
     /**
      * The test cases for the pre-configured drivers

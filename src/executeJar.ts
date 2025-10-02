@@ -1,8 +1,8 @@
-import * as path from "path";
+import * as path from "node:path";
 import * as vscode from "vscode";
-import { spawn, spawnSync } from "child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { Logger } from "@aditosoftware/vscode-logging";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { cacheHandler, libFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
 import {
@@ -103,7 +103,7 @@ export function executeJarAsync<ErrorCode extends number>(
         ];
 
         const childProcess = spawn(javaExecutable, commandArguments);
-        const startTime = new Date().getTime();
+        const startTime = Date.now();
 
         if (getClearOutputChannelOnStartSetting()) {
           Logger.getLogger().clear();
@@ -147,7 +147,7 @@ export function executeJarAsync<ErrorCode extends number>(
         });
 
         childProcess.on("exit", () => {
-          const duration = new Date().getTime() - startTime;
+          const duration = Date.now() - startTime;
           const minutes = Math.floor(duration / 60000);
           const seconds = Math.floor((duration % 60000) / 1000);
           const milliseconds = duration % 1000;

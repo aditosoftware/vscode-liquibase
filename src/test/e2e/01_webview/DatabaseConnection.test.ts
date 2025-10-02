@@ -1,7 +1,7 @@
 import { By, Key } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import assert from "assert";
+import assert from "node:assert";
 
 /**
  * Tests the connection of the database.

@@ -2,10 +2,10 @@ import Sinon from "sinon";
 import { TestUtils } from "../../TestUtils";
 import { testLiquibaseConnection } from "../../../../configuration/handle/testConfiguration";
 import * as vscode from "vscode";
-import assert from "assert";
+import assert from "node:assert";
 import { TransferDataForCommand } from "../../../../registerLiquibaseCommand";
 import { PROPERTY_FILE } from "../../../../input/ConnectionType";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import chai from "chai";
 import chaiFs from "chai-fs";
 

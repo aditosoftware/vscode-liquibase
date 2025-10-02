@@ -1,10 +1,10 @@
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { InputBox } from "vscode-extension-tester";
 import chai from "chai";
 import chaiFs from "chai-fs";
 import chaiString from "chai-string";
-import assert from "assert";
+import assert from "node:assert";
 
 chai.use(chaiFs);
 chai.use(chaiString);
@@ -31,7 +31,7 @@ suite("convert format", () => {
     fs.rmSync(tempOutput, { recursive: true, force: true, maxRetries: 10 });
   });
 
-  formats.forEach((pFormat) => {
+  for (const pFormat of formats) {
     /**
      * Tests the converting of a folder to a new format.
      */
@@ -43,9 +43,9 @@ suite("convert format", () => {
         `Converting the changelogs to ${pFormat} was executed successfully. Please check the files for correctness.`
       );
     });
-  });
+  }
 
-  formats.forEach((pFormat) => {
+  for (const pFormat of formats) {
     /**
      * Tests the converting of a file to a new format.
      */
@@ -57,26 +57,26 @@ suite("convert format", () => {
         `Converting the changelogs to ${pFormat} was executed successfully. Please check the files for correctness.`
       );
     });
-  });
+  }
 
-  formats.forEach((pFormat) => {
-    LiquibaseGUITestUtils.createRmbArguments("Convert a file from one liquibase format to another...").forEach(
-      (pArgument) => {
-        /**
-         * Tests that the converting via RMB does work.
-         */
-        test(`should execute converting of changelog to ${pFormat} from ${pArgument.description}`, async function () {
-          const input = await pArgument.command(this);
+  for (const pFormat of formats) {
+    for (const pArgument of LiquibaseGUITestUtils.createRmbArguments(
+      "Convert a file from one liquibase format to another..."
+    )) {
+      /**
+       * Tests that the converting via RMB does work.
+       */
+      test(`should execute converting of changelog to ${pFormat} from ${pArgument.description}`, async function () {
+        const input = await pArgument.command(this);
 
-          await assertConvertingWithNoChangelogSelection(
-            input,
-            pFormat,
-            `Converting the changelogs to ${pFormat} was executed successfully. Please check the files for correctness.`
-          );
-        });
-      }
-    );
-  });
+        await assertConvertingWithNoChangelogSelection(
+          input,
+          pFormat,
+          `Converting the changelogs to ${pFormat} was executed successfully. Please check the files for correctness.`
+        );
+      });
+    }
+  }
 });
 
 /**

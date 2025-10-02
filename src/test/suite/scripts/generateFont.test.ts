@@ -1,10 +1,10 @@
-import path from "path";
+import path from "node:path";
 import { generateFont, MinimalPackageJson } from "../../../scripts/generateFont";
 import { TestUtils } from "../TestUtils";
 import * as fs from "node:fs";
 import chai, { expect } from "chai";
 import chaiFs from "chai-fs";
-import assert from "assert";
+import assert from "node:assert";
 import Sinon from "sinon";
 import * as webfontImport from "webfont";
 
@@ -44,7 +44,7 @@ suite("generateFont", () => {
         icons: {
           "my-logo": {
             default: {
-              fontCharacter: "\\E001",
+              fontCharacter: String.raw`\E001`,
             },
           },
         },
@@ -66,11 +66,11 @@ suite("generateFont", () => {
   /**
    * Tests that an error was thrown, if there are no icons in the package.json
    */
-  [{}, { contributes: {} }, { contributes: { icons: {} } }].forEach((pTestCase) => {
+  for (const pTestCase of [{}, { contributes: {} }, { contributes: { icons: {} } }]) {
     test(`should throw error if no icons are in package.json: ${JSON.stringify(pTestCase)}`, async () => {
       await assertErrorCase(tempDir, "no icons found in package.json", pTestCase);
     });
-  });
+  }
 
   /**
    * Tests that an error was thrown, if there is no number given for the icon.
@@ -98,7 +98,7 @@ suite("generateFont", () => {
         icons: {
           "not-existing-logo": {
             default: {
-              fontCharacter: "\\E001",
+              fontCharacter: String.raw`\E001`,
             },
           },
         },
@@ -119,7 +119,7 @@ suite("generateFont", () => {
         icons: {
           "my-logo": {
             default: {
-              fontCharacter: "\\E001",
+              fontCharacter: String.raw`\E001`,
             },
           },
         },

@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
-import path from "path";
+import path from "node:path";
 import { DialogValues, OpenDialog, QuickPick } from "@aditosoftware/vscode-input";
 import { readChangelog } from "./configuration/data/readFromProperties";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
 import { PROPERTY_FILE } from "./input/ConnectionType";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { cacheHandler } from "./extension";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { PickPanelConfig } from "./registerLiquibaseCommand";
@@ -173,13 +173,17 @@ export class HandleChangelogFileInput {
     // add the existing changelog to the items
     const existingChangelog = HandleChangelogFileInput.getChangelogFileFromProperties(dialogValues);
     if (existingChangelog) {
-      items.push({ label: "configured changelog", kind: vscode.QuickPickItemKind.Separator });
-      items.push({ label: existingChangelog });
+      items.push(
+        { label: "configured changelog", kind: vscode.QuickPickItemKind.Separator },
+        { label: existingChangelog }
+      );
     }
 
     // add the choose option to the items
-    items.push({ label: "", kind: vscode.QuickPickItemKind.Separator });
-    items.push({ label: CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") });
+    items.push(
+      { label: "", kind: vscode.QuickPickItemKind.Separator },
+      { label: CHOOSE_CHANGELOG_OPTION, iconPath: new vscode.ThemeIcon("files") }
+    );
 
     // and add the recently loaded elements
     const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
@@ -196,8 +200,10 @@ export class HandleChangelogFileInput {
         });
 
       if (cachedElements && cachedElements.length !== 0) {
-        items.push({ label: "recently chosen changelogs", kind: vscode.QuickPickItemKind.Separator });
-        items.push(...cachedElements);
+        items.push(
+          { label: "recently chosen changelogs", kind: vscode.QuickPickItemKind.Separator },
+          ...cachedElements
+        );
       }
     }
 

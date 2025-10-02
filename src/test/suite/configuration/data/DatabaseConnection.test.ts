@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { DatabaseConnection } from "../../../../configuration/data/DatabaseConnection";
 import { UrlParts } from "@aditosoftware/driver-dependencies";
 

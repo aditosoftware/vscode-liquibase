@@ -1,6 +1,6 @@
-import path from "path";
-import fs from "fs";
-import assert from "assert";
+import path from "node:path";
+import fs from "node:fs";
+import assert from "node:assert";
 import { ModalDialog, TextEditor } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ContextOptions, RemoveConfigurationOptions } from "../../../constants";
@@ -41,11 +41,11 @@ suite("Remove existing liquibase.properties from the configuration", function ()
   /**
    * Test case for removing a liquibase.properties file with various remove options.
    */
-  [
+  for (const pArgument of [
     { removeOption: RemoveConfigurationOptions.CACHE, settingsThere: true, propertiesFileThere: true },
     { removeOption: RemoveConfigurationOptions.SETTING, settingsThere: false, propertiesFileThere: true },
     { removeOption: RemoveConfigurationOptions.DELETE_ALL, settingsThere: false, propertiesFileThere: false },
-  ].forEach((pArgument) => {
+  ]) {
     test(`should remove a liquibase.properties with remove option ${pArgument.removeOption}`, async function () {
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
@@ -103,5 +103,5 @@ suite("Remove existing liquibase.properties from the configuration", function ()
         "liquibase.properties files does exist"
       );
     });
-  });
+  }
 });

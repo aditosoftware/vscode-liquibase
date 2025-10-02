@@ -8,12 +8,12 @@ import {
   transformCommandArgsAfterInput,
   TransferDataForCommand,
 } from "../../registerLiquibaseCommand";
-import assert from "assert";
+import assert from "node:assert";
 import * as vscode from "vscode";
 import { ConnectionType, PROPERTY_FILE } from "../../input/ConnectionType";
 import * as changelogInput from "../../handleChangelogFileInput";
 import Sinon from "sinon";
-import path from "path";
+import path from "node:path";
 import { TestUtils } from "./TestUtils";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { DialogValues, InputBox } from "@aditosoftware/vscode-input";

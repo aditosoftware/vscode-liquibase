@@ -151,7 +151,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
 
     // checks if the input value is a number
     if (inputValue && /^\d*$/.test(inputValue)) {
-      const newPort = parseInt(inputValue);
+      const newPort = Number.parseInt(inputValue);
 
       // checks if the port is in a valid range
       if (newPort >= 0 && newPort <= 65535) {
@@ -289,30 +289,29 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
     const drivers = customDrivers;
 
     // add all the pre-configured drivers drivers
-    [...PREDEFINED_DRIVERS.keys()]
-      .sort((a, b) => a.localeCompare(b))
-      .forEach((pKey: string) => {
-        const driver = PREDEFINED_DRIVERS.get(pKey);
-        if (driver) {
-          radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
-        }
-      });
+    const preDefined = [...PREDEFINED_DRIVERS.keys()].sort((a, b) => a.localeCompare(b));
+    for (const pKey of preDefined) {
+      const driver = PREDEFINED_DRIVERS.get(pKey);
+      if (driver) {
+        radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
+      }
+    }
 
     // add custom drivers
     if (drivers && Object.keys(drivers).length !== 0) {
       // add a divider between the pre-configured drivers and the custom drivers
       radioElements.push(<VSCodeDivider />);
 
-      [...Object.keys(drivers)]
-        .sort((a, b) => a.localeCompare(b))
-        .forEach((pKey: string) => {
-          radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
-        });
+      const configuredDrivers = Object.keys(drivers).sort((a, b) => a.localeCompare(b));
+      for (const pKey of configuredDrivers) {
+        radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
+      }
     }
 
     // and add one element for no pre-configured driver at the end
-    radioElements.push(<VSCodeDivider />);
     radioElements.push(
+      <VSCodeDivider />,
+
       <VSCodeOption value={NO_PRE_CONFIGURED_DRIVER} selected>
         No pre-configured driver
       </VSCodeOption>

@@ -1,7 +1,7 @@
 import { updateConfiguration } from "../configuration/handle/readConfiguration";
 import { ConfirmationDialog, DialogValues, QuickPick, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { ConnectionType, PROPERTY_FILE } from "../input/ConnectionType";
 import { cacheHandler } from "../extension";
 import { RemoveConfigurationOptions } from "../constants";

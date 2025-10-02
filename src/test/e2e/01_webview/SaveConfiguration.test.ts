@@ -1,9 +1,9 @@
 import { By, TextEditor } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import assert from "assert";
-import { randomUUID } from "crypto";
-import path from "path";
+import assert from "node:assert";
+import { randomUUID } from "node:crypto";
+import path from "node:path";
 
 /**
  * Tests the saving of the configuration.

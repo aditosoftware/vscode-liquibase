@@ -1,6 +1,6 @@
 import { By, Key, WebView } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
-import assert from "assert";
+import assert from "node:assert";
 
 /**
  * Tests the additional elements from the webview.

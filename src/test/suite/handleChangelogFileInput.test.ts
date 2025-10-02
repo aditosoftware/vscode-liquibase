@@ -1,12 +1,12 @@
 import { DialogValues } from "@aditosoftware/vscode-input";
-import assert from "assert";
+import assert from "node:assert";
 import * as vscode from "vscode";
 import { HandleChangelogFileInput } from "../../handleChangelogFileInput";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
 import { TestUtils } from "./TestUtils";
-import path from "path";
-import { randomUUID } from "crypto";
-import * as fs from "fs";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
+import * as fs from "node:fs";
 import { setCacheHandler } from "../../extension";
 import { CacheHandler } from "../../cache";
 import Sinon from "sinon";
@@ -64,7 +64,7 @@ suite("handleChangelogInput", () => {
       assert.strictEqual(HandleChangelogFileInput["isExtraQueryForChangelogNeeded"](dialogValues), false);
     });
 
-    [
+    for (const pArgument of [
       {
         description: "changelog in the properties file",
         content: "changelogFile = foo",
@@ -73,7 +73,7 @@ suite("handleChangelogInput", () => {
         description: "no changelog in the properties file",
         content: "",
       },
-    ].forEach((pArgument) => {
+    ]) {
       /**
        * Tests that true will be returned, when a properties file will be read
        */
@@ -85,14 +85,14 @@ suite("handleChangelogInput", () => {
 
         assert.ok(HandleChangelogFileInput["isExtraQueryForChangelogNeeded"](dialogValues));
       });
-    });
+    }
   });
 
   /**
    * Tests the method `getChangelogFileFromProperties`.
    */
   suite("getChangelogFileFromProperties", () => {
-    [
+    for (const pArgument of [
       {
         description: "changelog in the properties file",
         content: "changelogFile = foo",
@@ -103,7 +103,7 @@ suite("handleChangelogInput", () => {
         content: "",
         expected: undefined,
       },
-    ].forEach((pArgument) => {
+    ]) {
       test(`should return ${pArgument.expected} when ${pArgument.description}`, () => {
         const propertyFile = generatePropertiesFile(temporaryResourcePath, pArgument.content);
 
@@ -115,7 +115,7 @@ suite("handleChangelogInput", () => {
           pArgument.expected
         );
       });
-    });
+    }
   });
 
   /**
@@ -138,7 +138,7 @@ suite("handleChangelogInput", () => {
       saveChangelog = Sinon.stub(cacheHandler, "saveChangelog");
     });
 
-    [
+    const allNothingArguments = [
       {
         description: "when choose changelog option",
         option: CHOOSE_CHANGELOG_OPTION,
@@ -154,38 +154,38 @@ suite("handleChangelogInput", () => {
         option: "",
         logMessage: "Error getting a changelog path from ",
       },
-    ]
-      .flatMap((pElement) =>
-        namesOfInput.map((pNameOfInput) => ({
-          ...pElement,
-          input: pNameOfInput,
-        }))
-      )
-      .forEach((pArgument) => {
-        /**
-         * Tests various cases where the input parameter was not as expected.
-         */
-        test(`should do nothing ${pArgument.description} and input name ${pArgument.input}`, () => {
-          const dialogValues = new DialogValues();
-          dialogValues.addValue(pArgument.input, pArgument.option);
+    ].flatMap((pElement) =>
+      namesOfInput.map((pNameOfInput) => ({
+        ...pElement,
+        input: pNameOfInput,
+      }))
+    );
 
-          assert.doesNotThrow(() =>
-            HandleChangelogFileInput["setExtraChangelogCorrectly"](dialogValues, pArgument.input)
-          );
+    for (const pArgument of allNothingArguments) {
+      /**
+       * Tests various cases where the input parameter was not as expected.
+       */
+      test(`should do nothing ${pArgument.description} and input name ${pArgument.input}`, () => {
+        const dialogValues = new DialogValues();
+        dialogValues.addValue(pArgument.input, pArgument.option);
 
-          let callCount = 0;
-          if (pArgument.logMessage) {
-            callCount = 1;
-            Sinon.assert.calledWithExactly(errorLog, {
-              message: pArgument.logMessage,
-              notifyUser: true,
-            });
-          }
-          Sinon.assert.callCount(errorLog, callCount);
-        });
+        assert.doesNotThrow(() =>
+          HandleChangelogFileInput["setExtraChangelogCorrectly"](dialogValues, pArgument.input)
+        );
+
+        let callCount = 0;
+        if (pArgument.logMessage) {
+          callCount = 1;
+          Sinon.assert.calledWithExactly(errorLog, {
+            message: pArgument.logMessage,
+            notifyUser: true,
+          });
+        }
+        Sinon.assert.callCount(errorLog, callCount);
       });
+    }
 
-    [
+    const allDoingArguments = [
       {
         description: "absolute path",
         option: path.join(temporaryResourcePath, "absolute.xml"),
@@ -196,39 +196,39 @@ suite("handleChangelogInput", () => {
         option: "relative.xml",
         expectedPath: path.join(temporaryResourcePath, "relative.xml"),
       },
-    ]
-      .flatMap((pElement) =>
-        namesOfInput.map((pNameOfInput) => ({
-          ...pElement,
-          input: pNameOfInput,
-        }))
-      )
-      .forEach((pArgument) => {
-        /**
-         * Test that the method call works with correct absolute and relative paths.
-         */
-        test(`should work with ${pArgument.description} and input name ${pArgument.input}`, () => {
-          // create the file before the tests, because we always assume it is there
-          fs.writeFileSync(pArgument.expectedPath, "", "utf-8");
+    ].flatMap((pElement) =>
+      namesOfInput.map((pNameOfInput) => ({
+        ...pElement,
+        input: pNameOfInput,
+      }))
+    );
 
-          const dialogValues = new DialogValues();
-          dialogValues.addValue(PROPERTY_FILE, temporaryResourcePath);
-          dialogValues.addValue(pArgument.input, pArgument.option);
+    for (const pArgument of allDoingArguments) {
+      /**
+       * Test that the method call works with correct absolute and relative paths.
+       */
+      test(`should work with ${pArgument.description} and input name ${pArgument.input}`, () => {
+        // create the file before the tests, because we always assume it is there
+        fs.writeFileSync(pArgument.expectedPath, "", "utf-8");
 
-          assert.doesNotThrow(() =>
-            HandleChangelogFileInput["setExtraChangelogCorrectly"](dialogValues, pArgument.input)
-          );
+        const dialogValues = new DialogValues();
+        dialogValues.addValue(PROPERTY_FILE, temporaryResourcePath);
+        dialogValues.addValue(pArgument.input, pArgument.option);
 
-          // uri should be set
-          assert.deepStrictEqual(dialogValues.inputValues.get(HandleChangelogFileInput.CHANGELOG_NAME), [
-            pArgument.expectedPath,
-          ]);
+        assert.doesNotThrow(() =>
+          HandleChangelogFileInput["setExtraChangelogCorrectly"](dialogValues, pArgument.input)
+        );
 
-          // and the changelog should be saved
-          Sinon.assert.calledOnce(saveChangelog);
-          Sinon.assert.calledWith(saveChangelog, temporaryResourcePath, pArgument.expectedPath);
-        });
+        // uri should be set
+        assert.deepStrictEqual(dialogValues.inputValues.get(HandleChangelogFileInput.CHANGELOG_NAME), [
+          pArgument.expectedPath,
+        ]);
+
+        // and the changelog should be saved
+        Sinon.assert.calledOnce(saveChangelog);
+        Sinon.assert.calledWith(saveChangelog, temporaryResourcePath, pArgument.expectedPath);
       });
+    }
   });
 
   /**

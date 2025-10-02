@@ -1,6 +1,6 @@
-import path from "path";
-import assert from "assert";
-import fs from "fs";
+import path from "node:path";
+import assert from "node:assert";
+import fs from "node:fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../constants";

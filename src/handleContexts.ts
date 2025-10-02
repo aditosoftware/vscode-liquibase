@@ -3,7 +3,7 @@ import { loadContextsFromChangelogFile } from "./executeJar";
 import { DialogValues, LoadingQuickPick, QuickPick, QuickPickItems } from "@aditosoftware/vscode-input";
 import { PickPanelConfig } from "./registerLiquibaseCommand";
 import * as vscode from "vscode";
-import path from "path";
+import path from "node:path";
 import { PROPERTY_FILE } from "./input/ConnectionType";
 import { cacheHandler } from "./extension";
 import { getLiquibaseFolder } from "./handleLiquibaseSettings";
@@ -83,17 +83,19 @@ export function generateItemsForContextPreDialog(contextCacheInfo?: ContextCache
     });
   }
 
-  items.push({
-    label: ContextOptions.LOAD_ALL_CONTEXT,
-    detail: "The loading might take a while.",
-    iconPath: new vscode.ThemeIcon("sync"),
-  });
+  items.push(
+    {
+      label: ContextOptions.LOAD_ALL_CONTEXT,
+      detail: "The loading might take a while.",
+      iconPath: new vscode.ThemeIcon("sync"),
+    },
 
-  items.push({
-    label: ContextOptions.NO_CONTEXT,
-    detail: "This will only execute any changeset that does not have any context",
-    iconPath: new vscode.ThemeIcon("search-remove"),
-  });
+    {
+      label: ContextOptions.NO_CONTEXT,
+      detail: "This will only execute any changeset that does not have any context",
+      iconPath: new vscode.ThemeIcon("search-remove"),
+    }
+  );
 
   return items;
 }

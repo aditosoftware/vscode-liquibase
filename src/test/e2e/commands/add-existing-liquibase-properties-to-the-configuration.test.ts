@@ -1,8 +1,8 @@
-import path from "path";
-import fs from "fs";
-import assert from "assert";
+import path from "node:path";
+import fs from "node:fs";
+import assert from "node:assert";
 import { By } from "vscode-extension-tester";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import chai from "chai";
 import chaiFs from "chai-fs";

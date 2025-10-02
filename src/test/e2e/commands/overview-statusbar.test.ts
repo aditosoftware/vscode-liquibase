@@ -1,7 +1,7 @@
 import { InputBox, StatusBar } from "vscode-extension-tester";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import assert from "assert";
+import assert from "node:assert";
 /**
  * Tests the overview item in the status bar.
  */
