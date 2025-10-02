@@ -296,7 +296,7 @@ export function handleCommandArgs(
       }
     } else if (commandArg instanceof TransferActionForCommand) {
       transferActions.push(commandArg);
-    } else if (typeof commandArg !== "undefined") {
+    } else if (commandArg !== undefined) {
       // Note: this message will also appear, if everything was alright.
       Logger.getLogger().debug({
         message: `Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`,
@@ -378,9 +378,11 @@ export function transformCommandArgsAfterInput(
 
   if (dialogValues.uri) {
     // if this was called from an right click menu, then handle some parameters differently
-    cmdArgs.push("--changelogFile=" + path.relative(getWorkFolder(), dialogValues.uri.fsPath));
+    cmdArgs.push(
+      "--changelogFile=" + path.relative(getWorkFolder(), dialogValues.uri.fsPath),
 
-    cmdArgs.push("-Dliquibase.searchPath=" + getWorkFolder());
+      "-Dliquibase.searchPath=" + getWorkFolder()
+    );
   }
   return propertyFilePath;
 }

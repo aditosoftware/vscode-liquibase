@@ -162,7 +162,7 @@ export class LiquibaseConfigurationData {
     const propertiesEditor = this.generatePropertiesEditor(pDisguisePassword ?? false);
     // replace all escaped colons with unescaped.
     // There is no way to automatically escape them during creation
-    return propertiesEditor.format().replaceAll("\\:", ":");
+    return propertiesEditor.format().replaceAll(String.raw`\:`, ":");
   }
 
   /**

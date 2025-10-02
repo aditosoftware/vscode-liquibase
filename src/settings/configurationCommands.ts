@@ -45,7 +45,7 @@ export async function editExistingLiquibaseConfiguration(
     const fileName = path.basename(fsPath);
     // first part of name, if the name has at least 2 dots, otherwise full name
     const name =
-      fileName.indexOf(".") !== fileName.lastIndexOf(".") ? fileName.substring(0, fileName.indexOf(".")) : fileName;
+      fileName.indexOf(".") === fileName.lastIndexOf(".") ? fileName : fileName.substring(0, fileName.indexOf("."));
     existingConfiguration = { fsPath, name };
   } else {
     // invoked via command palette - show inputs for user
