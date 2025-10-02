@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
 import { HandleChangelogFileInput, getWorkFolder } from "./handleChangelogFileInput";
-import * as path from "path";
+import * as path from "node:path";
 import { resourcePath } from "./extension";
 import { DialogValues, InputBase, InputBaseOptions, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";

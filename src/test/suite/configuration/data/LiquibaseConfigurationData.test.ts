@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseConfigurationData } from "../../../../configuration/data/LiquibaseConfigurationData";
 import { TestUtils } from "../../TestUtils";
 import { NO_PRE_CONFIGURED_DRIVER } from "@aditosoftware/driver-dependencies";

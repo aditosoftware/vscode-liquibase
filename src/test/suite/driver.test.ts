@@ -1,4 +1,4 @@
-import assert, { fail } from "assert";
+import assert, { fail } from "node:assert";
 import { PREDEFINED_DRIVERS, Driver, UrlParts } from "@aditosoftware/driver-dependencies";
 
 /**

@@ -1,8 +1,8 @@
-import assert from "assert";
+import assert from "node:assert";
 import { prerequisites } from "../../prerequisites";
 import { TestUtils } from "./TestUtils";
 import * as vscode from "vscode";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import Sinon from "sinon";
 
 /**

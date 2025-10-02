@@ -1,10 +1,10 @@
-import path from "path";
+import path from "node:path";
 import { generateFont, MinimalPackageJson } from "../../../scripts/generateFont";
 import { TestUtils } from "../TestUtils";
 import * as fs from "node:fs";
 import chai, { expect } from "chai";
 import chaiFs from "chai-fs";
-import assert from "assert";
+import assert from "node:assert";
 import Sinon from "sinon";
 import * as webfontImport from "webfont";
 

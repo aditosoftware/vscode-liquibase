@@ -1,7 +1,7 @@
-import path from "path";
+import path from "node:path";
 import { TestUtils } from "../../TestUtils";
-import assert from "assert";
-import fs from "fs";
+import assert from "node:assert";
+import fs from "node:fs";
 import {
   addToLiquibaseConfiguration,
   createLiquibaseProperties,

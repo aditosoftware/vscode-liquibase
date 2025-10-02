@@ -9,7 +9,7 @@ import { chooseFileForChangelog } from "../configuration/handleChangelogSelectio
 import { Logger, LoggingMessageWithLevel } from "@aditosoftware/vscode-logging";
 import { getCustomDrivers } from "../utilities/customDriverUtilities";
 import * as vscode from "vscode";
-import path from "path";
+import path from "node:path";
 /**
  * This class manages the state and behavior of LiquibaseConfiguration webview panels.
  *
@@ -109,7 +109,7 @@ export class LiquibaseConfigurationPanel {
           Logger.getLogger().error({ message: "error transferring the message to the webview" });
         }
       },
-      (reject) => Logger.getLogger().debug({ message: `transfer message was rejected ${reject}` })
+      (error) => Logger.getLogger().debug({ message: `transfer message was rejected ${error}` })
     );
   }
 

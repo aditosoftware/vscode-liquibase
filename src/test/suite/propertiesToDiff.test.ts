@@ -1,8 +1,8 @@
-import assert from "assert";
+import assert from "node:assert";
 import { TestUtils } from "./TestUtils";
-import { randomUUID } from "crypto";
-import path from "path";
-import * as fs from "fs";
+import { randomUUID } from "node:crypto";
+import path from "node:path";
+import * as fs from "node:fs";
 import { getReferenceKeysFromPropertyFile } from "../../propertiesToDiff";
 
 /**

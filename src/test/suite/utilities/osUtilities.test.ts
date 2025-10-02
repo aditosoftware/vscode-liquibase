@@ -1,5 +1,5 @@
 import { getClasspathSeparator } from "../../../utilities/osUtilities";
-import assert from "assert";
+import assert from "node:assert";
 
 /**
  * Tests the os specific utitlies

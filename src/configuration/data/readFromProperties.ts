@@ -1,4 +1,4 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { KeyValuePairObject, getProperties } from "properties-file";
 import { LiquibaseSettings } from "./TransferSettings";
 import { ConfigurationStatus, LiquibaseConfigurationData } from "./LiquibaseConfigurationData";

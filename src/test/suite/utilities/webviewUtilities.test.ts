@@ -1,7 +1,7 @@
-import assert from "assert";
+import assert from "node:assert";
 import { getNonce, getUri } from "../../../utilities/webviewUtilities";
 import * as vscode from "vscode";
-import path from "path";
+import path from "node:path";
 
 /**
  * Tests the webview utilities.

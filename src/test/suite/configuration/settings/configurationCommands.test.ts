@@ -1,10 +1,10 @@
-import assert from "assert";
-import { randomUUID } from "crypto";
+import assert from "node:assert";
+import { randomUUID } from "node:crypto";
 import { TestUtils } from "../../TestUtils";
-import path from "path";
+import path from "node:path";
 import * as vscode from "vscode";
 import * as configurationCommand from "../../../../settings/configurationCommands";
-import fs from "fs";
+import fs from "node:fs";
 import { LiquibaseConfigurationPanel } from "../../../../panels/LiquibaseConfigurationPanel";
 import * as readConfiguration from "../../../../configuration/handle/readConfiguration";
 import Sinon from "sinon";
@@ -383,11 +383,11 @@ suite("configurationCommands", () => {
     /**
      * Tests the validation of the input box text value.
      */
-    inputParameter.forEach((input) => {
+    for (const input of inputParameter) {
       test(`should validate input box text value ${input.input}`, () => {
         assert.strictEqual(configurationCommand.validateInputBoxTextValue(input.input)?.message, input.expected);
       });
-    });
+    }
   });
 
   /**
@@ -405,11 +405,11 @@ suite("configurationCommands", () => {
     /**
      * Tests the validation of the input box text value.
      */
-    inputParameter.forEach((input) => {
+    for (const input of inputParameter) {
       test(`should validate input box port value ${input.input}`, () => {
         assert.strictEqual(configurationCommand.validateInputBoxPortValue(input.input)?.message, input.expected);
       });
-    });
+    }
   });
 
   /**

@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
-import path from "path";
+import path from "node:path";
 import Sinon from "sinon";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { PropertiesEditor } from "properties-file/editor";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
 import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
 
@@ -193,7 +193,7 @@ suite("Extension Integration Test Suite", () => {
   /**
    * Execute some commands.
    */
-  commandArguments.forEach((commandArgument: CommandArgument) => {
+  for (const commandArgument of commandArguments) {
     test(`should execute command ${commandArgument.command}`, async () => {
       // create a real quick pick for afterwards
       const realQuickPick = vscode.window.createQuickPick();
@@ -287,7 +287,7 @@ suite("Extension Integration Test Suite", () => {
       Sinon.assert.callCount(loadingQuickPick, commandArgument.answers.quickPick?.length ?? 0);
       Sinon.assert.callCount(openDialog, commandArgument.answers.openDialog?.length ?? 0);
     }).timeout(10_000);
-  });
+  }
 });
 
 /**

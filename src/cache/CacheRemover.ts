@@ -109,9 +109,10 @@ export class CacheRemover {
           if (propertyFiles) {
             const connectionsToRemove: string[] = [];
 
-            Object.keys(this.configuration)
-              .filter((configKey) => propertyFiles.includes(configKey))
-              .forEach((key) => connectionsToRemove.push(this.configuration[key]));
+            const configKeys = Object.keys(this.configuration).filter((configKey) => propertyFiles.includes(configKey));
+            for (const key of configKeys) {
+              connectionsToRemove.push(this.configuration[key]);
+            }
 
             this.cacheHandler.removeConnectionsFromCache(connectionsToRemove);
 
@@ -208,12 +209,12 @@ export class CacheRemover {
   private generateRemoveOptions(): QuickPickItem[] {
     const items: QuickPickItem[] = [];
 
-    CacheRemover.removeOptions.forEach((value, key) => {
+    for (const [key, value] of CacheRemover.removeOptions) {
       items.push({
         label: key,
         detail: value,
       });
-    });
+    }
 
     return items;
   }

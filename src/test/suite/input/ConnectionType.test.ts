@@ -2,7 +2,7 @@ import Sinon from "sinon";
 import { ConnectionType } from "../../../input/ConnectionType";
 import * as readConfiguration from "../../../configuration/handle/readConfiguration";
 import { DialogValues } from "@aditosoftware/vscode-input";
-import assert from "assert";
+import assert from "node:assert";
 import * as vscode from "vscode";
 
 /**

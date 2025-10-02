@@ -1,11 +1,11 @@
-import assert from "assert";
-import path from "path";
-import fs from "fs";
+import assert from "node:assert";
+import path from "node:path";
+import fs from "node:fs";
 import { Cache, CacheHandler } from "../../../cache/";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { TestUtils } from "../TestUtils";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import chai from "chai";
 import chaiFs from "chai-fs";
 

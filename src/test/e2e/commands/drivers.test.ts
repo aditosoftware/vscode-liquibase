@@ -1,6 +1,6 @@
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import { InputBox } from "vscode-extension-tester";
 import chai from "chai";
 import chaiString from "chai-string";

@@ -1,11 +1,11 @@
 import { DialogValues } from "@aditosoftware/vscode-input";
 import { activate, createGeneralStatusBarItem, setRequireForceAndForceParameter, validateInput } from "../../extension";
-import assert from "assert";
+import assert from "node:assert";
 import { Command } from "vscode";
 import * as vscode from "vscode";
 import { TestUtils } from "./TestUtils";
 import Sinon from "sinon";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import chai, { expect } from "chai";
 import chaiString from "chai-string";
 

@@ -1,8 +1,8 @@
-import assert from "assert";
+import assert from "node:assert";
 import { TestUtils } from "../../TestUtils";
-import path from "path";
-import { randomUUID } from "crypto";
-import * as fs from "fs";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
+import * as fs from "node:fs";
 import { readChangelog, readFullValues, readUrl } from "../../../../configuration/data/readFromProperties";
 import {
   ConfigurationStatus,

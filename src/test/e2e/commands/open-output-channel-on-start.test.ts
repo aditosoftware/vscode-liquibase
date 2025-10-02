@@ -2,7 +2,7 @@ import { BottomBarPanel } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
-import assert from "assert";
+import assert from "node:assert";
 
 /**
  * Test suite for the open output channel setting (`liquibase.openOutputChannelOnCommandStart`).

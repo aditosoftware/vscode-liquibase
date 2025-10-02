@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import {
   ConfigurationStatus,
   LiquibaseConfigurationData,
@@ -6,7 +6,7 @@ import {
 import Sinon from "sinon";
 import * as vscode from "vscode";
 import { TestUtils } from "../TestUtils";
-import path from "path";
+import path from "node:path";
 import { chooseFileForChangelog } from "../../../configuration/handleChangelogSelection";
 import { LiquibaseConfigurationPanel } from "../../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../../../configuration/transfer";

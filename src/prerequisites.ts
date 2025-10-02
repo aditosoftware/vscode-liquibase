@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import * as path from "path";
-import * as fs from "fs";
+import * as path from "node:path";
+import * as fs from "node:fs";
 import download from "download";
-import { PREDEFINED_DRIVERS } from "@aditosoftware/driver-dependencies";
+import { Driver, PREDEFINED_DRIVERS } from "@aditosoftware/driver-dependencies";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**
@@ -92,7 +92,7 @@ function getRequiredFiles(): Map<string, string> {
   const requiredFiles = new Map<string, string>();
 
   // add the required jars for liquibase
-  [
+  const dependencies = [
     "https://repo1.maven.org/maven2/org/liquibase/liquibase-core/4.28.0/liquibase-core-4.28.0.jar",
     // picocli for using the CLI commands,
     "https://repo1.maven.org/maven2/info/picocli/picocli/4.7.5/picocli-4.7.5.jar",
@@ -106,14 +106,16 @@ function getRequiredFiles(): Map<string, string> {
     "https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.14.0/commons-lang3-3.14.0.jar",
     // opencsv is needed for 4.28 and onwards
     "https://repo1.maven.org/maven2/com/opencsv/opencsv/5.9/opencsv-5.9.jar",
-  ].forEach((pUrl) => {
+  ];
+  for (const pUrl of dependencies) {
     requiredFiles.set(getFileName(pUrl), pUrl);
-  });
+  }
 
   // and add the jars for the drivers
-  PREDEFINED_DRIVERS.forEach((value) => {
+  for (const value of PREDEFINED_DRIVERS.values()) {
     requiredFiles.set(getFileName(value.urlForDownload), value.urlForDownload);
-  });
+  }
+
   return requiredFiles;
 }
 

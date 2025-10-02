@@ -8,10 +8,10 @@ import {
 import { TestUtils } from "../../TestUtils";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
 import { DialogValues } from "@aditosoftware/vscode-input";
-import path from "path";
-import * as fs from "fs";
+import path from "node:path";
+import * as fs from "node:fs";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
-import assert from "assert";
+import assert from "node:assert";
 import { setCacheHandler } from "../../../../extension";
 import { Cache, CacheHandler } from "../../../../cache";
 import { RemoveConfigurationOptions } from "../../../../constants";

@@ -29,9 +29,7 @@ export class LiquibaseConfigurationData {
    */
   static readonly configuredKeys: string[] = [
     "changelogFile",
-    ...["username", "password", "url", "driver"]
-      .map((pKey) => [pKey, DatabaseConnection.createReferenceKey(pKey)])
-      .flat(),
+    ...["username", "password", "url", "driver"].flatMap((pKey) => [pKey, DatabaseConnection.createReferenceKey(pKey)]),
   ];
 
   /**
@@ -132,11 +130,10 @@ export class LiquibaseConfigurationData {
     ) {
       let connection: DatabaseConnection;
       if (reference) {
-        if (!this.referenceDatabaseConnection) {
-          this.referenceDatabaseConnection = DatabaseConnection.createDefaultDatabaseConnection(
-            this.liquibaseSettings.defaultDatabaseForConfiguration
-          );
-        }
+        this.referenceDatabaseConnection =
+          this.referenceDatabaseConnection ??
+          DatabaseConnection.createDefaultDatabaseConnection(this.liquibaseSettings.defaultDatabaseForConfiguration);
+
         connection = this.referenceDatabaseConnection;
       } else {
         connection = this.databaseConnection;

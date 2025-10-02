@@ -1,6 +1,6 @@
 import { By, Key } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
-import assert from "assert";
+import assert from "node:assert";
 
 /**
  * Tests various elements with the reference connection.

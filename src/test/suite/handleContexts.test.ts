@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import {
   ContextCacheInformation,
   contextPreDialog,
@@ -12,13 +12,13 @@ import { DialogValues, QuickPickItems } from "@aditosoftware/vscode-input";
 import * as vscode from "vscode";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
 import { TestUtils } from "./TestUtils";
-import path from "path";
-import * as fs from "fs";
+import path from "node:path";
+import * as fs from "node:fs";
 import * as lbSettings from "../../handleLiquibaseSettings";
 import Sinon from "sinon";
 import { setCacheHandler } from "../../extension";
 import { CacheHandler, ContextSelection } from "../../cache";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { ContextOptions } from "../../constants";
 import { HandleChangelogFileInput } from "../../handleChangelogFileInput";
 import { expect } from "chai";

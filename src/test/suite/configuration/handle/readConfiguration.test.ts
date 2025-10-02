@@ -7,9 +7,9 @@ import {
   updateConfiguration,
 } from "../../../../configuration/handle/readConfiguration";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
-import path from "path";
-import assert, { fail } from "assert";
-import fs from "fs";
+import path from "node:path";
+import assert, { fail } from "node:assert";
+import fs from "node:fs";
 import { TestUtils } from "../../TestUtils";
 
 /**

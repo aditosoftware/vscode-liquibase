@@ -2,9 +2,9 @@ import Sinon from "sinon";
 import { convertFormats } from "../../convertFormats";
 import { TestUtils } from "./TestUtils";
 import * as vscode from "vscode";
-import path from "path";
-import assert from "assert";
-import * as fs from "fs";
+import path from "node:path";
+import assert from "node:assert";
+import * as fs from "node:fs";
 import chai from "chai";
 import chaiFs from "chai-fs";
 

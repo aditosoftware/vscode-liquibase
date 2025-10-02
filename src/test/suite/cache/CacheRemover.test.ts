@@ -1,10 +1,10 @@
-import path from "path";
+import path from "node:path";
 
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { CacheHandler, CacheRemover } from "../../../cache/";
 import Sinon from "sinon";
 import { Logger } from "@aditosoftware/vscode-logging";
-import assert from "assert";
+import assert from "node:assert";
 import { ConfirmationDialog, DialogValues, QuickPick } from "@aditosoftware/vscode-input";
 import { PROPERTY_FILE } from "../../../input/ConnectionType";
 import { TestUtils } from "../TestUtils";

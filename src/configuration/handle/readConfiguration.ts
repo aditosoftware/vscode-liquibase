@@ -1,6 +1,6 @@
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { getLiquibaseConfigurationPath } from "../../handleLiquibaseSettings";
-import path from "path";
+import path from "node:path";
 import { Logger } from "@aditosoftware/vscode-logging";
 
 /**

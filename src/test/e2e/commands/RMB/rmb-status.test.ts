@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../../constants";

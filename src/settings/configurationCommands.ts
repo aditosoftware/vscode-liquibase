@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { addToLiquibaseConfiguration } from "../configuration/handle/createAndAddConfiguration";
 import { LiquibaseConfigurationPanel } from "../panels/LiquibaseConfigurationPanel";
-import * as path from "path";
-import * as fs from "fs";
+import * as path from "node:path";
+import * as fs from "node:fs";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
 import {
