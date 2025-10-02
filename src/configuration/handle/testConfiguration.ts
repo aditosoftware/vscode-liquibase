@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { LiquibaseConfigurationData } from "../data/LiquibaseConfigurationData";
 import * as fs from "node:fs";
 import path from "node:path";
-import * as os from "os";
+import * as os from "node:os";
 import { TransferDataForCommand } from "../../registerLiquibaseCommand";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
 import { TransferActionForCommand } from "../../TransferActionForCommand";

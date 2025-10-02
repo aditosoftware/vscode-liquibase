@@ -29,7 +29,7 @@ suite("MessageData", () => {
         )
       );
 
-      const cloned = MessageData.clone(JSON.parse(JSON.stringify(initialData)));
+      const cloned = MessageData.clone(structuredClone(initialData));
 
       assert.ok(cloned.configurationData, "configuration data should be there");
 
@@ -46,7 +46,7 @@ suite("MessageData", () => {
         notifyUser: true,
       });
 
-      const cloned = MessageData.clone(JSON.parse(JSON.stringify(initialData)));
+      const cloned = MessageData.clone(structuredClone(initialData));
 
       assert.ok(!cloned.configurationData, "no configuration data should be there");
 

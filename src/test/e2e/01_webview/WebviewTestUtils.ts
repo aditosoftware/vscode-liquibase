@@ -2,7 +2,6 @@ import assert from "node:assert";
 import { By, EditorView, InputBox, Key, VSBrowser, WebView, Workbench } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { randomUUID } from "node:crypto";
 
 /**
  * Utility class for the webview e2e tests.

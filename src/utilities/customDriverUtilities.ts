@@ -10,7 +10,9 @@ import { CustomDrivers, CustomDriverData } from "./customDriver";
  */
 export function getCustomDrivers(): CustomDrivers {
   const customDriverObject: CustomDrivers = {};
-  fs.readdirSync(resourcePath).forEach((file) => {
+  const files = fs.readdirSync(resourcePath);
+
+  for (const file of files) {
     if (file.includes(".json")) {
       const fileContent = fs.readFileSync(path.join(resourcePath, file), { encoding: "utf-8" });
       const driver = JSON.parse(fileContent);
@@ -24,7 +26,7 @@ export function getCustomDrivers(): CustomDrivers {
         } as CustomDriverData;
       }
     }
-  });
+  }
 
   return customDriverObject;
 }

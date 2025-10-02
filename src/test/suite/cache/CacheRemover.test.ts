@@ -207,7 +207,7 @@ suite("CacheRemover tests", () => {
       );
     });
 
-    [
+    const detailMessageArguments = [
       {
         name: "no dialog values",
         expected: "",
@@ -259,7 +259,9 @@ suite("CacheRemover tests", () => {
           return dialogValues;
         },
       },
-    ].forEach((pArgument) => {
+    ];
+
+    for (const pArgument of detailMessageArguments) {
       /**
        * Tests that the generation of the detail message for the confirm dialog works correctly.
        * This method is explicitly tested, because there is no easy way to test it correctly in the program flow.
@@ -269,7 +271,7 @@ suite("CacheRemover tests", () => {
 
         assert.deepStrictEqual(pArgument.expected, result);
       });
-    });
+    }
 
     /**
      * Tests that the cancelling of the dialog works.

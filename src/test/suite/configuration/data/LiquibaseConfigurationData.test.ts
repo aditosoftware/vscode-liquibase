@@ -14,7 +14,7 @@ suite("LiquibaseConfigurationData", () => {
     /**
      * Tests various combinations for the key - values
      */
-    [
+    const keyValueArguments = [
       {
         key: "changelogFile",
         value: "myValue",
@@ -64,7 +64,8 @@ suite("LiquibaseConfigurationData", () => {
         value: "ipsum",
         getActualValue: (data: LiquibaseConfigurationData) => data.additionalConfiguration["lorem"],
       },
-    ].forEach((pArgument) => {
+    ];
+    for (const pArgument of keyValueArguments) {
       test(`should handle value for key ${pArgument.key}`, () => {
         const liquibaseConfigurationData = TestUtils.createDummyLiquibaseConfigurationData();
 
@@ -72,7 +73,7 @@ suite("LiquibaseConfigurationData", () => {
 
         assert.deepStrictEqual(pArgument.getActualValue(liquibaseConfigurationData), pArgument.value);
       });
-    });
+    }
 
     /**
      * Tests that a pre configured driver will be handled correctly for a normal connection.
@@ -180,13 +181,13 @@ referencePassword = ${passwordValue}`;
       /**
        * Tests that an undisguised password will be also written, if required.
        */
-      [false, undefined].forEach((pArgument) => {
+      for (const pArgument of [false, undefined]) {
         test(`should work with not disguised password (${pArgument})`, () => {
           const actual = liquibaseConfigurationData.generateProperties(pArgument);
 
           assert.deepStrictEqual(actual, expected(password));
         });
-      });
+      }
     });
 
     /**

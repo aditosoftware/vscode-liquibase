@@ -25,7 +25,7 @@ suite("validate: Right Click Menu", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Validate...").forEach((pArgument) => {
+  for (const pArgument of LiquibaseGUITestUtils.createRmbArguments("Validate...")) {
     /**
      * Test case to execute the 'validate' command from RMB.
      * It resets the database, opens the Right Click Menu, selects the 'Validate' option,
@@ -39,5 +39,5 @@ suite("validate: Right Click Menu", function () {
         "Notification did NOT show"
       );
     });
-  });
+  }
 });

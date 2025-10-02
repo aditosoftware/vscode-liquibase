@@ -19,7 +19,7 @@ suite("update: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments("Update...", ContextOptions.LOAD_ALL_CONTEXT).forEach((pArgument) => {
+  for (const pArgument of LiquibaseGUITestUtils.createRmbArguments("Update...", ContextOptions.LOAD_ALL_CONTEXT)) {
     /**
      * Test case to execute the 'update' command from RMB.
      */
@@ -38,7 +38,7 @@ suite("update: Right Click Menu", function () {
         "Table 'person' DOES NOT exist, while it should"
       );
     });
-  });
+  }
 
   /**
    * Teardown function that runs after the test suite.

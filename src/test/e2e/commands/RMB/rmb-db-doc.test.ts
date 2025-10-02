@@ -32,10 +32,10 @@ suite("db-doc: Right Click Menu", function () {
     fs.rmSync(directoryForDbDoc, { recursive: true });
   });
 
-  LiquibaseGUITestUtils.createRmbArguments(
+  for (const pArgument of LiquibaseGUITestUtils.createRmbArguments(
     "Generate database documentation (db-doc)...",
     ContextOptions.NO_CONTEXT
-  ).forEach((pArgument) => {
+  )) {
     /**
      * Test case to execute the 'db-doc' command from RMB.
      */
@@ -57,5 +57,5 @@ suite("db-doc: Right Click Menu", function () {
         "Did NOT create a DB-DOC Files"
       );
     });
-  });
+  }
 });

@@ -152,12 +152,12 @@ export function displayAvailableDrivers(): void {
   quickPick.placeholder = "Search all drivers";
   quickPick.ignoreFocusOut = false;
   quickPick.onDidAccept(() => {
-    quickPick.selectedItems.forEach((selectedItem) => {
+    for (const selectedItem of quickPick.selectedItems) {
       if (selectedItem.label === "Add New Driver") {
         quickPick.dispose();
         modifyOrAddDriver();
       }
-    });
+    }
   });
   quickPick.title = "Available Drivers";
   quickPick.buttons = [reload];
@@ -198,15 +198,17 @@ export function getDrivers(): vscode.QuickPickItem[] {
 
   const drivers: vscode.QuickPickItem[] = [];
 
-  drivers.push({
-    label: "New Driver",
-    kind: vscode.QuickPickItemKind.Separator,
-  });
+  drivers.push(
+    {
+      label: "New Driver",
+      kind: vscode.QuickPickItemKind.Separator,
+    },
 
-  drivers.push({
-    iconPath: new vscode.ThemeIcon("add"),
-    label: "Add New Driver",
-  });
+    {
+      iconPath: new vscode.ThemeIcon("add"),
+      label: "Add New Driver",
+    }
+  );
 
   getCustomDriversForView(drivers, [editDriver, deleteDriver]);
 
@@ -215,14 +217,14 @@ export function getDrivers(): vscode.QuickPickItem[] {
     kind: vscode.QuickPickItemKind.Separator,
   });
 
-  PREDEFINED_DRIVERS.forEach((value, key) => {
+  for (const [key, value] of PREDEFINED_DRIVERS) {
     drivers.push({
       label: key,
       description: value.jdbcName,
       detail: value.driverClass,
       buttons: [],
     });
-  });
+  }
 
   return drivers;
 }
@@ -239,7 +241,7 @@ export function getCustomDriversForView(drivers: vscode.QuickPickItem[], actions
     kind: vscode.QuickPickItemKind.Separator,
   });
 
-  fs.readdirSync(resourcePath).forEach((file) => {
+  for (const file of fs.readdirSync(resourcePath)) {
     if (path.extname(file) === ".json") {
       const fileContent = fs.readFileSync(path.join(resourcePath, file), "utf8");
       if (fileContent?.includes("driverClass")) {
@@ -252,7 +254,7 @@ export function getCustomDriversForView(drivers: vscode.QuickPickItem[], actions
         });
       }
     }
-  });
+  }
 }
 
 /**
@@ -394,7 +396,7 @@ export const handleDriverInput = (
           // Create the custom driver object with the given values
           const driver: CustomDriverData = {
             driverClass: driverClass,
-            port: parseInt(defaultPort),
+            port: Number.parseInt(defaultPort),
             jdbcName: jdbcName,
             separator: separator,
           };
@@ -511,7 +513,7 @@ export function validateInputBoxPortValue(value: string): vscode.InputBoxValidat
       message: "Port must be a number",
       severity: vscode.InputBoxValidationSeverity.Error,
     } as vscode.InputBoxValidationMessage;
-  } else if (parseInt(port) < 0 || parseInt(port) > 65535) {
+  } else if (Number.parseInt(port) < 0 || Number.parseInt(port) > 65535) {
     return {
       message: "Port must be between 0 and 65535",
       severity: vscode.InputBoxValidationSeverity.Error,

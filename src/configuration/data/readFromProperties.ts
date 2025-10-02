@@ -57,13 +57,14 @@ export function readPossibleReferenceValues(pPath: string): string[] {
   const referenceValues: string[] = [];
 
   const referenceKeys = new Map<string, string>();
-  possibleReferenceKeys.forEach((pKey) => {
+
+  for (const pKey of possibleReferenceKeys) {
     // in the file, the keys are without dashes and in camelCase
     const keyFromFile = pKey.replaceAll(/-([a-z])/g, (_, match) => match.toUpperCase());
     // for the output, the keys should still be in kebab-case
     const formattedKey = `--reference-${pKey}`;
     referenceKeys.set(keyFromFile, formattedKey);
-  });
+  }
 
   for (const [key, value] of Object.entries(liquibaseProperties)) {
     if (referenceKeys.has(key)) {

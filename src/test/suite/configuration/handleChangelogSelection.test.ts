@@ -64,7 +64,7 @@ suite("handleChangelogSelection", () => {
     /**
      * Tests that the method itself should work, when nothing was selected.
      */
-    [undefined, []].forEach((pArgument) => {
+    for (const pArgument of [undefined, []]) {
       test(`should work with nothing selected (${pArgument})`, (done) => {
         openDialog.resolves(pArgument);
 
@@ -76,7 +76,7 @@ suite("handleChangelogSelection", () => {
           })
           .catch(done);
       });
-    });
+    }
 
     /**
      * Tests that the selection of an changelog does work.

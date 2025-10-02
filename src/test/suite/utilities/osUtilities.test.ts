@@ -24,7 +24,7 @@ suite("osUtilities", () => {
   /**
    * Tests for the various platforms the separator
    */
-  [
+  const platformArguments = [
     {
       platform: "aix",
       classpath: ":",
@@ -53,11 +53,12 @@ suite("osUtilities", () => {
       platform: "win32",
       classpath: ";",
     },
-  ].forEach((pArguments) => {
+  ];
+  for (const pArguments of platformArguments) {
     test(`should get classpath separator for ${pArguments.platform}`, () => {
       Object.defineProperty(process, "platform", { value: pArguments.platform });
 
       assert.strictEqual(getClasspathSeparator(), pArguments.classpath);
     });
-  });
+  }
 });

@@ -79,11 +79,11 @@ suite("handleLiquibaseSettings", () => {
     /**
      * Tests that the default database configuration can be loaded correctly.
      */
-    [
+    for (const pArgument of [
       { expected: "AnyValue", newValue: "AnyValue" },
       { expected: NO_PRE_CONFIGURED_DRIVER, newValue: "" },
       { expected: NO_PRE_CONFIGURED_DRIVER, newValue: undefined },
-    ].forEach((pArgument) => {
+    ]) {
       test(`should read settings correctly for ${pArgument.newValue}`, (done) => {
         // set the configuration for the tests
         vscode.workspace
@@ -96,23 +96,23 @@ suite("handleLiquibaseSettings", () => {
 
               done();
             },
-            (reject) => {
-              assert.fail(reject);
+            (error) => {
+              assert.fail(error);
             }
           );
       });
-    });
+    }
   });
 
   /**
    * Tests the method `getOpenOutputChannelOnCommandStartSetting`
    */
   suite("getOpenOutputChannelOnCommandStartSetting", () => {
-    [
+    for (const pArgument of [
       { setSetting: undefined, expected: true },
       { setSetting: false, expected: false },
       { setSetting: true, expected: true },
-    ].forEach((pArgument) => {
+    ]) {
       /**
        * Tests that the correct result will be returned for the given setting
        */
@@ -123,6 +123,6 @@ suite("handleLiquibaseSettings", () => {
 
         assert.strictEqual(getOpenOutputChannelOnCommandStartSetting(), pArgument.expected);
       });
-    });
+    }
   });
 });

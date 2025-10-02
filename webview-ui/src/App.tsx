@@ -363,7 +363,7 @@ function App(): React.JSX.Element {
   function handleChangeAdditionalElements(pValues: Map<string, string>): void {
     updateData((draft) => {
       draft.additionalConfiguration = {};
-      for (const [value, key] of pValues) {
+      for (const [key, value] of pValues) {
         draft.additionalConfiguration[key] = value;
       }
     });

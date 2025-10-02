@@ -14,7 +14,7 @@ import * as vscode from "vscode";
 import Sinon from "sinon";
 import chai from "chai";
 import chaiFs from "chai-fs";
-import * as os from "os";
+import * as os from "node:os";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
 import * as configurationReading from "../../configuration/handle/readConfiguration";
 import { randomUUID } from "node:crypto";

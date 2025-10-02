@@ -262,7 +262,7 @@ suite("CacheHandler tests", () => {
         assert.deepStrictEqual(cacheHandler.readCache(), expected);
       });
 
-      [
+      for (const pElement of [
         {
           expected: { loadedContexts: ["dev", "prod", "qs"] },
           file: firstConnectionLocation,
@@ -276,14 +276,14 @@ suite("CacheHandler tests", () => {
         secondConnectionBazChangelog,
         firstConnectionNoValidChangelog,
         noConnectionNoValidChangelog,
-      ].forEach((pElement) => {
+      ]) {
         /**
          * Test that reading the contexts works. It also checks that the contexts are ordered.
          */
         test(`should read contexts of legacy cache of ${pElement.file} and changelog ${pElement.changelog}`, () => {
           assert.deepStrictEqual(cacheHandler.readContexts(pElement.file, pElement.changelog), pElement.expected);
         });
-      });
+      }
     });
 
     /**
@@ -307,7 +307,7 @@ suite("CacheHandler tests", () => {
         assert.deepStrictEqual(cacheHandler.readCache(), cache);
       });
 
-      [
+      for (const pElement of [
         {
           expected: { loadedContexts: ["dev", "prod", "qs"], selectedContexts: ["prod", "qs"] },
           file: firstConnectionLocation,
@@ -321,14 +321,14 @@ suite("CacheHandler tests", () => {
         secondConnectionBazChangelog,
         firstConnectionNoValidChangelog,
         noConnectionNoValidChangelog,
-      ].forEach((pElement) => {
+      ]) {
         /**
          * Test that reading the contexts works. It also checks that the contexts are ordered.
          */
         test(`should read contexts of  ${pElement.file} and changelog ${pElement.changelog}`, () => {
           assert.deepStrictEqual(cacheHandler.readContexts(pElement.file, pElement.changelog), pElement.expected);
         });
-      });
+      }
     });
   });
 

@@ -174,7 +174,7 @@ suite("removeConfiguration", () => {
     /**
      * Tests various options how the message will be created.
      */
-    [
+    const detailMessageArguments = [
       {
         expectedDetail: "",
         removeOption: undefined,
@@ -198,7 +198,8 @@ suite("removeConfiguration", () => {
 - ${RemoveConfigurationOptions.DELETE_ALL}`,
         removeOption: RemoveConfigurationOptions.DELETE_ALL,
       },
-    ].forEach((pArgument) => {
+    ];
+    for (const pArgument of detailMessageArguments) {
       test(`should generate detail message for ${pArgument.removeOption}`, () => {
         const dialogValues = new DialogValues();
         if (pArgument.removeOption) {
@@ -210,7 +211,7 @@ suite("removeConfiguration", () => {
           generateDetailMessageForDeleteConfiguration(dialogValues)
         );
       });
-    });
+    }
   });
 });
 

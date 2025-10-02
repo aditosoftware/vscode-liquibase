@@ -244,7 +244,9 @@ export function handleResultsOfCommandExecuted(
   additionalCommandAction?.afterCommandAction?.(dialogValues);
 
   // Execute all Transfer Actions from any command calls
-  transferActions.forEach((pTransferAction) => pTransferAction.executeAfterCommandAction());
+  for (const pTransferAction of transferActions) {
+    pTransferAction.executeAfterCommandAction();
+  }
 }
 
 /**
@@ -278,14 +280,15 @@ export function handleCommandArgs(
       // external data from any other command call
       // find out the config we can delete
       let indexToDelete = -1;
-      pickPanelConfigs.forEach((config, index) => {
+
+      for (const [index, config] of pickPanelConfigs.entries()) {
         if (config.input.inputOptions.name === commandArg.name) {
           indexToDelete = index;
 
           // if a config was found, set the new value
           preBuiltDialogValues.addValue(config.input.inputOptions.name, commandArg.data);
         }
-      });
+      }
 
       // delete the config, if it was found
       if (indexToDelete !== -1) {
@@ -317,7 +320,9 @@ export function buildAdditionalCmdArguments(
   const cmdArgs: string[] = [];
   if (additionalCommandAction?.commandLineArgs) {
     // add any given command line arguments
-    additionalCommandAction.commandLineArgs.forEach((pArg) => cmdArgs.push(pArg));
+    for (const pArg of additionalCommandAction.commandLineArgs) {
+      cmdArgs.push(pArg);
+    }
   }
   if (additionalCommandAction?.searchPathRequired && !isRightClickMenuAction) {
     // add the search path to the arguments
