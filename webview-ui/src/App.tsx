@@ -363,9 +363,9 @@ function App(): React.JSX.Element {
   function handleChangeAdditionalElements(pValues: Map<string, string>): void {
     updateData((draft) => {
       draft.additionalConfiguration = {};
-      for (const [key, value] of pValues.entries()) {
+      pValues.forEach((value, key) => {
         draft.additionalConfiguration[key] = value;
-      }
+      });
     });
   }
 }
