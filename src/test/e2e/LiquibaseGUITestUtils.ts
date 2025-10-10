@@ -12,12 +12,12 @@ import {
   Workbench,
   TreeItem,
 } from "vscode-extension-tester";
-import assert from "assert";
-import { randomUUID } from "crypto";
+import assert from "node:assert";
+import { randomUUID } from "node:crypto";
 import { WebviewTestUtils } from "./01_webview/WebviewTestUtils";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
-import path from "path";
-import * as fs from "fs";
+import path from "node:path";
+import * as fs from "node:fs";
 import { CHOOSE_CHANGELOG_OPTION, ContextOptions, RemoveCacheOptions } from "../../constants";
 import chai from "chai";
 import chaiString from "chai-string";
@@ -72,9 +72,9 @@ export class LiquibaseGUITestUtils {
     // start the container
     if (startContainer) {
       await DockerTestUtils.startContainer();
-    }
 
-    this.removeContentOfFolder(path.join(this.WORKSPACE_PATH, "data", "liquibase"));
+      this.removeContentOfFolder(path.join(this.WORKSPACE_PATH, "data", "liquibase"));
+    }
 
     // open the workspace
     await this.openWorkspace();
@@ -320,7 +320,9 @@ export class LiquibaseGUITestUtils {
             if (notifications.notification) {
               return true;
             } else if (notifications.otherNotification) {
-              notifications.otherNotification.forEach((pNotification) => messages.add(pNotification));
+              for (const pNotification of notifications.otherNotification) {
+                messages.add(pNotification);
+              }
             }
             return false;
           } catch (error) {
@@ -386,7 +388,7 @@ export class LiquibaseGUITestUtils {
         if (message.includes(text)) {
           return { notification };
         }
-      } else if (RegExp(text).exec(message)) {
+      } else if (new RegExp(text).exec(message)) {
         return { notification };
       }
     }
@@ -429,11 +431,11 @@ export class LiquibaseGUITestUtils {
       "no context": () => this.selectContext({ toggleAll: false }),
     };
 
-    options.forEach((option) => {
-      Object.entries(execFunctions).forEach(([key, exec]) => {
+    for (const option of options) {
+      for (const [key, exec] of Object.entries(execFunctions)) {
         callback(option, exec, key);
-      });
-    });
+      }
+    }
   }
 
   /**
@@ -497,7 +499,7 @@ export class LiquibaseGUITestUtils {
 
     // check if the folder name is there in the quick pick
     const optionForFolderName = await input.findQuickPick(lastFolderName);
-    if (typeof optionForFolderName !== "undefined") {
+    if (optionForFolderName !== undefined) {
       // if it is there, select it
       await input.selectQuickPick(lastFolderName);
     }

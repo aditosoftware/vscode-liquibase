@@ -1,5 +1,5 @@
 import { DialogValues } from "@aditosoftware/vscode-input";
-import assert from "assert";
+import assert from "node:assert";
 import { folderSelectionName } from "../../constants";
 import {
   changeAndEmptyOutputDirectory,
@@ -9,16 +9,16 @@ import {
   openIndexHtmlAfterCommandExecution,
 } from "../../liquibaseCommandsUtilities";
 import { assertFileWasOpened } from "./utilities/vscodeUtilities.test";
-import path from "path";
+import path from "node:path";
 import * as vscode from "vscode";
 import Sinon from "sinon";
 import chai from "chai";
 import chaiFs from "chai-fs";
-import * as os from "os";
+import * as os from "node:os";
 import { PROPERTY_FILE } from "../../input/ConnectionType";
 import * as configurationReading from "../../configuration/handle/readConfiguration";
-import { randomUUID } from "crypto";
-import * as fs from "fs";
+import { randomUUID } from "node:crypto";
+import * as fs from "node:fs";
 
 chai.use(chaiFs);
 

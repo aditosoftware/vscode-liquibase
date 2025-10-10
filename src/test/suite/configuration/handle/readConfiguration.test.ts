@@ -7,9 +7,9 @@ import {
   updateConfiguration,
 } from "../../../../configuration/handle/readConfiguration";
 import * as handleLiquibaseSettings from "../../../../handleLiquibaseSettings";
-import path from "path";
-import assert, { fail } from "assert";
-import fs from "fs";
+import path from "node:path";
+import assert, { fail } from "node:assert";
+import fs from "node:fs";
 import { TestUtils } from "../../TestUtils";
 
 /**
@@ -110,7 +110,7 @@ suite("read configuration", () => {
       { configurationPath: "path/to/connection/one.liquibase.properties", configurationName: "one" },
     ];
 
-    [{ configurationPath: undefined, configurationName: "five" }, ...existingConfigurations].forEach((pArgument) => {
+    for (const pArgument of [{ configurationPath: undefined, configurationName: "five" }, ...existingConfigurations]) {
       /**
        * Tests that the reading of the configuration path works
        */
@@ -122,12 +122,12 @@ suite("read configuration", () => {
           })
           .catch(done);
       });
-    });
+    }
 
-    [
+    for (const pArgument of [
       ...existingConfigurations,
       { configurationPath: "path/to/connection/five.liquibase.properties", configurationName: undefined },
-    ].forEach((pArgument) => {
+    ]) {
       /**
        * Tests that the reading of the configuration names works
        */
@@ -136,7 +136,7 @@ suite("read configuration", () => {
 
         assert.deepStrictEqual(result, pArgument.configurationName);
       });
-    });
+    }
   });
 
   /**
@@ -149,8 +149,8 @@ suite("read configuration", () => {
     test("should not work with not existing configuration", (done) => {
       getLiquibaseConfigurationPathStub.resolves(undefined);
 
-      updateConfiguration((jsonData) => {
-        fail(`should not be updated ${jsonData} `);
+      updateConfiguration(() => {
+        fail("data should not be updated");
       })
         .then((result) => {
           assert.ok(!result);

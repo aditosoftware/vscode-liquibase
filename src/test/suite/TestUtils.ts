@@ -1,13 +1,13 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import * as vscode from "vscode";
 
 import { Logger } from "@aditosoftware/vscode-logging";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { ConfigurationStatus, LiquibaseConfigurationData } from "../../configuration/data/LiquibaseConfigurationData";
 import { initializeLogger } from "@aditosoftware/vscode-input";
 import { setCacheHandler, setLibFolder, setResourcePath } from "../../extension";
-import assert from "assert";
+import assert from "node:assert";
 import { CacheHandler } from "../../cache";
 import Sinon from "sinon";
 

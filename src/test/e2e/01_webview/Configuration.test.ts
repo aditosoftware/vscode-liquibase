@@ -1,7 +1,7 @@
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import assert from "assert";
-import { randomUUID } from "crypto";
+import assert from "node:assert";
+import { randomUUID } from "node:crypto";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
 /**

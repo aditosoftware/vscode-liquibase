@@ -2,9 +2,9 @@ import Sinon from "sinon";
 import { convertFormats } from "../../convertFormats";
 import { TestUtils } from "./TestUtils";
 import * as vscode from "vscode";
-import path from "path";
-import assert from "assert";
-import * as fs from "fs";
+import path from "node:path";
+import assert from "node:assert";
+import * as fs from "node:fs";
 import chai from "chai";
 import chaiFs from "chai-fs";
 
@@ -115,20 +115,20 @@ suite("convert format", () => {
     },
   ];
 
-  testArguments.forEach((pArgument) => {
+  for (const pArgument of testArguments) {
     /**
      * Tests the converting of the given argument to a new format.
      */
     test(`should transform ${pArgument.format} with ${pArgument.fileSelection ? "file" : "folder"} ${
       pArgument.changelogLocation
-    }  ${typeof pArgument.changelogLocation !== "string" ? "selected from rmb" : ""}`, async () => {
+    }  ${typeof pArgument.changelogLocation === "string" ? "" : "selected from rmb"}`, async () => {
       const infoMessage = TestUtils.createInfoMessageStubWithSelection();
 
       await assertConverting(
         () =>
           convertFormats(
             pArgument.fileSelection,
-            typeof pArgument.changelogLocation !== "string" ? pArgument.changelogLocation : undefined
+            typeof pArgument.changelogLocation === "string" ? undefined : pArgument.changelogLocation
           ),
         tempFolder,
         pArgument.format,
@@ -141,7 +141,7 @@ suite("convert format", () => {
         `Converting the changelogs to ${pArgument.format} was executed successfully. Please check the files for correctness.`
       );
     });
-  });
+  }
 
   /**
    * Tests that the user receives a warn message, when a file could not be converted.

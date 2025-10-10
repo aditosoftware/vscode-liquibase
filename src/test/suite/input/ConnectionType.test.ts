@@ -2,7 +2,7 @@ import Sinon from "sinon";
 import { ConnectionType } from "../../../input/ConnectionType";
 import * as readConfiguration from "../../../configuration/handle/readConfiguration";
 import { DialogValues } from "@aditosoftware/vscode-input";
-import assert from "assert";
+import assert from "node:assert";
 import * as vscode from "vscode";
 
 /**
@@ -110,7 +110,7 @@ suite("ConnectionType test", () => {
       vscodeShowQuickPick.restore();
     });
 
-    [
+    for (const pElement of [
       {
         connectionType: new ConnectionType({ name: "propertyFile" }),
         expectedPlaceHolder: "Select your configuration",
@@ -119,7 +119,7 @@ suite("ConnectionType test", () => {
         connectionType: new ConnectionType({ name: "referencePropertyFile" }),
         expectedPlaceHolder: "Select your reference configuration",
       },
-    ].forEach((pElement) => {
+    ]) {
       /**
        * Tests that it works with any value selected.
        */
@@ -147,7 +147,7 @@ suite("ConnectionType test", () => {
           })
           .catch((error) => done(error));
       });
-    });
+    }
 
     /**
      * Tests that the method works when no value is selected.

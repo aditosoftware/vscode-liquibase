@@ -2,7 +2,7 @@ import { BottomBarPanel } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../constants";
-import assert from "assert";
+import assert from "node:assert";
 
 /**
  * Test suite for the open output channel setting (`liquibase.openOutputChannelOnCommandStart`).
@@ -28,7 +28,7 @@ suite("Open output Channel On Start", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 
-  [false, true].forEach((settingValue) => {
+  for (const settingValue of [false, true]) {
     /**
      * Tests the visibility of the output channel after that setting was set to a specific value.
      */
@@ -51,5 +51,5 @@ suite("Open output Channel On Start", function () {
         assert.ok(await LiquibaseGUITestUtils.outputPanel.isDisplayed(), "output panel is displayed");
       }
     });
-  });
+  }
 });

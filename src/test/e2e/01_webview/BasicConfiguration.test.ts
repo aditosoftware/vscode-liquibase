@@ -1,7 +1,7 @@
-import assert from "assert";
+import assert from "node:assert";
 import { WebviewTestUtils } from "./WebviewTestUtils";
 import { By, InputBox } from "vscode-extension-tester";
-import path from "path";
+import path from "node:path";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
 /**

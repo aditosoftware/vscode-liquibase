@@ -59,7 +59,7 @@ function App(): React.JSX.Element {
   function handleInitData(messageData: MessageData): void {
     const configurationData = messageData.configurationData;
     if (configurationData) {
-      setReferenceConnection(typeof configurationData.referenceDatabaseConnection !== "undefined");
+      setReferenceConnection(configurationData.referenceDatabaseConnection !== undefined);
 
       updateData((draft) => {
         Object.assign(draft, configurationData);
@@ -239,7 +239,7 @@ function App(): React.JSX.Element {
                 </p>
               )}
 
-              <div>{previewData !== null ? <pre id="preview">{previewData}</pre> : <p>Load Data...</p>}</div>
+              <div>{previewData === null ? <p>Load Data...</p> : <pre id="preview">{previewData}</pre>}</div>
             </fieldset>
           </div>
         </section>

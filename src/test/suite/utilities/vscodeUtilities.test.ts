@@ -1,10 +1,10 @@
-import assert from "assert";
-import * as fs from "fs";
+import assert from "node:assert";
+import * as fs from "node:fs";
 import { TestUtils } from "../TestUtils";
 import Sinon from "sinon";
 import { Logger, LoggingMessage } from "@aditosoftware/vscode-logging";
 import { openDocument, openLiquibaseDocumentation } from "../../../utilities/vscodeUtilities";
-import path from "path";
+import path from "node:path";
 import * as vscode from "vscode";
 import chai from "chai";
 import chaiFs from "chai-fs";
@@ -114,7 +114,7 @@ suite("vscodeUtilities", () => {
       const errorMessage = Sinon.spy(vscode.window, "showErrorMessage");
 
       const openExternalStub = Sinon.stub(vscode.env, "openExternal");
-      openExternalStub.returns(Promise.reject(new Error()));
+      openExternalStub.returns(Promise.reject(new Error("testing")));
 
       openLiquibaseDocumentation("foo");
 

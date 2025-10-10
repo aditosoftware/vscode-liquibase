@@ -26,6 +26,8 @@ export class MessageData {
     if (this.data instanceof LiquibaseConfigurationData) {
       return this.data;
     }
+
+    return undefined;
   }
 
   /**

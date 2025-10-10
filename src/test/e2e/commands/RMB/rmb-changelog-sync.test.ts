@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -22,10 +22,10 @@ suite("changelog-sync: Right Click Menu", function () {
   /**
    * Test case for executing the 'changelog sync' command via RMB.
    */
-  LiquibaseGUITestUtils.createRmbArguments(
+  for (const pArgument of LiquibaseGUITestUtils.createRmbArguments(
     "Mark not deployed changelogs as executed (changelog-sync)...",
     ContextOptions.NO_CONTEXT
-  ).forEach((pArgument) => {
+  )) {
     test(`should execute 'changelog sync' command from ${pArgument.description}`, async function () {
       await pArgument.command(this, configurationName);
 
@@ -35,7 +35,7 @@ suite("changelog-sync: Right Click Menu", function () {
         )
       );
     });
-  });
+  }
 
   /**
    * Teardown function that runs after the test suite.

@@ -1,8 +1,8 @@
-import assert from "assert";
+import assert from "node:assert";
 import { prerequisites } from "../../prerequisites";
 import { TestUtils } from "./TestUtils";
 import * as vscode from "vscode";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import Sinon from "sinon";
 
 /**
@@ -73,7 +73,7 @@ suite("prerequisites", () => {
     prerequisites(context, tempDir)
       .then(() => {
         // because of no awaits, we wait 7 seconds in order to have everything downloaded
-        new Promise((r) => setTimeout(r, 7_000))
+        new Promise((r) => setTimeout(r, 7000))
           .then(() => {
             // check that the jars were downloaded correctly
             const files = fs.readdirSync(tempDir);

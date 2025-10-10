@@ -1,6 +1,6 @@
-import path from "path";
-import fs from "fs";
-import assert from "assert";
+import path from "node:path";
+import fs from "node:fs";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -36,10 +36,10 @@ suite("update-sql: Right Click Menu", function () {
     fs.rmSync(temporaryFolder, { recursive: true });
   });
 
-  LiquibaseGUITestUtils.createRmbArguments(
+  for (const pArgument of LiquibaseGUITestUtils.createRmbArguments(
     "Generate SQL File for incoming changes...",
     ContextOptions.LOAD_ALL_CONTEXT
-  ).forEach((pArgument) => {
+  )) {
     /**
      * Test case to execute the 'update-sql' command from RMB.
      */
@@ -72,5 +72,5 @@ suite("update-sql: Right Click Menu", function () {
       );
       chai.assert.pathExists(updateFile);
     });
-  });
+  }
 });

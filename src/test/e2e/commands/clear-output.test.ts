@@ -1,7 +1,7 @@
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 
 /**
  * Test suite for the 'clear' functionality and setting.
@@ -72,9 +72,6 @@ async function executeTagExists(configurationName: string): Promise<void> {
 
   await input.setText(randomUUID());
   await input.confirm();
-
-  // const modalDialog = new ModalDialog();
-  // await modalDialog.pushButton("Drop-all");
 
   assert.ok(
     await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag-exists' was executed successfully.")

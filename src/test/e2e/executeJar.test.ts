@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { TextEditor } from "vscode-extension-tester";
 import { ContextOptions } from "../../constants";
 import { DockerTestUtils } from "../suite/DockerTestUtils";
@@ -57,13 +57,14 @@ suite("executeJar", function () {
     const cache = JSON.parse(text);
 
     // get the key that was NOT used for the update but should be updated in the cache
-    const key = Object.keys(cache).filter((pKey) => pKey.includes(configurationNameDupe))[0];
+    const key = Object.keys(cache).find((pKey) => pKey.includes(configurationNameDupe));
+    assert.ok(key);
     const cacheForKey: Connection = cache[key];
     // sanitize the result to remove the lastUsed from the changelogs and to lowercase the path
-    cacheForKey.changelogs.forEach((pChangelog) => {
+    for (const pChangelog of cacheForKey.changelogs) {
       pChangelog.lastUsed = clock;
       pChangelog.path = pChangelog.path.toLowerCase();
-    });
+    }
 
     assert.deepStrictEqual(
       cacheForKey,

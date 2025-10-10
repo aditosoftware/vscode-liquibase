@@ -1,7 +1,7 @@
-import path from "path";
+import path from "node:path";
 import { TestUtils } from "../../TestUtils";
-import assert from "assert";
-import fs from "fs";
+import assert from "node:assert";
+import fs from "node:fs";
 import {
   addToLiquibaseConfiguration,
   createLiquibaseProperties,
@@ -386,17 +386,17 @@ function assertLogging(
   Sinon.assert.callCount(errorLog, messages.error?.length ?? 0);
 
   if (messages.info) {
-    messages.info.forEach((infoMessage) =>
-      Sinon.assert.calledWith(infoLog, { message: infoMessage, notifyUser: true } as LoggingMessage)
-    );
+    for (const infoMessage of messages.info) {
+      Sinon.assert.calledWith(infoLog, { message: infoMessage, notifyUser: true } as LoggingMessage);
+    }
   }
 
   if (messages.error) {
-    messages.error.forEach((errorMessage) =>
+    for (const errorMessage of messages.error) {
       Sinon.assert.calledWith(errorLog, {
         message: errorMessage,
         notifyUser: true,
-      } as LoggingMessage)
-    );
+      } as LoggingMessage);
+    }
   }
 }

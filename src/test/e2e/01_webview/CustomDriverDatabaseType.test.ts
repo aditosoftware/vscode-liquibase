@@ -1,7 +1,7 @@
 import { By } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { WebviewTestUtils } from "./WebviewTestUtils";
-import assert from "assert";
+import assert from "node:assert";
 
 /**
  * Tests custom driver selection.

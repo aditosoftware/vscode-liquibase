@@ -1,8 +1,8 @@
 import { InputBox } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
-import assert from "assert";
-import path from "path";
-import * as fs from "fs";
+import assert from "node:assert";
+import path from "node:path";
+import * as fs from "node:fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { CHOOSE_CHANGELOG_OPTION } from "../../../constants";
 

@@ -1,4 +1,4 @@
-import { randomInt } from "crypto";
+import { randomInt } from "node:crypto";
 import { Uri, Webview } from "vscode";
 
 /**

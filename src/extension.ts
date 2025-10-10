@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as path from "path";
+import * as path from "node:path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { PickPanelConfig, registerLiquibaseCommand, TransferDataForCommand } from "./registerLiquibaseCommand";
@@ -13,7 +13,7 @@ import {
   QuickPick,
   initializeLogger,
 } from "@aditosoftware/vscode-input";
-import * as os from "os";
+import * as os from "node:os";
 import {
   addExistingLiquibaseConfiguration,
   displayAvailableDrivers,
@@ -26,7 +26,7 @@ import {
   openFileAfterCommandExecution,
   openIndexHtmlAfterCommandExecution,
 } from "./liquibaseCommandsUtilities";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { readUrl } from "./configuration/data/readFromProperties";
 import { openDocument, openLiquibaseDocumentation } from "./utilities/vscodeUtilities";
@@ -85,9 +85,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   initializeLogger(Logger.getLogger());
 
   // creates the items for the status bar
-  context.subscriptions.push(createGeneralStatusBarItem());
-
-  context.subscriptions.push(createOverviewStatusBarItem());
+  context.subscriptions.push(createGeneralStatusBarItem(), createOverviewStatusBarItem());
 
   // Perform any necessary prerequisites setup before executing the extension logic
   await prerequisites(context, resourcePath);
@@ -202,9 +200,8 @@ function registerCommands(context: vscode.ExtensionContext): void {
   registerCommandsForLiquibasePropertiesHandling(context);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.convertFormatFolder", async () => await convertFormats(false))
-  );
-  context.subscriptions.push(
+    vscode.commands.registerCommand("liquibase.convertFormatFolder", async () => await convertFormats(false)),
+
     vscode.commands.registerCommand("liquibase.convertFormatFile", async (...commandArgs) => {
       let selectedFile: vscode.Uri | undefined = undefined;
 
@@ -218,21 +215,17 @@ function registerCommands(context: vscode.ExtensionContext): void {
       }
 
       await convertFormats(true, selectedFile);
-    })
-  );
+    }),
 
-  // Register all commands that are used for showing/deleting the cache
-  context.subscriptions.push(
+    // Register all commands that are used for showing/deleting the cache
     vscode.commands.registerCommand("liquibase.openCacheFile", async () => {
       await openDocument(cacheHandler.cacheLocation);
     }),
     vscode.commands.registerCommand("liquibase.removeFromCache", async () => {
       await new CacheRemover(cacheHandler).removeFromCache();
-    })
-  );
+    }),
 
-  // Command that will be executed when the extension command is triggered
-  context.subscriptions.push(
+    // Command that will be executed when the extension command is triggered
     registerLiquibaseCommand("Update your database", "update", [...generatePropertyFileDialogOptions(true, true)], {
       searchPathRequired: true,
     }),
@@ -629,24 +622,18 @@ function registerCommandsForLiquibasePropertiesHandling(context: vscode.Extensio
   context.subscriptions.push(
     vscode.commands.registerCommand("liquibase.createLiquibaseConfiguration", () => {
       LiquibaseConfigurationPanel.render(context.extensionUri);
-    })
-  );
+    }),
 
-  context.subscriptions.push(
     vscode.commands.registerCommand("liquibase.editExistingLiquibaseConfiguration", (uri: vscode.Uri) =>
       editExistingLiquibaseConfiguration(uri, context)
-    )
-  );
+    ),
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", async () => removeConfiguration())
-  );
+    vscode.commands.registerCommand("liquibase.removeExistingConfiguration", async () => removeConfiguration()),
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration)
-  );
+    vscode.commands.registerCommand("liquibase.addExistingConfiguration", addExistingLiquibaseConfiguration),
 
-  context.subscriptions.push(vscode.commands.registerCommand("liquibase.drivers", displayAvailableDrivers));
+    vscode.commands.registerCommand("liquibase.drivers", displayAvailableDrivers)
+  );
 }
 
 /**

@@ -1,5 +1,5 @@
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { EditorView, TextEditor } from "vscode-extension-tester";
@@ -40,7 +40,7 @@ suite("History", async function () {
   /**
    * Test the 'history' command with TABULAR and TEXT output format.
    */
-  ["TABULAR", "TEXT"].forEach((pHistoryOption) => {
+  for (const pHistoryOption of ["TABULAR", "TEXT"]) {
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
       LiquibaseGUITestUtils.removeContentOfFolder(temporaryFolder);
 
@@ -76,5 +76,5 @@ suite("History", async function () {
       );
       chai.assert.pathExists(historyFile);
     });
-  });
+  }
 });

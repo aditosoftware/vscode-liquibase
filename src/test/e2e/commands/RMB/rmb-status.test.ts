@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { DockerTestUtils } from "../../../suite/DockerTestUtils";
 import { LiquibaseGUITestUtils } from "../../LiquibaseGUITestUtils";
 import { ContextOptions } from "../../../../constants";
@@ -19,10 +19,10 @@ suite("status: Right Click Menu", function () {
     configurationName = await LiquibaseGUITestUtils.setupTests();
   });
 
-  LiquibaseGUITestUtils.createRmbArguments(
+  for (const pArgument of LiquibaseGUITestUtils.createRmbArguments(
     "List the not deployed changesets (status)...",
     ContextOptions.NO_CONTEXT
-  ).forEach((pArgument) => {
+  )) {
     /**
      * Test case for executing the 'status' command from RMB.
      */
@@ -34,7 +34,7 @@ suite("status: Right Click Menu", function () {
         "Notification did NOT show"
       );
     });
-  });
+  }
 
   /**
    * Cleans up the test suite.

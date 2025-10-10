@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import {
   ConfigurationStatus,
   LiquibaseConfigurationData,
@@ -6,7 +6,7 @@ import {
 import Sinon from "sinon";
 import * as vscode from "vscode";
 import { TestUtils } from "../TestUtils";
-import path from "path";
+import path from "node:path";
 import { chooseFileForChangelog } from "../../../configuration/handleChangelogSelection";
 import { LiquibaseConfigurationPanel } from "../../../panels/LiquibaseConfigurationPanel";
 import { MessageType } from "../../../configuration/transfer";
@@ -64,7 +64,7 @@ suite("handleChangelogSelection", () => {
     /**
      * Tests that the method itself should work, when nothing was selected.
      */
-    [undefined, []].forEach((pArgument) => {
+    for (const pArgument of [undefined, []]) {
       test(`should work with nothing selected (${pArgument})`, (done) => {
         openDialog.resolves(pArgument);
 
@@ -76,7 +76,7 @@ suite("handleChangelogSelection", () => {
           })
           .catch(done);
       });
-    });
+    }
 
     /**
      * Tests that the selection of an changelog does work.

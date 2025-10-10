@@ -1,6 +1,6 @@
 import { By, EditorView, Key, TextEditor, WebView, Workbench } from "vscode-extension-tester";
 import { WebviewTestUtils } from "./WebviewTestUtils";
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 
 /**

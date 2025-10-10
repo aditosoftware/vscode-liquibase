@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
 import { HandleChangelogFileInput, getWorkFolder } from "./handleChangelogFileInput";
-import * as path from "path";
+import * as path from "node:path";
 import { resourcePath } from "./extension";
 import { DialogValues, InputBase, InputBaseOptions, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";
@@ -244,7 +244,9 @@ export function handleResultsOfCommandExecuted(
   additionalCommandAction?.afterCommandAction?.(dialogValues);
 
   // Execute all Transfer Actions from any command calls
-  transferActions.forEach((pTransferAction) => pTransferAction.executeAfterCommandAction());
+  for (const pTransferAction of transferActions) {
+    pTransferAction.executeAfterCommandAction();
+  }
 }
 
 /**
@@ -278,14 +280,15 @@ export function handleCommandArgs(
       // external data from any other command call
       // find out the config we can delete
       let indexToDelete = -1;
-      pickPanelConfigs.forEach((config, index) => {
+
+      for (const [index, config] of pickPanelConfigs.entries()) {
         if (config.input.inputOptions.name === commandArg.name) {
           indexToDelete = index;
 
           // if a config was found, set the new value
           preBuiltDialogValues.addValue(config.input.inputOptions.name, commandArg.data);
         }
-      });
+      }
 
       // delete the config, if it was found
       if (indexToDelete !== -1) {
@@ -293,7 +296,7 @@ export function handleCommandArgs(
       }
     } else if (commandArg instanceof TransferActionForCommand) {
       transferActions.push(commandArg);
-    } else if (typeof commandArg !== "undefined") {
+    } else if (commandArg !== undefined) {
       // Note: this message will also appear, if everything was alright.
       Logger.getLogger().debug({
         message: `Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`,
@@ -317,7 +320,9 @@ export function buildAdditionalCmdArguments(
   const cmdArgs: string[] = [];
   if (additionalCommandAction?.commandLineArgs) {
     // add any given command line arguments
-    additionalCommandAction.commandLineArgs.forEach((pArg) => cmdArgs.push(pArg));
+    for (const pArg of additionalCommandAction.commandLineArgs) {
+      cmdArgs.push(pArg);
+    }
   }
   if (additionalCommandAction?.searchPathRequired && !isRightClickMenuAction) {
     // add the search path to the arguments
@@ -373,9 +378,11 @@ export function transformCommandArgsAfterInput(
 
   if (dialogValues.uri) {
     // if this was called from an right click menu, then handle some parameters differently
-    cmdArgs.push("--changelogFile=" + path.relative(getWorkFolder(), dialogValues.uri.fsPath));
+    cmdArgs.push(
+      "--changelogFile=" + path.relative(getWorkFolder(), dialogValues.uri.fsPath),
 
-    cmdArgs.push("-Dliquibase.searchPath=" + getWorkFolder());
+      "-Dliquibase.searchPath=" + getWorkFolder()
+    );
   }
   return propertyFilePath;
 }

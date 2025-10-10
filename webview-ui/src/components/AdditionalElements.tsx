@@ -167,16 +167,6 @@ export function AdditionalElements(pProperties: Readonly<AdditionalElementProps>
     pProperties.onValueChange(newElementValues);
   }
 
-  /**
-   * Checks if the entered key is acceptable.
-   *
-   * @param key - the key to check
-   * @returns true if the key is acceptable, false otherwise
-   */
-  function isKeyAcceptable(key: string): boolean {
-    return !LiquibaseConfigurationData.configuredKeys.includes(key);
-  }
-
   return (
     <div>
       <fieldset>
@@ -273,4 +263,14 @@ export function AdditionalElements(pProperties: Readonly<AdditionalElementProps>
       </fieldset>
     </div>
   );
+}
+
+/**
+ * Checks if the entered key is acceptable.
+ *
+ * @param key - the key to check
+ * @returns true if the key is acceptable, false otherwise
+ */
+function isKeyAcceptable(key: string): boolean {
+  return !LiquibaseConfigurationData.configuredKeys.includes(key);
 }

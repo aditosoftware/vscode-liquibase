@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { suiteTeardown } from "mocha";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";

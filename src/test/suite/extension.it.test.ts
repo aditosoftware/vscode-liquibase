@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
-import path from "path";
+import path from "node:path";
 import Sinon from "sinon";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import { PropertiesEditor } from "properties-file/editor";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import { DockerTestUtils } from "./DockerTestUtils";
 import { CHOOSE_CHANGELOG_OPTION } from "../../constants";
 
@@ -193,7 +193,7 @@ suite("Extension Integration Test Suite", () => {
   /**
    * Execute some commands.
    */
-  commandArguments.forEach((commandArgument: CommandArgument) => {
+  for (const commandArgument of commandArguments) {
     test(`should execute command ${commandArgument.command}`, async () => {
       // create a real quick pick for afterwards
       const realQuickPick = vscode.window.createQuickPick();
@@ -220,50 +220,57 @@ suite("Extension Integration Test Suite", () => {
 
       // stub the showing of an input box
       const inputBox = Sinon.stub(vscode.window, "createInputBox");
-      commandArgument.answers.inputBox?.forEach((value, index) => {
-        const copyInputBox = Object.create(realInput);
-        copyInputBox.onDidAccept = (callback: () => void) => {
-          copyInputBox.value = value;
-          callback();
-          return {
-            dispose: () => {},
-          } as vscode.Disposable;
-        };
-        const inputBoxWithAccept = copyInputBox as vscode.InputBox;
 
-        inputBox.onCall(index).returns(inputBoxWithAccept);
-      });
+      if (commandArgument.answers.inputBox) {
+        for (const [index, value] of commandArgument.answers.inputBox.entries()) {
+          const copyInputBox = Object.create(realInput);
+          copyInputBox.onDidAccept = (callback: () => void) => {
+            copyInputBox.value = value;
+            callback();
+            return {
+              dispose: () => {},
+            } as vscode.Disposable;
+          };
+          const inputBoxWithAccept = copyInputBox as vscode.InputBox;
+
+          inputBox.onCall(index).returns(inputBoxWithAccept);
+        }
+      }
 
       // stub the showing of an open dialog
       const openDialog = Sinon.stub(vscode.window, "showOpenDialog");
-      commandArgument.answers.openDialog?.forEach((value, index) => {
-        openDialog.onCall(index).resolves([vscode.Uri.file(value)]);
-      });
+      if (commandArgument.answers.openDialog) {
+        for (const [index, value] of commandArgument.answers.openDialog.entries()) {
+          openDialog.onCall(index).resolves([vscode.Uri.file(value)]);
+        }
+      }
 
       // stub the showing of a loading and normal quick pick created by the vscode-input.
       const loadingQuickPick = Sinon.stub(vscode.window, "createQuickPick");
 
-      commandArgument.answers.quickPick?.forEach((value, index) => {
-        const copyElementWithAccept = Object.create(realQuickPick);
-        copyElementWithAccept.onDidAccept = (callback: () => void) => {
-          callback();
-          return {
-            dispose: () => {},
-          } as vscode.Disposable;
-        };
-        // and transforms this any element back to an vscode.QuickPick, so it can be returned by createQuickPick
-        const quickPickWithAccept = copyElementWithAccept as vscode.QuickPick<vscode.QuickPickItem>;
+      if (commandArgument.answers.quickPick) {
+        for (const [index, value] of commandArgument.answers.quickPick.entries()) {
+          const copyElementWithAccept = Object.create(realQuickPick);
+          copyElementWithAccept.onDidAccept = (callback: () => void) => {
+            callback();
+            return {
+              dispose: () => {},
+            } as vscode.Disposable;
+          };
+          // and transforms this any element back to an vscode.QuickPick, so it can be returned by createQuickPick
+          const quickPickWithAccept = copyElementWithAccept as vscode.QuickPick<vscode.QuickPickItem>;
 
-        if (value.length !== 0) {
-          Sinon.stub(quickPickWithAccept, "selectedItems").get(() => {
-            return value.map((pValue) => {
-              return { label: pValue, picked: true } as vscode.QuickPickItem;
+          if (value.length !== 0) {
+            Sinon.stub(quickPickWithAccept, "selectedItems").get(() => {
+              return value.map((pValue) => {
+                return { label: pValue, picked: true } as vscode.QuickPickItem;
+              });
             });
-          });
-        }
+          }
 
-        loadingQuickPick.onCall(index).returns(quickPickWithAccept);
-      });
+          loadingQuickPick.onCall(index).returns(quickPickWithAccept);
+        }
+      }
 
       // stub the showing of the info message
       const infoMessage = Sinon.stub(vscode.window, "showInformationMessage");
@@ -287,7 +294,7 @@ suite("Extension Integration Test Suite", () => {
       Sinon.assert.callCount(loadingQuickPick, commandArgument.answers.quickPick?.length ?? 0);
       Sinon.assert.callCount(openDialog, commandArgument.answers.openDialog?.length ?? 0);
     }).timeout(10_000);
-  });
+  }
 });
 
 /**

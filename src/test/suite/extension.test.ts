@@ -1,11 +1,11 @@
 import { DialogValues } from "@aditosoftware/vscode-input";
 import { activate, createGeneralStatusBarItem, setRequireForceAndForceParameter, validateInput } from "../../extension";
-import assert from "assert";
+import assert from "node:assert";
 import { Command } from "vscode";
 import * as vscode from "vscode";
 import { TestUtils } from "./TestUtils";
 import Sinon from "sinon";
-import * as fs from "fs";
+import * as fs from "node:fs";
 import chai, { expect } from "chai";
 import chaiString from "chai-string";
 
@@ -27,18 +27,18 @@ suite("extension tests", () => {
    * Tests the validation of the inputs.
    */
   suite("validateInput", () => {
-    [
+    for (const pArgument of [
       { input: "", expected: "Objects to include must not be empty" },
       { input: " ", expected: "Objects to include must not be empty" },
       { input: "x", expected: null },
-    ].forEach((pArgument) => {
+    ]) {
       /**
        * Tests that the input is validated correctly.
        */
       test(`should validate input for value '${pArgument.input}'`, () => {
         assert.strictEqual(validateInput(pArgument.input), pArgument.expected);
       });
-    });
+    }
   });
 
   /**
@@ -157,11 +157,11 @@ suite("extension tests", () => {
       expect(files).to.contain("error.log");
 
       // all other files should be jar files
-      files
-        .filter((pFileName) => !pFileName.endsWith(".log"))
-        .forEach((pFileName) => {
-          expect(pFileName).to.endWith(".jar");
-        });
+      const otherFiles = files.filter((pFileName) => !pFileName.endsWith(".log"));
+
+      for (const pFileName of otherFiles) {
+        expect(pFileName).to.endWith(".jar");
+      }
     });
   });
 });

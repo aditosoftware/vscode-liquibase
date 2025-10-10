@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { ModalDialog } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";

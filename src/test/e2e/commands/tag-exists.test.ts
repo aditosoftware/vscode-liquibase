@@ -1,7 +1,7 @@
-import assert from "assert";
+import assert from "node:assert";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 
 /**
  * Test suite for the 'tag-exists' command.
