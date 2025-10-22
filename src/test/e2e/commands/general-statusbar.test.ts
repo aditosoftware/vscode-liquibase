@@ -15,7 +15,9 @@ suite("general item in statusbar", () => {
   test("should have status bar and clicks it", async () => {
     const statusBar = new StatusBar();
 
-    const liquibaseItem = await statusBar.getItem("liquibase-logo  Liquibase, Execute any Liquibase command");
+    const liquibaseItem = await statusBar.getItem(
+      "default-view-icon  Liquibase Integration, Execute any Liquibase command"
+    );
     assert.ok(liquibaseItem, "no item was found in status bar");
 
     await liquibaseItem.click();

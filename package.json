@@ -1,10 +1,10 @@
 {
   "name": "liquibase-integration",
-  "displayName": "Liquibase",
-  "description": "Execute Liquibase commands on changelogs and create liquibase.properties files",
+  "displayName": "Liquibase 4 Integration",
+  "description": "Run official Liquibase CLI commands on changelogs and manage liquibase.properties files",
   "license": "MIT",
   "publisher": "adito",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "engines": {
     "vscode": "^1.84.0"
   },
@@ -20,7 +20,7 @@
   "extensionKind": [
     "workspace"
   ],
-  "icon": "media/icons/liquibase_logo.png",
+  "icon": "media/icons/extension-icon.png",
   "capabilities": {
     "untrustedWorkspaces": {
       "supported": false,
@@ -377,15 +377,6 @@
         ]
       }
     ],
-    "icons": {
-      "liquibase-logo": {
-        "description": "The Liquibase icon",
-        "default": {
-          "fontPath": "./assets/liquibase_icons.woff",
-          "fontCharacter": "\\E001"
-        }
-      }
-    },
     "keybindings": [
       {
         "command": "liquibase.update",
@@ -399,7 +390,6 @@
     "package": "webpack --mode production --devtool hidden-source-map",
     "webpack:compile": "webpack --mode development",
     "clean": "rimraf ./out  && rimraf ./dist",
-    "build:icons": "run-func out/scripts/generateFont.js generateFont",
     "compile": "tsc -p ./",
     "watch": "tsc --watch -p ./",
     "clean-compile": "npm run clean && npm run compile && npm run webpack:compile",
@@ -440,12 +430,10 @@
     "mariadb": "^3.4.5",
     "mkdirp": "^3.0.1",
     "rimraf": "^6.0.1",
-    "run-func": "^3.0.0",
     "sinon": "^21.0.0",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
     "vscode-extension-tester": "^8.18.0",
-    "webfont": "^11.2.26",
     "webpack": "^5.102.1",
     "webpack-cli": "^6.0.1",
     "webpack-shell-plugin-next": "^2.3.2"

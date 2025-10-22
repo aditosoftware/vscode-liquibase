@@ -96,7 +96,7 @@ suite("extension tests", () => {
       const item = createGeneralStatusBarItem();
 
       // check that the command has the logo
-      expect(item.text).to.include("$(liquibase-logo)");
+      expect(item.text).to.include("$(default-view-icon)");
 
       assert.ok(item.command);
       expect(item.command).to.not.be.a("string");
