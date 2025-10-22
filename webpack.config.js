@@ -45,7 +45,7 @@ const config = {
     // build the icons before the real build
     new WebpackShellPluginNext({
       onBeforeBuild: {
-        scripts: ["npm run compile", "npm run build:icons"],
+        scripts: ["npm run compile"],
         blocking: true,
       },
     }),

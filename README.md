@@ -2,11 +2,23 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=aditosoftware_vscode-liquibase&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=aditosoftware_vscode-liquibase)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=aditosoftware_vscode-liquibase&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=aditosoftware_vscode-liquibase)
 
-# Liquibase
+# Liquibase 4 Integration for Visual Studio Code
 
 A Visual Studio Code extension that supports executing [Liquibase commands](https://docs.liquibase.com/commands/command-list.html) without needing to use the command line.
+It invokes the official Liquibase command-line tool to run commands; it does not reimplement Liquibase itself.
+
 
 You can also create and edit [`liquibase.properties`](https://docs.liquibase.com/concepts/connections/creating-config-properties.html) files, which are used as a foundation for any command execution.
+
+## Disclaimer
+
+This extension integrates Liquibase with VS Code.
+
+Liquibase® is a registered trademark of Liquibase, Inc.
+
+This project is not affiliated with or endorsed by Liquibase, Inc.
+
+Liquibase is licensed separately under the Functional Source License (FSL-1.1).
 
 ## Getting started
 
@@ -32,7 +44,7 @@ All commands can be accessed from the "Liquibase" item in the status bar.
 
 ![Status bar item of Liquibase Extension](/media/walkthrough/statusBar.png)
 
-You can also access all commands by using the the command palette. It can be accessed with the keyboard shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (macOS <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
+You can also access all commands by using the command palette. It can be accessed with the keyboard shortcut <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> (macOS <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>).
 
 If you execute any command, you notice a general pattern of inputs. You will be always asked the following steps in this order:
 
@@ -41,11 +53,13 @@ If you execute any command, you notice a general pattern of inputs. You will be 
 3. Select the **contexts**. Some commands allow you to filter the changelogs by contexts. See ["Executing commands with and without contexts"](#executing-commands-with-and-without-contexts) for more details.
 4. Any **additional options** you need to give before you can execute the command.
 
+The extension passes the selected options to the Liquibase CLI and executes the corresponding command.
+
 Some commands are accessible from the context menu. The context menu is available for all `xml`, `json`, `yaml`, `yml` and `sql` files, because those are the languages where you can write Liquibase changelogs. All commands are found in the _"Liquibase"_ sub menu. When executing a command from the context menu, it will use the current file as your changelog.
 
 ## Supported Liquibase Commands
 
-Currently, the following Liquibase commands are supported:
+Currently, the following Liquibase commands are supported via the Liquibase CLI:
 
 > **Tip:** The link on the command itself will lead you to the Liquibase documentation. This will give you a better understanding of the technical details of each command.
 >
@@ -87,7 +101,7 @@ If you want to control the storage location of the overview output, you can use 
 
 ### Executing commands with and without contexts
 
-Many liquibase commands can be executed with a context. After a connection and a changelog file was selected, you might be prompted with a context selection. There you have different options:
+Many Liquibase commands can be executed with a context. After a connection and a changelog file was selected, you might be prompted with a context selection. There you have different options:
 
 - **Use any of the recently loaded contexts**: This will give you **all contexts that were recently loaded** by "Load all contexts from the changelog file". You should use this option, if you want to use contexts and these have not changed from any recently loaded contexts. This option is only visible, if cached contexts are there.
 - **Load all contexts from the changelog file**: This will **parse and read all changelog files** based on your root changelog file. Anytime you load new contexts, the old ones for this connection will be discarded. This option should be used, if you never have loaded your contexts before or your contexts have changed from any recently loaded context and you want to execute the query with contexts.
@@ -97,9 +111,9 @@ Both "Load all contexts from the changelog file" and "Use any of the recently lo
 
 The recently loaded contexts are saved per database connection. That means, if you have three connections, then you have three sections of the contexts. For more information regarding caching, see [the caching section](#caching).
 
-## Converting changelogs from one liquibase format to another format
+## Converting changelogs from one Liquibase format to another format
 
-With the two commands `Liquibase: Converts a file from one liquibase format to another` and `Liquibase: Converts a folder from one liquibase format to another`, you can convert changelogs from one format to another.
+With the two commands `Liquibase: Converts a file from one Liquibase format to another` and `Liquibase: Converts a folder from one Liquibase format to another`, you can convert changelogs from one format to another.
 
 > **NOTE:** It is very important, that you check to produced results by the command. We do not guarantee the completeness and correctness of the files.
 
@@ -122,6 +136,6 @@ You can remove any values from the cache with the `Liquibase: Cache: Remove any 
 
 ## View logs
 
-This extension write to the output. It can be viewed by executing the command `Output: Focus on Output View` and then selecting the channel _"Liquibase"_.
+This extension writes to the output. It can be viewed by executing the command `Output: Focus on Output View` and then selecting the channel _"Liquibase"_.
 
-Logs will be also written to a log folder on your OS. You can reach the log folder by executing the command `Developer: Open Extension Logs Folder` and then navigating to the liquibase folder.
+Logs will be also written to a log folder on your OS. You can reach the log folder by executing the command `Developer: Open Extension Logs Folder` and then navigating to the folder containing the log files.

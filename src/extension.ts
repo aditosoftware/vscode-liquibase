@@ -101,7 +101,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
 export function createGeneralStatusBarItem(): vscode.StatusBarItem {
   return createStatusBarItem({
     id: "liquibase.general",
-    text: "$(liquibase-logo) Liquibase",
+    text: "$(default-view-icon) Liquibase Integration",
     name: "Liquibase Commands",
     tooltip: "Execute any Liquibase command",
     command: {

@@ -76,8 +76,6 @@ export class LiquibaseConfigurationPanel {
         }
       );
 
-      panel.iconPath = vscode.Uri.file(path.join(extensionUri.fsPath, "media", "icons", "liquibase-logo.svg"));
-
       LiquibaseConfigurationPanel.currentPanel = new LiquibaseConfigurationPanel(panel, extensionUri);
     }
 
