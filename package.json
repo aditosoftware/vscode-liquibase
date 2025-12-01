@@ -429,7 +429,7 @@
     "copyfiles": "^2.4.1",
     "mariadb": "^3.4.5",
     "mkdirp": "^3.0.1",
-    "rimraf": "^6.1.0",
+    "rimraf": "^6.1.2",
     "sinon": "^21.0.0",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
