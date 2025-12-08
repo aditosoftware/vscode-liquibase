@@ -49,7 +49,7 @@ jobs:
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
 
       - name: Run clean install
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: Run tests on Linux
         run: xvfb-run -a npm test
