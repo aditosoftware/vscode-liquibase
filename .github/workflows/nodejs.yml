@@ -104,7 +104,7 @@ jobs:
 
       - name: "Upload e2e screenshots"
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: e2e-screenshots-${{ matrix.os }}-${{ matrix.node-version }}
           path: ./out/test-resources/**/screenshots/**
