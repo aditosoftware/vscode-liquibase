@@ -433,7 +433,7 @@
     "sinon": "^21.0.1",
     "ts-loader": "^9.5.4",
     "typescript": "^5.9.3",
-    "vscode-extension-tester": "^8.18.0",
+    "vscode-extension-tester": "^8.21.0",
     "webpack": "^5.104.1",
     "webpack-cli": "^6.0.1",
     "webpack-shell-plugin-next": "^2.3.2"
