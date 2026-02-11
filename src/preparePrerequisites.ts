@@ -36,7 +36,6 @@ export function getRequiredFiles(): Map<string, string> {
   return requiredFiles;
 }
 
-
 /**
  * Finds out the file name from the url downloaded.
  *
