@@ -178,7 +178,7 @@ jobs:
         run: cyclonedx-npm --output-file sbom/sbom-webview-ui.json webview-ui/package.json
 
       - name: Prepare directory for SBOM merge
-        run: prepareSbomJarCreation
+        run: npm run prepareSbomJarCreation
 
       - name: Create SBOM for JARS
         uses: anchore/sbom-action@v0
