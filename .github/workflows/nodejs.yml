@@ -150,7 +150,7 @@ jobs:
 
   sbom:
     name: Generate merged SBOM (root + webview-ui)
-    if: github.event_name == 'release' || (github.ref_name == 'main' && github.event_name != 'pull_request')
+#    if: github.event_name == 'release' || (github.ref_name == 'main' && github.event_name != 'pull_request')
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -177,13 +177,24 @@ jobs:
       - name: Generate SBOM (webview-ui)
         run: cyclonedx-npm --output-file sbom/sbom-webview-ui.json webview-ui/package.json
 
+      - name: Prepare directory for SBOM merge
+        run: prepareSbomJarCreation
+
+      - name: Create SBOM for JARS
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./out/sbom/
+          format: cyclonedx-json
+          upload-artifact: false
+          artifact-name: sbom/sbom-jars.json
+
       - name: Merge + validate (CycloneDX CLI via Docker)
         run: |
           docker run --rm \
             -v "${GITHUB_WORKSPACE}:/work" \
             -w /work \
             cyclonedx/cyclonedx-cli \
-            merge --input-files sbom/sbom-root.json sbom/sbom-webview-ui.json --output-file sbom/combined-sbom.json
+            merge --input-files sbom/sbom-root.json sbom/sbom-webview-ui.json sbom/sbom-jars.json --output-file sbom/combined-sbom.json
 
       - name: Upload SBOM to Dependency-Track
         uses: DependencyTrack/gh-upload-sbom@48feab3080ff9e8f51f4d21861d9fc914eb744f5

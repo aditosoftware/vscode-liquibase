@@ -400,6 +400,7 @@
     "test": "vscode-test",
     "test:e2e": "npm run pretest && extest setup-and-run --code_version max --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
+    "prepareSbomJarCreation": "npm run clean-compile &&  node out/test/sbom/sbom-creation.js",
     "postinstall": "cd webview-ui && npm install && npm run build"
   },
   "dependencies": {
