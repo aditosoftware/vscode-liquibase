@@ -207,16 +207,6 @@ jobs:
             cyclonedx/cyclonedx-cli \
             convert --input-file sbom/combined-sbom.json --output-file sbom/combined-sbom-1.6.json --output-version v1_6 --output-format json
 
-
-      - name: Upload combined SBOM artifact
-        if: always()
-        uses: actions/upload-artifact@v6
-        with:
-          name: combined-sbom
-          path: sbom/*.json
-          if-no-files-found: error
-          retention-days: 1
-
       - name: Upload SBOM to Dependency-Track
         uses: DependencyTrack/gh-upload-sbom@48feab3080ff9e8f51f4d21861d9fc914eb744f5
         with:
