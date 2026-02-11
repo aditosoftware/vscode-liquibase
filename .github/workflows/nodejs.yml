@@ -49,6 +49,7 @@ jobs:
           format: cyclonedx-json
           upload-artifact: false
           output-file: sbom/sbom-jars.json
+          config: ./.syft.yaml
 
       - name: Merge + validate (CycloneDX CLI via Docker)
         run: |
