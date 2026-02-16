@@ -173,10 +173,10 @@ jobs:
         run: npm install --global --ignore-scripts @cyclonedx/cyclonedx-npm
 
       - name: Generate SBOM (root)
-        run: cyclonedx-npm --output-file sbom/sbom-root.json
+        run: cyclonedx-npm --omit=dev --output-file sbom/sbom-root.json
 
       - name: Generate SBOM (webview-ui)
-        run: cyclonedx-npm --output-file sbom/sbom-webview-ui.json webview-ui/package.json
+        run: cyclonedx-npm --omit=dev --output-file sbom/sbom-webview-ui.json webview-ui/package.json
 
       - name: Prepare directory for SBOM JARs
         run: npm run prepareSbomJarCreation
