@@ -6,7 +6,7 @@ on:
     branches:
       - "main"
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
   build:
@@ -63,6 +63,8 @@ jobs:
   e2e-tests:
     needs: build
     strategy:
+      # let other jobs finish as well, maybe they can finish and there is only an error in one of the jobs
+      fail-fast: false
       matrix:
         # No windows runner, because in this extension, we have a lot of tests that need docker in the WSL.
         # Sadly, the setup-wsl (https://github.com/Vampire/setup-wsl) and the current windows runners only support WSL 1.
