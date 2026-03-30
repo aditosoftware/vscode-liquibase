@@ -82,8 +82,9 @@ export class WebviewTestUtils {
         await input.cancel();
       }
     } catch (error) {
-      // if it does not work, just log the error and ignore it
-      console.error("error trying to cancel any input box", error);
+      // If it does not work, just log the error and ignore it.
+      // This error really does not matter, therefore logging on debug level.
+      console.debug("error trying to cancel any input box", error);
     }
 
     const editorView = new EditorView();
