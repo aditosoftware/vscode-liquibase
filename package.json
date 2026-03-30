@@ -387,12 +387,12 @@
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
-    "package": "webpack --mode production --devtool hidden-source-map",
+    "package": "npm run install-webview && webpack --mode production --devtool hidden-source-map",
     "webpack:compile": "webpack --mode development",
     "clean": "rimraf ./out  && rimraf ./dist",
     "compile": "tsc -p ./",
     "watch": "tsc --watch -p ./",
-    "clean-compile": "npm run clean && npm run compile && npm run webpack:compile",
+    "clean-compile": "npm run clean && npm run compile && npm run install-webview && npm run webpack:compile",
     "createTempWorkspace": "copyfiles -u 3 -E -a \"src/test/workspace/**/*\" out/temp/workspace",
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
@@ -401,7 +401,8 @@
     "test:e2e": "npm run pretest && extest setup-and-run --code_version max --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
     "prepareSbomJarCreation": "npm run clean-compile &&  node out/test/sbom/sbom-creation.js",
-    "postinstall": "cd webview-ui && npm install && npm run build"
+    "install-webview": "cd webview-ui && npm install && npm run build",
+    "postinstall": "npm run install-webview"
   },
   "dependencies": {
     "@aditosoftware/driver-dependencies": "^1.0.5",
