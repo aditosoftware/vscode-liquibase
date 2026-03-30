@@ -4,5 +4,6 @@
   "extensions.ignoreRecommendations": true,
   "explorer.compactFolders": false,
   "terminal.integrated.copyOnSelection": true,
-  "git.openRepositoryInParentFolders": "never"
+  "git.openRepositoryInParentFolders": "never",
+  "workbench.editor.useModal": "off"
 }
