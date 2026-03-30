@@ -42,3 +42,5 @@ eslint.config.mjs
 DEV_NOTES.md
 .gitlab
 .github
+.idea
+.syft.yaml
