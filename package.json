@@ -410,7 +410,7 @@
     "@aditosoftware/vscode-logging": "^1.0.4",
     "download": "^8.0.0",
     "immer": "^11.1.4",
-    "properties-file": "^4.0.0"
+    "properties-file": "^5.0.4"
   },
   "devDependencies": {
     "@aditosoftware/eslint-config-adito-platform": "latest",
