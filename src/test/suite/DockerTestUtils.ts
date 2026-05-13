@@ -83,7 +83,7 @@ export class DockerTestUtils {
           this.containerNamePrefix + containerName
         } -e MYSQL_ROOT_PASSWORD=${this.password} -e MYSQL_USER=${this.username} -e MYSQL_DATABASE=${
           this.dbName
-        } mariadb`;
+        } mariadb:11.8.3`;
         break;
 
       case "postgres":
@@ -91,7 +91,7 @@ export class DockerTestUtils {
           this.containerNamePrefix + containerName
         } -e POSTGRES_PASSWORD=${this.password} -e POSTGRES_USER=${this.username} -e POSTGRES_DB=${
           this.dbName
-        } postgres`;
+        } postgres:16.13`;
         break;
 
       default:
@@ -166,7 +166,7 @@ export class DockerTestUtils {
   private static async repeatCommand(command: string): Promise<string | undefined> {
     const maxRetries = 20;
     for (let i = 1; i <= maxRetries; i++) {
-      await new Promise((r) => setTimeout(r, 1000));
+      await new Promise((r) => setTimeout(r, 2000));
       try {
         const result = await this.executeCommand(command);
         return result;
