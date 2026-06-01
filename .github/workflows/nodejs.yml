@@ -142,7 +142,7 @@ jobs:
         run: npm run lint -- --format json --output-file eslint-results.json || true
 
       - name: Analyze with SonarCloud
-        uses: SonarSource/sonarqube-scan-action@v8.0.0
+        uses: SonarSource/sonarqube-scan-action@v8.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
