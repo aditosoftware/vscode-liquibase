@@ -40,7 +40,7 @@ jobs:
         run: npm -v
 
       - name: Cache node_modules
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.5
         with:
           path: |
             node_modules
@@ -88,7 +88,7 @@ jobs:
           distribution: temurin
 
       - name: Restore cached node_modules
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.5
         with:
           path: |
             node_modules
@@ -129,7 +129,7 @@ jobs:
           node-version: 22.x
 
       - name: Restore cached node_modules
-        uses: actions/cache@v5
+        uses: actions/cache@v5.0.5
         with:
           path: |
             node_modules
