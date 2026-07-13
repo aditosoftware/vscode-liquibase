@@ -213,6 +213,7 @@ jobs:
           apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
           projectName: ${{ github.event.repository.name }}
           projectVersion: ${{ github.ref_type == 'tag' && github.ref_name || 'current' }}
-          projectTags: 'designer-extension-pack,${{ github.event.repository.name }}'
+          # add current tag when building for a branch
+          projectTags: designer-extension-pack,${{ github.event.repository.name }}${{ github.ref_type == 'branch' && ',current' || '' }}
           bomFilename: "sbom/combined-sbom-1.6.json"
           autoCreate: true
