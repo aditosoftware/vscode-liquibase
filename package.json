@@ -400,7 +400,9 @@
     "test": "vscode-test",
     "test:e2e": "npm run pretest && extest setup-and-run --code_version max --extensions_dir ./out/e2e/extensions --code_settings ./src/test/e2e/settings.json --mocha_config .mocharc.json out/test/e2e/**/*.test.js",
     "coverage": "npm run test -- --coverage --coverage-output ./coverage --coverage-reporter html --coverage-reporter text",
-    "prepareSbomJarCreation": "npm run clean-compile &&  node out/test/sbom/sbom-creation.js",
+    "sbom:createRoot": "cyclonedx-npm --omit=dev --output-file sbom/sbom-root.json",
+    "sbom:createWebview": "cyclonedx-npm --omit=dev --output-file sbom/sbom-webview-ui.json webview-ui/package.json",
+    "sbom:prepareSbomJarCreation": "npm run clean-compile &&  node out/test/sbom/sbom-creation.js",
     "install-webview": "cd webview-ui && npm install && npm run build",
     "postinstall": "npm run install-webview"
   },
@@ -414,6 +416,7 @@
   },
   "devDependencies": {
     "@aditosoftware/eslint-config-adito-platform": "latest",
+    "@cyclonedx/cyclonedx-npm": "^6.0.0",
     "@types/chai": "^4.3.19",
     "@types/chai-fs": "^2.0.5",
     "@types/chai-string": "^1.4.5",
