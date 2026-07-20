@@ -423,7 +423,7 @@
     "@types/download": "^8.0.5",
     "@types/mocha": "^10.0.10",
     "@types/node": "26.x",
-    "@types/sinon": "^21.0.1",
+    "@types/sinon": "^22.0.0",
     "@types/vscode": "^1.84.0",
     "@vscode/test-cli": "^0.0.15",
     "@vscode/test-electron": "^3.0.0",
