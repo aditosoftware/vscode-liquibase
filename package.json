@@ -4,7 +4,7 @@
   "description": "Run official Liquibase CLI commands on changelogs and manage liquibase.properties files",
   "license": "MIT",
   "publisher": "adito",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "engines": {
     "vscode": "^1.84.0"
   },
