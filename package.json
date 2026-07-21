@@ -407,7 +407,7 @@
     "postinstall": "npm run install-webview"
   },
   "dependencies": {
-    "@aditosoftware/driver-dependencies": "^1.0.5",
+    "@aditosoftware/driver-dependencies": "^1.0.6",
     "@aditosoftware/vscode-input": "^2.0.3",
     "@aditosoftware/vscode-logging": "^1.0.4",
     "download": "^8.0.0",

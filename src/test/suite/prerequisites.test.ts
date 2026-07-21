@@ -20,7 +20,7 @@ suite("prerequisites", () => {
     "ojdbc11-23.2.0.0.jar",
     "opencsv-5.9.jar",
     "picocli-4.7.5.jar",
-    "postgresql-42.6.0.jar",
+    "postgresql-42.7.11.jar",
     "snakeyaml-2.2.jar",
   ];
 
