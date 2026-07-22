@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and and th
 
 ### Changed
 
-- Updated postegresql because of a vulnerability
+- Updated postegresql driver depedency because of CVE-2024-1597, CVE-2026-42198
 - Upgraded some dependencies
 
 ## 1.2.0
