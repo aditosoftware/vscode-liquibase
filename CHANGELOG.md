@@ -4,6 +4,13 @@ All notable changes to the "Liquibase" extension will be documented in this file
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.2.1
+
+### Changed
+
+- Updated postegresql driver depedency because of CVE-2024-1597, CVE-2026-42198
+- Upgraded some dependencies
+
 ## 1.2.0
 
 ### Changed
