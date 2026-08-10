@@ -1,6 +1,6 @@
 import { exec, ExecException } from "node:child_process";
 import { isWindows } from "../../utilities/osUtilities";
-import mariadb from "mariadb";
+import mariadb, { type Pool } from "mariadb";
 
 /**
  * Creates and manages a maria docker container for tests.
@@ -206,7 +206,7 @@ export class DockerTestUtils {
    * @param pool - The MariaDB pool to execute the command on.
    * @returns A Promise resolving to the result of the SQL command execution.
    */
-  static async executeMariaDBSQL(command: string, pool?: mariadb.Pool): Promise<string> {
+  static async executeMariaDBSQL(command: string, pool?: Pool): Promise<string> {
     const usedPool = pool || this.pool;
 
     let conn;
@@ -229,7 +229,7 @@ export class DockerTestUtils {
    * @param database - the name of the database
    * @returns the created pool
    */
-  static createPool(database?: string): mariadb.Pool {
+  static createPool(database?: string): Pool {
     return mariadb.createPool({
       host: DockerTestUtils.getDockerIP(),
       user: DockerTestUtils.username,
