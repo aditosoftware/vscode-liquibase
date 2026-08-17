@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/vscode-extension-tester/resources/extester.schema.json",
+  "setup": {
+    "vscodeVersion": "max",
+    "extensionsDir": "./out/e2e/extensions"
+  },
+  "run": {
+    "testFiles": ["./out/test/e2e/**/*.test.js"],
+    "settings": "./src/test/e2e/settings.json",
+    "mochaConfig": ".mocharc.json",
+    "vscodeVersion": "max",
+    "extensionsDir": "./out/e2e/extensions"
+  }
+}
