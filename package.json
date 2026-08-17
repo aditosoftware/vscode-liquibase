@@ -411,7 +411,7 @@
     "@aditosoftware/vscode-input": "^2.0.3",
     "@aditosoftware/vscode-logging": "^1.0.4",
     "download": "^8.0.0",
-    "immer": "^11.1.15",
+    "immer": "^11.1.16",
     "properties-file": "^5.0.6"
   },
   "devDependencies": {
