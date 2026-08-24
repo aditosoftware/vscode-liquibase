@@ -416,7 +416,7 @@
   },
   "devDependencies": {
     "@aditosoftware/eslint-config-adito-platform": "latest",
-    "@cyclonedx/cyclonedx-npm": "^6.0.0",
+    "@cyclonedx/cyclonedx-npm": "^6.0.1",
     "@types/chai": "^4.3.19",
     "@types/chai-fs": "^2.0.5",
     "@types/chai-string": "^1.4.5",
