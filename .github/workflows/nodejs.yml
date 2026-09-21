@@ -207,7 +207,7 @@ jobs:
             convert --input-file sbom/combined-sbom.json --output-file sbom/combined-sbom-1.6.json --output-version v1_6 --output-format json
 
       - name: Upload SBOM to Dependency-Track
-        uses: DependencyTrack/gh-upload-sbom@95c2b5a810450509ef8a67e4f854b42d2ddf7fbf
+        uses: DependencyTrack/gh-upload-sbom@d8935b70f527d6aca6bbef5ab02db3933c9a8626
         with:
           serverHostname: ${{ secrets.DEPENDENCYTRACK_HOSTNAME }}
           apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
