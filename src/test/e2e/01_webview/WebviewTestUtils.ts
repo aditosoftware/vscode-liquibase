@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { By, EditorView, InputBox, Key, VSBrowser, WebView, Workbench } from "vscode-extension-tester";
+import { By, EditorView, InputBox, Key, VSBrowser, WebView, WebElement, Workbench } from "vscode-extension-tester";
 import { LiquibaseGUITestUtils } from "../LiquibaseGUITestUtils";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 
@@ -157,7 +157,7 @@ export class WebviewTestUtils {
   static async addConfigurationDataToWebview(config: Config): Promise<void> {
     await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
       const nameInput = await webView.findWebElement(By.id("nameInput"));
-      await nameInput.sendKeys(config.name);
+      await this.typeIntoWebviewInput(nameInput, config.name);
 
       if (config.addChangelog) {
         // only select a changelog when needed
@@ -176,22 +176,28 @@ export class WebviewTestUtils {
       }
 
       const username = await webView.findWebElement(By.id("dbConfig_username"));
-      await username.sendKeys(DockerTestUtils.username, Key.TAB);
+      await this.typeIntoWebviewInput(username, DockerTestUtils.username, Key.TAB);
 
       const password = await webView.findWebElement(By.id("dbConfig_password"));
-      await password.sendKeys(DockerTestUtils.password, Key.TAB);
+      await this.typeIntoWebviewInput(password, DockerTestUtils.password, Key.TAB);
 
       const databaseType = await webView.findWebElement(By.id("dbConfig_databaseTypeSelection"));
       await databaseType.sendKeys(config.databaseType);
 
       const serverAddress = await webView.findWebElement(By.id("dbConfig_serverAddress"));
-      await serverAddress.sendKeys(DockerTestUtils.getDockerIP(), Key.TAB);
+      await this.typeIntoWebviewInput(serverAddress, DockerTestUtils.getDockerIP(), Key.TAB);
 
       const port = await webView.findWebElement(By.id("dbConfig_port"));
-      await port.sendKeys(config.port, Key.TAB);
+      await this.typeIntoWebviewInput(port, String(config.port), Key.TAB);
 
       const databaseName = await webView.findWebElement(By.id("dbConfig_databaseName"));
-      await databaseName.sendKeys(config.databaseName, Key.TAB);
+      await this.typeIntoWebviewInput(databaseName, config.databaseName, Key.TAB);
+
+      // verify that the preview shows the expected url. If it does not match, the configuration
+      // would be saved with a broken connection (for instance because of pre-filled default values
+      // in the input fields) and every following command of the test suite would fail.
+      // Failing here means only the current test fails and a retry creates a fresh configuration.
+      await WebviewTestUtils.assertMatchPreview(webView, WebviewTestUtils.expectedPreviewUrl(config));
 
       const button = await webView.findWebElement(By.id(config.buttonToClick));
       assert.deepStrictEqual(await button.getAttribute("id"), config.buttonToClick, "button id");
@@ -207,6 +213,52 @@ export class WebviewTestUtils {
     if (config.buttonToClick === "saveButton") {
       await LiquibaseGUITestUtils.waitForCommandExecution(`Configuration for ${config.name} was successfully saved.`);
     }
+  }
+
+  /**
+   * Types the given value into a webview input field.
+   *
+   * The input fields of the webview may already contain default values (for instance `localhost`,
+   * `data` or the default port of the selected database type). As `sendKeys` appends to the current
+   * value of the field, the field is cleared before the new value is typed.
+   *
+   * The input fields are custom elements (`vscode-text-field`). The WebDriver `clear` action is
+   * not allowed for them (`InvalidElementStateError`), so the content is removed manually by
+   * selecting all and deleting it.
+   *
+   * @param element - the input field that should be filled
+   * @param value - the value that should be typed into the field
+   * @param keys - additional keys to press after the value (for instance `Key.TAB` to trigger the blur event)
+   */
+  private static async typeIntoWebviewInput(element: WebElement, value: string, ...keys: string[]): Promise<void> {
+    await element.click();
+    await element.sendKeys(Key.CONTROL + "a", Key.DELETE);
+    await element.sendKeys(value, ...keys);
+  }
+
+  /**
+   * Builds the regular expression for the expected url line of the preview.
+   *
+   * @param config - the configuration that was written to the webview
+   * @returns the regular expression that the url of the preview should match
+   */
+  private static expectedPreviewUrl(config: Config): RegExp {
+    const urlPrefix = config.databaseType === "MariaDB" ? "jdbc:mariadb" : "jdbc:postgresql";
+    const expectedUrl = `${urlPrefix}://${DockerTestUtils.getDockerIP()}:${config.port}/${config.databaseName}`;
+
+    // the url needs to end with a line break (or the end of the text), so that a broken value
+    // that only starts with the expected url (for instance `data` vs `datadata`) does not match
+    return new RegExp(String.raw`url\s*=\s*${WebviewTestUtils.escapeRegExp(expectedUrl)}(?:[\r\n]|$)`);
+  }
+
+  /**
+   * Escapes a string, so that it can be used as a literal part of a regular expression.
+   *
+   * @param value - the string that should be escaped
+   * @returns the escaped string
+   */
+  private static escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
   }
 }
 

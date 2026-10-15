@@ -103,6 +103,10 @@ async function startValidateExecution(expectedLabels: string[], configurationNam
     configurationName,
   });
 
+  // the quick picks are rendered asynchronously, so wait for the expected number of items.
+  // Otherwise the labels could be read before the list is complete.
+  await LiquibaseGUITestUtils.waitForQuickPicksToBeThere(input, expectedLabels.length);
+
   const labels: string[] = [];
   for (const quickPickItem of await input.getQuickPicks()) {
     const label = await quickPickItem.getLabel();

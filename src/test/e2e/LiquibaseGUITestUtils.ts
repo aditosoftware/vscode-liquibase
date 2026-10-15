@@ -557,6 +557,32 @@ export class LiquibaseGUITestUtils {
   }
 
   /**
+   * Wait until the quick picks of an input box are loaded.
+   *
+   * The quick pick items are rendered asynchronously. Without waiting for them, the items
+   * can be read before the list is complete, resulting in a missing or partial list of labels.
+   *
+   * @param inputBox - the current input component
+   * @param expectedCount - the number of quick picks that should be available
+   */
+  static async waitForQuickPicksToBeThere(inputBox: InputBox, expectedCount: number): Promise<void> {
+    await VSBrowser.instance.driver.wait(
+      async () => {
+        try {
+          const quickPicks = await inputBox.getQuickPicks();
+          return quickPicks.length === expectedCount;
+        } catch (error) {
+          // the quick pick widget may not be displayed yet, just retry
+          console.debug("error getting the quick picks", error);
+          return false;
+        }
+      },
+      10_000,
+      "waiting for input quick picks"
+    );
+  }
+
+  /**
    * Creates some RMB arguments for the tests.
    *
    * @param name - the name of the command that should be called
