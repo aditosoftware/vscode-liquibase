@@ -122,6 +122,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7.0.1
+        # full history and all branch refs are needed, so the sonar scanner can
+        # resolve the base branch `main` for the new code period calculation
+        # (otherwise it warns: "Could not find ref 'main' in refs/heads, ...")
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v7
@@ -146,9 +151,24 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
+          # sonar.sources must be set explicitly when sonar.tests is set,
+          # otherwise the scanner indexes ONLY the test directories and the
+          # eslint report import cannot match any regular source file
+          # ("No input file found for ...")
+          # sonar.exclusions only applies to main (non-test) files, so the test
+          # dirs can be excluded here without affecting the sonar.tests indexing
+          # sonar.tests: explicit test classification instead of the path heuristic
+          # (only the real test dirs; sbom/sbom-creation.ts is a CI utility script
+          # executed by node, not a test, so it stays a regular analyzed source)
+          # tsconfigPaths: both TS projects must be listed, otherwise only the
+          # root project is analyzed
           args: -Dsonar.projectKey=aditosoftware_vscode-liquibase
             -Dsonar.organization=aditosoftware
             -Dsonar.eslint.reportPaths=eslint-results.json
+            -Dsonar.sources=.
+            -Dsonar.exclusions=**/*.ttf,**/*.woff,**/*.woff2,**/*.jar,**/*.png,**/*.jpg,**/*.jpeg,**/*.gif,**/*.ico,**/*.mp4,**/*.vsix,src/test/workspace/**,src/test/suite/**,src/test/e2e/**,webview-ui/build/**,out/**,dist/**
+            -Dsonar.tests=src/test/suite,src/test/e2e
+            -Dsonar.typescript.tsconfigPaths=tsconfig.json,webview-ui/tsconfig.json
 
 
   sbom:
