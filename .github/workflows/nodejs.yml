@@ -40,17 +40,23 @@ jobs:
         run: npm -v
 
       - name: Cache node_modules
+        id: restore-node-modules
         uses: actions/cache@v6
         with:
           path: |
             node_modules
             webview-ui/build
-            webview-ui/node-modules
+            webview-ui/node_modules
           key: node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
 
+      # only trust the cache when the primary key matched exactly; on a
+      # fallback match the cached install may be stale, and if the restore
+      # failed entirely (e.g. "Egress is over the account limit") there is
+      # nothing usable at all — in both cases reinstall the dependencies
       - name: Run clean install
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
         run: npm ci --ignore-scripts
 
       - name: Run tests on Linux
@@ -88,15 +94,26 @@ jobs:
           distribution: temurin
 
       - name: Restore cached node_modules
+        id: restore-node-modules
         uses: actions/cache@v6
         with:
           path: |
             node_modules
             webview-ui/build
-            webview-ui/node-modules
+            webview-ui/node_modules
           key: node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
+
+      # only trust the cache when the primary key matched exactly; on a
+      # fallback match the cached install may be stale, and if the restore
+      # failed entirely (e.g. "Egress is over the account limit") there is
+      # nothing usable at all — in both cases reinstall the dependencies.
+      # without this step the e2e job has no npm ci at all and would fail
+      # on a missing/broken cache
+      - name: Install dependencies
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
+        run: npm ci --ignore-scripts
 
       - name: run e2e tests
         run: xvfb-run -a npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
@@ -134,15 +151,24 @@ jobs:
           node-version: 22.x
 
       - name: Restore cached node_modules
+        id: restore-node-modules
         uses: actions/cache@v6
         with:
           path: |
             node_modules
             webview-ui/build
-            webview-ui/node-modules
+            webview-ui/node_modules
           key: node_modules-ubuntu-latest-node-22.x-${{ hashFiles('package-lock.json') }}
           restore-keys: |
             node_modules-ubuntu-latest-node-22.x
+      # only trust the cache when the primary key matched exactly; on a
+      # fallback match the cached install may be stale, and if the restore
+      # failed entirely (e.g. "Egress is over the account limit") there is
+      # nothing usable at all — in both cases reinstall the dependencies
+      - name: Install dependencies
+        if: steps.restore-node-modules.outputs.cache-hit != 'true'
+        run: npm ci --ignore-scripts
+
       - name: Run ESLint
         run: npm run lint -- --format json --output-file eslint-results.json || true
 
