@@ -111,7 +111,6 @@ export function readFullValues(
 function readProperties(pPath: string): KeyValuePairObject {
   if (fs.existsSync(pPath)) {
     return getProperties(fs.readFileSync(pPath, "utf8"));
-  } else {
-    return {};
   }
+  return {};
 }

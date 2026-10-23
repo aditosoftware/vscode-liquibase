@@ -13,18 +13,20 @@ export function getCustomDrivers(): CustomDrivers {
   const files = fs.readdirSync(resourcePath);
 
   for (const file of files) {
-    if (file.includes(".json")) {
-      const fileContent = fs.readFileSync(path.join(resourcePath, file), { encoding: "utf-8" });
-      const driver = JSON.parse(fileContent);
+    if (!file.includes(".json")) {
+      continue;
+    }
 
-      if (driver.driverClass && driver.defaultPort && driver.jdbcName && driver.separator) {
-        customDriverObject[driver.name] = {
-          driverClass: driver.driverClass,
-          port: driver.defaultPort,
-          jdbcName: driver.jdbcName,
-          separator: driver.separator,
-        } as CustomDriverData;
-      }
+    const fileContent = fs.readFileSync(path.join(resourcePath, file), { encoding: "utf8" });
+    const driver = JSON.parse(fileContent);
+
+    if (driver.driverClass && driver.defaultPort && driver.jdbcName && driver.separator) {
+      customDriverObject[driver.name] = {
+        driverClass: driver.driverClass,
+        port: driver.defaultPort,
+        jdbcName: driver.jdbcName,
+        separator: driver.separator,
+      } as CustomDriverData;
     }
   }
 

@@ -24,6 +24,10 @@ suite("Update", function () {
    * Test case for executing the 'update' command with different context types.
    */
   LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
+    /**
+     * Tests that the 'update' command is executed with the selected context type
+     * and that the expected tables are created in the database.
+     */
     test("should execute 'update' with context type '" + option + "' command with " + key, async function () {
       await DockerTestUtils.resetDB();
 

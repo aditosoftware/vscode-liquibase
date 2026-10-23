@@ -27,7 +27,7 @@ import { expect } from "chai";
  * Tests the file handleContexts
  */
 suite("handleContexts", () => {
-  let tempDir: string;
+  let temporaryDirectory: string;
 
   /**
    * Creates the temp dir and the necessary resources before all tests.
@@ -37,7 +37,7 @@ suite("handleContexts", () => {
 
     TestUtils.init();
 
-    tempDir = TestUtils.createTempFolderForTests("contexts");
+    temporaryDirectory = TestUtils.createTempFolderForTests("contexts");
   });
 
   /**
@@ -57,19 +57,21 @@ suite("handleContexts", () => {
      * Creates the dialog values and writes an xml changelog.
      */
     setup("create dialog values", () => {
-      const propertyFile = path.join(tempDir, "data.liquibase.properties");
-      fs.writeFileSync(propertyFile, "changelogFile: changelog.xml", { encoding: "utf-8" });
+      const propertyFile = path.join(temporaryDirectory, "data.liquibase.properties");
+      fs.writeFileSync(propertyFile, "changelogFile: changelog.xml", { encoding: "utf8" });
 
+      // HTTP links in schemas location is needed
+      /* eslint-disable unicorn/prefer-https */
       fs.writeFileSync(
-        path.join(tempDir, "changelog.xml"),
+        path.join(temporaryDirectory, "changelog.xml"),
         `<?xml version="1.0" encoding="UTF-8"?>
 
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:pro="http://www.liquibase.org/xml/ns/pro"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
-                        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/pro https://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
                         ">
 
     <changeSet id="1" author="your.name" labels="foo-label" context="foo">
@@ -106,7 +108,7 @@ suite("handleContexts", () => {
 `
       );
 
-      Sinon.stub(lbSettings, "getLiquibaseFolder").returns(tempDir);
+      Sinon.stub(lbSettings, "getLiquibaseFolder").returns(temporaryDirectory);
 
       dialogValues = new DialogValues();
       dialogValues.addValue(PROPERTY_FILE, propertyFile);
@@ -133,7 +135,7 @@ suite("handleContexts", () => {
      * This will read from an sql file.
      */
     test("should load from context menu", (done) => {
-      const sqlChangelog = path.join(tempDir, "changelog.sql");
+      const sqlChangelog = path.join(temporaryDirectory, "changelog.sql");
 
       fs.writeFileSync(
         sqlChangelog,
@@ -159,7 +161,7 @@ create table company (
 --comment: example comment
 alter table person add column country varchar(2)
 --rollback ALTER TABLE person DROP COLUMN country;`,
-        { encoding: "utf-8" }
+        { encoding: "utf8" }
       );
 
       dialogValues.uri = vscode.Uri.file(sqlChangelog);
@@ -171,7 +173,7 @@ alter table person add column country varchar(2)
      * This will read from a JSON file.
      */
     test("should load from context menu without contexts", (done) => {
-      const jsonChangelog = path.join(tempDir, "changelog.json");
+      const jsonChangelog = path.join(temporaryDirectory, "changelog.json");
 
       fs.writeFileSync(
         jsonChangelog,
@@ -200,7 +202,7 @@ alter table person add column country varchar(2)
             },
           ],
         }),
-        { encoding: "utf-8" }
+        { encoding: "utf8" }
       );
 
       dialogValues.uri = vscode.Uri.file(jsonChangelog);
@@ -214,8 +216,11 @@ alter table person add column country varchar(2)
   suite("saveSelectedContexts", () => {
     let saveMethod: Sinon.SinonSpy;
 
+    /**
+     * Creates a new cache handler and spies on its save method.
+     */
     setup(() => {
-      const cacheLocation = path.join(tempDir, `${randomUUID()}.json`);
+      const cacheLocation = path.join(temporaryDirectory, `${randomUUID()}.json`);
       const cacheHandler = new CacheHandler(cacheLocation);
       setCacheHandler(cacheHandler);
 
@@ -430,7 +435,7 @@ alter table person add column country varchar(2)
      */
     test("should load from input", () => {
       // reset any cache handler that might or might not be there
-      setCacheHandler(new CacheHandler(path.join(tempDir, `${randomUUID()}.json`)));
+      setCacheHandler(new CacheHandler(path.join(temporaryDirectory, `${randomUUID()}.json`)));
 
       const expected: ContextCacheInformation = {
         connectionLocation: "foo",

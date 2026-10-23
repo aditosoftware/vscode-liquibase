@@ -43,5 +43,5 @@ export function getRequiredFiles(): Map<string, string> {
  * @returns the file name under which the element would be saved
  */
 function getFileName(urlForDownload: string): string {
-  return urlForDownload.substring(urlForDownload.lastIndexOf("/") + 1);
+  return urlForDownload.slice(Math.max(0, urlForDownload.lastIndexOf("/") + 1));
 }

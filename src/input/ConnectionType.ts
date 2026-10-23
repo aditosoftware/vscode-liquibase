@@ -26,19 +26,31 @@ interface ConnectionTypeOptions extends InputBaseOptions {
  */
 export class ConnectionType extends InputBase<ConnectionTypeOptions> {
   /**
+   * Suggests the user that they should create a configuration, when no liquibase configuration was found.
+   */
+  static async suggestCreationOfConfiguration(): Promise<void> {
+    const answer = await vscode.window.showErrorMessage("No configurations found. Please create a configuration.", {
+      title: "Create configuration",
+    });
+    if (answer?.title === "Create configuration") {
+      await vscode.commands.executeCommand("liquibase.createLiquibaseConfiguration");
+    }
+  }
+
+  /**
    * @override
    */
   async showDialog(_currentResults: DialogValues, title: string): Promise<string | undefined> {
     const configurations: vscode.QuickPickItem[] | undefined = await this.generateItems();
 
     if (configurations && configurations.length !== 0) {
-      const placeHolder = `Select your ${
+      const placeholder = `Select your ${
         this.inputOptions.name === REFERENCE_PROPERTY_FILE ? "reference " : ""
       }configuration`;
 
       const selectedConnection: vscode.QuickPickItem | undefined = await vscode.window.showQuickPick(configurations, {
         title,
-        placeHolder,
+        placeHolder: placeholder,
         canPickMany: false,
       });
 
@@ -52,18 +64,6 @@ export class ConnectionType extends InputBase<ConnectionTypeOptions> {
   }
 
   /**
-   * Suggests the user that they should create a configuration, when no liquibase configuration was found.
-   */
-  static async suggestCreationOfConfiguration(): Promise<void> {
-    const answer = await vscode.window.showErrorMessage("No configurations found. Please create a configuration.", {
-      title: "Create configuration",
-    });
-    if (answer?.title === "Create configuration") {
-      await vscode.commands.executeCommand("liquibase.createLiquibaseConfiguration");
-    }
-  }
-
-  /**
    * Generates the items for the selection.
    *
    * @returns the items for the selection
@@ -73,7 +73,7 @@ export class ConnectionType extends InputBase<ConnectionTypeOptions> {
 
     if (configuration) {
       return Object.keys(configuration)
-        .sort((a, b) => a.localeCompare(b))
+        .toSorted((a, b) => a.localeCompare(b))
         .map((key) => {
           const path = configuration[key];
           return {

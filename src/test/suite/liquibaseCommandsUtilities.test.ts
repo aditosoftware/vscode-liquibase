@@ -4,7 +4,7 @@ import { folderSelectionName } from "../../constants";
 import {
   changeAndEmptyOutputDirectory,
   fileName,
-  generateCommandLineArgs,
+  generateCommandLineArguments,
   openFileAfterCommandExecution,
   openIndexHtmlAfterCommandExecution,
 } from "../../liquibaseCommandsUtilities";
@@ -32,6 +32,9 @@ suite("liquibaseCommandsUtilities", () => {
 
   const dialogValues = new DialogValues();
 
+  /**
+   * Creates the dialog values that are used in multiple tests.
+   */
   suiteSetup("create dialog values", () => {
     dialogValues.addValue(folderSelectionName, folderPath);
     dialogValues.addValue(fileName, myFileName);
@@ -45,14 +48,14 @@ suite("liquibaseCommandsUtilities", () => {
   });
 
   /**
-   * Tests the method `generateCommandLineArgs`.
+   * Tests the method `generateCommandLineArguments`.
    */
-  suite("generateCommandLineArgs", () => {
+  suite("generateCommandLineArguments", () => {
     /**
      * Tests that the args will be generated correctly.
      */
     test("should generate args correctly", () => {
-      const actual = generateCommandLineArgs("myArg", dialogValues);
+      const actual = generateCommandLineArguments("myArg", dialogValues);
 
       assert.ok(actual);
       assert.deepStrictEqual([`--myArg=${path.join(folderPath, myFileName)}`], actual);
@@ -62,7 +65,7 @@ suite("liquibaseCommandsUtilities", () => {
      * Tests that nothing should be generated when empty dialog values were given.
      */
     test("should generate nothing when empty dialog values", () => {
-      assert.ok(!generateCommandLineArgs("myArgs", new DialogValues()));
+      assert.ok(!generateCommandLineArguments("myArgs", new DialogValues()));
     });
   });
 
@@ -70,6 +73,9 @@ suite("liquibaseCommandsUtilities", () => {
    * Tests the method `openFileAfterCommandExecution`.
    */
   suite("openFileAfterCommandExecution", () => {
+    /**
+     * Tests that the generated file will be opened and has the correct content.
+     */
     test("should check file was opened", (done) => {
       openFileAfterCommandExecution(dialogValues)
         .then(() => {
@@ -94,6 +100,9 @@ suite("liquibaseCommandsUtilities", () => {
       openExternal = Sinon.stub(vscode.env, "openExternal");
     });
 
+    /**
+     * Tests that the wrong folder structure will be sorted correctly and the index.html will be opened.
+     */
     test("should open and sort correctly", (done) => {
       const dbDoc = path.join(workspaceFolder, "db-doc");
 

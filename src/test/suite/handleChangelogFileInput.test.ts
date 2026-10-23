@@ -104,6 +104,9 @@ suite("handleChangelogInput", () => {
         expected: undefined,
       },
     ]) {
+      /**
+       * Tests that the changelog file will be read correctly from the properties file.
+       */
       test(`should return ${pArgument.expected} when ${pArgument.description}`, () => {
         const propertyFile = generatePropertiesFile(temporaryResourcePath, pArgument.content);
 
@@ -209,7 +212,7 @@ suite("handleChangelogInput", () => {
        */
       test(`should work with ${pArgument.description} and input name ${pArgument.input}`, () => {
         // create the file before the tests, because we always assume it is there
-        fs.writeFileSync(pArgument.expectedPath, "", "utf-8");
+        fs.writeFileSync(pArgument.expectedPath, "", "utf8");
 
         const dialogValues = new DialogValues();
         dialogValues.addValue(PROPERTY_FILE, temporaryResourcePath);
@@ -305,6 +308,6 @@ suite("handleChangelogInput", () => {
 function generatePropertiesFile(temporaryResourcePath: string, content: string): string {
   const propertyFile = path.join(temporaryResourcePath, `${randomUUID()}.liquibase.properties`);
 
-  fs.writeFileSync(propertyFile, content, "utf-8");
+  fs.writeFileSync(propertyFile, content, "utf8");
   return propertyFile;
 }

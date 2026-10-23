@@ -13,7 +13,7 @@ chai.use(chaiString);
 /**
  * Test suite for the 'history' command.
  */
-suite("History", async function () {
+suite("History", () => {
   /**
    * The name of the configuration that was created during the setup.
    */
@@ -41,6 +41,10 @@ suite("History", async function () {
    * Test the 'history' command with TABULAR and TEXT output format.
    */
   for (const pHistoryOption of ["TABULAR", "TEXT"]) {
+    /**
+     * Tests that the 'history' command is executed and writes the history file
+     * in the given output format into the temporary folder.
+     */
     test(`should execute 'history' command as ${pHistoryOption}`, async function () {
       LiquibaseGUITestUtils.removeContentOfFolder(temporaryFolder);
 
@@ -72,7 +76,7 @@ suite("History", async function () {
       await LiquibaseGUITestUtils.waitUntil(
         () => fs.existsSync(historyFile),
         `History file ${historyFile} should exist`,
-        10000
+        10_000
       );
       chai.assert.pathExists(historyFile);
     });

@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as path from "node:path";
+import path from "node:path";
 import * as fs from "node:fs";
 import download from "download";
 import { Logger } from "@aditosoftware/vscode-logging";
@@ -18,7 +18,7 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
   if (!context.globalState.get("liquibase-first-activation")) {
     // Perform one-time setup tasks (e.g., download files)
     Logger.getLogger().info({ message: "Liquibase was executed for the first time" });
-    await downloadLiquibaseFiles(resourcePath, Array.from(requiredFiles.values()));
+    await downloadLiquibaseFiles(resourcePath, [...requiredFiles.values()]);
 
     // Mark first activation as completed
     await context.globalState.update("liquibase-first-activation", true);
@@ -41,10 +41,12 @@ export async function prerequisites(context: vscode.ExtensionContext, resourcePa
 
   for (const [fileName, url] of requiredFiles) {
     const filePath = path.join(resourcePath, fileName);
-    if (!fs.existsSync(filePath)) {
-      missingFiles.push(fileName);
-      missingUrls.push(url);
+    if (fs.existsSync(filePath)) {
+      continue;
     }
+
+    missingFiles.push(fileName);
+    missingUrls.push(url);
   }
 
   if (missingFiles && missingFiles.length !== 0) {

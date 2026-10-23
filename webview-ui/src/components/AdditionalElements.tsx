@@ -15,7 +15,7 @@ import { LiquibaseConfigurationData } from "../../../src/configuration/data/Liqu
 /**
  * The properties for the additional element tag.
  */
-interface AdditionalElementProps {
+interface AdditionalElementProperties {
   /**
    * Event for listening on any value change of the additional elements.
    *
@@ -35,22 +35,24 @@ const valueIndicator = "value";
  * @param pProperties - the properties that are needed for the additional elements
  * @returns the created component
  */
-export function AdditionalElements(pProperties: Readonly<AdditionalElementProps>): React.JSX.Element {
+export function AdditionalElements(pProperties: Readonly<AdditionalElementProperties>): React.JSX.Element {
   const [additionalElementValues, setAdditionalElementValues] = useState<Map<string, string>>(new Map());
 
   const [key, setKey] = useState<string>("");
   const [value, setValue] = useState<string>("");
 
   vscodeApiWrapper.addMessageListener((pMessage) => {
-    if (pMessage.messageType === MessageType.INIT && pMessage.configurationData) {
-      // recreate the new values as a new map
-      const newValues = new Map();
-      const additionalConfiguration = pMessage.configurationData.additionalConfiguration;
-      for (const configKey in additionalConfiguration) {
-        newValues.set(configKey, additionalConfiguration[configKey]);
-      }
-      setAdditionalElementValues(newValues);
+    if (!(pMessage.messageType === MessageType.INIT && pMessage.configurationData)) {
+      return;
     }
+
+    // recreate the new values as a new map
+    const newValues = new Map();
+    const additionalConfiguration = pMessage.configurationData.additionalConfiguration;
+    for (const configKey in additionalConfiguration) {
+      newValues.set(configKey, additionalConfiguration[configKey]);
+    }
+    setAdditionalElementValues(newValues);
   });
 
   /**
@@ -61,21 +63,23 @@ export function AdditionalElements(pProperties: Readonly<AdditionalElementProps>
   function makeRowEditable(pEvent: { target: unknown }): void {
     const target = pEvent.target;
 
-    if (target instanceof DataGridCell) {
-      const cell: DataGridCell = target;
-
-      // Do not continue if `cell` is undefined/null or is not a grid cell
-      if (!cell || cell.role !== "gridcell") {
-        return;
-      }
-
-      // set editable
-      cell.setAttribute("contenteditable", "true");
-
-      // add listeners which end the edit
-      cell.addEventListener("keydown", handleKeydown);
-      cell.addEventListener("blur", handleEditFinished);
+    if (!(target instanceof DataGridCell)) {
+      return;
     }
+
+    const cell: DataGridCell = target;
+
+    // Do not continue if `cell` is undefined/null or is not a grid cell
+    if (!cell || cell.role !== "gridcell") {
+      return;
+    }
+
+    // set editable
+    cell.setAttribute("contenteditable", "true");
+
+    // add listeners which end the edit
+    cell.addEventListener("keydown", handleKeydown);
+    cell.addEventListener("blur", handleEditFinished);
   }
 
   /**
@@ -98,59 +102,65 @@ export function AdditionalElements(pProperties: Readonly<AdditionalElementProps>
   function handleEditFinished(pEvent: Event): void {
     const target = pEvent.target;
 
-    if (target instanceof DataGridCell) {
-      const cell: DataGridCell = target;
-
-      const id = cell.id;
-
-      // the id contains all information about the old key and value and if it is an key or value
-      const [indicator, oldKey, oldValue] = id.split(separator);
-      const newCellValue = cell.innerText;
-
-      const newAdditionalValues = new Map(additionalElementValues);
-
-      if (indicator === keyIndicator && !isKeyAcceptable(newCellValue)) {
-        vscodeApiWrapper.postMessage(
-          new MessageData(MessageType.LOG_MESSAGE, {
-            level: "error",
-            message: "Invalid key input: " + newCellValue,
-            notifyUser: true,
-          })
-        );
-
-        //set content to old value
-        cell.innerText = oldKey;
-        return;
-      } else if (indicator === keyIndicator) {
-        // if the key has changed delete the old entry and add one with the new key
-        newAdditionalValues.delete(oldKey);
-        newAdditionalValues.set(newCellValue, oldValue);
-      } else if (indicator === valueIndicator) {
-        // if the value has changed, then just replace the old value with the new one.
-        newAdditionalValues.set(oldKey, newCellValue);
-      }
-
-      // set content no longer editable
-      cell.setAttribute("contenteditable", "false");
-
-      // set the new values to the webview and trigger the onValueChange
-      setAdditionalElementValues(newAdditionalValues);
-      pProperties.onValueChange(newAdditionalValues);
+    if (!(target instanceof DataGridCell)) {
+      return;
     }
+
+    const cell: DataGridCell = target;
+
+    const id = cell.id;
+
+    // the id contains all information about the old key and value and if it is an key or value
+    const [indicator, oldKey, oldValue] = id.split(separator);
+    const newCellValue = cell.textContent ?? "";
+
+    if (indicator === keyIndicator && !isKeyAcceptable(newCellValue)) {
+      vscodeApiWrapper.postMessage(
+        new MessageData(MessageType.LOG_MESSAGE, {
+          level: "error",
+          message: "Invalid key input: " + newCellValue,
+          notifyUser: true,
+        })
+      );
+
+      //set content to old value
+      cell.textContent = oldKey;
+      return;
+    }
+
+    const newAdditionalValues = new Map(additionalElementValues);
+
+    if (indicator === keyIndicator) {
+      // if the key has changed delete the old entry and add one with the new key
+      newAdditionalValues.delete(oldKey);
+      newAdditionalValues.set(newCellValue, oldValue);
+    } else if (indicator === valueIndicator) {
+      // if the value has changed, then just replace the old value with the new one.
+      newAdditionalValues.set(oldKey, newCellValue);
+    }
+
+    // set content no longer editable
+    cell.setAttribute("contenteditable", "false");
+
+    // set the new values to the webview and trigger the onValueChange
+    setAdditionalElementValues(newAdditionalValues);
+    pProperties.onValueChange(newAdditionalValues);
   }
 
   /**
    * Creates a new row, when the plus button was pressed and both key and value where given.
    */
   function createNewRow(): void {
-    if (key && value && isKeyAcceptable(key)) {
-      setAdditionalElementValues(additionalElementValues.set(key, value));
-
-      setKey("");
-      setValue("");
-
-      pProperties.onValueChange(additionalElementValues);
+    if (!(key && value && isKeyAcceptable(key))) {
+      return;
     }
+
+    setAdditionalElementValues(additionalElementValues.set(key, value));
+
+    setKey("");
+    setValue("");
+
+    pProperties.onValueChange(additionalElementValues);
   }
 
   /**
@@ -197,8 +207,8 @@ export function AdditionalElements(pProperties: Readonly<AdditionalElementProps>
               <VSCodeTextField
                 id="keyInput"
                 value={key}
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) => {
-                  const enteredKey = e.target.value;
+                onBlur={(event: React.FocusEvent<HTMLInputElement>) => {
+                  const enteredKey = event.target.value;
                   if (isKeyAcceptable(enteredKey)) {
                     setKey(enteredKey);
                   } else {
@@ -218,7 +228,7 @@ export function AdditionalElements(pProperties: Readonly<AdditionalElementProps>
               <VSCodeTextField
                 id="valueInput"
                 value={value}
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) => setValue(e.target.value)}
+                onBlur={(event: React.FocusEvent<HTMLInputElement>) => setValue(event.target.value)}
               />
             </VSCodeDataGridCell>
             <VSCodeDataGridCell cell-type="columnheader" grid-column="3">

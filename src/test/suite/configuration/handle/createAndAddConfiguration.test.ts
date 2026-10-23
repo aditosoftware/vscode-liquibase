@@ -104,7 +104,7 @@ suite("create and add configuration", () => {
         .then(() => {
           chai.assert.pathExists(configPath);
 
-          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf8" }));
 
           assert.deepStrictEqual({ lorem: "ipsum" }, result);
 
@@ -125,7 +125,7 @@ suite("create and add configuration", () => {
 
       addToLiquibaseConfiguration("newElement", "/my/path/to/somewhere")
         .then(() => {
-          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf8" }));
 
           assert.deepStrictEqual({ newElement: "/my/path/to/somewhere" }, result);
 
@@ -148,7 +148,7 @@ suite("create and add configuration", () => {
 
       addToLiquibaseConfiguration("key", "newValue", true)
         .then(() => {
-          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf8" }));
 
           assert.deepStrictEqual({ key: "value" }, result);
 
@@ -175,7 +175,7 @@ suite("create and add configuration", () => {
 
       addToLiquibaseConfiguration("key", "newValue", true)
         .then(() => {
-          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf8" }));
 
           assert.deepStrictEqual({ key: "newValue" }, result);
 
@@ -198,7 +198,7 @@ suite("create and add configuration", () => {
 
       addToLiquibaseConfiguration("key", "newValue", false)
         .then(() => {
-          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf-8" }));
+          const result = JSON.parse(fs.readFileSync(configPath, { encoding: "utf8" }));
 
           assert.deepStrictEqual({ key: "newValue" }, result);
 
@@ -216,6 +216,9 @@ suite("create and add configuration", () => {
   suite("createLiquibaseProperties", () => {
     let liquibaseConfigurationData: LiquibaseConfigurationData;
 
+    /**
+     * Creates some dummy configuration data and stubs the transfer message.
+     */
     setup("create data", () => {
       liquibaseConfigurationData = TestUtils.createDummyLiquibaseConfigurationData();
       liquibaseConfigurationData.name = "data";
@@ -290,7 +293,7 @@ suite("create and add configuration", () => {
 
           chai.assert.notPathExists(liquibaseProperties);
 
-          const settingsContent = fs.readFileSync(configPath, "utf-8");
+          const settingsContent = fs.readFileSync(configPath, "utf8");
 
           assert.deepStrictEqual(JSON.parse(settingsContent), oldSettingsContent);
 
@@ -353,9 +356,9 @@ driver = org.mariadb.jdbc.Driver`;
 
       chai.assert.pathExists(liquibaseProperties);
 
-      const settingsContent = fs.readFileSync(configPath, "utf-8");
+      const settingsContent = fs.readFileSync(configPath, "utf8");
 
-      const propertiesContent = fs.readFileSync(liquibaseProperties, "utf-8");
+      const propertiesContent = fs.readFileSync(liquibaseProperties, "utf8");
 
       assert.deepStrictEqual(JSON.parse(settingsContent), { data: liquibaseProperties }, "settings content");
       assert.deepStrictEqual(propertiesContent, expectedFileContent, "properties content");

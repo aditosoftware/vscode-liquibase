@@ -34,7 +34,7 @@ interface Configuration {
 export async function readLiquibaseConfigurationNames(): Promise<string[] | undefined> {
   const configuration = await readConfiguration();
   if (configuration) {
-    return Object.keys(configuration).sort((a, b) => a.localeCompare(b));
+    return Object.keys(configuration).toSorted((a, b) => a.localeCompare(b));
   }
 }
 
@@ -125,7 +125,7 @@ async function readConfigurationInternal(): Promise<Configuration | undefined> {
   }
 
   // read the jsonData from the file, if no file is there, just give an empty json object
-  const data = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf-8") : JSON.stringify({});
+  const data = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf8") : JSON.stringify({});
   const jsonData: Record<string, string> = JSON.parse(data) as Record<string, string>;
   return { configPath, jsonData };
 }

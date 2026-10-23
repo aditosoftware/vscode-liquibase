@@ -18,19 +18,6 @@ export class MessageData {
   ) {}
 
   /**
-   * Returns the configurationData of the message, if this message contains one.
-   *
-   * @returns the configuration data
-   */
-  get configurationData(): LiquibaseConfigurationData | undefined {
-    if (this.data instanceof LiquibaseConfigurationData) {
-      return this.data;
-    }
-
-    return undefined;
-  }
-
-  /**
    * Creates a new instance of an existing object after the serialization.
    * This is needed, because otherwise no methods will be there.
    *
@@ -44,5 +31,18 @@ export class MessageData {
       // no instanceof check possible, because the data is not serialized yet
       "status" in pSerializedData.data ? LiquibaseConfigurationData.clone(pSerializedData.data) : pSerializedData.data
     );
+  }
+
+  /**
+   * Returns the configurationData of the message, if this message contains one.
+   *
+   * @returns the configuration data
+   */
+  get configurationData(): LiquibaseConfigurationData | undefined {
+    if (this.data instanceof LiquibaseConfigurationData) {
+      return this.data;
+    }
+
+    return undefined;
   }
 }

@@ -132,20 +132,6 @@ export class CacheHandler {
   }
 
   /**
-   * Adds a dummy element for the `connectionLocation` to the cache.
-   *
-   * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
-   */
-  private addDummyElementForConnectionToCache(connectionLocation: string): void {
-    if (!this.cache[connectionLocation]) {
-      // if no cache is there for the connection, then add an element
-      this.cache[connectionLocation] = {
-        changelogs: [],
-      };
-    }
-  }
-
-  /**
    * Saves a recently selected changelog file in the cache.
    *
    * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
@@ -177,34 +163,6 @@ export class CacheHandler {
   }
 
   /**
-   * Gets the given changelog from the cache.
-   *
-   * @param connectionLocation - the location to the liquibase.properties file
-   * @param changelogPath - the path of the changelog that should be given to the method caller
-   * @returns the changelog with the `changelogPath` if found and all other changelogs
-   */
-  private getChangelog(
-    connectionLocation: string,
-    changelogPath: string
-  ): {
-    existingChangelog: Changelog | undefined;
-    changelogs: Changelog[];
-  } {
-    this.readCache();
-
-    this.addDummyElementForConnectionToCache(connectionLocation);
-
-    let changelogs = this.cache[connectionLocation].changelogs;
-
-    if (!changelogs) {
-      changelogs = [];
-    }
-
-    const existingChangelog = changelogs.find((log) => log.path === changelogPath);
-    return { existingChangelog, changelogs };
-  }
-
-  /**
    * Reads the cache from the cache location in the file system.
    * If there was already a cache loaded, then the stored object will be returned.
    *
@@ -215,7 +173,7 @@ export class CacheHandler {
       // if we have no cached elements, then try to read them
       if (fs.existsSync(this.cacheLocation)) {
         // if the cache exists, just read and parse the cache
-        const cacheContext = fs.readFileSync(this.cacheLocation, { encoding: "utf-8" });
+        const cacheContext = fs.readFileSync(this.cacheLocation, { encoding: "utf8" });
         this.cache = JSON.parse(cacheContext) as Cache;
 
         this.transformOldContextToNewContextSelection();
@@ -228,32 +186,6 @@ export class CacheHandler {
     }
 
     return this.cache;
-  }
-
-  /**
-   * Transforms the old `contexts` to the new `contextSelection`.
-   */
-  private transformOldContextToNewContextSelection(): void {
-    for (const pCacheElement of Object.values(this.cache)) {
-      if (!pCacheElement.changelogs) {
-        pCacheElement.changelogs = [];
-      }
-
-      // The following block needs to contain deprecated code in order to migrate it.
-      /* eslint-disable @typescript-eslint/no-deprecated */
-      if (pCacheElement.contexts) {
-        // move the contexts to every changelog
-        for (const pChangelog of pCacheElement.changelogs) {
-          pChangelog.contexts = {
-            loadedContexts: pCacheElement.contexts,
-          };
-        }
-
-        // and delete the old contexts
-        delete pCacheElement.contexts;
-        /* eslint-enable @typescript-eslint/no-deprecated */
-      }
-    }
   }
 
   /**
@@ -273,9 +205,8 @@ export class CacheHandler {
       existingChangelog.contexts.loadedContexts?.sort((a, b) => a.localeCompare(b));
 
       return existingChangelog.contexts;
-    } else {
-      return {};
     }
+    return {};
   }
 
   /**
@@ -291,9 +222,8 @@ export class CacheHandler {
       return cache[connectionLocation].changelogs
         .toSorted((a, b) => b.lastUsed - a.lastUsed)
         .map((pChangelog) => pChangelog.path);
-    } else {
-      return [];
     }
+    return [];
   }
 
   /**
@@ -302,13 +232,15 @@ export class CacheHandler {
    * The user will be informed, if this file is successfully removed.
    */
   removeCache(): void {
-    if (fs.existsSync(this.cacheLocation)) {
-      // remove the cache from the file system
-      fs.rmSync(this.cacheLocation);
-      // empty the cache as well
-      this.cache = {};
-      Logger.getLogger().info({ message: `Successfully removed all recently loaded elements.`, notifyUser: true });
+    if (!fs.existsSync(this.cacheLocation)) {
+      return;
     }
+
+    // remove the cache from the file system
+    fs.rmSync(this.cacheLocation);
+    // empty the cache as well
+    this.cache = {};
+    Logger.getLogger().info({ message: `Successfully removed all recently loaded elements.`, notifyUser: true });
   }
 
   /**
@@ -330,9 +262,88 @@ export class CacheHandler {
   }
 
   /**
+   * Adds a dummy element for the `connectionLocation` to the cache.
+   *
+   * @param connectionLocation - the location (=liquibase.properties) of the connection. This is used as a key in the cache.
+   */
+  private addDummyElementForConnectionToCache(connectionLocation: string): void {
+    const existingConnection = this.cache[connectionLocation];
+
+    if (!existingConnection) {
+      // if no cache is there for the connection, then add an element
+      this.cache[connectionLocation] = {
+        changelogs: [],
+      };
+    }
+  }
+
+  /**
+   * Gets the given changelog from the cache.
+   *
+   * @param connectionLocation - the location to the liquibase.properties file
+   * @param changelogPath - the path of the changelog that should be given to the method caller
+   * @returns the changelog with the `changelogPath` if found and all other changelogs
+   */
+  private getChangelog(
+    connectionLocation: string,
+    changelogPath: string
+  ): {
+    /**
+     * The changelog element that already exists in the cache, or `undefined` if it does not exist yet.
+     */
+    existingChangelog: Changelog | undefined;
+
+    /**
+     * All changelogs that are currently stored for the connection.
+     */
+    changelogs: Changelog[];
+  } {
+    this.readCache();
+
+    this.addDummyElementForConnectionToCache(connectionLocation);
+
+    let changelogs = this.cache[connectionLocation].changelogs;
+
+    if (!changelogs) {
+      changelogs = [];
+    }
+
+    const existingChangelog = changelogs.find((log) => log.path === changelogPath);
+    return { existingChangelog, changelogs };
+  }
+
+  /**
+   * Transforms the old `contexts` to the new `contextSelection`.
+   */
+  private transformOldContextToNewContextSelection(): void {
+    for (const pCacheElement of Object.values(this.cache)) {
+      if (!pCacheElement.changelogs) {
+        pCacheElement.changelogs = [];
+      }
+
+      // The following block needs to contain deprecated code in order to migrate it.
+      /* eslint-disable @typescript-eslint/no-deprecated */
+      if (!pCacheElement.contexts) {
+        continue;
+      }
+
+      // move the contexts to every changelog
+      for (const pChangelog of pCacheElement.changelogs) {
+        pChangelog.contexts = {
+          loadedContexts: pCacheElement.contexts,
+        };
+      }
+
+      // and delete the old contexts
+      delete pCacheElement.contexts;
+      /* eslint-enable @typescript-eslint/no-deprecated */
+    }
+  }
+
+  /**
    * Writes the cache to the cache location.
    */
   private writeCache(): void {
-    fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf-8" });
+    fs.writeFileSync(this.cacheLocation, JSON.stringify(this.cache, undefined, 2), { encoding: "utf8" });
   }
 }

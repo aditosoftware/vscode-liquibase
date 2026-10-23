@@ -14,17 +14,17 @@ import { TransferActionForCommand } from "../../TransferActionForCommand";
  */
 export async function testLiquibaseConnection(pConfiguration: LiquibaseConfigurationData): Promise<void> {
   // we need to build a temporary file for testing the configuration
-  const tempFolder = fs.mkdtempSync(path.join(os.tmpdir(), "liquibase"));
-  const tempFilePath = path.join(tempFolder, "temporary.liquibase.properties");
+  const temporaryFolder = fs.mkdtempSync(path.join(os.tmpdir(), "liquibase"));
+  const temporaryFilePath = path.join(temporaryFolder, "temporary.liquibase.properties");
 
   // create a temporary configuration
-  fs.writeFileSync(tempFilePath, pConfiguration.generateProperties(), "utf-8");
+  fs.writeFileSync(temporaryFilePath, pConfiguration.generateProperties(), "utf8");
 
   // execute the validate command
   await vscode.commands.executeCommand(
     "liquibase.validate",
-    new TransferDataForCommand(PROPERTY_FILE, tempFilePath),
-    new DeleteTemporaryFiles(tempFolder, tempFilePath)
+    new TransferDataForCommand(PROPERTY_FILE, temporaryFilePath),
+    new DeleteTemporaryFiles(temporaryFolder, temporaryFilePath)
   );
 }
 
@@ -35,12 +35,12 @@ class DeleteTemporaryFiles extends TransferActionForCommand {
   /**
    * Constructor.
    *
-   * @param tempFolder - The temporary folder.
-   * @param tempFilePath - The temporary file which is inside the temporary folder.
+   * @param temporaryFolder - The temporary folder.
+   * @param temporaryFilePath - The temporary file which is inside the temporary folder.
    */
   constructor(
-    public tempFolder: string,
-    public tempFilePath: string
+    public temporaryFolder: string,
+    public temporaryFilePath: string
   ) {
     super();
   }
@@ -49,7 +49,7 @@ class DeleteTemporaryFiles extends TransferActionForCommand {
    * @override
    */
   executeAfterCommandAction(): void {
-    fs.rmSync(this.tempFilePath);
-    fs.rmdirSync(this.tempFolder);
+    fs.rmSync(this.temporaryFilePath);
+    fs.rmdirSync(this.temporaryFolder);
   }
 }

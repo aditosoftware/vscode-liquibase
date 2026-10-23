@@ -116,7 +116,7 @@ suite("CacheHandler tests", () => {
 
       // prepare the caches for the tests
       // prepare an empty cache
-      fs.writeFileSync(emptyFile, JSON.stringify({}), { encoding: "utf-8" });
+      fs.writeFileSync(emptyFile, JSON.stringify({}), { encoding: "utf8" });
 
       // This cache format is no longer supported
       fs.writeFileSync(
@@ -145,11 +145,11 @@ suite("CacheHandler tests", () => {
             ],
           },
         }),
-        { encoding: "utf-8" }
+        { encoding: "utf8" }
       );
 
       // writes a currently valid cache file.
-      fs.writeFileSync(cacheFile, JSON.stringify(cache), { encoding: "utf-8" });
+      fs.writeFileSync(cacheFile, JSON.stringify(cache), { encoding: "utf8" });
     });
 
     /**
@@ -902,7 +902,7 @@ function assertRemoveConnectionOfCache(expected: Cache, cacheLocation: string, c
  * @param cacheLocation - the location where the cache should be read
  */
 function assertCacheContent(expected: Cache, cacheLocation: string): void {
-  const result: Cache = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" }));
+  const result: Cache = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf8" }));
 
   assert.deepStrictEqual(result, expected);
 }
@@ -914,5 +914,5 @@ function assertCacheContent(expected: Cache, cacheLocation: string): void {
  * @param cacheLocation - the location were the cache should be written to
  */
 function writeCacheToLocation(cache: Cache, cacheLocation: string): void {
-  fs.writeFileSync(cacheLocation, JSON.stringify(cache), "utf-8");
+  fs.writeFileSync(cacheLocation, JSON.stringify(cache), "utf8");
 }

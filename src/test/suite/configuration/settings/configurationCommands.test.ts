@@ -23,7 +23,7 @@ chai.use(chaiFs);
  * Tests the file `configurationCommands.ts`.
  */
 suite("configurationCommands", () => {
-  let tempPath: string;
+  let temporaryPath: string;
   let fileName: string;
 
   let extensionContext: vscode.ExtensionContext;
@@ -34,12 +34,12 @@ suite("configurationCommands", () => {
   suiteSetup("create temp dir", () => {
     TestUtils.initLoggerForTests();
 
-    tempPath = TestUtils.createTempFolderForTests("configurationCommands");
+    temporaryPath = TestUtils.createTempFolderForTests("configurationCommands");
 
-    setResourcePath(tempPath);
+    setResourcePath(temporaryPath);
 
     extensionContext = {
-      extensionUri: vscode.Uri.file(tempPath),
+      extensionUri: vscode.Uri.file(temporaryPath),
     } as vscode.ExtensionContext;
   });
 
@@ -47,8 +47,8 @@ suite("configurationCommands", () => {
    * Creates a temp file with a random name before each test.
    */
   setup("create temp file name", () => {
-    fileName = path.join(tempPath, `${randomUUID()}.liquibase.properties`);
-    fs.writeFileSync(fileName, "", "utf-8");
+    fileName = path.join(temporaryPath, `${randomUUID()}.liquibase.properties`);
+    fs.writeFileSync(fileName, "", "utf8");
   });
 
   /**
@@ -74,7 +74,7 @@ suite("configurationCommands", () => {
      * Tests the editing of an file with the shorter name name `liquibase.properties`.
      */
     test("should edit with uri and short file name", (done) => {
-      const shortName = path.join(tempPath, "liquibase.properties");
+      const shortName = path.join(temporaryPath, "liquibase.properties");
       const uri = vscode.Uri.file(shortName);
       assertEditExistingLiquibaseConfiguration(extensionContext, uri, done);
     });
@@ -191,9 +191,9 @@ suite("configurationCommands", () => {
 
       configurationCommand.writeConfigToJSON(driverName, createCustomDriverData());
 
-      const driverJson = path.join(tempPath, driverName + ".json");
+      const driverJson = path.join(temporaryPath, driverName + ".json");
       chai.assert.pathExists(driverJson);
-      assert.strictEqual(fs.readFileSync(driverJson, "utf-8"), expectedJSON);
+      assert.strictEqual(fs.readFileSync(driverJson, "utf8"), expectedJSON);
     });
   });
 
@@ -206,14 +206,14 @@ suite("configurationCommands", () => {
      */
     test("should copy and create driver", () => {
       const driverName = crypto.randomUUID();
-      const customJarFileFolder = path.join(tempPath, crypto.randomUUID());
+      const customJarFileFolder = path.join(temporaryPath, crypto.randomUUID());
       const customJarFilePath = path.join(customJarFileFolder, crypto.randomUUID() + ".jar");
       fs.mkdirSync(customJarFileFolder, { recursive: true });
       fs.writeFileSync(customJarFilePath, "");
       configurationCommand.copyAndCreateDriver(customJarFilePath, driverName, createCustomDriverData());
 
-      chai.assert.pathExists(path.join(tempPath, driverName + ".jar"));
-      chai.assert.pathExists(path.join(tempPath, driverName + ".json"));
+      chai.assert.pathExists(path.join(temporaryPath, driverName + ".jar"));
+      chai.assert.pathExists(path.join(temporaryPath, driverName + ".json"));
     });
   });
 
@@ -227,7 +227,7 @@ suite("configurationCommands", () => {
     test("should update driver", () => {
       const driverName1 = crypto.randomUUID();
       const driverName2 = crypto.randomUUID();
-      const customJarFileFolder = path.join(tempPath, crypto.randomUUID());
+      const customJarFileFolder = path.join(temporaryPath, crypto.randomUUID());
       const customJarFilePath = path.join(customJarFileFolder, crypto.randomUUID() + ".jar");
       fs.mkdirSync(customJarFileFolder, { recursive: true });
       fs.writeFileSync(customJarFilePath, "");
@@ -235,14 +235,17 @@ suite("configurationCommands", () => {
 
       configurationCommand.updateDriver(driverName1, driverName2, createCustomDriverData());
 
-      chai.assert.pathExists(path.join(tempPath, driverName2 + ".jar"));
-      chai.assert.pathExists(path.join(tempPath, driverName2 + ".json"));
+      chai.assert.pathExists(path.join(temporaryPath, driverName2 + ".jar"));
+      chai.assert.pathExists(path.join(temporaryPath, driverName2 + ".json"));
     });
   });
 
+  /**
+   * Tests the `getCustomDriversForView` method.
+   */
   suite("getCustomDriversForView", () => {
     /**
-     * Tests the creation of a new liquibase configuration.
+     * Tests that the custom drivers will be added to the given list.
      */
     test("should get custom drivers for view", () => {
       const driverName = crypto.randomUUID();
@@ -266,15 +269,15 @@ suite("configurationCommands", () => {
      */
     test("should handle driver input", async () => {
       const driverName = crypto.randomUUID();
-      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      const driverFile = path.join(temporaryPath, crypto.randomUUID() + ".jar");
       fs.writeFileSync(driverFile, "");
 
       configurationCommand.handleDriverInput(createDriverInputs(driverFile, driverName));
 
       await new Promise((resolve) => setImmediate(resolve));
 
-      chai.assert.pathExists(path.join(tempPath, driverName + ".jar"));
-      chai.assert.pathExists(path.join(tempPath, driverName + ".json"));
+      chai.assert.pathExists(path.join(temporaryPath, driverName + ".jar"));
+      chai.assert.pathExists(path.join(temporaryPath, driverName + ".json"));
       chai.assert.pathExists(driverFile);
     });
 
@@ -284,7 +287,7 @@ suite("configurationCommands", () => {
     test("should handle driver input with old values", async () => {
       const driverName1 = crypto.randomUUID();
       const driverName2 = crypto.randomUUID();
-      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      const driverFile = path.join(temporaryPath, crypto.randomUUID() + ".jar");
       fs.writeFileSync(driverFile, "");
 
       //create the driver to be updated
@@ -300,15 +303,15 @@ suite("configurationCommands", () => {
       await new Promise((resolve) => setImmediate(resolve));
 
       chai.assert.notPathExists(
-        path.join(tempPath, driverName1 + ".jar"),
+        path.join(temporaryPath, driverName1 + ".jar"),
         "old driver file " + driverName1 + ".jar should be deleted"
       );
       chai.assert.notPathExists(
-        path.join(tempPath, driverName1 + ".json"),
+        path.join(temporaryPath, driverName1 + ".json"),
         "old driver json " + driverName1 + ".json should be deleted"
       );
-      chai.assert.pathExists(path.join(tempPath, driverName2 + ".jar"), "new driver file should exist");
-      chai.assert.pathExists(path.join(tempPath, driverName2 + ".json"), "new driver json should exist");
+      chai.assert.pathExists(path.join(temporaryPath, driverName2 + ".jar"), "new driver file should exist");
+      chai.assert.pathExists(path.join(temporaryPath, driverName2 + ".json"), "new driver json should exist");
       chai.assert.pathExists(driverFile);
     });
 
@@ -317,13 +320,13 @@ suite("configurationCommands", () => {
      */
     test("should handle driver input with no input", () => {
       const driverVisualName = crypto.randomUUID();
-      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      const driverFile = path.join(temporaryPath, crypto.randomUUID() + ".jar");
       fs.writeFileSync(driverFile, "");
 
       configurationCommand.handleDriverInput(createDriverInputs("", driverVisualName), undefined, driverVisualName);
 
-      chai.assert.notPathExists(path.join(tempPath, driverVisualName + ".jar"));
-      chai.assert.notPathExists(path.join(tempPath, driverVisualName + ".json"));
+      chai.assert.notPathExists(path.join(temporaryPath, driverVisualName + ".jar"));
+      chai.assert.notPathExists(path.join(temporaryPath, driverVisualName + ".json"));
       chai.assert.pathExists(driverFile);
     });
   });
@@ -359,7 +362,7 @@ suite("configurationCommands", () => {
      * Tests the modification of a driver.
      */
     test("should modify driver", () => {
-      const driverFile = path.join(tempPath, crypto.randomUUID() + ".jar");
+      const driverFile = path.join(temporaryPath, crypto.randomUUID() + ".jar");
       fs.writeFileSync(driverFile, "");
 
       const modifyOrAddDriverSpy = Sinon.spy(configurationCommand, "modifyOrAddDriver");
@@ -384,6 +387,9 @@ suite("configurationCommands", () => {
      * Tests the validation of the input box text value.
      */
     for (const input of inputParameter) {
+      /**
+       * Tests the validation of the input box text value.
+       */
       test(`should validate input box text value ${input.input}`, () => {
         assert.strictEqual(configurationCommand.validateInputBoxTextValue(input.input)?.message, input.expected);
       });
@@ -403,9 +409,12 @@ suite("configurationCommands", () => {
       { input: "", expected: "Port must not be empty" },
     ];
     /**
-     * Tests the validation of the input box text value.
+     * Tests the validation of the input box port value.
      */
     for (const input of inputParameter) {
+      /**
+       * Tests the validation of the input box port value.
+       */
       test(`should validate input box port value ${input.input}`, () => {
         assert.strictEqual(configurationCommand.validateInputBoxPortValue(input.input)?.message, input.expected);
       });
@@ -421,9 +430,9 @@ suite("configurationCommands", () => {
      */
     test("should remove driver files", () => {
       const driverName = crypto.randomUUID();
-      const driverFile = path.join(tempPath, driverName + ".jar");
+      const driverFile = path.join(temporaryPath, driverName + ".jar");
       fs.writeFileSync(driverFile, "");
-      const driverJSON = path.join(tempPath, driverName + ".json");
+      const driverJSON = path.join(temporaryPath, driverName + ".json");
       fs.writeFileSync(driverJSON, "");
 
       configurationCommand.removeDriverFiles(driverName);

@@ -8,7 +8,7 @@ import {
 } from "@aditosoftware/vscode-input";
 import { getWorkFolder } from "./handleChangelogFileInput";
 import * as vscode from "vscode";
-import { createBasicArgsForLiquibaseCLI, executeJarAsync } from "./executeJar";
+import { createBasicArgumentsForLiquibaseCLI, executeJarAsync } from "./executeJar";
 import { Logger } from "@aditosoftware/vscode-logging";
 import { selectOutputFolder } from "./constants";
 
@@ -38,7 +38,7 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
         },
       },
       onBeforeInput: () => {
-        return typeof selectedFile === "undefined";
+        return selectedFile === undefined;
       },
     }),
     new OpenDialog({
@@ -72,15 +72,17 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
 
   const dialogValues = await handleMultiStepInput("Convert your changelogs to a new format", inputElements);
 
-  if (dialogValues) {
-    const input = selectedFile?.fsPath ?? dialogValues.inputValues.get(inputKey)?.[0];
-    const output = dialogValues.inputValues.get(outputKey)?.[0];
-    const format = dialogValues.inputValues.get(formatKey)?.[0];
-    const databaseType = dialogValues.inputValues.get(databaseTypeKey)?.[0];
+  if (!dialogValues) {
+    return;
+  }
 
-    if (input && output && format) {
-      await convertToNewFormat(input, output, format, databaseType);
-    }
+  const input = selectedFile?.fsPath ?? dialogValues.inputValues.get(inputKey)?.[0];
+  const output = dialogValues.inputValues.get(outputKey)?.[0];
+  const format = dialogValues.inputValues.get(formatKey)?.[0];
+  const databaseType = dialogValues.inputValues.get(databaseTypeKey)?.[0];
+
+  if (input && output && format) {
+    await convertToNewFormat(input, output, format, databaseType);
   }
 }
 
@@ -93,21 +95,21 @@ export async function convertFormats(convertFile: boolean, selectedFile?: vscode
  * @param databaseType - the database type. This is only given, when the format is SQL.
  */
 async function convertToNewFormat(input: string, output: string, format: string, databaseType?: string): Promise<void> {
-  const args = [...createBasicArgsForLiquibaseCLI(), "convert", "--format", format, input, output];
+  const createdArguments = [...createBasicArgumentsForLiquibaseCLI(), "convert", "--format", format, input, output];
 
   if (databaseType) {
-    args.push(...["--database-type", databaseType]);
+    createdArguments.push("--database-type", databaseType);
   }
 
   const result = await executeJarAsync(
     `Converting to ${format}`,
     `Converting the changelogs to ${format}`,
-    args,
+    createdArguments,
     [0, 3]
   );
 
   switch (result) {
-    case 0:
+    case 0: {
       // everything was successful
       vscode.window
         .showInformationMessage(
@@ -124,7 +126,8 @@ async function convertToNewFormat(input: string, output: string, format: string,
           (error) => Logger.getLogger().error({ message: `error showing success message`, error })
         );
       break;
-    case 3:
+    }
+    case 3: {
       // some files were not successful
       Logger.getLogger().showOutputChannel();
       Logger.getLogger().warn({
@@ -132,5 +135,6 @@ async function convertToNewFormat(input: string, output: string, format: string,
         notifyUser: true,
       });
       break;
+    }
   }
 }

@@ -24,7 +24,7 @@ suite("prerequisites", () => {
     "snakeyaml-2.2.jar",
   ];
 
-  let tempDir: string;
+  let temporaryDirectory: string;
 
   /**
    * Inits the logger and the resources directory.
@@ -32,7 +32,7 @@ suite("prerequisites", () => {
   suiteSetup("init logger and temp dir", () => {
     TestUtils.initLoggerForTests();
 
-    tempDir = TestUtils.createTempFolderForTests("resource");
+    temporaryDirectory = TestUtils.createTempFolderForTests("resource");
   });
 
   /**
@@ -70,13 +70,13 @@ suite("prerequisites", () => {
       globalState: globalState,
     } as vscode.ExtensionContext;
 
-    prerequisites(context, tempDir)
+    prerequisites(context, temporaryDirectory)
       .then(() => {
         // because of no awaits, we wait 7 seconds in order to have everything downloaded
         new Promise((r) => setTimeout(r, 7000))
           .then(() => {
             // check that the jars were downloaded correctly
-            const files = fs.readdirSync(tempDir);
+            const files = fs.readdirSync(temporaryDirectory);
             assert.deepStrictEqual(jars, files);
 
             done();

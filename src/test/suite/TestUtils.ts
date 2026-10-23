@@ -6,7 +6,7 @@ import { Logger } from "@aditosoftware/vscode-logging";
 import { randomUUID } from "node:crypto";
 import { ConfigurationStatus, LiquibaseConfigurationData } from "../../configuration/data/LiquibaseConfigurationData";
 import { initializeLogger } from "@aditosoftware/vscode-input";
-import { setCacheHandler, setLibFolder, setResourcePath } from "../../extension";
+import { setCacheHandler, setLibraryFolder, setResourcePath } from "../../extension";
 import assert from "node:assert";
 import { CacheHandler } from "../../cache";
 import Sinon from "sinon";
@@ -49,7 +49,7 @@ export class TestUtils {
    * @returns the full path to the temporary folder.
    */
   static createTempFolderForTests(...folderNames: string[]): string {
-    const temporaryPath = path.join(TestUtils.temporaryResourcePath, ...folderNames, randomUUID());
+    const temporaryPath = path.join(this.temporaryResourcePath, ...folderNames, randomUUID());
     if (!fs.existsSync(temporaryPath)) {
       fs.mkdirSync(temporaryPath, { recursive: true });
     }
@@ -65,12 +65,12 @@ export class TestUtils {
   static init(): void {
     this.initLoggerForTests();
 
-    setLibFolder(path.join(__dirname, "..", "..", "..", "lib"));
+    setLibraryFolder(path.join(__dirname, "..", "..", "..", "lib"));
 
-    assert.ok(fs.existsSync(TestUtils.resourcePath), TestUtils.resourcePath);
-    setResourcePath(TestUtils.resourcePath);
+    assert.ok(fs.existsSync(this.resourcePath), this.resourcePath);
+    setResourcePath(this.resourcePath);
 
-    setCacheHandler(new CacheHandler(path.join(TestUtils.resourcePath, "cache.json")));
+    setCacheHandler(new CacheHandler(path.join(this.resourcePath, "cache.json")));
   }
 
   /**

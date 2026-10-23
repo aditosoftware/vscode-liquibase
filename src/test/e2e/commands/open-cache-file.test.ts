@@ -35,8 +35,8 @@ suite("open cache", () => {
     try {
       const modalDialog = new ModalDialog();
       await modalDialog.close();
-    } catch (e) {
-      console.error(`error while trying to close the dialog ${e}`);
+    } catch (error) {
+      console.error(`error while trying to close the dialog ${error}`);
     }
   });
 

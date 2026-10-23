@@ -26,6 +26,9 @@ suite("changelog-sync: Right Click Menu", function () {
     "Mark not deployed changelogs as executed (changelog-sync)...",
     ContextOptions.NO_CONTEXT
   )) {
+    /**
+     * Tests that the 'changelog sync' command can be executed from the right click menu.
+     */
     test(`should execute 'changelog sync' command from ${pArgument.description}`, async function () {
       await pArgument.command(this, configurationName);
 

@@ -9,7 +9,7 @@ import { CustomDrivers, CustomDriver } from "../../../src/utilities/customDriver
 /**
  * Properties for creating a database configuration
  */
-interface DatabaseConfigurationProps {
+interface DatabaseConfigurationProperties {
   /**
    * The basic id for all elements inside
    */
@@ -59,7 +59,7 @@ interface NewUrlValues extends UrlParts {
  * @param pProperties - the properties for creating the element
  * @returns the created element
  */
-export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfigurationProps>): React.JSX.Element {
+export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfigurationProperties>): React.JSX.Element {
   const [serverAddress, setServerAddress] = useState<string>("localhost");
   const [port, setPort] = useState<number>(-1);
   const [databaseName, setDatabaseName] = useState<string>("data");
@@ -154,7 +154,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
       const newPort = Number.parseInt(inputValue);
 
       // checks if the port is in a valid range
-      if (newPort >= 0 && newPort <= 65535) {
+      if (newPort >= 0 && newPort <= 65_535) {
         setPort(newPort);
 
         updateUrl({ port: newPort });
@@ -197,8 +197,8 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
         <legend>{pProperties.title}</legend>
         <fieldset>
           <legend>Database credentials</legend>
-          {createInput(pProperties, "text", "username", "Username of the database")}
-          {createInput(pProperties, "password", "password", "Password of the database")}
+          {createInput("text", "username", "Username of the database")}
+          {createInput("password", "password", "Password of the database")}
         </fieldset>
 
         <fieldset id={pProperties.baseId + "_databaseConnection"}>
@@ -209,9 +209,9 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
             <VSCodeDropdown
               id={pProperties.baseId + "_databaseTypeSelection"}
               value={pProperties.databaseConnection?.databaseType}
-              onInput={(e) => {
+              onInput={(event) => {
                 // @ts-expect-error error exists because type is not 100% correct. I cannot change the type and using any is against ESLint.
-                const newDatabaseType = e.target.value;
+                const newDatabaseType = event.target.value;
                 pProperties.onUpdate("databaseType", newDatabaseType);
                 // remove classpath and driver values, when a pre-configured values was used
                 if (newDatabaseType !== NO_PRE_CONFIGURED_DRIVER && PREDEFINED_DRIVERS.has(newDatabaseType)) {
@@ -254,24 +254,12 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
             </div>
           )}
 
-          {createInput(
-            pProperties,
-            "text",
-            "url",
-            "The url of the database",
-            "For example: jdbc:mariadb://localhost:3306/data"
-          )}
+          {createInput("text", "url", "The url of the database", "For example: jdbc:mariadb://localhost:3306/data")}
 
           {pProperties.databaseConnection?.databaseType === NO_PRE_CONFIGURED_DRIVER && (
             <>
               <VSCodeDivider />
-              {createInput(
-                pProperties,
-                "text",
-                "driver",
-                "The driver class of database",
-                "For example: org.mariadb.jdbc.Driver"
-              )}
+              {createInput("text", "driver", "The driver class of database", "For example: org.mariadb.jdbc.Driver")}
             </>
           )}
         </fieldset>
@@ -289,7 +277,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
     const drivers = customDrivers;
 
     // add all the pre-configured drivers drivers
-    const preDefined = [...PREDEFINED_DRIVERS.keys()].sort((a, b) => a.localeCompare(b));
+    const preDefined = [...PREDEFINED_DRIVERS.keys()].toSorted((a, b) => a.localeCompare(b));
     for (const pKey of preDefined) {
       const driver = PREDEFINED_DRIVERS.get(pKey);
       if (driver) {
@@ -302,7 +290,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
       // add a divider between the pre-configured drivers and the custom drivers
       radioElements.push(<VSCodeDivider />);
 
-      const configuredDrivers = Object.keys(drivers).sort((a, b) => a.localeCompare(b));
+      const configuredDrivers = Object.keys(drivers).toSorted((a, b) => a.localeCompare(b));
       for (const pKey of configuredDrivers) {
         radioElements.push(<VSCodeOption value={pKey}>{pKey}</VSCodeOption>);
       }
@@ -323,7 +311,6 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
   /**
    * Creates an input inside a section.
    *
-   * @param pProperties - the properties which are used to configure this component. This is needed for handling the changing of values.
    * @param pType - the type of the text input field, e.g. text, password
    * @param pFieldName - the name of the field. This is used for setting the new value when the value has changed
    * @param pLabel - the label of the text field
@@ -331,7 +318,6 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
    * @returns the created input
    */
   function createInput(
-    pProperties: DatabaseConfigurationProps,
     pType: TextFieldType,
     pFieldName: keyof DatabaseConnection,
     pLabel: string,
@@ -343,7 +329,7 @@ export function DatabaseConfiguration(pProperties: Readonly<DatabaseConfiguratio
         type={pType}
         placeholder={pPlaceholder}
         value={pProperties.databaseConnection?.getValue(pFieldName)}
-        onBlur={(e: React.FocusEvent<HTMLInputElement>) => pProperties.onUpdate(pFieldName, e.target.value)}>
+        onBlur={(event: React.FocusEvent<HTMLInputElement>) => pProperties.onUpdate(pFieldName, event.target.value)}>
         {pLabel}
       </VSCodeTextField>
     );

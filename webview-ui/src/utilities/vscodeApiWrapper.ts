@@ -11,6 +11,9 @@ import { MessageData } from "../../../src/configuration/transfer";
  * enabled by acquireVsCodeApi.
  */
 class VSCodeAPIWrapper {
+  /**
+   * The API of the VS Code webview, or `undefined` when running outside of VS Code (e.g. inside a browser based dev server).
+   */
   private readonly vsCodeApi: WebviewApi<unknown> | undefined;
 
   /**

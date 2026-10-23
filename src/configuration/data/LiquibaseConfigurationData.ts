@@ -14,7 +14,14 @@ type AdditionalConfiguration = { [key: string]: string };
  * The status of the current configuration.
  */
 export enum ConfigurationStatus {
+  /**
+   * The configuration is a new one and does not exist yet.
+   */
   NEW = "NEW",
+
+  /**
+   * The configuration already exists and will be edited.
+   */
   EDIT = "EDIT",
 }
 
@@ -22,8 +29,6 @@ export enum ConfigurationStatus {
  * The liquibase configuration data.
  */
 export class LiquibaseConfigurationData {
-  [immerable] = true;
-
   /**
    * The keys that can be configured in the configuration data.
    */
@@ -31,6 +36,11 @@ export class LiquibaseConfigurationData {
     "changelogFile",
     ...["username", "password", "url", "driver"].flatMap((pKey) => [pKey, DatabaseConnection.createReferenceKey(pKey)]),
   ];
+
+  /**
+   * Marker for immer, so that this class is treated as an immerable class and produces immutable objects.
+   */
+  [immerable] = true;
 
   /**
    * Constructor. If you want to create a new instance of this outside of the class, you might want to use any of the following methods:
@@ -129,10 +139,11 @@ export class LiquibaseConfigurationData {
       normalizedKey === "driver"
     ) {
       let connection: DatabaseConnection;
+
       if (reference) {
-        this.referenceDatabaseConnection =
-          this.referenceDatabaseConnection ??
-          DatabaseConnection.createDefaultDatabaseConnection(this.liquibaseSettings.defaultDatabaseForConfiguration);
+        this.referenceDatabaseConnection ??= DatabaseConnection.createDefaultDatabaseConnection(
+          this.liquibaseSettings.defaultDatabaseForConfiguration
+        );
 
         connection = this.referenceDatabaseConnection;
       } else {
