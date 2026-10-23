@@ -89,7 +89,7 @@ export class LiquibaseGUITestUtils {
     await new EditorView().closeAllEditors();
 
     // open our output panel
-    await LiquibaseGUITestUtils.openOutputPanel();
+    await this.openOutputPanel();
 
     return configurationName;
   }
@@ -105,8 +105,8 @@ export class LiquibaseGUITestUtils {
             this.outputPanel = await new BottomBarPanel().openOutputView();
             await this.outputPanel.selectChannel("Liquibase");
             return true;
-          } catch (err) {
-            console.error("error opening the output channel", err);
+          } catch (error) {
+            console.error("error opening the output channel", error);
             return false;
           }
         },
@@ -168,7 +168,7 @@ export class LiquibaseGUITestUtils {
     await prompt.confirm();
 
     // input the configuration name and changelog file
-    await LiquibaseGUITestUtils.selectConfigurationAndChangelogFile(input, configurationName, changelogFile);
+    await this.selectConfigurationAndChangelogFile(input, configurationName, changelogFile);
 
     return input;
   }
@@ -191,14 +191,16 @@ export class LiquibaseGUITestUtils {
     }
 
     // Set the path to the Liquibase changelog file.
-    if (changelogFile) {
-      // choose the location of the file
-      await input.selectQuickPick(CHOOSE_CHANGELOG_OPTION);
-
-      // and choose the changelog file in the OpenDialog
-      await input.setText(LiquibaseGUITestUtils.CHANGELOG_FILE);
-      await input.selectQuickPick("changelog.xml");
+    if (!changelogFile) {
+      return;
     }
+
+    // choose the location of the file
+    await input.selectQuickPick(CHOOSE_CHANGELOG_OPTION);
+
+    // and choose the changelog file in the OpenDialog
+    await input.setText(this.CHANGELOG_FILE);
+    await input.selectQuickPick("changelog.xml");
   }
 
   /**
@@ -209,7 +211,8 @@ export class LiquibaseGUITestUtils {
   static async clearNotifications(): Promise<Workbench> {
     const center = new Workbench();
     const notification = await center.openNotificationsCenter();
-    if ((await notification.getNotifications(NotificationType.Any)).length > 0) {
+    const notifications = await notification.getNotifications(NotificationType.Any);
+    if (notifications.length > 0) {
       await notification.clearAllNotifications();
     }
 
@@ -279,9 +282,9 @@ export class LiquibaseGUITestUtils {
    * @returns - the path to the temporary folder
    */
   static generateTemporaryFolder(): string {
-    const tempDir = path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "output", randomUUID());
-    fs.mkdirSync(tempDir, { recursive: true });
-    return tempDir;
+    const temporaryDirectory = path.join(this.WORKSPACE_PATH, "output", randomUUID());
+    fs.mkdirSync(temporaryDirectory, { recursive: true });
+    return temporaryDirectory;
   }
 
   /**
@@ -319,7 +322,8 @@ export class LiquibaseGUITestUtils {
             const notifications = await this.notificationExists(text);
             if (notifications.notification) {
               return true;
-            } else if (notifications.otherNotification) {
+            }
+            if (notifications.otherNotification) {
               for (const pNotification of notifications.otherNotification) {
                 messages.add(pNotification);
               }
@@ -333,10 +337,10 @@ export class LiquibaseGUITestUtils {
         10_000,
         "waiting for the command execution to be done"
       );
-    } catch (err) {
-      console.error(err);
+    } catch (error) {
+      console.error(error);
       if (failOnWaitExceeded) {
-        const messageResult = Array.from(messages).join("; ");
+        const messageResult = [...messages].join("; ");
         assert.fail(
           `Expected notification "${text}" be among the given notifications, but they were only the following notifications: ${messageResult}`
         );
@@ -358,11 +362,10 @@ export class LiquibaseGUITestUtils {
 
     if (notification.notification) {
       return notification.notification;
-    } else {
-      assert.fail(
-        `Expected notification ${text} be among the given notifications, but they were only ${notification.otherNotification}`
-      );
     }
+    assert.fail(
+      `Expected notification ${text} be among the given notifications, but they were only ${notification.otherNotification}`
+    );
   }
 
   /**
@@ -388,7 +391,7 @@ export class LiquibaseGUITestUtils {
         if (message.includes(text)) {
           return { notification };
         }
-      } else if (new RegExp(text).exec(message)) {
+      } else if (new RegExp(text).test(message)) {
         return { notification };
       }
     }
@@ -455,13 +458,11 @@ export class LiquibaseGUITestUtils {
     option: string,
     toggleContexts: () => Promise<void>
   ): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution(startCommand);
+    const input = await this.startCommandExecution(startCommand);
 
     await this.selectContextsInMatrixExecution(input, option, toggleContexts);
 
-    await LiquibaseGUITestUtils.waitForCommandExecution(
-      `Liquibase command '${commandName}' was executed successfully.`
-    );
+    await this.waitForCommandExecution(`Liquibase command '${commandName}' was executed successfully.`);
   }
 
   /**
@@ -530,7 +531,7 @@ export class LiquibaseGUITestUtils {
     const inputBox = input || new InputBox();
 
     // wait until there are checkboxes loaded
-    await LiquibaseGUITestUtils.waitForCheckboxesToBeThere(inputBox);
+    await this.waitForCheckboxesToBeThere(inputBox);
 
     if (filterForInput) {
       await inputBox.setText(filterForInput);
@@ -593,17 +594,12 @@ export class LiquibaseGUITestUtils {
     return [
       {
         command: (mochaContext: Mocha.Context, configurationName?: string) =>
-          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelog(name, mochaContext, configurationName, contextOption),
+          this.openAndSelectRMBItemFromChangelog(name, mochaContext, configurationName, contextOption),
         description: "RMB in file",
       },
       {
         command: (mochaContext: Mocha.Context, configurationName?: string) =>
-          LiquibaseGUITestUtils.openAndSelectRMBItemFromChangelogFromExplorer(
-            name,
-            mochaContext,
-            configurationName,
-            contextOption
-          ),
+          this.openAndSelectRMBItemFromChangelogFromExplorer(name, mochaContext, configurationName, contextOption),
         description: "RMB in file explorer",
       },
     ];
@@ -638,7 +634,7 @@ export class LiquibaseGUITestUtils {
 
     await this.openAndSelectRMBItemFromAlreadyOpenedFile(action, mochaContext);
 
-    return LiquibaseGUITestUtils.inputBasicValuesForRMB(configurationName, contextOption);
+    return this.inputBasicValuesForRMB(configurationName, contextOption);
   }
 
   /**
@@ -658,7 +654,7 @@ export class LiquibaseGUITestUtils {
   ): Promise<InputBox> {
     await this.openAndSelectRMBItemFromExplorer(action, mochaContext, ".liquibase", "changelog.xml");
 
-    return LiquibaseGUITestUtils.inputBasicValuesForRMB(configurationName, contextOption);
+    return this.inputBasicValuesForRMB(configurationName, contextOption);
   }
 
   /**
@@ -759,7 +755,7 @@ export class LiquibaseGUITestUtils {
    * @param checkForCacheToBeThere - if `true`, then during the command execution it will check if there is a cache entry to remove
    */
   static async removeWholeCache(checkForCacheToBeThere?: boolean): Promise<void> {
-    let input = await LiquibaseGUITestUtils.startCommandExecution({
+    let input = await this.startCommandExecution({
       command: "Cache: Remove any values from the recently loaded elements...",
     });
 
@@ -771,7 +767,7 @@ export class LiquibaseGUITestUtils {
 
       // if the notifications were checked and the input is no longer displayed, reopen the command
       if (!(await input.isDisplayed())) {
-        input = await LiquibaseGUITestUtils.startCommandExecution({
+        input = await this.startCommandExecution({
           command: "Cache: Remove any values from the recently loaded elements...",
         });
       }
@@ -783,7 +779,7 @@ export class LiquibaseGUITestUtils {
     const modalDialog = new ModalDialog();
     await modalDialog.pushButton("Delete");
 
-    await LiquibaseGUITestUtils.waitForCommandExecution("Successfully removed all recently loaded elements.");
+    await this.waitForCommandExecution("Successfully removed all recently loaded elements.");
   }
 
   /**
@@ -798,7 +794,7 @@ export class LiquibaseGUITestUtils {
     contextOption: ContextOptions.LOAD_ALL_CONTEXT | ContextOptions.USE_RECENTLY_LOADED,
     filterTextForContexts?: string
   ): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution({
+    const input = await this.startCommandExecution({
       command: "update...",
       configurationName,
       changelogFile: true,
@@ -809,9 +805,7 @@ export class LiquibaseGUITestUtils {
 
     await this.selectContext({ toggleAll: true, filterForInput: filterTextForContexts, input });
 
-    assert.ok(
-      await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully")
-    );
+    assert.ok(await this.waitForCommandExecution("Liquibase command 'update' was executed successfully"));
   }
 
   /**
@@ -821,12 +815,12 @@ export class LiquibaseGUITestUtils {
    * @param tagName - the name of the tag that should be created
    */
   static async executeCreateTag(configurationName: string, tagName: string): Promise<void> {
-    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "create tag...", configurationName });
+    const input = await this.startCommandExecution({ command: "create tag...", configurationName });
 
     await input.setText(tagName);
     await input.confirm();
 
-    assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'tag' was executed successfully"));
+    assert.ok(await this.waitForCommandExecution("Liquibase command 'tag' was executed successfully"));
   }
   //#endregion
 
@@ -860,12 +854,12 @@ export class LiquibaseGUITestUtils {
    */
   static async createCustomDriver(): Promise<string> {
     const jarName = randomUUID() + ".jar";
-    const driverJar = path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, jarName);
+    const driverJar = path.join(this.WORKSPACE_PATH, jarName);
     fs.writeFileSync(driverJar, "");
 
     const driverName = randomUUID();
 
-    const input = await LiquibaseGUITestUtils.startCommandExecution({ command: "drivers..." });
+    const input = await this.startCommandExecution({ command: "drivers..." });
 
     await input.selectQuickPick("Add New Driver");
     await input.confirm();
@@ -889,7 +883,7 @@ export class LiquibaseGUITestUtils {
     await input.setText(";");
     await input.confirm();
 
-    await LiquibaseGUITestUtils.waitForCommandExecution("Driver was successfully created");
+    await this.waitForCommandExecution("Driver was successfully created");
 
     return driverName;
   }

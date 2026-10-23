@@ -42,6 +42,9 @@ suite("CacheRemover tests", () => {
     debugLog = Sinon.stub(Logger.getLogger(), "debug");
   });
 
+  /**
+   * Restores the stubs after each test.
+   */
   teardown("restore stubs", () => {
     infoLog.restore();
     debugLog.restore();
@@ -374,7 +377,7 @@ suite("CacheRemover tests", () => {
 
           chai.assert.pathExists(cacheLocation);
 
-          const result = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" }));
+          const result = JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf8" }));
           const keys = Object.keys(result);
 
           assert.deepStrictEqual(
@@ -397,6 +400,6 @@ suite("CacheRemover tests", () => {
  * @param cacheLocation - the cache location
  */
 function assertCacheLocationUnchanged(cacheLocation: string): void {
-  const keys = Object.keys(JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf-8" })));
+  const keys = Object.keys(JSON.parse(fs.readFileSync(cacheLocation, { encoding: "utf8" })));
   assert.strictEqual(4, keys.length, `file should not have changed: ${keys}`);
 }

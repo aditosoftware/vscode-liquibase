@@ -14,16 +14,22 @@ chai.use(chaiFs);
  * Tests the converting from one format to another format.
  */
 suite("convert format", () => {
-  const tempFolder = TestUtils.createTempFolderForTests();
+  const temporaryFolder = TestUtils.createTempFolderForTests();
 
   const workspacePath = path.join(__dirname, "..", "..", "temp", "workspace");
   const liquibaseFolder = path.join(workspacePath, ".liquibase");
   const changelogFile = path.join(liquibaseFolder, "changelog.xml");
 
+  /**
+   * Inits the logger for the tests.
+   */
   suiteSetup(() => {
     TestUtils.init();
   });
 
+  /**
+   * Restores all stubs after each test.
+   */
   teardown(() => {
     Sinon.restore();
   });
@@ -130,7 +136,7 @@ suite("convert format", () => {
             pArgument.fileSelection,
             typeof pArgument.changelogLocation === "string" ? undefined : pArgument.changelogLocation
           ),
-        tempFolder,
+        temporaryFolder,
         pArgument.format,
         pArgument.changelogLocation
       );
@@ -147,13 +153,13 @@ suite("convert format", () => {
    * Tests that the user receives a warn message, when a file could not be converted.
    */
   test("should give warn message when one file could not be converted", async () => {
-    const emptyFile = path.join(tempFolder, "empty.xml");
+    const emptyFile = path.join(temporaryFolder, "empty.xml");
     fs.writeFileSync(emptyFile, "");
     chai.assert.pathExists(emptyFile);
 
     const warnMessage = Sinon.spy(vscode.window, "showWarningMessage");
 
-    await assertConverting(() => convertFormats(true), tempFolder, "YAML", emptyFile);
+    await assertConverting(() => convertFormats(true), temporaryFolder, "YAML", emptyFile);
 
     Sinon.assert.calledOnce(warnMessage);
     Sinon.assert.calledWith(
@@ -166,10 +172,10 @@ suite("convert format", () => {
    * Tests that a not existing file does lead to a rejected promise.
    */
   test("should handle calling with not existing file", async () => {
-    const invalidFile = path.join(tempFolder, "invalid.xml");
+    const invalidFile = path.join(temporaryFolder, "invalid.xml");
     chai.assert.notPathExists(invalidFile);
 
-    await assert.rejects(assertConverting(() => convertFormats(true), tempFolder, "YAML", invalidFile));
+    await assert.rejects(assertConverting(() => convertFormats(true), temporaryFolder, "YAML", invalidFile));
   });
 });
 
@@ -177,7 +183,7 @@ suite("convert format", () => {
  * Asserts the converting calls.
  *
  * @param call - the call for `convertFormat`, that should be done
- * @param tempFolder - the temp folder were the output should be written
+ * @param temporaryFolder - the temp folder were the output should be written
  * @param format - the format to which it should be converted
  * @param changelogLocation - the changelog that should be converted.
  * This can be a folder or a file as string (when selected in OpenDialog)
@@ -185,7 +191,7 @@ suite("convert format", () => {
  */
 async function assertConverting(
   call: () => Promise<void>,
-  tempFolder: string,
+  temporaryFolder: string,
   format: string,
   changelogLocation: string | vscode.Uri
 ): Promise<void> {
@@ -200,7 +206,7 @@ async function assertConverting(
   if (changelogFromDialog) {
     openDialog.onFirstCall().resolves([vscode.Uri.file(changelogLocation)]);
   }
-  openDialog.onCall(changelogFromDialog ? 1 : 0).resolves([vscode.Uri.file(tempFolder)]);
+  openDialog.onCall(changelogFromDialog ? 1 : 0).resolves([vscode.Uri.file(temporaryFolder)]);
 
   const inputBox = Sinon.stub(vscode.window, "createInputBox");
   const copyInputBox = Object.create(realInput);

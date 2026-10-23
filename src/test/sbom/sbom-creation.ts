@@ -3,20 +3,18 @@ import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import fs from "node:fs";
 
-const projectDir = path.join(__dirname, "..", "..", "..");
-console.debug(`Project directory: ${projectDir}`);
+const projectDirectory = path.join(__dirname, "..", "..", "..");
+console.debug(`Project directory: ${projectDirectory}`);
 
-const targetDir = path.join(projectDir, "out", "sbom");
-console.log(`Target directory: ${targetDir}`);
-fs.mkdirSync(targetDir, { recursive: true });
+const targetDirectory = path.join(projectDirectory, "out", "sbom");
+console.log(`Target directory: ${targetDirectory}`);
+fs.mkdirSync(targetDirectory, { recursive: true });
 
 // copy liquibase extended jar
 copyLiquibaseExtendedJar();
 
-downloadFiles().catch((err) => {
-  console.error(err);
-  process.exitCode = 1; // fail the pipeline step
-});
+// download all required files and fail the pipeline step when the download was not successful
+void downloadFiles();
 
 /**
  * Copies the liquibase-extended-cli.jar from the project to the target directory.
@@ -24,8 +22,8 @@ downloadFiles().catch((err) => {
 function copyLiquibaseExtendedJar(): void {
   const liquibaseExtendedJar = "liquibase-extended-cli.jar";
 
-  const source = path.join(projectDir, "lib", liquibaseExtendedJar);
-  const destination = path.join(targetDir, liquibaseExtendedJar);
+  const source = path.join(projectDirectory, "lib", liquibaseExtendedJar);
+  const destination = path.join(targetDirectory, liquibaseExtendedJar);
 
   console.debug(`Copying ${source} to ${destination}`);
   fs.cpSync(source, destination);
@@ -36,20 +34,26 @@ function copyLiquibaseExtendedJar(): void {
  * Those files are also downloaded during the install process of the extension.
  */
 async function downloadFiles(): Promise<void> {
-  const files = getRequiredFiles();
+  try {
+    const files = getRequiredFiles();
 
-  for (const [fileName, fileUrl] of files) {
-    console.debug(`Downloading: ${fileName} from ${fileUrl}`);
+    for (const [fileName, fileUrl] of files) {
+      console.debug(`Downloading: ${fileName} from ${fileUrl}`);
 
-    const res = await fetch(fileUrl);
-    if (!res.ok) {
-      throw new Error(`Download failed (${fileName}): ${res.status} ${res.statusText}`);
+      const response = await fetch(fileUrl);
+      if (!response.ok) {
+        throw new Error(`Download failed (${fileName}): ${response.status} ${response.statusText}`);
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      const targetPath = path.join(targetDirectory, fileName);
+      await writeFile(targetPath, Buffer.from(arrayBuffer));
+
+      console.debug(`Saved: ${targetPath}`);
     }
-
-    const arrayBuffer = await res.arrayBuffer();
-    const targetPath = path.join(targetDir, fileName);
-    await writeFile(targetPath, Buffer.from(arrayBuffer));
-
-    console.debug(`Saved: ${targetPath}`);
+  } catch (error) {
+    console.error(error);
+    // fail the pipeline step
+    process.exitCode = 1;
   }
 }

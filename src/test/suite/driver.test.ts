@@ -33,8 +33,8 @@ suite("url handling", () => {
        */
       test("without old url", () => {
         assert.strictEqual(
-          "jdbc:myDriver//127.0.0.1:1234/my_database",
-          driver.buildUrl(undefined, {}, "127.0.0.1", 1234, "my_database")
+          driver.buildUrl(undefined, {}, "127.0.0.1", 1234, "my_database"),
+          "jdbc:myDriver//127.0.0.1:1234/my_database"
         );
       });
       /**
@@ -42,8 +42,8 @@ suite("url handling", () => {
        */
       test("with old url", () => {
         assert.strictEqual(
-          "jdbc:myDriver//127.0.0.1:1234/my_database?param",
-          driver.buildUrl("jdbc:myDriver//127.0.0.1:1234/my_database?param", {}, "127.0.0.1", 1234, "my_database")
+          driver.buildUrl("jdbc:myDriver//127.0.0.1:1234/my_database?param", {}, "127.0.0.1", 1234, "my_database"),
+          "jdbc:myDriver//127.0.0.1:1234/my_database?param"
         );
       });
 
@@ -52,8 +52,8 @@ suite("url handling", () => {
        */
       test("with new server address", () => {
         assert.strictEqual(
-          "jdbc:myDriver//localhost:1234/my_database",
-          driver.buildUrl(undefined, { serverAddress: "localhost" }, "127.0.0.1", 1234, "my_database")
+          driver.buildUrl(undefined, { serverAddress: "localhost" }, "127.0.0.1", 1234, "my_database"),
+          "jdbc:myDriver//localhost:1234/my_database"
         );
       });
 
@@ -62,8 +62,8 @@ suite("url handling", () => {
        */
       test("with new port", () => {
         assert.strictEqual(
-          "jdbc:myDriver//127.0.0.1:8520/my_database",
-          driver.buildUrl(undefined, { port: 8520 }, "127.0.0.1", 1234, "my_database")
+          driver.buildUrl(undefined, { port: 8520 }, "127.0.0.1", 1234, "my_database"),
+          "jdbc:myDriver//127.0.0.1:8520/my_database"
         );
       });
 
@@ -72,8 +72,8 @@ suite("url handling", () => {
        */
       test("with new database name", () => {
         assert.strictEqual(
-          "jdbc:myDriver//127.0.0.1:1234/system_db",
-          driver.buildUrl(undefined, { databaseName: "system_db" }, "127.0.0.1", 1234, "my_database")
+          driver.buildUrl(undefined, { databaseName: "system_db" }, "127.0.0.1", 1234, "my_database"),
+          "jdbc:myDriver//127.0.0.1:1234/system_db"
         );
       });
     });
@@ -107,7 +107,7 @@ suite("url handling", () => {
   });
 
   /**
-   *Tests the url handling of all pre-configured drivers in the `PREDEFINED_DRIVERS` map.
+   * Tests the url handling of all pre-configured drivers in the `PREDEFINED_DRIVERS` map.
    */
   suite("url handling of pre-configured drivers", () => {
     const testCases: TestCase[] = [
@@ -165,12 +165,12 @@ suite("url handling", () => {
      */
     test("should have test cases for every driver", () => {
       // gets all drivers from the test cases, distinct and sort them
-      const testCaseDrivers = Array.from(new Set(testCases.map((pCase) => pCase.driver))).sort((a, b) =>
+      const testCaseDrivers = [...new Set(testCases.map((pCase) => pCase.driver))].toSorted((a, b) =>
         a.localeCompare(b)
       );
 
       assert.deepStrictEqual(
-        Array.from(PREDEFINED_DRIVERS.keys()).sort((a, b) => a.localeCompare(b)),
+        [...PREDEFINED_DRIVERS.keys()].toSorted((a, b) => a.localeCompare(b)),
         testCaseDrivers
       );
     });

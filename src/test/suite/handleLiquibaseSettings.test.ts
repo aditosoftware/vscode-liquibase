@@ -84,6 +84,9 @@ suite("handleLiquibaseSettings", () => {
       { expected: NO_PRE_CONFIGURED_DRIVER, newValue: "" },
       { expected: NO_PRE_CONFIGURED_DRIVER, newValue: undefined },
     ]) {
+      /**
+       * Tests that the setting will be read and transformed correctly.
+       */
       test(`should read settings correctly for ${pArgument.newValue}`, (done) => {
         // set the configuration for the tests
         vscode.workspace

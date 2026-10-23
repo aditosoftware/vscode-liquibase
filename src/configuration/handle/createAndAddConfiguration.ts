@@ -29,7 +29,9 @@ export async function addToLiquibaseConfiguration(
 ): Promise<void> {
   const success = await updateConfiguration(async (pJsonData) => {
     // if there is a configuration with this name, check for override
-    if (pJsonData[pName] && pCheckForExisting) {
+    const existingConfiguration = pJsonData[pName];
+
+    if (pCheckForExisting && existingConfiguration) {
       const shouldOverride = await checkForOverridingExistingConfiguration(pName);
       if (!shouldOverride) {
         return;
@@ -47,7 +49,7 @@ export async function addToLiquibaseConfiguration(
 }
 
 /**
- *Creates a `liquibase.properties` file by filling out a multi step dialog.
+ * Creates a `liquibase.properties` file by filling out a multi step dialog.
  *
  * @param pConfigurationData - the inputted values from the user
  */
@@ -78,7 +80,7 @@ export async function createLiquibaseProperties(pConfigurationData: LiquibaseCon
 
   let fileName: string = name;
   if (!fileName.endsWith(fileEnding)) {
-    fileName = fileName + fileEnding;
+    fileName += fileEnding;
   }
 
   const properties: string = pConfigurationData.generateProperties();

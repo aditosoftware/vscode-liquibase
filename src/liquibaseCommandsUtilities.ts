@@ -23,7 +23,7 @@ export const fileName = "fileName";
  * @param dialogValues - the dialog values
  * @returns the generated command line arguments
  */
-export function generateCommandLineArgs(argument: string, dialogValues: DialogValues): string[] | undefined {
+export function generateCommandLineArguments(argument: string, dialogValues: DialogValues): string[] | undefined {
   const fullPath = generateFilePath(dialogValues);
 
   if (fullPath) {
@@ -68,35 +68,37 @@ function generateFilePath(dialogValues: DialogValues): string | undefined {
 export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogValues): Promise<void> {
   const folder = dialogValues.inputValues.get(folderSelectionName)?.[0];
 
-  if (folder) {
-    try {
-      // try to correctly move the columns folder under the tables folder, so all links resolve
-      const columns = path.join(folder, "columns");
-      const tables = path.join(folder, "tables");
-
-      if (fs.existsSync(columns) && fs.existsSync(tables)) {
-        const filesAndFolders = fs.readdirSync(columns);
-
-        const newColumns = path.join(tables, "columns");
-        fs.mkdirSync(newColumns);
-
-        for (const item of filesAndFolders) {
-          const sourcePath = path.join(columns, item);
-          const destinationPath = path.join(newColumns, item);
-
-          fs.renameSync(sourcePath, destinationPath);
-        }
-        fs.rmdirSync(columns);
-      }
-    } catch (error) {
-      Logger.getLogger().error({ message: "error while trying to move files", error });
-    }
-
-    const fullPath = path.join(folder, "index.html");
-    const uri = vscode.Uri.file(fullPath);
-
-    await vscode.env.openExternal(uri);
+  if (!folder) {
+    return;
   }
+
+  try {
+    // try to correctly move the columns folder under the tables folder, so all links resolve
+    const columns = path.join(folder, "columns");
+    const tables = path.join(folder, "tables");
+
+    if (fs.existsSync(columns) && fs.existsSync(tables)) {
+      const filesAndFolders = fs.readdirSync(columns);
+
+      const newColumns = path.join(tables, "columns");
+      fs.mkdirSync(newColumns);
+
+      for (const item of filesAndFolders) {
+        const sourcePath = path.join(columns, item);
+        const destinationPath = path.join(newColumns, item);
+
+        fs.renameSync(sourcePath, destinationPath);
+      }
+      fs.rmdirSync(columns);
+    }
+  } catch (error) {
+    Logger.getLogger().error({ message: "error while trying to move files", error });
+  }
+
+  const fullPath = path.join(folder, "index.html");
+  const uri = vscode.Uri.file(fullPath);
+
+  await vscode.env.openExternal(uri);
 }
 
 /**
@@ -109,24 +111,26 @@ export async function openIndexHtmlAfterCommandExecution(dialogValues: DialogVal
 export async function changeAndEmptyOutputDirectory(dialogValues: DialogValues): Promise<void> {
   const folder = dialogValues.inputValues.get(folderSelectionName)?.[0];
 
-  if (folder?.includes(os.tmpdir())) {
-    const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
-
-    let configurationName = "db-doc";
-
-    if (propertyFile) {
-      const name = await getNameOfConfiguration(propertyFile);
-      if (name) {
-        configurationName = name;
-      }
-    }
-
-    const subfolder = path.join(folder, configurationName);
-
-    if (fs.existsSync(subfolder)) {
-      fs.rmSync(subfolder, { recursive: true });
-    }
-
-    dialogValues.addValue(folderSelectionName, subfolder);
+  if (!folder?.includes(os.tmpdir())) {
+    return;
   }
+
+  const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE)?.[0];
+
+  let configurationName = "db-doc";
+
+  if (propertyFile) {
+    const name = await getNameOfConfiguration(propertyFile);
+    if (name) {
+      configurationName = name;
+    }
+  }
+
+  const subfolder = path.join(folder, configurationName);
+
+  if (fs.existsSync(subfolder)) {
+    fs.rmSync(subfolder, { recursive: true });
+  }
+
+  dialogValues.addValue(folderSelectionName, subfolder);
 }

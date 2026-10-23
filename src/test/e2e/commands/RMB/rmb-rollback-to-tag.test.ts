@@ -27,6 +27,10 @@ suite("rollback-to-tag: Right Click Menu", function () {
     "Rollback to Tag...",
     ContextOptions.LOAD_ALL_CONTEXT
   )) {
+    /**
+     * Tests that the 'rollback-to-tag' command can be executed from the right click menu
+     * and that the rollback removes the values from the database.
+     */
     test(`should execute 'rollback-to-tag' command from ${pArgument.description}`, async function () {
       const tagName = randomUUID();
 
@@ -52,14 +56,12 @@ suite("rollback-to-tag: Right Click Menu", function () {
       assert.ok(
         await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'rollback' was executed successfully.")
       );
-      assert.ok(
-        (
-          await DockerTestUtils.executeMariaDBSQL(
-            "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"
-          )
-        )?.length === 0,
-        "Rollback did not remove values from DB"
+
+      const databaseInformation = await DockerTestUtils.executeMariaDBSQL(
+        "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'company'"
       );
+
+      assert.ok(databaseInformation?.length === 0, "Rollback did not remove values from DB");
     });
   }
 

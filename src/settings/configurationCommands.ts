@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { addToLiquibaseConfiguration } from "../configuration/handle/createAndAddConfiguration";
 import { LiquibaseConfigurationPanel } from "../panels/LiquibaseConfigurationPanel";
-import * as path from "node:path";
+import path from "node:path";
 import * as fs from "node:fs";
 import { getDefaultDatabaseForConfiguration, getLiquibaseFolder } from "../handleLiquibaseSettings";
 import { getPathOfConfiguration, readLiquibaseConfigurationNames } from "../configuration/handle/readConfiguration";
@@ -33,7 +33,13 @@ export async function editExistingLiquibaseConfiguration(
 ): Promise<void> {
   let existingConfiguration:
     | {
+        /**
+         * The path to the configuration file.
+         */
         fsPath: string;
+        /**
+         * The name of the configuration.
+         */
         name: string;
       }
     | undefined;
@@ -45,7 +51,7 @@ export async function editExistingLiquibaseConfiguration(
     const fileName = path.basename(fsPath);
     // first part of name, if the name has at least 2 dots, otherwise full name
     const name =
-      fileName.indexOf(".") === fileName.lastIndexOf(".") ? fileName : fileName.substring(0, fileName.indexOf("."));
+      fileName.indexOf(".") === fileName.lastIndexOf(".") ? fileName : fileName.slice(0, fileName.indexOf("."));
     existingConfiguration = { fsPath, name };
   } else {
     // invoked via command palette - show inputs for user
@@ -61,16 +67,18 @@ export async function editExistingLiquibaseConfiguration(
     }
   }
 
-  if (existingConfiguration) {
-    // transferring the data from .properties into an object
-    const data = readFullValues(existingConfiguration.name, existingConfiguration.fsPath, {
-      defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
-      liquibaseDirectoryInProject: getLiquibaseFolder(),
-      customDrivers: getCustomDrivers(),
-    });
-    // and renders the panel with the data
-    LiquibaseConfigurationPanel.render(context.extensionUri, data);
+  if (!existingConfiguration) {
+    return;
   }
+
+  // transferring the data from .properties into an object
+  const data = readFullValues(existingConfiguration.name, existingConfiguration.fsPath, {
+    defaultDatabaseForConfiguration: getDefaultDatabaseForConfiguration(),
+    liquibaseDirectoryInProject: getLiquibaseFolder(),
+    customDrivers: getCustomDrivers(),
+  });
+  // and renders the panel with the data
+  LiquibaseConfigurationPanel.render(context.extensionUri, data);
 }
 
 /**
@@ -127,13 +135,15 @@ export async function addExistingLiquibaseConfiguration(): Promise<void> {
 
   const dialogValues = await handleMultiStepInput("Add existing configuration", inputs);
 
-  if (dialogValues) {
-    const name = dialogValues.inputValues.get(nameKey)?.[0];
-    const location = dialogValues.inputValues.get(locationKey)?.[0];
+  if (!dialogValues) {
+    return;
+  }
 
-    if (name && location) {
-      await addToLiquibaseConfiguration(name, location);
-    }
+  const name = dialogValues.inputValues.get(nameKey)?.[0];
+  const location = dialogValues.inputValues.get(locationKey)?.[0];
+
+  if (name && location) {
+    await addToLiquibaseConfiguration(name, location);
   }
 }
 
@@ -153,10 +163,12 @@ export function displayAvailableDrivers(): void {
   quickPick.ignoreFocusOut = false;
   quickPick.onDidAccept(() => {
     for (const selectedItem of quickPick.selectedItems) {
-      if (selectedItem.label === "Add New Driver") {
-        quickPick.dispose();
-        modifyOrAddDriver();
+      if (selectedItem.label !== "Add New Driver") {
+        continue;
       }
+
+      quickPick.dispose();
+      modifyOrAddDriver();
     }
   });
   quickPick.title = "Available Drivers";
@@ -172,10 +184,12 @@ export function displayAvailableDrivers(): void {
     }
   });
   quickPick.onDidTriggerButton((button) => {
-    if (button === reload) {
-      quickPick.dispose();
-      displayAvailableDrivers();
+    if (button !== reload) {
+      return;
     }
+
+    quickPick.dispose();
+    displayAvailableDrivers();
   });
   quickPick.show();
 }
@@ -196,19 +210,16 @@ export function getDrivers(): vscode.QuickPickItem[] {
     tooltip: "edit",
   };
 
-  const drivers: vscode.QuickPickItem[] = [];
-
-  drivers.push(
+  const drivers: vscode.QuickPickItem[] = [
     {
       label: "New Driver",
       kind: vscode.QuickPickItemKind.Separator,
     },
-
     {
       iconPath: new vscode.ThemeIcon("add"),
       label: "Add New Driver",
-    }
-  );
+    },
+  ];
 
   getCustomDriversForView(drivers, [editDriver, deleteDriver]);
 
@@ -242,18 +253,22 @@ export function getCustomDriversForView(drivers: vscode.QuickPickItem[], actions
   });
 
   for (const file of fs.readdirSync(resourcePath)) {
-    if (path.extname(file) === ".json") {
-      const fileContent = fs.readFileSync(path.join(resourcePath, file), "utf8");
-      if (fileContent?.includes("driverClass")) {
-        const driver = JSON.parse(fileContent);
-        drivers.push({
-          label: driver.name,
-          description: driver.jdbcName,
-          detail: driver.driverClass,
-          buttons: actions,
-        });
-      }
+    if (path.extname(file) !== ".json") {
+      continue;
     }
+
+    const fileContent = fs.readFileSync(path.join(resourcePath, file), "utf8");
+    if (!fileContent?.includes("driverClass")) {
+      continue;
+    }
+
+    const driver = JSON.parse(fileContent);
+    drivers.push({
+      label: driver.name,
+      description: driver.jdbcName,
+      detail: driver.driverClass,
+      buttons: actions,
+    });
   }
 }
 
@@ -276,7 +291,8 @@ export function deleteDriver(driverName: string): void {
       if (dialogValues && dialogValues.inputValues.get("confirmation")?.[0] === "true") {
         removeDriverFiles(driverName);
       }
-      displayAvailableDrivers(); //re-open the previous view
+      // re-open the previous view
+      displayAvailableDrivers();
     })
     .catch((error) => {
       Logger.getLogger().error({ message: "Error while removing the driver", error, notifyUser: true });
@@ -382,38 +398,42 @@ export const handleDriverInput = (
   oldDriverValues?: CustomDriverData,
   oldDriverName?: string
 ): void => {
-  handleMultiStepInput(`${oldDriverName ? "Edit the driver '" + oldDriverName + "'" : "Add a new driver"}`, inputs)
+  handleMultiStepInput(oldDriverName ? "Edit the driver '" + oldDriverName + "'" : "Add a new driver", inputs)
     .then((dialogValues) => {
-      if (dialogValues) {
-        const driverFile = dialogValues.inputValues.get("driverFile")?.[0];
-        const visualName = dialogValues.inputValues.get("visualName")?.[0];
-        const jdbcName = dialogValues.inputValues.get("jdbcName")?.[0];
-        const driverClass = dialogValues.inputValues.get("driverClass")?.[0];
-        const defaultPort = dialogValues.inputValues.get("defaultPort")?.[0];
-        const separator = dialogValues.inputValues.get("separator")?.[0];
+      if (!dialogValues) {
+        return;
+      }
 
-        if (visualName && jdbcName && driverClass && defaultPort && separator) {
-          // Create the custom driver object with the given values
-          const driver: CustomDriverData = {
-            driverClass: driverClass,
-            port: Number.parseInt(defaultPort),
-            jdbcName: jdbcName,
-            separator: separator,
-          };
+      const driverFile = dialogValues.inputValues.get("driverFile")?.[0];
+      const visualName = dialogValues.inputValues.get("visualName")?.[0];
+      const jdbcName = dialogValues.inputValues.get("jdbcName")?.[0];
+      const driverClass = dialogValues.inputValues.get("driverClass")?.[0];
+      const defaultPort = dialogValues.inputValues.get("defaultPort")?.[0];
+      const separator = dialogValues.inputValues.get("separator")?.[0];
 
-          // Add or modify the driver based on the presence of oldDriverValues and oldDriverName
-          if (oldDriverValues && oldDriverName) {
-            updateDriver(oldDriverName, visualName, driver);
-          } else if (driverFile) {
-            const driverFilePath = vscode.Uri.file(driverFile).fsPath;
-            copyAndCreateDriver(driverFilePath, visualName, driver);
-          } else {
-            Logger.getLogger().warn({
-              message: "No driver file was selected or previous driver values were found.",
-              notifyUser: true,
-            });
-          }
-        }
+      if (!visualName || !jdbcName || !driverClass || !defaultPort || !separator) {
+        return;
+      }
+
+      // Create the custom driver object with the given values
+      const driver: CustomDriverData = {
+        driverClass: driverClass,
+        port: Number.parseInt(defaultPort),
+        jdbcName: jdbcName,
+        separator: separator,
+      };
+
+      // Add or modify the driver based on the presence of oldDriverValues and oldDriverName
+      if (oldDriverValues && oldDriverName) {
+        updateDriver(oldDriverName, visualName, driver);
+      } else if (driverFile) {
+        const driverFilePath = vscode.Uri.file(driverFile).fsPath;
+        copyAndCreateDriver(driverFilePath, visualName, driver);
+      } else {
+        Logger.getLogger().warn({
+          message: "No driver file was selected or previous driver values were found.",
+          notifyUser: true,
+        });
       }
     })
     .catch((error) => {
@@ -446,7 +466,8 @@ export function updateDriver(oldDriverName: string, driverName: string, driver: 
  * @param driver - the custom driver object
  */
 export function copyAndCreateDriver(driverFilePath: string, driverName: string, driver: CustomDriverData): void {
-  fs.copyFileSync(driverFilePath, path.join(resourcePath, driverName + ".jar")); // Copy the driver to the resource folder
+  // Copy the driver to the resource folder
+  fs.copyFileSync(driverFilePath, path.join(resourcePath, driverName + ".jar"));
   writeConfigToJSON(driverName, driver);
 
   Logger.getLogger().info({ message: "Driver was successfully created", notifyUser: true });
@@ -508,19 +529,20 @@ export function validateInputBoxPortValue(value: string): vscode.InputBoxValidat
       message: "Port must not be empty",
       severity: vscode.InputBoxValidationSeverity.Error,
     } as vscode.InputBoxValidationMessage;
-  } else if (!/^\d*$/.test(port)) {
+  }
+  if (!/^\d*$/.test(port)) {
     return {
       message: "Port must be a number",
       severity: vscode.InputBoxValidationSeverity.Error,
     } as vscode.InputBoxValidationMessage;
-  } else if (Number.parseInt(port) < 0 || Number.parseInt(port) > 65535) {
+  }
+  if (Number.parseInt(port) < 0 || Number.parseInt(port) > 65_535) {
     return {
       message: "Port must be between 0 and 65535",
       severity: vscode.InputBoxValidationSeverity.Error,
     } as vscode.InputBoxValidationMessage;
-  } else {
-    return null;
   }
+  return null;
 }
 
 /**

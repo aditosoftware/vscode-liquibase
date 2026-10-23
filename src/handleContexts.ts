@@ -42,7 +42,7 @@ export function generateContextInputs(): PickPanelConfig[] {
           return generateItemsForContextPreDialog(contextCacheInfo);
         },
       }),
-      createCmdArgs: generateCmdArgsForPreContextSelection,
+      createCmdArgs: generateCommandArgumentsForPreContextSelection,
     },
 
     {
@@ -57,7 +57,7 @@ export function generateContextInputs(): PickPanelConfig[] {
         onBeforeInput: showContextSelection,
         onAfterInput: (dialogValues) => saveSelectedContexts(dialogValues, contextCacheInfo),
       }),
-      createCmdArgs: createCmdArgsForContextSelection,
+      createCmdArgs: createCommandArgumentsForContextSelection,
     },
   ];
 }
@@ -109,15 +109,17 @@ export function generateItemsForContextPreDialog(contextCacheInfo?: ContextCache
 export function saveSelectedContexts(dialogValues: DialogValues, contextCacheInfo?: ContextCacheInformation): void {
   const selectedContexts = dialogValues.inputValues.get("context");
 
-  if (selectedContexts && contextCacheInfo) {
-    contextCacheInfo.contexts.selectedContexts = selectedContexts;
-
-    cacheHandler.saveContexts(
-      contextCacheInfo.connectionLocation,
-      contextCacheInfo.changelogLocation,
-      contextCacheInfo.contexts
-    );
+  if (!(selectedContexts && contextCacheInfo)) {
+    return;
   }
+
+  contextCacheInfo.contexts.selectedContexts = selectedContexts;
+
+  cacheHandler.saveContexts(
+    contextCacheInfo.connectionLocation,
+    contextCacheInfo.changelogLocation,
+    contextCacheInfo.contexts
+  );
 }
 
 /**
@@ -128,7 +130,7 @@ export function saveSelectedContexts(dialogValues: DialogValues, contextCacheInf
  * @param dialogValues - the current dialog values
  * @returns the cmd args
  */
-function generateCmdArgsForPreContextSelection(dialogValues: DialogValues): string[] | undefined {
+function generateCommandArgumentsForPreContextSelection(dialogValues: DialogValues): string[] | undefined {
   const selected = dialogValues.inputValues.get(contextPreDialog);
   if (selected?.[0] === ContextOptions.NO_CONTEXT) {
     return [`--contexts=${NO_CONTEXT_USED}`];
@@ -143,12 +145,12 @@ function generateCmdArgsForPreContextSelection(dialogValues: DialogValues): stri
  * @param dialogValues - the current dialog values
  * @returns the cmd args
  */
-function createCmdArgsForContextSelection(dialogValues: DialogValues): string[] {
+function createCommandArgumentsForContextSelection(dialogValues: DialogValues): string[] {
   const context = dialogValues.inputValues.get("context");
 
   // add a dummy value when no context should be used, otherwise transform them normally
-  const contextCmdValue: string = context && context.length > 0 ? context.join(",") : NO_CONTEXT_USED;
-  return [`--contexts=${contextCmdValue}`];
+  const contextCommandValue: string = context && context.length > 0 ? context.join(",") : NO_CONTEXT_USED;
+  return [`--contexts=${contextCommandValue}`];
 }
 
 /**
@@ -163,16 +165,18 @@ export function loadCacheForPropertyFile(currentResults: DialogValues): ContextC
   const changelogLocation =
     currentResults.uri?.fsPath ?? currentResults.inputValues.get(HandleChangelogFileInput.CHANGELOG_NAME)?.[0];
 
-  if (connectionLocation && changelogLocation) {
-    // read the contexts from the cache
-    const contexts = cacheHandler.readContexts(connectionLocation, changelogLocation);
-
-    return {
-      connectionLocation,
-      changelogLocation,
-      contexts,
-    };
+  if (!connectionLocation || !changelogLocation) {
+    return;
   }
+
+  // read the contexts from the cache
+  const contexts = cacheHandler.readContexts(connectionLocation, changelogLocation);
+
+  return {
+    connectionLocation,
+    changelogLocation,
+    contexts,
+  };
 }
 
 /**
@@ -215,7 +219,8 @@ export async function loadContexts(dialogValues: DialogValues, cache: ContextSel
         }),
         additionalPlaceholder: "from recently loaded elements",
       };
-    } else if (result === ContextOptions.LOAD_ALL_CONTEXT) {
+    }
+    if (result === ContextOptions.LOAD_ALL_CONTEXT) {
       return await loadContextsFromChangelog(dialogValues);
     }
   }

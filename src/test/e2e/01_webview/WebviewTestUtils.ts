@@ -119,7 +119,7 @@ export class WebviewTestUtils {
    * @param expected - the expected text that should be contained in the preview
    */
   static async assertMatchPreview(webView: WebView, expected: RegExp): Promise<void> {
-    const text = await WebviewTestUtils.extractPreviewText(webView);
+    const text = await this.extractPreviewText(webView);
 
     assert.match(text, expected);
   }
@@ -131,13 +131,13 @@ export class WebviewTestUtils {
    * @param expected - the expected text that should be equals the preview
    */
   static async assertEqualsPreview(webView: WebView, expected: string): Promise<void> {
-    const text = await WebviewTestUtils.extractPreviewText(webView);
+    const text = await this.extractPreviewText(webView);
 
     assert.strictEqual(text, expected);
   }
 
   /**
-   *Extracts the text of the preview.
+   * Extracts the text of the preview.
    *
    * @param webView - the webview from which the preview should be taken
    * @returns the text of the preview
@@ -155,7 +155,7 @@ export class WebviewTestUtils {
    * @param config - the configuration that should be written
    */
   static async addConfigurationDataToWebview(config: Config): Promise<void> {
-    await WebviewTestUtils.openAndExecuteOnWebview(async (webView) => {
+    await this.openAndExecuteOnWebview(async (webView) => {
       const nameInput = await webView.findWebElement(By.id("nameInput"));
       await this.typeIntoWebviewInput(nameInput, config.name);
 
@@ -197,7 +197,7 @@ export class WebviewTestUtils {
       // would be saved with a broken connection (for instance because of pre-filled default values
       // in the input fields) and every following command of the test suite would fail.
       // Failing here means only the current test fails and a retry creates a fresh configuration.
-      await WebviewTestUtils.assertMatchPreview(webView, WebviewTestUtils.expectedPreviewUrl(config));
+      await this.assertMatchPreview(webView, this.expectedPreviewUrl(config));
 
       const button = await webView.findWebElement(By.id(config.buttonToClick));
       assert.deepStrictEqual(await button.getAttribute("id"), config.buttonToClick, "button id");
@@ -248,7 +248,7 @@ export class WebviewTestUtils {
 
     // the url needs to end with a line break (or the end of the text), so that a broken value
     // that only starts with the expected url (for instance `data` vs `datadata`) does not match
-    return new RegExp(String.raw`url\s*=\s*${WebviewTestUtils.escapeRegExp(expectedUrl)}(?:[\r\n]|$)`);
+    return new RegExp(String.raw`url\s*=\s*${this.escapeRegExp(expectedUrl)}(?:[\r\n]|$)`);
   }
 
   /**
@@ -258,7 +258,7 @@ export class WebviewTestUtils {
    * @returns the escaped string
    */
   private static escapeRegExp(value: string): string {
-    return value.replace(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
+    return value.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
   }
 }
 

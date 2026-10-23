@@ -30,8 +30,8 @@ suite("handleChangelogSelection", () => {
    * Creates a temp dir for the tests and builds a path for a dummy changelog file.
    */
   suiteSetup("create temp directory", () => {
-    const tempDir = TestUtils.createTempFolderForTests("changelogSelection");
-    changelogFile = path.join(tempDir, "changelog.xml");
+    const temporaryDirectory = TestUtils.createTempFolderForTests("changelogSelection");
+    changelogFile = path.join(temporaryDirectory, "changelog.xml");
   });
 
   /**
@@ -65,6 +65,9 @@ suite("handleChangelogSelection", () => {
      * Tests that the method itself should work, when nothing was selected.
      */
     for (const pArgument of [undefined, []]) {
+      /**
+       * Tests that the method itself should work, when nothing was selected.
+       */
       test(`should work with nothing selected (${pArgument})`, (done) => {
         openDialog.resolves(pArgument);
 

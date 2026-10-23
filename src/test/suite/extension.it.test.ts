@@ -194,6 +194,9 @@ suite("Extension Integration Test Suite", () => {
    * Execute some commands.
    */
   for (const commandArgument of commandArguments) {
+    /**
+     * Tests that the command will be executed correctly and all dialogs are answered as expected.
+     */
     test(`should execute command ${commandArgument.command}`, async () => {
       // create a real quick pick for afterwards
       const realQuickPick = vscode.window.createQuickPick();
@@ -207,14 +210,18 @@ suite("Extension Integration Test Suite", () => {
 
       // first quick pick is always property file, therefore just return first item
       quickPick.onFirstCall().callsFake(async (items) => {
-        return (await items)[0];
+        const resolvedItems = await items;
+
+        return resolvedItems[0];
       });
 
       // if there is a selection of the reference, connection, this will be the second call
       if (commandArgument.answers.selectReferenceConnection) {
         quickPickCount++;
         quickPick.onSecondCall().callsFake(async (items) => {
-          return (await items)[0];
+          const resolvedItems = await items;
+
+          return resolvedItems[0];
         });
       }
 

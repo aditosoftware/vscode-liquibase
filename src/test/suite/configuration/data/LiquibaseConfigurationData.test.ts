@@ -66,6 +66,9 @@ suite("LiquibaseConfigurationData", () => {
       },
     ];
     for (const pArgument of keyValueArguments) {
+      /**
+       * Tests that the given key - value combination will be handled correctly.
+       */
       test(`should handle value for key ${pArgument.key}`, () => {
         const liquibaseConfigurationData = TestUtils.createDummyLiquibaseConfigurationData();
 
@@ -143,18 +146,6 @@ suite("LiquibaseConfigurationData", () => {
       const password = "mySecretPassword";
 
       /**
-       * The function to create the expected value.
-       *
-       * @param passwordValue - the value that should be set as password
-       * @returns the content for the properties file.
-       */
-      const expected = (passwordValue: string): string => `
-# configuration for the database
-password = ${passwordValue}
-# configuration for the reference database
-referencePassword = ${passwordValue}`;
-
-      /**
        * Creates a simple liquibase configuration with only password and reference password set.
        */
       setup("init data", () => {
@@ -182,6 +173,9 @@ referencePassword = ${passwordValue}`;
        * Tests that an undisguised password will be also written, if required.
        */
       for (const pArgument of [false, undefined]) {
+        /**
+         * Tests that an undisguised password will be also written, if required.
+         */
         test(`should work with not disguised password (${pArgument})`, () => {
           const actual = liquibaseConfigurationData.generateProperties(pArgument);
 
@@ -219,9 +213,15 @@ dolor = sit`;
     });
   });
 
+  /**
+   * Tests the cloning of the configuration data.
+   */
   suite("clone", () => {
     let data: LiquibaseConfigurationData;
 
+    /**
+     * Creates some dummy configuration data with a reference connection.
+     */
     setup("init data", () => {
       data = TestUtils.createDummyLiquibaseConfigurationData();
       data.handleValueFromLiquibaseConfiguration("username", "jane");
@@ -265,3 +265,15 @@ dolor = sit`;
     });
   });
 });
+
+/**
+ * Creates the expected content for the properties file with the given password value.
+ *
+ * @param passwordValue - the value that should be set as password
+ * @returns the content for the properties file.
+ */
+const expected = (passwordValue: string): string => `
+# configuration for the database
+password = ${passwordValue}
+# configuration for the reference database
+referencePassword = ${passwordValue}`;

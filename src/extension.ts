@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import * as path from "node:path";
+import path from "node:path";
 import { prerequisites } from "./prerequisites";
 import { getReferenceKeysFromPropertyFile } from "./propertiesToDiff";
 import { PickPanelConfig, registerLiquibaseCommand, TransferDataForCommand } from "./registerLiquibaseCommand";
@@ -22,7 +22,7 @@ import {
 import {
   changeAndEmptyOutputDirectory,
   fileName,
-  generateCommandLineArgs,
+  generateCommandLineArguments,
   openFileAfterCommandExecution,
   openIndexHtmlAfterCommandExecution,
 } from "./liquibaseCommandsUtilities";
@@ -45,7 +45,7 @@ export let resourcePath: string;
 /**
  * Internal resources folder inside the extension.
  */
-export let libFolder: string;
+export let libraryFolder: string;
 
 /**
  * The cache handler used for handling the cache.
@@ -77,7 +77,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   cacheHandler = new CacheHandler(cacheLocation);
 
   // the folder, where additional libraries are included
-  libFolder = path.join(context.extensionPath, "lib");
+  libraryFolder = path.join(context.extensionPath, "lib");
 
   // initialize the logger
   Logger.initializeLogger(context, "Liquibase");
@@ -202,14 +202,14 @@ function registerCommands(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
     vscode.commands.registerCommand("liquibase.convertFormatFolder", async () => await convertFormats(false)),
 
-    vscode.commands.registerCommand("liquibase.convertFormatFile", async (...commandArgs) => {
+    vscode.commands.registerCommand("liquibase.convertFormatFile", async (...commandArguments) => {
       let selectedFile: vscode.Uri | undefined = undefined;
 
       // commandArgs will be filled, when called from right button menu.
-      if (commandArgs) {
-        for (const commandArg of commandArgs) {
-          if (commandArg instanceof vscode.Uri) {
-            selectedFile = commandArg;
+      if (commandArguments) {
+        for (const commandArgument of commandArguments) {
+          if (commandArgument instanceof vscode.Uri) {
+            selectedFile = commandArgument;
           }
         }
       }
@@ -300,7 +300,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
               value: "diff.txt",
             },
           }),
-          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+          createCmdArgs: (dialogValues) => generateCommandLineArguments("output-file", dialogValues),
         },
         generateDiffTypes(),
       ],
@@ -335,7 +335,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
               value: "changelog.xml",
             },
           }),
-          createCmdArgs: (dialogValues) => generateCommandLineArgs("changelog-file", dialogValues),
+          createCmdArgs: (dialogValues) => generateCommandLineArguments("changelog-file", dialogValues),
         },
         generateDiffTypes("The types for which the changelog should be generated"),
         {
@@ -429,7 +429,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
               value: "history.txt",
             },
           }),
-          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+          createCmdArgs: (dialogValues) => generateCommandLineArguments("output-file", dialogValues),
         },
         {
           input: new QuickPick({
@@ -515,7 +515,7 @@ function registerCommands(context: vscode.ExtensionContext): void {
               value: "update-sql.sql",
             },
           }),
-          createCmdArgs: (dialogValues) => generateCommandLineArgs("output-file", dialogValues),
+          createCmdArgs: (dialogValues) => generateCommandLineArguments("output-file", dialogValues),
         },
       ],
       {
@@ -532,9 +532,10 @@ function registerCommands(context: vscode.ExtensionContext): void {
  * @returns - the '--requireForce' and '--force' arguments or an empty array if the confirmation was not set
  */
 export function setRequireForceAndForceParameter(dialogValues: DialogValues): string[] {
-  if (dialogValues.inputValues.get("confirmation") === undefined) {
+  if (!dialogValues.inputValues.has("confirmation")) {
     return [];
-  } else if (
+  }
+  if (
     dialogValues.inputValues.get("confirmation")?.[0] &&
     dialogValues.inputValues.get("confirmation")?.[0] === "true"
   ) {
@@ -560,14 +561,14 @@ export function validateInput(value: string): string | null {
 /**
  * Generates an input for the `--diff-types` and pre-selects the default types.
  *
- * @param placeHolder - the placeHolder that should be set in the dialog
+ * @param placeholder - the placeholder that should be set in the dialog
  * @returns the pickPanelConfig with all the diff types
  */
-function generateDiffTypes(placeHolder: string = "Choose any diff types"): PickPanelConfig {
+function generateDiffTypes(placeholder: string = "Choose any diff types"): PickPanelConfig {
   return {
     input: new QuickPick({
       name: "diffTypes",
-      placeHolder,
+      placeHolder: placeholder,
       //all possible diffTypes for the diff dialog
       generateItems: () => [
         { label: "catalogs", description: "" },
@@ -661,10 +662,10 @@ export function setCacheHandler(pCacheHandler: CacheHandler): void {
 }
 
 /**
- * Sets the lib folder. This is used for tests, when no value was set.
+ * Sets the library folder. This is used for tests, when no value was set.
  *
- * @param pLibFolder - the value the set
+ * @param pLibraryFolder - the value the set
  */
-export function setLibFolder(pLibFolder: string): void {
-  libFolder = pLibFolder;
+export function setLibraryFolder(pLibraryFolder: string): void {
+  libraryFolder = pLibraryFolder;
 }

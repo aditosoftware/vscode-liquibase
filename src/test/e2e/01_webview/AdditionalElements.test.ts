@@ -78,7 +78,8 @@ suite("AdditionalElements", () => {
       const addButton = await webView.findWebElement(By.id("addButton"));
       await addButton.click();
 
-      await WebviewTestUtils.assertEqualsPreview(webView, ""); //should not add the key-value pair
+      // the key-value pair should not be added
+      await WebviewTestUtils.assertEqualsPreview(webView, "");
     });
   });
 
@@ -114,7 +115,8 @@ suite("AdditionalElements", () => {
       // and exit the component via tab
       await value.sendKeys(Key.END, Key.BACK_SPACE, Key.TAB);
 
-      await WebviewTestUtils.assertMatchPreview(webView, /driver2 = lorem/); //should not edit the first inserted key-value pair
+      // the first inserted key-value pair should not be edited
+      await WebviewTestUtils.assertMatchPreview(webView, /driver2 = lorem/);
     });
   });
 });

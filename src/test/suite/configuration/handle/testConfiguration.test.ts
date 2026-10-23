@@ -11,6 +11,9 @@ import chaiFs from "chai-fs";
 
 chai.use(chaiFs);
 
+/**
+ * Tests the testing of the liquibase configuration.
+ */
 suite("testConfiguration", () => {
   /**
    * Restore all stubs after the tests.
@@ -35,15 +38,15 @@ suite("testConfiguration", () => {
       .then(() => {
         Sinon.assert.calledOnce(executeCommandStub);
 
-        const args = executeCommandStub.firstCall.args;
+        const firstArguments = executeCommandStub.firstCall.args;
 
-        assert.strictEqual(args.length, 3, "three args should be passed");
+        assert.strictEqual(firstArguments.length, 3, "three args should be passed");
 
-        assert.strictEqual(args[0], "liquibase.validate", "first arg should be the command");
+        assert.strictEqual(firstArguments[0], "liquibase.validate", "first arg should be the command");
 
         // get the other two args
-        const transferData: TransferDataForCommand = args[1];
-        const deleteTempFiles = args[2];
+        const transferData: TransferDataForCommand = firstArguments[1];
+        const deleteTemporaryFiles = firstArguments[2];
 
         assert.strictEqual(transferData.name, PROPERTY_FILE, "transfer data should have the name set correctly");
 
@@ -52,24 +55,24 @@ suite("testConfiguration", () => {
 
         assert.strictEqual(
           data,
-          deleteTempFiles.tempFilePath,
-          "the data and the tempFilePath from the third argument should be the same"
+          deleteTemporaryFiles.temporaryFilePath,
+          "the data and the temporaryFilePath from the third argument should be the same"
         );
 
-        chai.assert.pathExists(deleteTempFiles.tempFolder);
-        chai.assert.pathExists(deleteTempFiles.tempFilePath);
+        chai.assert.pathExists(deleteTemporaryFiles.temporaryFolder);
+        chai.assert.pathExists(deleteTemporaryFiles.temporaryFilePath);
 
         assert.deepStrictEqual(
-          fs.readFileSync(data, "utf-8"),
+          fs.readFileSync(data, "utf8"),
           fileContent,
           "the content of the file should be the expected one"
         );
 
         // execute the after command action manually
-        deleteTempFiles.executeAfterCommandAction();
+        deleteTemporaryFiles.executeAfterCommandAction();
 
-        chai.assert.notPathExists(deleteTempFiles.tempFolder);
-        chai.assert.notPathExists(deleteTempFiles.tempFilePath);
+        chai.assert.notPathExists(deleteTemporaryFiles.temporaryFolder);
+        chai.assert.notPathExists(deleteTemporaryFiles.temporaryFilePath);
 
         done();
       })

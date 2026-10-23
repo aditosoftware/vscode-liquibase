@@ -40,7 +40,7 @@ export class HandleChangelogFileInput {
         input: new QuickPick({
           name: this.CHANGELOG_QUICK_PICK_NAME,
           placeHolder: "Select the changelog file",
-          generateItems: this.generateItemsForChangelogSelection,
+          generateItems: (dialogValues) => this.generateItemsForChangelogSelection(dialogValues),
           onBeforeInput: this.isExtraQueryForChangelogNeeded,
           onAfterInput: (dialogValues) => this.setExtraChangelogCorrectly(dialogValues, this.CHANGELOG_QUICK_PICK_NAME),
         }),
@@ -60,7 +60,7 @@ export class HandleChangelogFileInput {
               "All Files": ["*"],
             },
           },
-          onBeforeInput: this.isOpenDialogNeeded,
+          onBeforeInput: (dialogValues) => this.isOpenDialogNeeded(dialogValues),
           onAfterInput: (dialogValues) =>
             this.setExtraChangelogCorrectly(dialogValues, this.CHANGELOG_OPEN_DIALOG_NAME),
         }),
@@ -75,13 +75,8 @@ export class HandleChangelogFileInput {
    * @returns `true` when an extra changelog query is needed, `false` when none is needed
    */
   private static isExtraQueryForChangelogNeeded(dialogValues: DialogValues): boolean {
-    if (dialogValues.uri) {
-      // context menu, no changelog question needed
-      return false;
-    }
-
-    // in all the other cases, ask for the changelog file
-    return true;
+    // context menu, no changelog question needed. In all the other cases, ask for the changelog file
+    return !dialogValues.uri;
   }
 
   /**
@@ -92,8 +87,8 @@ export class HandleChangelogFileInput {
    */
   private static isOpenDialogNeeded(dialogValues: DialogValues): boolean {
     return (
-      HandleChangelogFileInput.isExtraQueryForChangelogNeeded(dialogValues) &&
-      dialogValues.inputValues.get(HandleChangelogFileInput.CHANGELOG_QUICK_PICK_NAME)?.[0] === CHOOSE_CHANGELOG_OPTION
+      this.isExtraQueryForChangelogNeeded(dialogValues) &&
+      dialogValues.inputValues.get(this.CHANGELOG_QUICK_PICK_NAME)?.[0] === CHOOSE_CHANGELOG_OPTION
     );
   }
 
@@ -105,13 +100,13 @@ export class HandleChangelogFileInput {
    */
   private static getChangelogFileFromProperties(dialogValues: DialogValues): string | undefined {
     const propertyFile = dialogValues.inputValues.get(PROPERTY_FILE);
-    if (propertyFile?.[0]) {
-      const changelog = readChangelog(propertyFile[0]);
-      if (changelog) {
-        // if there is a changelog in in property-file, return it, so we can show it in the dialog
-        return changelog;
-      }
+
+    if (!propertyFile?.[0]) {
+      return;
     }
+
+    // if there is a changelog in in property-file, return it, so we can show it in the dialog
+    return readChangelog(propertyFile[0]);
   }
 
   /**
@@ -171,7 +166,7 @@ export class HandleChangelogFileInput {
     const items: vscode.QuickPickItem[] = [];
 
     // add the existing changelog to the items
-    const existingChangelog = HandleChangelogFileInput.getChangelogFileFromProperties(dialogValues);
+    const existingChangelog = this.getChangelogFileFromProperties(dialogValues);
     if (existingChangelog) {
       items.push(
         { label: "configured changelog", kind: vscode.QuickPickItemKind.Separator },

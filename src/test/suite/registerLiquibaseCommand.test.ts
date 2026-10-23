@@ -1,11 +1,11 @@
 import {
   addCommandAction,
-  buildAdditionalCmdArguments,
-  handleCommandArgs,
-  HandleCommandArgsResults,
+  buildAdditionalCommandArguments,
+  handleCommandArguments,
+  HandleCommandArgumentsResults,
   handleResultsOfCommandExecuted,
   PickPanelConfig,
-  transformCommandArgsAfterInput,
+  transformCommandArgumentsAfterInput,
   TransferDataForCommand,
 } from "../../registerLiquibaseCommand";
 import assert from "node:assert";
@@ -199,20 +199,20 @@ suite("registerLiquibaseCommand", () => {
   });
 
   /**
-   * Tests the method `handleCommandArgs`.
+   * Tests the method `handleCommandArguments`.
    */
   suite("handleCommandArgs", () => {
     /**
      * Tests that the method works as normal when no command args were given.
      */
     test("should work with no vscode command arg", () => {
-      const result = handleCommandArgs([], []);
+      const result = handleCommandArguments([], []);
 
       assert.deepStrictEqual(result, {
-        isRightClickMenuAction: false,
+        hasRightClickMenuAction: false,
         preBuiltDialogValues: new DialogValues(),
         transferActions: [],
-      } as HandleCommandArgsResults);
+      } as HandleCommandArgumentsResults);
     });
 
     /**
@@ -224,13 +224,13 @@ suite("registerLiquibaseCommand", () => {
       const expectedDialogValues = new DialogValues();
       expectedDialogValues.uri = uri;
 
-      const result = handleCommandArgs([uri], []);
+      const result = handleCommandArguments([uri], []);
 
       assert.deepStrictEqual(result, {
-        isRightClickMenuAction: true,
+        hasRightClickMenuAction: true,
         preBuiltDialogValues: expectedDialogValues,
         transferActions: [],
-      } as HandleCommandArgsResults);
+      } as HandleCommandArgumentsResults);
     });
 
     /**
@@ -240,7 +240,7 @@ suite("registerLiquibaseCommand", () => {
       const expectedDialogValues = new DialogValues();
       expectedDialogValues.addValue("foo", "bar");
 
-      const result = handleCommandArgs(
+      const result = handleCommandArguments(
         [new TransferDataForCommand("foo", "bar")],
         [
           {
@@ -250,23 +250,23 @@ suite("registerLiquibaseCommand", () => {
       );
 
       assert.deepStrictEqual(result, {
-        isRightClickMenuAction: false,
+        hasRightClickMenuAction: false,
         preBuiltDialogValues: expectedDialogValues,
         transferActions: [],
-      } as HandleCommandArgsResults);
+      } as HandleCommandArgumentsResults);
     });
 
     /**
      * Tests that the `TransferDataForCommand` will be not transferred, when no `PickPanelConfig` with the name exists.
      */
     test("should work with TransferDataForCommand command arg and not existing pickPanelConfig", () => {
-      const result = handleCommandArgs([new TransferDataForCommand("foo", "bar")], []);
+      const result = handleCommandArguments([new TransferDataForCommand("foo", "bar")], []);
 
       assert.deepStrictEqual(result, {
-        isRightClickMenuAction: false,
+        hasRightClickMenuAction: false,
         preBuiltDialogValues: new DialogValues(),
         transferActions: [],
-      } as HandleCommandArgsResults);
+      } as HandleCommandArgumentsResults);
     });
 
     /**
@@ -285,26 +285,26 @@ suite("registerLiquibaseCommand", () => {
         }
       }
 
-      const result = handleCommandArgs([new DummyTransferActionForCommand()], []);
+      const result = handleCommandArguments([new DummyTransferActionForCommand()], []);
 
       assert.deepStrictEqual(result, {
-        isRightClickMenuAction: false,
+        hasRightClickMenuAction: false,
         preBuiltDialogValues: new DialogValues(),
         transferActions: [new DummyTransferActionForCommand()],
-      } as HandleCommandArgsResults);
+      } as HandleCommandArgumentsResults);
     });
 
     /**
      * Tests that the input `undefined` will produce no error.
      */
     test("should work with undefined", () => {
-      const result = handleCommandArgs([undefined], []);
+      const result = handleCommandArguments([undefined], []);
 
       assert.deepStrictEqual(result, {
-        isRightClickMenuAction: false,
+        hasRightClickMenuAction: false,
         preBuiltDialogValues: new DialogValues(),
         transferActions: [],
-      } as HandleCommandArgsResults);
+      } as HandleCommandArgumentsResults);
     });
 
     /**
@@ -313,13 +313,13 @@ suite("registerLiquibaseCommand", () => {
     test("should work with any other command arg", () => {
       const debugLog = Sinon.spy(Logger.getLogger(), "debug");
 
-      const result = handleCommandArgs(["foo"], []);
+      const result = handleCommandArguments(["foo"], []);
 
       assert.deepStrictEqual(result, {
-        isRightClickMenuAction: false,
+        hasRightClickMenuAction: false,
         preBuiltDialogValues: new DialogValues(),
         transferActions: [],
-      } as HandleCommandArgsResults);
+      } as HandleCommandArgumentsResults);
 
       Sinon.assert.calledOnce(debugLog);
     });
@@ -333,7 +333,7 @@ suite("registerLiquibaseCommand", () => {
      * Tests that the method will produce an empty array when no additional arguments were given.
      */
     test("should work with no additional arguments", () => {
-      assert.deepStrictEqual(buildAdditionalCmdArguments(false), []);
+      assert.deepStrictEqual(buildAdditionalCommandArguments(false), []);
     });
 
     /**
@@ -341,7 +341,7 @@ suite("registerLiquibaseCommand", () => {
      */
     test("should work with command line arguments given", () => {
       assert.deepStrictEqual(
-        buildAdditionalCmdArguments(false, {
+        buildAdditionalCommandArguments(false, {
           commandLineArgs: ["foo", "bar"],
         }),
         ["foo", "bar"]
@@ -352,7 +352,7 @@ suite("registerLiquibaseCommand", () => {
      * Tests that the search path will be added when it is required and no RMB call is there.
      */
     test("should work with search path given when no RMB menu", () => {
-      assert.deepStrictEqual(buildAdditionalCmdArguments(false, { searchPathRequired: true }), [
+      assert.deepStrictEqual(buildAdditionalCommandArguments(false, { searchPathRequired: true }), [
         `-Dliquibase.searchPath=${process.cwd()}`,
       ]);
     });
@@ -361,19 +361,19 @@ suite("registerLiquibaseCommand", () => {
      * Tests that the search path will be not added, if we are in a RMB call, even it is required
      */
     test("should work with search path given when RMB menu", () => {
-      assert.deepStrictEqual(buildAdditionalCmdArguments(true, { searchPathRequired: true }), []);
+      assert.deepStrictEqual(buildAdditionalCommandArguments(true, { searchPathRequired: true }), []);
     });
   });
 
   /**
-   * Tests the method `transformCommandArgsAfterInput`
+   * Tests the method `transformCommandArgumentsAfterInput`
    */
-  suite("transformCommandArgsAfterInput", () => {
+  suite("transformCommandArgumentsAfterInput", () => {
     /**
      * Tests that the arguments will be added normally as expected.
      */
     test("should call normally", () => {
-      const expectedArgs: string[] = ["--my-args=a,b", "--additional-arg=true", "--force=true"];
+      const expectedArguments: string[] = ["--my-args=a,b", "--additional-arg=true", "--force=true"];
 
       const dialogValues = new DialogValues();
       dialogValues.addValue(PROPERTY_FILE, "data.liquibase.properties");
@@ -391,12 +391,12 @@ suite("registerLiquibaseCommand", () => {
         },
       ];
 
-      assertTransformCommandArgsAfterInput(
+      assertTransformCommandArgumentsAfterInput(
         dialogValues,
         pickPanelConfigs,
         "data.liquibase.properties",
         undefined,
-        expectedArgs
+        expectedArguments
       );
     });
 
@@ -409,7 +409,7 @@ suite("registerLiquibaseCommand", () => {
       const dialogValues = new DialogValues();
       dialogValues.addValue(changelogInput.HandleChangelogFileInput.CHANGELOG_NAME, changelogPath);
 
-      assertTransformCommandArgsAfterInput(dialogValues, [], undefined, vscode.Uri.file(changelogPath), [
+      assertTransformCommandArgumentsAfterInput(dialogValues, [], undefined, vscode.Uri.file(changelogPath), [
         "--changelogFile=changelog.xml",
         `-Dliquibase.searchPath=${process.cwd()}`,
       ]);
@@ -418,26 +418,26 @@ suite("registerLiquibaseCommand", () => {
 });
 
 /**
- * Asserts the calling of the method `transformCommandArgsAfterInput`.
+ * Asserts the calling of the method `transformCommandArgumentsAfterInput`.
  *
  * @param dialogValues - the dialog values that should be passed
  * @param pickPanelConfigs - the given `PickPanelConfigs`
  * @param expectedPropertyFilePath - the expected path to the property file
  * @param expectedUri - the expected uri set in the dialog values
- * @param expectedArgs - the expected created arguments
+ * @param expectedArguments - the expected created arguments
  */
-function assertTransformCommandArgsAfterInput(
+function assertTransformCommandArgumentsAfterInput(
   dialogValues: DialogValues,
   pickPanelConfigs: PickPanelConfig[],
   expectedPropertyFilePath: string | undefined,
   expectedUri: vscode.Uri | undefined,
-  expectedArgs: string[]
+  expectedArguments: string[]
 ): void {
-  const args: string[] = [];
+  const givenArguments: string[] = [];
 
-  const result = transformCommandArgsAfterInput(dialogValues, pickPanelConfigs, args);
+  const result = transformCommandArgumentsAfterInput(dialogValues, pickPanelConfigs, givenArguments);
 
   assert.strictEqual(result, expectedPropertyFilePath, "result should match");
   assert.strictEqual(dialogValues.uri?.fsPath, expectedUri?.fsPath, "uri should match");
-  assert.deepStrictEqual(args, expectedArgs, "args should match");
+  assert.deepStrictEqual(givenArguments, expectedArguments, "args should match");
 }

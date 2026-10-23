@@ -9,7 +9,7 @@ import assert from "node:assert";
 chai.use(chaiFs);
 chai.use(chaiString);
 
-const tempOutput = LiquibaseGUITestUtils.generateTemporaryFolder();
+const temporaryOutput = LiquibaseGUITestUtils.generateTemporaryFolder();
 
 /**
  * Tests the converting from one format to another format.
@@ -28,7 +28,7 @@ suite("convert format", () => {
    * Removes the temporary output folder after all tests.
    */
   suiteTeardown("remove temporary folder", () => {
-    fs.rmSync(tempOutput, { recursive: true, force: true, maxRetries: 10 });
+    fs.rmSync(temporaryOutput, { recursive: true, force: true, maxRetries: 10 });
   });
 
   for (const pFormat of formats) {
@@ -122,9 +122,9 @@ async function assertConvertingWithNoChangelogSelection(
   format: string,
   expectedCommandEndMessage: string
 ): Promise<void> {
-  LiquibaseGUITestUtils.removeContentOfFolder(tempOutput);
+  LiquibaseGUITestUtils.removeContentOfFolder(temporaryOutput);
 
-  await LiquibaseGUITestUtils.selectFolder(input, tempOutput);
+  await LiquibaseGUITestUtils.selectFolder(input, temporaryOutput);
 
   // the format
   await input.setText(format);
@@ -139,11 +139,11 @@ async function assertConvertingWithNoChangelogSelection(
   assert.ok(await LiquibaseGUITestUtils.waitForCommandExecution(expectedCommandEndMessage));
 
   await LiquibaseGUITestUtils.waitUntil(
-    () => fs.readdirSync(tempOutput).length !== 0,
-    `waiting for file to be there in ${tempOutput}`
+    () => fs.readdirSync(temporaryOutput).length !== 0,
+    `waiting for file to be there in ${temporaryOutput}`
   );
 
-  const files = fs.readdirSync(tempOutput);
+  const files = fs.readdirSync(temporaryOutput);
   for (const file of files) {
     chai.expect(file).to.endWith(format.toLowerCase());
   }

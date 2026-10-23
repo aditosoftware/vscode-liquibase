@@ -20,8 +20,19 @@ import { getCustomDrivers } from "../utilities/customDriverUtilities";
  * - Setting message listeners so data can be passed between the webview and extension
  */
 export class LiquibaseConfigurationPanel {
+  /**
+   * The currently opened panel, or `undefined` when no panel is open.
+   */
   private static currentPanel: LiquibaseConfigurationPanel | undefined;
+
+  /**
+   * The underlying webview panel that is managed by this class.
+   */
   private readonly _panel: WebviewPanel;
+
+  /**
+   * All disposables that are registered for the webview panel and must be disposed when the panel closes.
+   */
   private readonly _disposables: Disposable[] = [];
 
   /**
@@ -53,9 +64,9 @@ export class LiquibaseConfigurationPanel {
    * If there is no data given, then a default init data will be passed
    */
   public static render(extensionUri: Uri, data?: LiquibaseConfigurationData): void {
-    if (LiquibaseConfigurationPanel.currentPanel) {
+    if (this.currentPanel) {
       // If the webview panel already exists reveal it
-      LiquibaseConfigurationPanel.currentPanel._panel.reveal(ViewColumn.One);
+      this.currentPanel._panel.reveal(ViewColumn.One);
     } else {
       // If a webview panel does not already exist create and show a new one
       const panel = window.createWebviewPanel(
@@ -75,7 +86,7 @@ export class LiquibaseConfigurationPanel {
         }
       );
 
-      LiquibaseConfigurationPanel.currentPanel = new LiquibaseConfigurationPanel(panel, extensionUri);
+      this.currentPanel = new LiquibaseConfigurationPanel(panel, extensionUri);
     }
 
     // In all cases, transfer a message with the current data
@@ -100,7 +111,7 @@ export class LiquibaseConfigurationPanel {
    * @param data - the data of the message
    */
   static transferMessage(pMessageType: MessageType, data: LiquibaseConfigurationData): void {
-    LiquibaseConfigurationPanel.currentPanel?._panel.webview.postMessage(new MessageData(pMessageType, data)).then(
+    this.currentPanel?._panel.webview.postMessage(new MessageData(pMessageType, data)).then(
       (success) => {
         if (!success) {
           Logger.getLogger().error({ message: "error transferring the message to the webview" });
@@ -190,23 +201,27 @@ export class LiquibaseConfigurationPanel {
 
         if (data instanceof LiquibaseConfigurationData) {
           switch (messageType) {
-            case MessageType.SAVE_CONNECTION:
+            case MessageType.SAVE_CONNECTION: {
               createLiquibaseProperties(data).catch((error) =>
                 Logger.getLogger().error({ message: "Error saving the connection", error })
               );
               break;
-            case MessageType.TEST_CONNECTION:
+            }
+            case MessageType.TEST_CONNECTION: {
               testLiquibaseConnection(data).catch((error) =>
                 Logger.getLogger().error({ message: "Error testing the connection", error })
               );
               break;
-            case MessageType.CHOOSE_CHANGELOG:
+            }
+            case MessageType.CHOOSE_CHANGELOG: {
               chooseFileForChangelog(data).catch((error) =>
                 Logger.getLogger().error({ message: "Error choosing a changelog", error })
               );
               break;
-            default:
+            }
+            default: {
               throw new Error(`Handling for command ${messageType} not found.`);
+            }
           }
         } else if (messageData.messageType === MessageType.LOG_MESSAGE) {
           Logger.getLogger().log(data);

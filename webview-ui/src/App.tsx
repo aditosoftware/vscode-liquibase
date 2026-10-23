@@ -35,18 +35,22 @@ function App(): React.JSX.Element {
 
   vscodeApiWrapper.addMessageListener((pMessage) => {
     switch (pMessage.messageType) {
-      case MessageType.INIT:
+      case MessageType.INIT: {
         handleInitData(pMessage);
         break;
-      case MessageType.SAVING_SUCCESSFUL:
+      }
+      case MessageType.SAVING_SUCCESSFUL: {
         handleSavingSuccessful(pMessage);
         break;
-      case MessageType.CHOOSE_CHANGELOG_RESULT:
+      }
+      case MessageType.CHOOSE_CHANGELOG_RESULT: {
         handleChooseChangelogResult(pMessage);
         break;
-      default:
+      }
+      default: {
         console.error(`No handling for type ${pMessage.messageType} found`);
         break;
+      }
     }
   });
 
@@ -58,13 +62,15 @@ function App(): React.JSX.Element {
    */
   function handleInitData(messageData: MessageData): void {
     const configurationData = messageData.configurationData;
-    if (configurationData) {
-      setReferenceConnection(configurationData.referenceDatabaseConnection !== undefined);
-
-      updateData((draft) => {
-        Object.assign(draft, configurationData);
-      });
+    if (!configurationData) {
+      return;
     }
+
+    setReferenceConnection(configurationData.referenceDatabaseConnection !== undefined);
+
+    updateData((draft) => {
+      Object.assign(draft, configurationData);
+    });
   }
 
   /**
@@ -73,7 +79,7 @@ function App(): React.JSX.Element {
    * @param messageData - the message data given
    */
   function handleSavingSuccessful(messageData: MessageData): void {
-    if (messageData.configurationData && data.name === messageData.configurationData.name) {
+    if (data.name === messageData.configurationData?.name) {
       //just check the name if the loaded config is the same
       updateData((draft) => {
         draft.status = ConfigurationStatus.EDIT;
