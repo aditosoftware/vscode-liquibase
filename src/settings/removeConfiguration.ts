@@ -117,19 +117,21 @@ function deleteConfig(path: string, deletionMode: string[]): (pJsonData: Record<
     // get all information about what to delete
     const deleteOptions = whatDeleted.get(deletionMode[0]);
 
-    if (foundKey && deleteOptions) {
-      if (deleteOptions.includes(RemoveConfigurationOptions.CACHE)) {
-        // remove the cache
-        cacheHandler.removeConnectionsFromCache([path]);
-      }
-      if (deleteOptions.includes(RemoveConfigurationOptions.SETTING)) {
-        // remove the setting
-        delete pJsonData[foundKey];
-      }
-      if (deleteOptions.includes(RemoveConfigurationOptions.DELETE_ALL)) {
-        // remove the configuration file
-        fs.rmSync(path);
-      }
+    if (!(foundKey && deleteOptions)) {
+      return;
+    }
+
+    if (deleteOptions.includes(RemoveConfigurationOptions.CACHE)) {
+      // remove the cache
+      cacheHandler.removeConnectionsFromCache([path]);
+    }
+    if (deleteOptions.includes(RemoveConfigurationOptions.SETTING)) {
+      // remove the setting
+      delete pJsonData[foundKey];
+    }
+    if (deleteOptions.includes(RemoveConfigurationOptions.DELETE_ALL)) {
+      // remove the configuration file
+      fs.rmSync(path);
     }
   };
 }

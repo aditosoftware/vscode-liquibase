@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { executeJar } from "./executeJar";
 import { HandleChangelogFileInput, getWorkFolder } from "./handleChangelogFileInput";
-import * as path from "node:path";
+import path from "node:path";
 import { resourcePath } from "./extension";
 import { DialogValues, InputBase, InputBaseOptions, handleMultiStepInput } from "@aditosoftware/vscode-input";
 import { Logger } from "@aditosoftware/vscode-logging";
@@ -83,8 +83,8 @@ export function registerLiquibaseCommand(
   pOriginPickPanelConfigs: ReadonlyArray<PickPanelConfig>,
   additionalCommandAction?: AdditionalCommandAction
 ): vscode.Disposable {
-  return vscode.commands.registerCommand("liquibase." + action, async (...commandArgs) => {
-    await addCommandAction(title, action, pOriginPickPanelConfigs, commandArgs, additionalCommandAction);
+  return vscode.commands.registerCommand("liquibase." + action, async (...commandArguments) => {
+    await addCommandAction(title, action, pOriginPickPanelConfigs, commandArguments, additionalCommandAction);
   });
 }
 
@@ -94,31 +94,27 @@ export function registerLiquibaseCommand(
  * @param title - the title that should be displayed over every input
  * @param action - Liquibase action to perform (e.g., "update").
  * @param pOriginPickPanelConfigs - Array of PickPanelConfig objects representing different user interaction steps.
- * @param vscodeCommandArgs - the command arguments given by VSCode when trying to start the command execution
+ * @param vscodeCommandArguments - the command arguments given by VSCode when trying to start the command execution
  * @param additionalCommandAction - any optional additional elements for registering any command
  */
 export async function addCommandAction(
   title: string,
   action: string,
   pOriginPickPanelConfigs: ReadonlyArray<PickPanelConfig>,
-  vscodeCommandArgs: VSCodeArguments,
+  vscodeCommandArguments: VSCodeArguments,
   additionalCommandAction?: AdditionalCommandAction
 ): Promise<void> {
   // copy the origin pickPanelConfigs, because we might delete an element from them
-  const pickPanelConfigs = Array.from(pOriginPickPanelConfigs);
+  const pickPanelConfigs = [...pOriginPickPanelConfigs];
 
-  const {
-    isRightClickMenuAction,
-    preBuiltDialogValues,
-    transferActions,
-  }: {
-    isRightClickMenuAction: boolean;
-    preBuiltDialogValues: DialogValues;
-    transferActions: TransferActionForCommand[];
-  } = handleCommandArgs(vscodeCommandArgs, pickPanelConfigs);
+  const { hasRightClickMenuAction, preBuiltDialogValues, transferActions }: HandleCommandArgumentsResults =
+    handleCommandArguments(vscodeCommandArguments, pickPanelConfigs);
 
   // build the additional arguments
-  const args: string[] = buildAdditionalCmdArguments(isRightClickMenuAction, additionalCommandAction);
+  const additionalCommandArguments: string[] = buildAdditionalCommandArguments(
+    hasRightClickMenuAction,
+    additionalCommandAction
+  );
 
   try {
     // Handle the multi-step-input
@@ -134,15 +130,15 @@ export async function addCommandAction(
 
     await additionalCommandAction?.beforeCommandAction?.(dialogValues);
 
-    const propertyFilePath: string | undefined = transformCommandArgsAfterInput(
+    const propertyFilePath: string | undefined = transformCommandArgumentsAfterInput(
       dialogValues,
       pOriginPickPanelConfigs,
-      args
+      additionalCommandArguments
     );
 
     if (propertyFilePath) {
       // Execute Liquibase update with the final selections
-      executeJar(resourcePath, action, propertyFilePath, args).then(
+      executeJar(resourcePath, action, propertyFilePath, additionalCommandArguments).then(
         (code) => handleResultsOfCommandExecuted(code, action, dialogValues, transferActions, additionalCommandAction),
         (error) => Logger.getLogger().error({ message: "error executing jar", error })
       );
@@ -162,13 +158,13 @@ export async function addCommandAction(
 type VSCodeArguments = any[];
 
 /**
- * The results of the `handleCommandArgs` method.
+ * The results of the `handleCommandArguments` method.
  */
-export type HandleCommandArgsResults = {
+export type HandleCommandArgumentsResults = {
   /**
    * If the command was triggered from a right click menu.
    */
-  isRightClickMenuAction: boolean;
+  hasRightClickMenuAction: boolean;
 
   /**
    * Any dialog values that are already set by the passed arguments.
@@ -252,84 +248,105 @@ export function handleResultsOfCommandExecuted(
 /**
  * Handles the command args that were given by calling this command.
  *
- * @param vscodeCommandArgs - the given command args by VSCode. These are given, when the command was called from RMB menu,
+ * @param vscodeCommandArguments - the given command args by VSCode. These are given, when the command was called from RMB menu,
  * or when additional args were passed.
  * @param pickPanelConfigs - the `PickPanelConfig` that contains all current inputs. These can be modified by this method,
- * and some values can be removed, if the values for an input are already filled by an `vscodeCommandArgs`.
+ * and some values can be removed, if the values for an input are already filled by an `vscodeCommandArguments`.
  * @returns the results of this method.
  * This includes a detection, if the command was triggered from RMB,
  * some dialog values that are already pre-filled and the transfer actions given by the command args.
  */
-export function handleCommandArgs(
-  vscodeCommandArgs: VSCodeArguments,
+export function handleCommandArguments(
+  vscodeCommandArguments: VSCodeArguments,
   pickPanelConfigs: PickPanelConfig[]
-): HandleCommandArgsResults {
+): HandleCommandArgumentsResults {
   const transferActions: TransferActionForCommand[] = [];
   // detect if we are coming from a context menu.
-  let isRightClickMenuAction = false;
+  let hasRightClickMenuAction = false;
   // and build any dialog values that we have given from the command args
   const preBuiltDialogValues = new DialogValues();
 
   // detect any command args. These can be values from the right click menu or from any other command calls during the extension.
-  for (const commandArg of vscodeCommandArgs) {
-    if (commandArg instanceof vscode.Uri) {
+  for (const commandArgument of vscodeCommandArguments) {
+    if (commandArgument instanceof vscode.Uri) {
       // Right click menus has Uri
-      preBuiltDialogValues.uri = commandArg;
-      isRightClickMenuAction = true;
-    } else if (commandArg instanceof TransferDataForCommand) {
+      preBuiltDialogValues.uri = commandArgument;
+      hasRightClickMenuAction = true;
+    } else if (commandArgument instanceof TransferDataForCommand) {
       // external data from any other command call
       // find out the config we can delete
-      let indexToDelete = -1;
-
-      for (const [index, config] of pickPanelConfigs.entries()) {
-        if (config.input.inputOptions.name === commandArg.name) {
-          indexToDelete = index;
-
-          // if a config was found, set the new value
-          preBuiltDialogValues.addValue(config.input.inputOptions.name, commandArg.data);
-        }
-      }
-
-      // delete the config, if it was found
-      if (indexToDelete !== -1) {
-        pickPanelConfigs.splice(indexToDelete);
-      }
-    } else if (commandArg instanceof TransferActionForCommand) {
-      transferActions.push(commandArg);
-    } else if (commandArg !== undefined) {
+      handleTransferDataForCommand(pickPanelConfigs, commandArgument, preBuiltDialogValues);
+    } else if (commandArgument instanceof TransferActionForCommand) {
+      transferActions.push(commandArgument);
+    } else if (commandArgument !== undefined) {
       // Note: this message will also appear, if everything was alright.
       Logger.getLogger().debug({
-        message: `Unknown data coming to the command ${commandArg}. Type was ${typeof commandArg}.`,
+        message: `Unknown data coming to the command ${commandArgument}. Type was ${typeof commandArgument}.`,
       });
     }
   }
-  return { isRightClickMenuAction, preBuiltDialogValues, transferActions };
+  return { hasRightClickMenuAction: hasRightClickMenuAction, preBuiltDialogValues, transferActions };
+}
+
+/**
+ * Handles the external data that was transferred to this command via a {@link TransferDataForCommand}.
+ *
+ * The transferred data is added to the `preBuiltDialogValues`, so the user does not need to
+ * give this value again. Afterwards, the matching config — and all configs after it — are
+ * removed from the `pickPanelConfigs`, so the user is no longer asked for this input.
+ *
+ * @param pickPanelConfigs - the `PickPanelConfig`s of the current command. The configs matching the transferred data are removed from this array (mutated in place).
+ * @param commandArgument - the transfer data given to the command. Its `name` must be identical to the `InputBase.name` of a config, otherwise nothing happens.
+ * @param preBuiltDialogValues - the dialog values that are already pre-filled. The transferred data is added to these values (mutated in place).
+ */
+function handleTransferDataForCommand(
+  pickPanelConfigs: PickPanelConfig[],
+  commandArgument: TransferDataForCommand,
+  preBuiltDialogValues: DialogValues
+): void {
+  let indexToDelete = -1;
+
+  for (const [index, config] of pickPanelConfigs.entries()) {
+    if (config.input.inputOptions.name !== commandArgument.name) {
+      continue;
+    }
+
+    indexToDelete = index;
+
+    // if a config was found, set the new value
+    preBuiltDialogValues.addValue(config.input.inputOptions.name, commandArgument.data);
+  }
+
+  // delete the config, if it was found
+  if (indexToDelete !== -1) {
+    pickPanelConfigs.splice(indexToDelete);
+  }
 }
 
 /**
  * Build additional cmd args depending on the `additionalCommandAction`.
  *
- * @param isRightClickMenuAction - if the current command was triggered from a right click menu.
+ * @param hasRightClickMenuAction - if the current command was triggered from a right click menu.
  * @param additionalCommandAction - any optional additional elements for registering any command
  * @returns the created additional cmd args.
  */
-export function buildAdditionalCmdArguments(
-  isRightClickMenuAction: boolean,
+export function buildAdditionalCommandArguments(
+  hasRightClickMenuAction: boolean,
   additionalCommandAction?: AdditionalCommandAction
 ): string[] {
-  const cmdArgs: string[] = [];
+  const commandArguments: string[] = [];
   if (additionalCommandAction?.commandLineArgs) {
     // add any given command line arguments
-    for (const pArg of additionalCommandAction.commandLineArgs) {
-      cmdArgs.push(pArg);
+    for (const pArgument of additionalCommandAction.commandLineArgs) {
+      commandArguments.push(pArgument);
     }
   }
-  if (additionalCommandAction?.searchPathRequired && !isRightClickMenuAction) {
+  if (!hasRightClickMenuAction && additionalCommandAction?.searchPathRequired) {
     // add the search path to the arguments
     const searchPath: string = "-Dliquibase.searchPath=" + getWorkFolder();
-    cmdArgs.push(searchPath);
+    commandArguments.push(searchPath);
   }
-  return cmdArgs;
+  return commandArguments;
 }
 
 /**
@@ -338,36 +355,41 @@ export function buildAdditionalCmdArguments(
  *
  * @param dialogValues - the values that the user has given
  * @param pOriginPickPanelConfigs - the configuration of the inputs. These will be used to add the cmd args to the given values.
- * @param cmdArgs - the cmd args that will be extended by the method.
+ * @param commandArguments - the cmd args that will be extended by the method.
  * @returns the path to the property file.
  */
-export function transformCommandArgsAfterInput(
+export function transformCommandArgumentsAfterInput(
   dialogValues: DialogValues,
   pOriginPickPanelConfigs: readonly PickPanelConfig[],
-  cmdArgs: string[]
+  commandArguments: string[]
 ): string | undefined {
   let propertyFilePath: string | undefined;
   // go over the dialog values
   dialogValues.inputValues.forEach((value, input) => {
-    pOriginPickPanelConfigs
-      .filter((pConfig) => pConfig.input.inputOptions.name === input)
-      .forEach((pConfig) => {
-        if (input === PROPERTY_FILE) {
-          // find out property file and save it in an extra variable
-          propertyFilePath = value[0];
-        }
+    const matchingConfigs = pOriginPickPanelConfigs.filter((pConfig) => pConfig.input.inputOptions.name === input);
 
-        if (pConfig.cmdArgs) {
-          // if there were values that are needed to include into the args, then add them
-          cmdArgs?.push(pConfig.cmdArgs + "=" + value.join(","));
-        }
+    for (const pConfig of matchingConfigs) {
+      if (input === PROPERTY_FILE) {
+        // find out property file and save it in an extra variable
+        propertyFilePath = value[0];
+      }
 
-        if (pConfig.createCmdArgs) {
-          // if we have a custom function for creating the cmd args, then call it and add them as well
-          const additionalArgs = pConfig.createCmdArgs(dialogValues);
-          additionalArgs?.forEach((pArg) => cmdArgs?.push(pArg));
-        }
-      });
+      if (pConfig.cmdArgs) {
+        // if there were values that are needed to include into the args, then add them
+        commandArguments?.push(pConfig.cmdArgs + "=" + value.join(","));
+      }
+
+      if (!pConfig.createCmdArgs) {
+        continue;
+      }
+
+      // if we have a custom function for creating the cmd args, then call it and add them as well
+      const additionalArguments = pConfig.createCmdArgs(dialogValues) ?? [];
+
+      for (const pArgument of additionalArguments) {
+        commandArguments?.push(pArgument);
+      }
+    }
   });
 
   // set the changelog from the dialog to the uri
@@ -378,7 +400,7 @@ export function transformCommandArgsAfterInput(
 
   if (dialogValues.uri) {
     // if this was called from an right click menu, then handle some parameters differently
-    cmdArgs.push(
+    commandArguments.push(
       "--changelogFile=" + path.relative(getWorkFolder(), dialogValues.uri.fsPath),
 
       "-Dliquibase.searchPath=" + getWorkFolder()

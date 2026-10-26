@@ -9,7 +9,7 @@ import { getReferenceKeysFromPropertyFile } from "../../propertiesToDiff";
  * Tests the file propertiesToDiff.
  */
 suite("propertiesToDiff", () => {
-  let tempPath: string;
+  let temporaryPath: string;
   let fileName: string;
 
   /**
@@ -18,14 +18,14 @@ suite("propertiesToDiff", () => {
   suiteSetup("init logger and temp folder", () => {
     TestUtils.initLoggerForTests();
 
-    tempPath = TestUtils.createTempFolderForTests("propertiesReading");
+    temporaryPath = TestUtils.createTempFolderForTests("propertiesReading");
   });
 
   /**
    * Creates for every test an individual file name in in the temp folder.
    */
   setup("create temp file name", () => {
-    fileName = path.join(tempPath, `${randomUUID()}.liquibase.properties`);
+    fileName = path.join(temporaryPath, `${randomUUID()}.liquibase.properties`);
   });
 
   /**
@@ -43,11 +43,14 @@ suite("propertiesToDiff", () => {
      * Tests that nothing will be read when reading the reference values from an empty file.
      */
     test("should readPossibleReferenceValues with empty file", () => {
-      fs.writeFileSync(fileName, "", "utf-8");
+      fs.writeFileSync(fileName, "", "utf8");
 
       assert.deepStrictEqual(getReferenceKeysFromPropertyFile(fileName), []);
     });
 
+    /**
+     * Tests that all valid keys will be read from the properties file and transformed correctly.
+     */
     test("should readPossibleReferenceValues", () => {
       fs.writeFileSync(
         fileName,
@@ -64,7 +67,7 @@ username = sed
 url = diam
 invalidKey = notCorrect
 `,
-        "utf-8"
+        "utf8"
       );
 
       const actual = getReferenceKeysFromPropertyFile(fileName);
@@ -84,7 +87,7 @@ invalidKey = notCorrect
           "--reference-schemas=elitr",
           "--reference-username=sed",
           "--reference-url=diam",
-        ].sort((a, b) => a.localeCompare(b))
+        ].toSorted((a, b) => a.localeCompare(b))
       );
     });
   });

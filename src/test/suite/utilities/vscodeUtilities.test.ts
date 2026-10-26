@@ -52,7 +52,7 @@ suite("vscodeUtilities", () => {
       const fileName = "myFile.txt";
       const file = path.join(folder, fileName);
 
-      fs.writeFileSync(file, fileContent, "utf-8");
+      fs.writeFileSync(file, fileContent, "utf8");
 
       openDocument(file)
         .then(() => {

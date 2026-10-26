@@ -21,6 +21,9 @@ suite("Unexpected Changesets", function () {
    * Test function that executes the 'Unexpected Changesets' command with different context types.
    */
   LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
+    /**
+     * Tests that the 'unexpected changesets' command is executed with the selected context type.
+     */
     test(
       "should execute 'Unexpected Changesets' with context type '" + option + "' command with " + key,
       async function () {

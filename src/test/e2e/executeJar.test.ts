@@ -14,7 +14,7 @@ suite("executeJar", function () {
    */
   let configurationName: string;
   let configurationNameDupe: string;
-  const clock = 1744016763539;
+  const clock = 1_744_016_763_539;
 
   /**
    * Set up the test suite.

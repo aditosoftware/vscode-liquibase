@@ -171,7 +171,7 @@ suite("read configuration", () => {
           assert.ok(result);
 
           const actualSettings = JSON.parse(
-            fs.readFileSync(path.join(baseResourcePath, "settings.json"), { encoding: "utf-8" })
+            fs.readFileSync(path.join(baseResourcePath, "settings.json"), { encoding: "utf8" })
           );
 
           assert.deepStrictEqual(

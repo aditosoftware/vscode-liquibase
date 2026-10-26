@@ -117,7 +117,7 @@ suite("extension tests", () => {
      * Tests that the activation of the extension does work.
      */
     test("should activate", async () => {
-      const tempDir = TestUtils.createTempFolderForTests("extension");
+      const temporaryDirectory = TestUtils.createTempFolderForTests("extension");
 
       const memento: vscode.Memento = {
         keys: () => {
@@ -137,10 +137,10 @@ suite("extension tests", () => {
       });
 
       const context: vscode.ExtensionContext = {
-        globalStorageUri: vscode.Uri.file(tempDir),
-        extensionPath: tempDir,
-        extensionUri: vscode.Uri.file(tempDir),
-        logUri: vscode.Uri.file(tempDir),
+        globalStorageUri: vscode.Uri.file(temporaryDirectory),
+        extensionPath: temporaryDirectory,
+        extensionUri: vscode.Uri.file(temporaryDirectory),
+        logUri: vscode.Uri.file(temporaryDirectory),
         subscriptions: [],
         globalState: memento,
       } as unknown as vscode.ExtensionContext;
@@ -150,7 +150,7 @@ suite("extension tests", () => {
       // check that there were any subscriptions registered
       expect(context.subscriptions).to.have.lengthOf.above(20);
 
-      const files = fs.readdirSync(tempDir);
+      const files = fs.readdirSync(temporaryDirectory);
 
       // in our temp dir, we should have two log files
       expect(files).to.contain("Liquibase.log");

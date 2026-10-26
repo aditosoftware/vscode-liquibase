@@ -1,9 +1,9 @@
-import * as path from "node:path";
+import path from "node:path";
 import * as vscode from "vscode";
 import { spawn, spawnSync } from "node:child_process";
 import { Logger } from "@aditosoftware/vscode-logging";
 import * as fs from "node:fs";
-import { cacheHandler, libFolder, resourcePath } from "./extension";
+import { cacheHandler, libraryFolder, resourcePath } from "./extension";
 import { getClasspathSeparator } from "./utilities/osUtilities";
 import {
   getClearOutputChannelOnStartSetting,
@@ -38,7 +38,7 @@ class CustomError extends Error {
  * @param rootPath - The root path for the JAR file and other resources.
  * @param operation - The operation to perform using Liquibase.
  * @param propertyPath - the path to the property file
- * @param args - Additional arguments for the Liquibase command.
+ * @param givenArguments - Additional arguments for the Liquibase command.
  * @returns A Promise that resolves when the process completes successfully or rejects on error.
  * This promise has the code of the command. 0 = successful, 1 = not successful.
  */
@@ -46,22 +46,27 @@ export function executeJar(
   rootPath: string,
   operation: string,
   propertyPath: string,
-  args: string[] = []
+  givenArguments: string[] = []
 ): Thenable<number> {
   // classpath elements needed for execution of the jar
   // the classpath is built from the root path and the workspace folder
   const cp = [path.join(rootPath, "*"), getLiquibaseFolder()].join(getClasspathSeparator());
 
-  const argsArray: string[] = [
+  const argumentsArray: string[] = [
     "-cp",
     cp,
     "liquibase.integration.commandline.LiquibaseCommandLine",
     operation,
     `--defaults-file=${propertyPath}`,
-    ...args,
+    ...givenArguments,
   ];
 
-  return executeJarAsync(`Executing Liquibase '${operation}'`, `Liquibase command '${operation}'`, argsArray, [0, 1]);
+  return executeJarAsync(
+    `Executing Liquibase '${operation}'`,
+    `Liquibase command '${operation}'`,
+    argumentsArray,
+    [0, 1]
+  );
 }
 
 /**
@@ -71,14 +76,14 @@ export function executeJar(
  *
  * @param progressTitle - the title for the progress
  * @param whatToExecute - what is executed. This will be shown in the logs  as `${whatToExecute} will be executed`
- * @param argsArray - the arguments that need to be added for this command
+ * @param argumentsArray - the arguments that need to be added for this command
  * @param allowedCodes - the allowed error codes. If any of this codes were given by the program call, then it was successful, otherwise not
  * @returns the error code of the program. this will be any of the `allowedCodes`
  */
 export function executeJarAsync<ErrorCode extends number>(
   progressTitle: string,
   whatToExecute: string,
-  argsArray: string[],
+  argumentsArray: string[],
   allowedCodes: ErrorCode[]
 ): Thenable<ErrorCode> {
   return vscode.window.withProgress(
@@ -99,7 +104,7 @@ export function executeJarAsync<ErrorCode extends number>(
           "-Duser.language=en",
           // set encoding to utf-8, because otherwise special characters will not be displayed correctly
           "-Dfile.encoding=UTF-8",
-          ...argsArray,
+          ...argumentsArray,
         ];
 
         const childProcess = spawn(javaExecutable, commandArguments);
@@ -148,8 +153,8 @@ export function executeJarAsync<ErrorCode extends number>(
 
         childProcess.on("exit", () => {
           const duration = Date.now() - startTime;
-          const minutes = Math.floor(duration / 60000);
-          const seconds = Math.floor((duration % 60000) / 1000);
+          const minutes = Math.floor(duration / 60_000);
+          const seconds = Math.floor((duration % 60_000) / 1000);
           const milliseconds = duration % 1000;
           const formattedDuration = `${minutes.toString().padStart(2, "0")}:${seconds
             .toString()
@@ -183,19 +188,19 @@ export async function loadContextsFromChangelogFile(changelogFile: string): Prom
     }
 
     // all arguments for the jar execution
-    const args = [
+    const argumentsForJar = [
       // set encoding to utf-8, because otherwise special characters will not be displayed correctly from liquibase
       "-Dfile.encoding=UTF-8",
-      ...createBasicArgsForLiquibaseCLI(),
+      ...createBasicArgumentsForLiquibaseCLI(),
       "context",
       changelogFile,
     ];
 
     Logger.getLogger().info({ message: `Trying to load contexts for ${changelogFile}` });
-    Logger.getLogger().info({ message: `${javaExecutable} ${args.join(" ")}` });
+    Logger.getLogger().info({ message: `${javaExecutable} ${argumentsForJar.join(" ")}` });
 
     try {
-      const result = spawnSync(javaExecutable, args, { encoding: "utf-8" });
+      const result = spawnSync(javaExecutable, argumentsForJar, { encoding: "utf8" });
 
       Logger.getLogger().info({ message: `Fetching of contexts finished with ${result.status}` });
       // Log every output (stdout, stderr) from the command for later information.
@@ -206,7 +211,7 @@ export async function loadContextsFromChangelogFile(changelogFile: string): Prom
       if (result.status === 0) {
         // command execution was successful, trim the result and transform it to the array
         const output = result.stdout.trim();
-        const contexts = JSON.parse(output.toString()) as string[];
+        const contexts = JSON.parse(output) as string[];
 
         Logger.getLogger().info({ message: `Loaded contexts: ${contexts.toString()}` });
 
@@ -313,12 +318,12 @@ export async function loadContextsFromChangelogFile(changelogFile: string): Prom
  * @example
  * Creating arguments for command `convert`:
  * ```ts
- * [...createBasicArgsForLiquibaseCLI(), "convert", "--format", format, input, output],
+ * [...createBasicArgumentsForLiquibaseCLI(), "convert", "--format", format, input, output],
  * ```
  * @returns the basic args
  */
-export function createBasicArgsForLiquibaseCLI(): string[] {
-  const cp = [path.join(resourcePath, "*"), path.join(libFolder, "*"), getLiquibaseFolder()].join(
+export function createBasicArgumentsForLiquibaseCLI(): string[] {
+  const cp = [path.join(resourcePath, "*"), path.join(libraryFolder, "*"), getLiquibaseFolder()].join(
     getClasspathSeparator()
   );
   return ["-cp", cp, "de.adito.LiquibaseExtendedCli"];
@@ -349,7 +354,7 @@ function getJavaExecutable(reject: (reason?: unknown) => void): string | undefin
  * @param progress - the progress where some messages should be written
  */
 function addToOutput(data: unknown, progress: vscode.Progress<{ message: string | undefined }>): void {
-  const line: string = `${data}`;
+  const line: string = String(data);
 
   // append any message to the output stream.
   // These messages should ignore any format

@@ -43,10 +43,12 @@ suite("Add existing liquibase.properties to the configuration", function () {
 
     // wait until there is a settings file with the content
     await LiquibaseGUITestUtils.waitUntil(() => {
-      if (fs.existsSync(settingsFile)) {
-        const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
-        return data[configurationName];
+      if (!fs.existsSync(settingsFile)) {
+        return;
       }
+
+      const data = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
+      return data[configurationName];
     }, `waiting for ${settingsFile} to exist`);
 
     chai.assert.pathExists(settingsFile);

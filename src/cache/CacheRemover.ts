@@ -97,11 +97,12 @@ export class CacheRemover {
    */
   private handleRemoval(toRemove: string, result: DialogValues): void {
     switch (toRemove) {
-      case RemoveCacheOptions.WHOLE_CACHE:
+      case RemoveCacheOptions.WHOLE_CACHE: {
         // remove the whole cache
         this.cacheHandler.removeCache();
         break;
-      case RemoveCacheOptions.REMOVE_CONNECTION:
+      }
+      case RemoveCacheOptions.REMOVE_CONNECTION: {
         // remove just a few connections
         {
           const propertyFiles = result.inputValues.get(PROPERTY_FILE);
@@ -123,8 +124,10 @@ export class CacheRemover {
           }
         }
         break;
-      default:
+      }
+      default: {
         Logger.getLogger().debug({ message: `Not defined use case ${toRemove}` });
+      }
     }
   }
 
@@ -146,7 +149,7 @@ export class CacheRemover {
 
     return Object.keys(this.configuration)
       .filter((key) => cacheKeys.includes(this.configuration[key]))
-      .sort((a, b) => a.localeCompare(b))
+      .toSorted((a, b) => a.localeCompare(b))
       .map((key) => {
         const value = this.configuration[key];
         return {
@@ -196,9 +199,8 @@ export class CacheRemover {
 
     if (toRemove?.[0]) {
       return toRemove[0] !== RemoveCacheOptions.WHOLE_CACHE;
-    } else {
-      return false;
     }
+    return false;
   }
 
   /**

@@ -55,6 +55,9 @@ suite("osUtilities", () => {
     },
   ];
   for (const pArguments of platformArguments) {
+    /**
+     * Tests that the correct classpath separator will be returned for the given platform.
+     */
     test(`should get classpath separator for ${pArguments.platform}`, () => {
       Object.defineProperty(process, "platform", { value: pArguments.platform });
 

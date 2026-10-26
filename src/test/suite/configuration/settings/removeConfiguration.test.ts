@@ -63,12 +63,12 @@ suite("removeConfiguration", () => {
       getLiquibaseConfigurationPath,
     };
 
-    const tempDir = TestUtils.createTempFolderForTests("removeConfiguration");
+    const temporaryDirectory = TestUtils.createTempFolderForTests("removeConfiguration");
 
-    const propertyFile = path.join(tempDir, "data.liquibase.properties");
+    const propertyFile = path.join(temporaryDirectory, "data.liquibase.properties");
     fs.writeFileSync(propertyFile, "# dummy content");
 
-    const settingsFile = path.join(tempDir, "settings.json");
+    const settingsFile = path.join(temporaryDirectory, "settings.json");
     fs.writeFileSync(settingsFile, JSON.stringify({ foo: propertyFile, bar: "baz" }));
 
     const cache: Cache = {
@@ -99,10 +99,10 @@ suite("removeConfiguration", () => {
       },
     };
 
-    const cacheFile = path.join(tempDir, "cache.json");
+    const cacheFile = path.join(temporaryDirectory, "cache.json");
     fs.writeFileSync(cacheFile, JSON.stringify(cache));
 
-    files = { tempDir, propertyFile, settingsFile, cacheFile };
+    files = { temporaryDirectory, propertyFile, settingsFile, cacheFile };
 
     setCacheHandler(new CacheHandler(cacheFile));
   });
@@ -200,6 +200,9 @@ suite("removeConfiguration", () => {
       },
     ];
     for (const pArgument of detailMessageArguments) {
+      /**
+       * Tests that the correct detail message for the given remove option will be generated.
+       */
       test(`should generate detail message for ${pArgument.removeOption}`, () => {
         const dialogValues = new DialogValues();
         if (pArgument.removeOption) {
@@ -236,7 +239,7 @@ function assertDeletion(
   stubs: Stubs,
   done: Mocha.Done
 ): void {
-  stubs.getLiquibaseConfigurationPath.resolves(files.tempDir);
+  stubs.getLiquibaseConfigurationPath.resolves(files.temporaryDirectory);
 
   stubs.showQuickPick.resolves({
     label: "foo",
@@ -290,15 +293,11 @@ function assertDeletion(
         },
       };
 
-      assert.deepStrictEqual(
-        JSON.parse(fs.readFileSync(files.cacheFile, "utf-8")),
-        expectedCache,
-        "cache file content"
-      );
+      assert.deepStrictEqual(JSON.parse(fs.readFileSync(files.cacheFile, "utf8")), expectedCache, "cache file content");
 
       assert.deepStrictEqual(
         expected.settingsFileContent,
-        JSON.parse(fs.readFileSync(files.settingsFile, "utf-8")),
+        JSON.parse(fs.readFileSync(files.settingsFile, "utf8")),
         "setting file content"
       );
 
@@ -316,20 +315,20 @@ type Files = {
   /**
    * The temporary directory.
    */
-  tempDir: string;
+  temporaryDirectory: string;
 
   /**
-   * The liquibase properties file inside `tempDir`.
+   * The liquibase properties file inside `temporaryDirectory`.
    */
   propertyFile: string;
 
   /**
-   * The settings file inside `tempDir`.
+   * The settings file inside `temporaryDirectory`.
    */
   settingsFile: string;
 
   /**
-   * The cache file inside `tempDir`.
+   * The cache file inside `temporaryDirectory`.
    */
   cacheFile: string;
 };

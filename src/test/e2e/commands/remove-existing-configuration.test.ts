@@ -33,8 +33,8 @@ suite("Remove existing liquibase.properties from the configuration", function ()
     try {
       const modalDialog = new ModalDialog();
       await modalDialog.close();
-    } catch (e) {
-      console.error(`error while trying to close the dialog ${e}`);
+    } catch (error) {
+      console.error(`error while trying to close the dialog ${error}`);
     }
   });
 
@@ -46,6 +46,10 @@ suite("Remove existing liquibase.properties from the configuration", function ()
     { removeOption: RemoveConfigurationOptions.SETTING, settingsThere: false, propertiesFileThere: true },
     { removeOption: RemoveConfigurationOptions.DELETE_ALL, settingsThere: false, propertiesFileThere: false },
   ]) {
+    /**
+     * Tests that the liquibase.properties is removed with the given remove option
+     * and that the expected places (cache, settings and properties file) are cleaned up.
+     */
     test(`should remove a liquibase.properties with remove option ${pArgument.removeOption}`, async function () {
       await LiquibaseGUITestUtils.executeUpdate(configurationName, ContextOptions.LOAD_ALL_CONTEXT);
 
@@ -78,7 +82,7 @@ suite("Remove existing liquibase.properties from the configuration", function ()
 
       // check settings file
       const settings = JSON.parse(
-        fs.readFileSync(path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json"), "utf-8")
+        fs.readFileSync(path.join(LiquibaseGUITestUtils.WORKSPACE_PATH, "data", "liquibase", "settings.json"), "utf8")
       );
       assert.strictEqual(
         Object.keys(settings).includes(configurationName),

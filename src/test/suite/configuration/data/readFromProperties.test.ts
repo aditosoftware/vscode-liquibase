@@ -15,16 +15,25 @@ import chaiFs from "chai-fs";
 
 chai.use(chaiFs);
 
+/**
+ * Tests the `readFromProperties` functionality.
+ */
 suite("readFromProperties", () => {
-  let tempPath: string;
+  let temporaryPath: string;
   let fileName: string;
 
+  /**
+   * Creates a temporary directory for the test files.
+   */
   suiteSetup("create temp dir", () => {
-    tempPath = TestUtils.createTempFolderForTests("propertiesReading");
+    temporaryPath = TestUtils.createTempFolderForTests("propertiesReading");
   });
 
+  /**
+   * Creates a new temporary file name for each test.
+   */
   setup("create temp file name", () => {
-    fileName = path.join(tempPath, `${randomUUID()}.liquibase.properties`);
+    fileName = path.join(temporaryPath, `${randomUUID()}.liquibase.properties`);
   });
 
   /**
@@ -35,7 +44,7 @@ suite("readFromProperties", () => {
      * Tests that the reading of a changelog works.
      */
     test("should readChangelog from filled file", () => {
-      fs.writeFileSync(fileName, "changelogFile: myChangelogFile.xml", "utf-8");
+      fs.writeFileSync(fileName, "changelogFile: myChangelogFile.xml", "utf8");
 
       assert.deepStrictEqual(readChangelog(fileName), "myChangelogFile.xml");
     });
@@ -44,7 +53,7 @@ suite("readFromProperties", () => {
      * Tests that the reading of a changelog from an empty file works.
      */
     test("should readChangelog from empty file", () => {
-      fs.writeFileSync(fileName, "", "utf-8");
+      fs.writeFileSync(fileName, "", "utf8");
 
       assert.deepStrictEqual(readChangelog(fileName), undefined);
     });
@@ -58,7 +67,7 @@ suite("readFromProperties", () => {
      * Tests that the reading of an url works.
      */
     test("should readUrl from filled file", () => {
-      fs.writeFileSync(fileName, "url: myUrl", "utf-8");
+      fs.writeFileSync(fileName, "url: myUrl", "utf8");
 
       assert.deepStrictEqual(readUrl(fileName), "myUrl");
     });
@@ -67,7 +76,7 @@ suite("readFromProperties", () => {
      * Tests that the reading of an url from an empty file works.
      */
     test("should readUrl from empty file", () => {
-      fs.writeFileSync(fileName, "", "utf-8");
+      fs.writeFileSync(fileName, "", "utf8");
 
       assert.deepStrictEqual(readUrl(fileName), undefined);
     });
@@ -123,7 +132,7 @@ referenceDriver = org.postgresql.Driver
 # additional configuration values
 lorem = ipsum
 `,
-        "utf-8"
+        "utf8"
       );
 
       expected.changelogFile = "changelog.xml";

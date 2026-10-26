@@ -6,6 +6,9 @@ import * as fs from "node:fs";
 import { DockerTestUtils } from "../../suite/DockerTestUtils";
 import { CHOOSE_CHANGELOG_OPTION } from "../../../constants";
 
+/**
+ * Test suite for the changelog selection of the commands.
+ */
 suite("changelog-selection", () => {
   /**
    * The name of the configuration that was created during the setup.
@@ -108,7 +111,8 @@ async function startValidateExecution(expectedLabels: string[], configurationNam
   await LiquibaseGUITestUtils.waitForQuickPicksToBeThere(input, expectedLabels.length);
 
   const labels: string[] = [];
-  for (const quickPickItem of await input.getQuickPicks()) {
+  const quickPicks = await input.getQuickPicks();
+  for (const quickPickItem of quickPicks) {
     const label = await quickPickItem.getLabel();
     labels.push(label);
   }

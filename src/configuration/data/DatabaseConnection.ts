@@ -9,12 +9,15 @@ import { CustomDriver, CustomDrivers } from "../../utilities/customDriver";
  * @see https://docs.liquibase.com/concepts/connections/creating-config-properties.html
  */
 export class DatabaseConnection {
-  [immerable] = true;
-
   /**
    * Prefix for all reference key.
    */
   static readonly REFERENCE: string = "reference";
+
+  /**
+   * Marker for immer, so that this class is treated as an immerable class and produces immutable objects.
+   */
+  [immerable] = true;
 
   /**
    * Constructor for a database connection. This be never called outside the class, instead you should use the static methods.
@@ -63,6 +66,27 @@ export class DatabaseConnection {
   }
 
   /**
+   * Transforms a key into a reference key. For instance `username` will be transformed to `referenceUsername`.
+   *
+   * @param key - the key which should be transformed into a reference key
+   * @returns the reference key
+   */
+  static createReferenceKey(key: string): string {
+    return this.REFERENCE + key.charAt(0).toUpperCase() + key.slice(1);
+  }
+
+  /**
+   * Transforms a key, which was previously referenced, back into its normal state.
+   *
+   * @param key - the referenced key
+   * @returns the normal key
+   */
+  static createDeReferencedKey(key: string): string {
+    const keyWithoutReference = key.replace(this.REFERENCE, "");
+    return keyWithoutReference.charAt(0).toLowerCase() + keyWithoutReference.slice(1);
+  }
+
+  /**
    * Trying to extract all the url parts from a database connection
    *
    * @param customDriver - the custom driver that should be used if the database type is not a pre-configured driver
@@ -74,8 +98,11 @@ export class DatabaseConnection {
     if (driver) {
       // and extract the url parts
       return driver.extractUrlParts(this.url);
-    } else if (customDriver?.[this.databaseType]) {
-      return new CustomDriver(customDriver[this.databaseType]).extractUrlParts(this.url);
+    }
+    const customDriverConfiguration = customDriver?.[this.databaseType];
+
+    if (customDriverConfiguration) {
+      return new CustomDriver(customDriverConfiguration).extractUrlParts(this.url);
     }
 
     return {};
@@ -137,61 +164,20 @@ export class DatabaseConnection {
     properties.insertComment(`configuration for the ${pReferenceConnection ? "reference " : ""}database`);
 
     for (const [key, value] of Object.entries(this)) {
-      if (key && value && key !== "databaseType" && typeof value === "string") {
-        let val: string = value;
-
-        if (key === "password" && pDisguisePassword) {
-          val = "***";
-        }
-
-        properties.insert(pReferenceConnection ? DatabaseConnection.createReferenceKey(key) : key, val);
+      if (!(key && value && key !== "databaseType" && typeof value === "string")) {
+        continue;
       }
+
+      let usedValue: string = value;
+
+      if (key === "password" && pDisguisePassword) {
+        usedValue = "***";
+      }
+
+      properties.insert(pReferenceConnection ? DatabaseConnection.createReferenceKey(key) : key, usedValue);
     }
 
     this.writeDriverConfigurationAndDownload(properties, pReferenceConnection);
-  }
-
-  /**
-   * Writes the driver configuration to the properties file. If `pDownloadDriver` is given, the driver will also be downloaded, if it is not there.
-   *
-   * @param pProperties - the properties editor where the properties should be written
-   * @param pIsReferenceConnection - information if this is the reference connection or not
-   */
-  private writeDriverConfigurationAndDownload(pProperties: PropertiesEditor, pIsReferenceConnection: boolean): void {
-    const databaseType: string = this.databaseType;
-
-    if (databaseType !== NO_PRE_CONFIGURED_DRIVER) {
-      const databaseDriver: Driver | undefined = PREDEFINED_DRIVERS.get(databaseType);
-      if (databaseDriver) {
-        const driverKey: string = "driver";
-
-        pProperties.insert(
-          pIsReferenceConnection ? DatabaseConnection.createReferenceKey(driverKey) : driverKey,
-          databaseDriver.driverClass
-        );
-      }
-    }
-  }
-
-  /**
-   * Transforms a key into a reference key. For instance `username` will be transformed to `referenceUsername`.
-   *
-   * @param key - the key which should be transformed into a reference key
-   * @returns the reference key
-   */
-  static createReferenceKey(key: string): string {
-    return DatabaseConnection.REFERENCE + key.charAt(0).toUpperCase() + key.substring(1);
-  }
-
-  /**
-   * Transforms a key, which was previously referenced, back into its normal state.
-   *
-   * @param key - the referenced key
-   * @returns the normal key
-   */
-  static createDeReferencedKey(key: string): string {
-    const keyWithoutReference = key.replace(DatabaseConnection.REFERENCE, "");
-    return keyWithoutReference.charAt(0).toLowerCase() + keyWithoutReference.substring(1);
   }
 
   /**
@@ -204,7 +190,7 @@ export class DatabaseConnection {
   adjustDriver(value: string): void {
     let preConfiguredDriver = false;
 
-    for (const [driverKey, driverValue] of PREDEFINED_DRIVERS.entries()) {
+    for (const [driverKey, driverValue] of PREDEFINED_DRIVERS) {
       if (driverValue.driverClass === value) {
         // adjust database type when driver was given
         this.databaseType = driverKey;
@@ -218,5 +204,32 @@ export class DatabaseConnection {
       // set the database type to no-pre-configured, because it can be any driver based on the users setting
       this.databaseType = NO_PRE_CONFIGURED_DRIVER;
     }
+  }
+
+  /**
+   * Writes the driver configuration to the properties file. If `pDownloadDriver` is given, the driver will also be downloaded, if it is not there.
+   *
+   * @param pProperties - the properties editor where the properties should be written
+   * @param pIsReferenceConnection - information if this is the reference connection or not
+   */
+  private writeDriverConfigurationAndDownload(pProperties: PropertiesEditor, pIsReferenceConnection: boolean): void {
+    const databaseType: string = this.databaseType;
+
+    if (databaseType === NO_PRE_CONFIGURED_DRIVER) {
+      return;
+    }
+
+    const databaseDriver: Driver | undefined = PREDEFINED_DRIVERS.get(databaseType);
+
+    if (!databaseDriver) {
+      return;
+    }
+
+    const driverKey: string = "driver";
+
+    pProperties.insert(
+      pIsReferenceConnection ? DatabaseConnection.createReferenceKey(driverKey) : driverKey,
+      databaseDriver.driverClass
+    );
   }
 }

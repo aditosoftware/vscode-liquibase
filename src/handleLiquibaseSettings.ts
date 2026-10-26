@@ -34,19 +34,21 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
     configurationPath = defaultValue;
   }
 
-  if (vscode.workspace.workspaceFolders) {
-    const workspaceFolder = vscode.workspace.workspaceFolders[0];
-
-    const absolutePath = path.join(workspaceFolder.uri.fsPath, configurationPath);
-
-    if (!fs.existsSync(absolutePath)) {
-      const uriFile = vscode.Uri.file(absolutePath);
-      // create the missing directories
-      await vscode.workspace.fs.createDirectory(uriFile);
-    }
-
-    return absolutePath;
+  if (!vscode.workspace.workspaceFolders) {
+    return;
   }
+
+  const workspaceFolder = vscode.workspace.workspaceFolders[0];
+
+  const absolutePath = path.join(workspaceFolder.uri.fsPath, configurationPath);
+
+  if (!fs.existsSync(absolutePath)) {
+    const uriFile = vscode.Uri.file(absolutePath);
+    // create the missing directories
+    await vscode.workspace.fs.createDirectory(uriFile);
+  }
+
+  return absolutePath;
 }
 
 /**
@@ -55,23 +57,22 @@ export async function getLiquibaseConfigurationPath(): Promise<string | undefine
  * @returns the liquibase folder in the workspace or the workspace folder
  */
 export function getLiquibaseFolder(): string {
+  if (!vscode.workspace.workspaceFolders) {
+    // Fallback: no workspace there, just return empty string.
+    return "";
+  }
+
   const configuration = vscode.workspace.getConfiguration(configurationName);
   const liquibaseFolder: string | undefined = configuration.get("liquibaseFolder", "");
 
-  if (vscode.workspace.workspaceFolders) {
-    const workspaceFolder = vscode.workspace.workspaceFolders[0];
+  const workspaceFolder = vscode.workspace.workspaceFolders[0];
 
-    const fsPathToWorkspace = workspaceFolder.uri.fsPath;
+  const fsPathToWorkspace = workspaceFolder.uri.fsPath;
 
-    if (liquibaseFolder) {
-      return path.join(fsPathToWorkspace, liquibaseFolder);
-    } else {
-      return fsPathToWorkspace;
-    }
+  if (liquibaseFolder) {
+    return path.join(fsPathToWorkspace, liquibaseFolder);
   }
-
-  // Fallback: no workspace there, just return empty string.
-  return "";
+  return fsPathToWorkspace;
 }
 
 /**

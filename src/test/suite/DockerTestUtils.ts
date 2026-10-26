@@ -1,4 +1,5 @@
-import { exec, ExecException } from "node:child_process";
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
 import { isWindows } from "../../utilities/osUtilities";
 import mariadb, { type Pool } from "mariadb";
 
@@ -78,24 +79,27 @@ export class DockerTestUtils {
   static async startContainer(containerName: string = "mariadb", exposedPort: number = 3310): Promise<string> {
     let command: string = "";
     switch (containerName) {
-      case "mariadb":
+      case "mariadb": {
         command = `${this.docker} run -d -p ${exposedPort}:3306 --name ${
           this.containerNamePrefix + containerName
         } -e MYSQL_ROOT_PASSWORD=${this.password} -e MYSQL_USER=${this.username} -e MYSQL_DATABASE=${
           this.dbName
         } mariadb:11.8.3`;
         break;
+      }
 
-      case "postgres":
+      case "postgres": {
         command = `${this.docker} run -d -p ${exposedPort}:5432 --name ${
           this.containerNamePrefix + containerName
         } -e POSTGRES_PASSWORD=${this.password} -e POSTGRES_USER=${this.username} -e POSTGRES_DB=${
           this.dbName
         } postgres:16.13`;
         break;
+      }
 
-      default:
+      default: {
         break;
+      }
     }
 
     return this.executeCommand(command);
@@ -127,7 +131,7 @@ export class DockerTestUtils {
 
     if (running && running.trim() === "true") {
       switch (containerName) {
-        case "mariadb":
+        case "mariadb": {
           // install mysql to the container
           await this.repeatCommand(
             `${this.docker} exec ${fullContainerName} sh -c "apt-get update && apt-get install -y mysql-client"`
@@ -138,9 +142,10 @@ export class DockerTestUtils {
             `${this.docker} exec ${fullContainerName} mysql -u${this.username} -p${this.password} -e "SELECT 1;"`
           );
           break;
+        }
 
         // check if database is available
-        case "postgres":
+        case "postgres": {
           await this.repeatCommand(`${this.docker} exec ${fullContainerName} psql ${this.dbName} -c "SELECT 1;"`);
 
           // create the needed schema
@@ -149,9 +154,11 @@ export class DockerTestUtils {
           );
 
           break;
+        }
 
-        default:
+        default: {
           break;
+        }
       }
     }
   }
@@ -165,13 +172,13 @@ export class DockerTestUtils {
    */
   private static async repeatCommand(command: string): Promise<string | undefined> {
     const maxRetries = 20;
-    for (let i = 1; i <= maxRetries; i++) {
+    for (let index = 1; index <= maxRetries; index++) {
       await new Promise((r) => setTimeout(r, 2000));
       try {
         const result = await this.executeCommand(command);
         return result;
       } catch (error) {
-        if (i === maxRetries) {
+        if (index === maxRetries) {
           throw error;
         }
       }
@@ -185,18 +192,13 @@ export class DockerTestUtils {
    * @returns the output of the command
    */
   private static async executeCommand(command: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      exec(command, (error: ExecException | null, stdout, stderr) => {
-        if (error) {
-          reject(error);
-          return;
-        }
-        if (stderr) {
-          console.error(stderr);
-        }
-        resolve(stdout);
-      });
-    });
+    const { stdout, stderr } = await promisify(exec)(command);
+
+    if (stderr) {
+      console.error(stderr);
+    }
+
+    return stdout;
   }
 
   /**
@@ -212,11 +214,11 @@ export class DockerTestUtils {
     let conn;
     try {
       conn = await usedPool.getConnection();
-      const res = await conn.query(command);
-      return res;
-    } catch (e) {
+      const result = await conn.query(command);
+      return result;
+    } catch (error) {
       conn?.destroy();
-      console.error(e);
+      console.error(error);
       return "";
     } finally {
       conn?.destroy();
@@ -231,9 +233,9 @@ export class DockerTestUtils {
    */
   static createPool(database?: string): Pool {
     return mariadb.createPool({
-      host: DockerTestUtils.getDockerIP(),
-      user: DockerTestUtils.username,
-      password: DockerTestUtils.password,
+      host: this.getDockerIP(),
+      user: this.username,
+      password: this.password,
       connectionLimit: 10,
       port: 3310,
       database: database,
@@ -244,7 +246,7 @@ export class DockerTestUtils {
    * Resets the database by dropping and creating the schema.
    */
   static async resetDB(): Promise<void> {
-    await DockerTestUtils.executeMariaDBSQL("DROP SCHEMA data", this.pool);
-    await DockerTestUtils.executeMariaDBSQL("CREATE SCHEMA data", this.pool);
+    await this.executeMariaDBSQL("DROP SCHEMA data", this.pool);
+    await this.executeMariaDBSQL("CREATE SCHEMA data", this.pool);
   }
 }

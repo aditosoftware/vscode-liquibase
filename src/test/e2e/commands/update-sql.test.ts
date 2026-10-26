@@ -72,7 +72,7 @@ suite("Update-sql", function () {
     await LiquibaseGUITestUtils.waitUntil(
       () => fs.existsSync(updateFile),
       `SQL file should be created at ${updateFile}`,
-      10000
+      10_000
     );
     chai.assert.pathExists(updateFile);
   });

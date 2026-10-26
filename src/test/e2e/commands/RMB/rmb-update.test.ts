@@ -32,11 +32,12 @@ suite("update: Right Click Menu", function () {
         await LiquibaseGUITestUtils.waitForCommandExecution("Liquibase command 'update' was executed successfully."),
         "Notification did NOT show"
       );
-      assert.ok(
-        (await DockerTestUtils.executeMariaDBSQL("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"))
-          ?.length >= 1,
-        "Table 'person' DOES NOT exist, while it should"
+
+      const databaseInformation = await DockerTestUtils.executeMariaDBSQL(
+        "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'person'"
       );
+
+      assert.ok(databaseInformation?.length >= 1, "Table 'person' DOES NOT exist, while it should");
     });
   }
 

@@ -21,20 +21,22 @@ export async function chooseFileForChangelog(data: LiquibaseConfigurationData): 
     },
   });
 
-  if (result?.[0]) {
-    const chosenFile = result[0].fsPath;
-
-    // find out relative path
-    let relativePath = path.relative(data.liquibaseSettings.liquibaseDirectoryInProject, chosenFile);
-
-    if (relativePath === chosenFile) {
-      // if the path could not be transformed to a relative path, e.g. when on other drive, then add a new element to the classpath and
-      // make a relative path from the new classpathElement
-      const directoryOfChosenFile = path.dirname(chosenFile);
-      relativePath = path.relative(directoryOfChosenFile, chosenFile);
-    }
-
-    data.changelogFile = relativePath;
-    LiquibaseConfigurationPanel.transferMessage(MessageType.CHOOSE_CHANGELOG_RESULT, data);
+  if (!result?.[0]) {
+    return;
   }
+
+  const chosenFile = result[0].fsPath;
+
+  // find out relative path
+  let relativePath = path.relative(data.liquibaseSettings.liquibaseDirectoryInProject, chosenFile);
+
+  if (relativePath === chosenFile) {
+    // if the path could not be transformed to a relative path, e.g. when on other drive, then add a new element to the classpath and
+    // make a relative path from the new classpathElement
+    const directoryOfChosenFile = path.dirname(chosenFile);
+    relativePath = path.relative(directoryOfChosenFile, chosenFile);
+  }
+
+  data.changelogFile = relativePath;
+  LiquibaseConfigurationPanel.transferMessage(MessageType.CHOOSE_CHANGELOG_RESULT, data);
 }

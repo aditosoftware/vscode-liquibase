@@ -21,6 +21,9 @@ suite("Status", function () {
    * Test the 'status' command with different context types and options.
    */
   LiquibaseGUITestUtils.matrixExecution((option, exec, key) => {
+    /**
+     * Tests that the 'status' command is executed with the selected context type.
+     */
     test("should execute 'status' with context type '" + option + "' command with " + key, async function () {
       await LiquibaseGUITestUtils.executeCommandInMatrixExecution(
         "status",

@@ -32,12 +32,15 @@ suite("Drop-all", function () {
     await DockerTestUtils.stopAndRemoveContainer();
   });
 
+  /**
+   * Teardown function that runs after every test and closes the modal dialog, if it is open.
+   */
   teardown(async () => {
     try {
       const modalDialog = new ModalDialog();
       await modalDialog.close();
-    } catch (e) {
-      console.error(`error while trying to close the dialog ${e}`);
+    } catch (error) {
+      console.error(`error while trying to close the dialog ${error}`);
     }
   });
 
