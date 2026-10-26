@@ -74,6 +74,12 @@ jobs:
         node-version: [ 20.x, 22.x ]
         os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
+    env:
+      # VS Code fails to start when the user-data-dir path exceeds the IPC socket
+      # path limit (~107 bytes). The runner workspace path
+      # (/home/runner/work/vscode-liquibase/vscode-liquibase) alone is too long,
+      # so the storage folder must live outside the workspace in a short path.
+      TEST_RESOURCES: /tmp/extest-${{ matrix.os }}-${{ matrix.node-version }}
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Set up Node.js
@@ -99,11 +105,11 @@ jobs:
             node_modules-${{ matrix.os }}-node-${{ matrix.node-version }}
 
       - name: run e2e tests
-        run: xvfb-run -a npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
+        run: xvfb-run -a npm run test:e2e
         if: runner.os == 'Linux'
 
       - name: npm e2e tests
-        run: npm run test:e2e -- --storage ./out/test-resources/${{ matrix.os }}/${{ matrix.node-version }}
+        run: npm run test:e2e
         if: runner.os != 'Linux'
 
       - name: "Upload e2e screenshots"
@@ -111,7 +117,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: e2e-screenshots-${{ matrix.os }}-${{ matrix.node-version }}
-          path: ./out/test-resources/**/screenshots/**
+          path: ${{ env.TEST_RESOURCES }}/**/screenshots/**
           retention-days: 5
           if-no-files-found: ignore
 
